@@ -1,12 +1,14 @@
 package com.data.mymoney
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.firestore.FirebaseFirestore
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -14,6 +16,8 @@ class MainActivity : AppCompatActivity() {
 
     var database = FirebaseDatabase.getInstance()
     var myRef = database.getReference("ingreso-gasto")
+    var db = FirebaseFirestore.getInstance()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,6 +37,21 @@ class MainActivity : AppCompatActivity() {
             override fun onCancelled(error: DatabaseError) {
             }
         })
+
+        db.collection("category")
+            .get()
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    for (document in task.result) {
+                        val aux = document.id + " => " + document.data["value"]
+                        myFbTextView?.text = aux
+                    }
+                } else {
+                    val message = "Error getting documents." + task.exception
+                }
+            }
+
+
     }
 
 }
