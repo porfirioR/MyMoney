@@ -1,0 +1,16 @@
+<div class="year">
+  <button mat-mini-fab color="" (click)="previousYear()">
+    <mat-icon>keyboard_arrow_left</mat-icon>
+  </button>
+  <span>{{formGroup.get('selectedYear')?.value}}</span>
+  <button mat-mini-fab color="" (click)="nextYear()">
+    <mat-icon>keyboard_arrow_right</mat-icon>
+  </button>
+</div>
+<mat-divider></mat-divider>
+<button class="btn-month" mat-mini-fab
+    (click)="changeMonth(month)"
+    *ngFor="let month of months"
+    [color]="month === formGroup.get('month')?.value && formGroup.get('year')?.value === formGroup.get('selectedYear')?.value? 'primary': ''">
+  {{month}}
+</button>

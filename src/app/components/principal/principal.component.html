@@ -1,0 +1,41 @@
+<mat-sidenav-container class="example-container" [hasBackdrop]="true">
+  <mat-sidenav #sidenav [mode]="'over'" [fixedInViewport]="true">
+    I'm a drawer
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <mat-toolbar color="primary">
+      <button mat-icon-button class="example-icon" (click)="sidenav.toggle()"
+        aria-label="Example icon-button with menu icon">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <span>My Money</span>
+      <button mat-stroked-button (click)="openBottomSheet()">
+        {{yearMonth?.monthLabel ? yearMonth?.monthLabel : 'Search'}}
+      </button>
+    </mat-toolbar>
+    <mat-card class="amount">
+      <span matRipple [matRippleCentered]="true" [matRippleUnbounded]="true">
+        <label>
+          Ingresos
+        </label>
+        <p>{{income}}</p>
+      </span>
+      <hr>
+      <span matRipple [matRippleCentered]="true" [matRippleUnbounded]="true">
+        <label>
+          Gastos
+        </label>
+        <p>{{expenses}}</p>
+      </span>
+      <hr>
+      <span>
+        <label>
+          Equilibrio
+        </label>
+        <p>{{balance}}</p>
+      </span>
+    </mat-card>
+    <mat-card>
+    </mat-card>
+  </mat-sidenav-content>
+</mat-sidenav-container>
