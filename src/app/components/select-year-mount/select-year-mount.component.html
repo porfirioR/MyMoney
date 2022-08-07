@@ -8,9 +8,11 @@
   </button>
 </div>
 <mat-divider></mat-divider>
-<button class="btn-month" mat-mini-fab
-    (click)="changeMonth(month)"
-    *ngFor="let month of months"
-    [color]="month === formGroup.get('month')?.value && formGroup.get('year')?.value === formGroup.get('selectedYear')?.value? 'primary': ''">
-  {{month}}
-</button>
+<div class="months">
+  <button class="btn-month" mat-mini-fab
+      (click)="changeMonth(month)"
+      *ngFor="let month of months"
+      [color]="month === formGroup.get('month')?.value && formGroup.get('year')?.value === formGroup.get('selectedYear')?.value? 'primary': ''">
+    {{month}}
+  </button>
+</div>

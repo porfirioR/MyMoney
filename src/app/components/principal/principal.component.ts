@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { MatDialog } from '@angular/material/dialog';
 import { YearMonthModel } from 'src/app/models/year-month-model';
+import { CategoryService } from 'src/app/services/category.service';
 import { SelectYearMountComponent } from '../select-year-mount/select-year-mount.component';
 
 @Component({
@@ -15,9 +17,16 @@ export class PrincipalComponent implements OnInit {
   protected balance: number = 0
   protected yearMonth?: YearMonthModel
 
-  constructor(private dialog: MatDialog) {
+  constructor(private dialog: MatDialog, private categoryService: CategoryService) {
     const date = new Date();
     this.yearMonth = new YearMonthModel(date.getFullYear(), '', date.getMonth())
+    categoryService.getAll().subscribe({
+      next: (x) => {
+        console.log(x);
+      }, error: (e) => {
+        throw e;
+      }
+    })
   }
 
   ngOnInit() {}

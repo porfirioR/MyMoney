@@ -24,10 +24,24 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatRippleModule } from '@angular/material/core';
 import { SelectYearMountComponent } from './components/select-year-mount/select-year-mount.component';
-import {MatDialogModule} from '@angular/material/dialog';
+import { MatDialogModule } from '@angular/material/dialog';
+import { AngularFireModule } from '@angular/fire/compat';
+import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
+import { AngularFireAuthModule } from '@angular/fire/compat/auth';
+import { AngularFireStorageModule } from '@angular/fire/compat/storage';
+import { SideNavComponent } from './components/side-nav/side-nav.component';
+import { MatListModule } from '@angular/material/list';
+import { CategoryConfigurationComponent } from './components/category-configuration/category-configuration.component';
 
 @NgModule({
-  declarations: [AppComponent, PrincipalComponent, SelectYearMountComponent],
+  declarations: [
+    AppComponent,
+    PrincipalComponent,
+    SelectYearMountComponent,
+    SideNavComponent,
+    CategoryConfigurationComponent,
+    
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -38,6 +52,7 @@ import {MatDialogModule} from '@angular/material/dialog';
       registrationStrategy: 'registerWhenStable:30000',
     }),
     BrowserAnimationsModule,
+    
     MatToolbarModule,
     MatIconModule,
     MatTabsModule,
@@ -55,6 +70,12 @@ import {MatDialogModule} from '@angular/material/dialog';
     MatSidenavModule,
     MatRippleModule,
     MatDialogModule,
+    MatListModule,
+
+    AngularFireModule.initializeApp(environment.firebaseConfig),
+    AngularFirestoreModule, // firestore
+    AngularFireAuthModule, // auth
+    AngularFireStorageModule, // storage
   ],
   providers: [],
   bootstrap: [AppComponent],
