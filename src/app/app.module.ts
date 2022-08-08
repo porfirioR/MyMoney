@@ -32,6 +32,9 @@ import { AngularFireStorageModule } from '@angular/fire/compat/storage';
 import { SideNavComponent } from './components/side-nav/side-nav.component';
 import { MatListModule } from '@angular/material/list';
 import { CategoryConfigurationComponent } from './components/category-configuration/category-configuration.component';
+import { CategoryRowComponent } from './components/category-row/category-row.component';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
+import { NewCategoryComponent } from './components/new-category/new-category.component';
 
 @NgModule({
   declarations: [
@@ -40,6 +43,8 @@ import { CategoryConfigurationComponent } from './components/category-configurat
     SelectYearMountComponent,
     SideNavComponent,
     CategoryConfigurationComponent,
+    CategoryRowComponent,
+    NewCategoryComponent,
     
   ],
   imports: [
@@ -71,6 +76,7 @@ import { CategoryConfigurationComponent } from './components/category-configurat
     MatRippleModule,
     MatDialogModule,
     MatListModule,
+    MatSnackBarModule,
 
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFirestoreModule, // firestore

@@ -28,11 +28,11 @@ constructor(private readonly db: AngularFirestore) { }
     return this.db.collection<CategoryModel>(this.categories).doc(id).delete()
   }
 
-  public create = (model: CategoryModel):Promise<DocumentReference<CategoryModel>> => {
+  public create = (model: CategoryModel): Promise<DocumentReference<CategoryModel>> => {
     return this.db.collection<CategoryModel>(this.categories).add(model)
   }
 
-  public update = (model: CategoryModel):Promise<void> => {
+  public update = (model: CategoryModel): Promise<void> => {
     return this.db.collection<CategoryModel>(this.categories).doc(model.id).set(model)
   }
 

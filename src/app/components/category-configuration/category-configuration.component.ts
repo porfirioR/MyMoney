@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core'
 import { Location } from '@angular/common'
-import { CategoryType } from '../../enums/category-type.enum';
-import { CategoryModel } from '../../models/category.model';
-import { CategoryService } from '../../services/category.service';
+import { CategoryType } from '../../enums/category-type.enum'
+import { CategoryModel } from '../../models/category.model'
+import { CategoryService } from '../../services/category.service'
+import { take } from 'rxjs';
+import { MatTabChangeEvent } from '@angular/material/tabs'
 
 @Component({
   selector: 'app-category-configuration',
@@ -12,10 +14,13 @@ import { CategoryService } from '../../services/category.service';
 export class CategoryConfigurationComponent implements OnInit {
   protected expenseCategory!: CategoryModel[]
   protected incomeCategory!: CategoryModel[]
+  protected currentTap!: string;
+  protected categoryType = CategoryType;
+
   constructor(private categoryService: CategoryService, protected location: Location) { }
 
   ngOnInit() {
-    this.categoryService.getAll().subscribe({
+    this.categoryService.getAll().pipe(take(1)).subscribe({
       next: (x) => {
         this.expenseCategory = this.categoriesByType(x, CategoryType.expense)
         this.incomeCategory = this.categoriesByType(x, CategoryType.income)
@@ -23,6 +28,7 @@ export class CategoryConfigurationComponent implements OnInit {
         throw e;
       }
     })
+    this.currentTap = this.categoryType.expense.toLowerCase()
   }
 
   protected exit = () => {
@@ -33,7 +39,7 @@ export class CategoryConfigurationComponent implements OnInit {
     return categories.filter(x => x.type === type)
   }
 
-  protected newCategory = () => {
-
+  protected tabChanged = (tabChangeEvent: MatTabChangeEvent): void => {
+    this.currentTap = tabChangeEvent.tab.textLabel.toLowerCase();
   }
 }

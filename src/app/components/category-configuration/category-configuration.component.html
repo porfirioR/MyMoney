@@ -3,19 +3,19 @@
     <mat-icon>keyboard_backspace</mat-icon>
   </button>
   <span>Category configuration</span>
-  <button mat-icon-button (click)="newCategory()" title="Add category">
+  <button mat-icon-button [routerLink]="['new-category', currentTap]" title="Add category">
     <mat-icon>add</mat-icon>
   </button>
 </mat-toolbar>
-<mat-tab-group mat-stretch-tabs mat-align-tabs="center">
-  <mat-tab label="Expenses">
-    <span *ngFor="let item of expenseCategory">
-      {{item.name}}
-    </span>
+<mat-tab-group mat-stretch-tabs mat-align-tabs="center" (selectedTabChange)="tabChanged($event)">
+  <mat-tab [label]="categoryType.expense">
+    <ng-container *ngFor="let item of expenseCategory">
+      <app-category-row [category]="item"></app-category-row>
+    </ng-container>
   </mat-tab>
-  <mat-tab label="Incomes">
+  <mat-tab [label]="categoryType.income">
     <span *ngFor="let item of incomeCategory">
-      {{item.name}}
+      <app-category-row [category]="item"></app-category-row>
     </span>
   </mat-tab>
 </mat-tab-group>
