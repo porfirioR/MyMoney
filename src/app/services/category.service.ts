@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore, DocumentChangeAction, DocumentReference } from '@angular/fire/compat/firestore';
 import { filter, map, Observable } from 'rxjs';
 import { CategoryType } from '../enums/category-type.enum';
-import { CollectionType } from '../enums/collection';
+import { CollectionType } from '../enums/collection-type.enum';
 import { CategoryModel } from '../models/category.model';
 
 @Injectable({

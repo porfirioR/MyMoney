@@ -1,8 +1,8 @@
 <mat-list>
   <div mat-subheader>Items</div>
-  <mat-list-item *ngFor="let item of navItems">
+  <mat-list-item *ngFor="let item of navItems" (click)="performItemAction(item.action)">
     <mat-icon mat-list-icon color="primary">{{item.icon}}</mat-icon>
-    <span (click)="performItemAction(item.action)" mat-line>{{item.name}}</span>
+    <span mat-line>{{item.name}}</span>
   </mat-list-item>
   <mat-divider></mat-divider>
   <div mat-subheader>Notes</div>
