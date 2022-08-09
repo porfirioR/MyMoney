@@ -19,11 +19,13 @@
   <mat-card-content class="category-group">
     <span *ngFor="let group of currentCategory.groups">
       <mat-card-title>{{group.groupName}}</mat-card-title>
-      <button class="btn-icon" mat-mini-fab (click)="updateIcon(icon)"
-          *ngFor="let icon of group.icons"
-          [color]="icon === formGroup.get('icon')?.value ? 'primary': ''">
-        <mat-icon>{{icon}}</mat-icon>
-      </button>
+      <div class="icon-list">
+        <button class="btn-icon" mat-mini-fab (click)="updateIcon(icon)"
+            *ngFor="let icon of group.icons"
+            [color]="icon === formGroup.get('icon')?.value ? 'primary': ''">
+          <mat-icon>{{icon}}</mat-icon>
+        </button>
+      </div>
     </span>
   </mat-card-content>
 </mat-card>

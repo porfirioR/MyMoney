@@ -22,3 +22,8 @@
   text-align: center !important;
   margin: 8px 0 8px 0 !important;
 }
+.icon-list {
+  flex-wrap: wrap;
+  display: flex;
+  justify-content: space-evenly;
+}

@@ -28,7 +28,7 @@ export class CategoryConfigurationComponent implements OnInit {
         throw e;
       }
     })
-    this.currentTap = this.categoryType.expense.toLowerCase()
+    this.currentTap = this.categoryType.expense
   }
 
   protected exit = () => {
@@ -40,6 +40,6 @@ export class CategoryConfigurationComponent implements OnInit {
   }
 
   protected tabChanged = (tabChangeEvent: MatTabChangeEvent): void => {
-    this.currentTap = tabChangeEvent.tab.textLabel.toLowerCase();
+    this.currentTap = tabChangeEvent.tab.textLabel;
   }
 }

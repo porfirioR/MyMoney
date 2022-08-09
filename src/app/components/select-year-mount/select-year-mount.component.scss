@@ -10,5 +10,7 @@
 }
 
 .months {
-  padding-left: 8px;
+  display: flex;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
 }

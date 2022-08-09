@@ -1,5 +1,4 @@
 export enum IconType {
-  Burger = 'fastfood',
   Cake = 'cake',
   School = 'school',
   City = 'location_city',
