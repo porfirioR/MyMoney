@@ -33,8 +33,9 @@ import { SideNavComponent } from './components/side-nav/side-nav.component';
 import { MatListModule } from '@angular/material/list';
 import { CategoryConfigurationComponent } from './components/category-configuration/category-configuration.component';
 import { CategoryRowComponent } from './components/category-row/category-row.component';
-import {MatSnackBarModule} from '@angular/material/snack-bar';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { NewCategoryComponent } from './components/new-category/new-category.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -57,7 +58,9 @@ import { NewCategoryComponent } from './components/new-category/new-category.com
       registrationStrategy: 'registerWhenStable:30000',
     }),
     BrowserAnimationsModule,
-    
+    FormsModule,
+    ReactiveFormsModule,
+
     MatToolbarModule,
     MatIconModule,
     MatTabsModule,

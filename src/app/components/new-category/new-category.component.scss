@@ -1,3 +1,24 @@
 .mat-toolbar {
   justify-content: space-between;
 }
+
+.form-input {
+  display: flex;
+  justify-content: space-between;
+  & .mat-from-field {
+    width: 100%;
+  }
+}
+
+.category-group {
+  margin: 0 0.5rem 0 0.5rem;
+}
+
+.btn-icon {
+  margin: 0.5rem;
+}
+
+.mat-card-title {
+  text-align: center !important;
+  margin: 8px 0 8px 0 !important;
+}

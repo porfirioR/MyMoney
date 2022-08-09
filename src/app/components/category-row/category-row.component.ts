@@ -6,7 +6,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 @Component({
   selector: 'app-category-row',
   templateUrl: './category-row.component.html',
-  styleUrls: ['./category-row.component.css']
+  styleUrls: ['./category-row.component.scss']
 })
 export class CategoryRowComponent implements OnInit {
   @Input() category!: CategoryModel
