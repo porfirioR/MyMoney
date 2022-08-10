@@ -1,7 +1,8 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CategoryService } from '../../services/category.service';
 import { CategoryModel } from '../../models/category.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { CategoryType } from 'src/app/enums/category-type.enum';
 
 @Component({
   selector: 'app-category-row',
@@ -10,6 +11,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class CategoryRowComponent implements OnInit {
   @Input() category!: CategoryModel
+  @Output() updateCategoryEvent = new EventEmitter<CategoryType>()
   constructor(private categoryService: CategoryService, private snackBar: MatSnackBar) { }
 
   ngOnInit() {
@@ -21,6 +23,7 @@ export class CategoryRowComponent implements OnInit {
     this.categoryService.update(updateCategory).then(() => {
       this.snackBar.open('Category was updated', '', { duration: 3000 })
       this.category.active = updateCategory.active
+      this.updateCategoryEvent.emit(updateCategory.type)
     })
   }
 

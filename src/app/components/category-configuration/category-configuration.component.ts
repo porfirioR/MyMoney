@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core'
 import { Location } from '@angular/common'
+import { MatTabChangeEvent } from '@angular/material/tabs'
 import { CategoryType } from '../../enums/category-type.enum'
 import { CategoryModel } from '../../models/category.model'
 import { CategoryService } from '../../services/category.service'
 import { take } from 'rxjs';
-import { MatTabChangeEvent } from '@angular/material/tabs'
 
 @Component({
   selector: 'app-category-configuration',
@@ -22,8 +22,8 @@ export class CategoryConfigurationComponent implements OnInit {
   ngOnInit() {
     this.categoryService.getAll().pipe(take(1)).subscribe({
       next: (x) => {
-        this.expenseCategory = this.categoriesByType(x, CategoryType.expense)
-        this.incomeCategory = this.categoriesByType(x, CategoryType.income)
+        this.expenseCategory = this.orderCategoryByActive(this.categoriesByType(x, CategoryType.expense))
+        this.incomeCategory = this.orderCategoryByActive(this.categoriesByType(x, CategoryType.income))
       }, error: (e) => {
         throw e;
       }
@@ -42,4 +42,12 @@ export class CategoryConfigurationComponent implements OnInit {
   protected tabChanged = (tabChangeEvent: MatTabChangeEvent): void => {
     this.currentTap = tabChangeEvent.tab.textLabel;
   }
+
+  protected reorderCategory = (type: CategoryType) => {
+    type === CategoryType.income ?
+      this.incomeCategory = this.orderCategoryByActive(this.incomeCategory) :
+      this.expenseCategory = this.orderCategoryByActive(this.expenseCategory)
+  }
+
+  private orderCategoryByActive = (categories: CategoryModel[]) => categories.sort((a, b) => a.active === b.active ? 0 : a.active ? -1 : 1)
 }

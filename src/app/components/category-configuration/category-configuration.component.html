@@ -10,7 +10,7 @@
 <mat-tab-group mat-stretch-tabs mat-align-tabs="center" (selectedTabChange)="tabChanged($event)">
   <mat-tab [label]="categoryType.expense">
     <ng-container *ngFor="let item of expenseCategory">
-      <app-category-row [category]="item"></app-category-row>
+      <app-category-row [category]="item" (updateCategoryEvent)="reorderCategory($event)"></app-category-row>
     </ng-container>
   </mat-tab>
   <mat-tab [label]="categoryType.income">
