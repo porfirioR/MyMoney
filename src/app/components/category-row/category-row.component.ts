@@ -10,7 +10,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class CategoryRowComponent implements OnInit {
   @Input() category!: CategoryModel
-  constructor(private categoryService: CategoryService, private _snackBar: MatSnackBar) { }
+  constructor(private categoryService: CategoryService, private snackBar: MatSnackBar) { }
 
   ngOnInit() {
   }
@@ -19,7 +19,7 @@ export class CategoryRowComponent implements OnInit {
     const updateCategory = Object.assign({} as CategoryModel, this.category)
     updateCategory.active = !active
     this.categoryService.update(updateCategory).then(() => {
-      this._snackBar.open('Category was updated', '', { duration: 3000 })
+      this.snackBar.open('Category was updated', '', { duration: 3000 })
       this.category.active = updateCategory.active
     })
   }

@@ -13,17 +13,20 @@
       <mat-icon>{{formGroup.get('icon')?.value}}</mat-icon>
     </button>
     <mat-form-field class="mat-from-field">
-      <input matInput placeholder="Category name" formControlName="categoryName">
+      <input matInput placeholder="Category name" formControlName="name">
     </mat-form-field>
+    <button mat-icon-button color="primary" [disabled]="formGroup.invalid" (click)="save()">
+      <mat-icon>done</mat-icon>
+    </button>
   </div>
   <mat-card-content class="category-group">
     <span *ngFor="let group of currentCategory.groups">
-      <mat-card-title>{{group.groupName}}</mat-card-title>
+      <mat-card-subtitle>{{group.groupName}}</mat-card-subtitle>
       <div class="icon-list">
         <button class="btn-icon" mat-mini-fab (click)="updateIcon(icon)"
             *ngFor="let icon of group.icons"
             [color]="icon === formGroup.get('icon')?.value ? 'primary': ''">
-          <mat-icon>{{icon}}</mat-icon>
+          <i class="material-icons-outlined">{{icon}}</i>
         </button>
       </div>
     </span>

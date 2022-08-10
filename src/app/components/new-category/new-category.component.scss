@@ -18,10 +18,12 @@
   margin: 0.5rem;
 }
 
-.mat-card-title {
+.mat-card-subtitle {
   text-align: center !important;
   margin: 8px 0 8px 0 !important;
+  color: rgb(0 0 0 / 66%);
 }
+
 .icon-list {
   flex-wrap: wrap;
   display: flex;

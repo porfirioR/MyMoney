@@ -3,4 +3,17 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin: 0 0.3rem 0 0.3rem;
+}
+
+.category-name {
+  min-width: 10rem;
+}
+
+.category-icon {
+  font-size: large;
+}
+
+.icon-color-green {
+  color: green;
 }

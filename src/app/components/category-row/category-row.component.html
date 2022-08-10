@@ -1,12 +1,14 @@
 <span class="row-category">
   <button mat-icon-button color="warn" (click)="deactivateReactivateCategory(category.active)" *ngIf="category.active">
-    <mat-icon>indeterminate_check_box</mat-icon>
+    <mat-icon>highlight_off</mat-icon>
   </button>
   <button mat-icon-button (click)="deactivateReactivateCategory(category.active)" *ngIf="!category.active">
-    <mat-icon>add</mat-icon>
+    <mat-icon class="icon-color-green">add_circle_outline</mat-icon>
   </button>
-  {{category.name}}
+  <i class="material-icons-outlined">{{category.icon}}</i>
+  <span class="category-name">{{category.name}}</span>
   <button mat-icon-button (click)="reorderCategory()" disabled>
     <mat-icon>menu</mat-icon>
   </button>
 </span>
+<mat-divider></mat-divider>

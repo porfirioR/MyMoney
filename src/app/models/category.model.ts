@@ -5,4 +5,5 @@ export class CategoryModel {
   active!: boolean
   name!: string
   type!: CategoryType
+  icon!: string
 }
