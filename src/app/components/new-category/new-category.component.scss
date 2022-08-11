@@ -19,3 +19,13 @@
   margin: 8px 0 8px 0 !important;
   color: rgb(0 0 0 / 66%);
 }
+
+.icon-list {
+  flex-wrap: wrap;
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.btn-icon {
+  margin: 0.5rem;
+}

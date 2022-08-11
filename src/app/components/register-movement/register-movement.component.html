@@ -3,8 +3,7 @@
     <button mat-icon-button (click)="exit()">
       <mat-icon>keyboard_backspace</mat-icon>
     </button>
-    <mat-form-field appearance="fill">
-      <mat-label>Favorite food</mat-label>
+    <mat-form-field >
       <mat-select formControlName="type">
         <mat-option [value]="categoryType.expense">
           {{categoryType.expense}}
@@ -18,33 +17,31 @@
       <mat-icon>home</mat-icon>
     </button>
   </mat-toolbar>
-  <div class="icon-list">
-    <button class="btn-icon" mat-mini-fab (click)="selectedIcon(category)"
+  <mat-card>
+    <div class="icon-list">
+      <button class="btn-icon" mat-mini-fab (click)="selectedIcon(category)"
         *ngFor="let category of currentCategories"
         [color]="category.icon === formGroup.get('icon')?.value ? 'primary': ''">
-      <i class="material-icons-outlined">{{category.icon}}</i>
-    </button>
-  </div>
-  <ng-container *ngIf="formGroup.get('icon')?.value">
-    <mat-form-field appearance="fill">
-      <!-- <mat-label>Telephone</mat-label> -->
-      <span matPrefix>
-        <mat-icon class="mat-18">{{formGroup.get('icon')?.value}}</mat-icon>
-      </span>
-      <input matInput type="text" formControlName="memorandum" placeholder="Memorándum">
-    </mat-form-field>
-    <span>
-      <mat-form-field appearance="fill">
-        <!-- <mat-label>First name</mat-label> -->
-        <input matInput type="number" formControlName="amount">
+        <i class="material-icons-outlined">{{category.icon}}</i>
+      </button>
+    </div>
+  </mat-card>
+  <mat-card *ngIf="formGroup.get('icon')?.value">
+    <mat-card-content>
+      <mat-form-field appearance="fill" class="w-35">
+        <span matPrefix>
+          <mat-icon class="mat-18">{{formGroup.get('icon')?.value}}</mat-icon>
+        </span>
+        <input matInput type="text" formControlName="memorandum" placeholder="Memorándum">
       </mat-form-field>
-      <mat-form-field appearance="fill">
-        <!-- <mat-label>Choose a date</mat-label> -->
-        <input matInput [matDatepicker]="picker" formControlName="date">
-        <mat-hint>MM/DD/YYYY</mat-hint>
+      <mat-form-field appearance="fill" class="w-20">
+        <input matInput type="number" formControlName="amount" placeholder="Amount">
+      </mat-form-field>
+      <mat-form-field appearance="fill" class="w-32">
+        <input matInput [matDatepicker]="picker" formControlName="date" placeholder="Date">
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
       </mat-form-field>
-    </span>
-  </ng-container>
+    </mat-card-content>
+  </mat-card>
 </form>

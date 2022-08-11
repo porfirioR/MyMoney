@@ -31,7 +31,7 @@ export class RegisterMovementComponent implements OnInit {
           categoryId: new FormControl('', Validators.required),
           memorandum: new FormControl(''),
           date: new FormControl(''),
-          amount: new FormControl(0, [Validators.required, Validators.min(0), Validators.minLength(1)])
+          amount: new FormControl('', [Validators.required, Validators.min(0), Validators.minLength(1)])
         })
         this.formGroup.controls['type'].valueChanges.subscribe({
           next: (value) => {
