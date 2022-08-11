@@ -36,6 +36,7 @@ import { CategoryRowComponent } from './components/category-row/category-row.com
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { NewCategoryComponent } from './components/new-category/new-category.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { RegisterMovementComponent } from './components/register-movement/register-movement.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +47,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     CategoryConfigurationComponent,
     CategoryRowComponent,
     NewCategoryComponent,
-    
+    RegisterMovementComponent
   ],
   imports: [
     BrowserModule,

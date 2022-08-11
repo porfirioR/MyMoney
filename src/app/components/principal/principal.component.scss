@@ -1,11 +1,33 @@
 .mat-card {
   margin: 1.5rem;
 }
+
 .amount {
   display: flex;
   justify-content: space-around;
 }
+
 .mat-toolbar {
   display: flex;
   justify-content: space-between;
+}
+
+.mat-fab.mat-accent {
+  color: #979797;
+}
+
+.mat-flat-button.mat-accent {
+  background-color: #ffd740c9;
+}
+
+.mat-sidenav-content {
+  min-height: 100%;
+}
+
+.btn-add {
+  position: fixed;
+  width: 60px;
+  height: 60px;
+  bottom: 40px;
+  right: 40px;
 }

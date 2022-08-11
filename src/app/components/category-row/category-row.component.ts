@@ -27,7 +27,4 @@ export class CategoryRowComponent implements OnInit {
     })
   }
 
-  protected reorderCategory = () => {
-
-  }
 }

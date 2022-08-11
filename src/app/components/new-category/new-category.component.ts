@@ -32,8 +32,10 @@ export class NewCategoryComponent implements OnInit {
         IconType.Shipping
       ]),
       new NewCategoryGroupModel(CategoryGroupIconType.Shopping, [
-        IconType.ShoppingCart, IconType.Mall, IconType.CreditCard, IconType.Offer, IconType.Monetization,
-        IconType.Store, IconType.Savings, IconType.Receipt, IconType.CurrencyExchange, IconType.Luggage
+        IconType.ShoppingCart, IconType.Mall, IconType.CreditCard, IconType.Offer,
+        IconType.Monetization, IconType.Store, IconType.Savings, IconType.Receipt,
+        IconType.CurrencyExchange, IconType.Luggage, IconType.Payment, IconType.Loyalty,
+        IconType.Wallet, IconType.BalanceWallet
       ]),
       new NewCategoryGroupModel(CategoryGroupIconType.Entertainment, [
         IconType.Movie, IconType.Casino, IconType.Pool, IconType.Golf, IconType.Fitness,
@@ -51,7 +53,7 @@ export class NewCategoryComponent implements OnInit {
       new NewCategoryGroupModel(CategoryGroupIconType.Family, [
         IconType.Marry, IconType.Child, IconType.Baby, IconType.Pregnant,
         IconType.Diversity, IconType.People, IconType.Spa, IconType.Hotel,
-        IconType.HotTub, IconType.Florist, IconType.Old, IconType.OldWoman,
+        IconType.Home, IconType.Florist, IconType.Old, IconType.OldWoman,
         IconType.Man, IconType.Woman, IconType.Transgender
       ]),
       new NewCategoryGroupModel(CategoryGroupIconType.Electronic, [
@@ -59,12 +61,12 @@ export class NewCategoryComponent implements OnInit {
         IconType.Camera, IconType.Sync, IconType.Wifi, IconType.Sms,
         IconType.Sd, IconType.Power, IconType.Phone, IconType.Bluetooth,
         IconType.Post, IconType.Phone2, IconType.Encryption, IconType.Security,
-        IconType.Rotate, IconType.Headphones, IconType.PhoneAndroid
+        IconType.Rotate, IconType.Headphones, IconType.PhoneAndroid, IconType.Keyboard
       ]),
       new NewCategoryGroupModel(CategoryGroupIconType.Education, [
-        IconType.School, IconType.City, IconType.Library, 
+        IconType.School, IconType.City, IconType.Library,
         IconType.Book, IconType.Poll, IconType.Business, IconType.Inclusive,
-        IconType.Pdf, IconType.Attach_file
+        IconType.Pdf, IconType.Attach_file, IconType.Calculate
       ]),
     ]
   )

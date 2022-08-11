@@ -5,6 +5,7 @@ import { CategoryType } from '../../enums/category-type.enum'
 import { CategoryModel } from '../../models/category.model'
 import { CategoryService } from '../../services/category.service'
 import { take } from 'rxjs';
+import { HelperService } from 'src/app/services/helper.service'
 
 @Component({
   selector: 'app-category-configuration',
@@ -22,8 +23,8 @@ export class CategoryConfigurationComponent implements OnInit {
   ngOnInit() {
     this.categoryService.getAll().pipe(take(1)).subscribe({
       next: (x) => {
-        this.expenseCategory = this.orderCategoryByActive(this.categoriesByType(x, CategoryType.expense))
-        this.incomeCategory = this.orderCategoryByActive(this.categoriesByType(x, CategoryType.income))
+        this.expenseCategory = this.orderCategoryByActive(HelperService.categoriesByType(x, CategoryType.expense))
+        this.incomeCategory = this.orderCategoryByActive(HelperService.categoriesByType(x, CategoryType.income))
       }, error: (e) => {
         throw e;
       }
@@ -35,9 +36,7 @@ export class CategoryConfigurationComponent implements OnInit {
     this.location.back()
   }
 
-  protected categoriesByType = (categories: CategoryModel[], type: CategoryType): CategoryModel[] => {
-    return categories.filter(x => x.type === type)
-  }
+
 
   protected tabChanged = (tabChangeEvent: MatTabChangeEvent): void => {
     this.currentTap = tabChangeEvent.tab.textLabel;

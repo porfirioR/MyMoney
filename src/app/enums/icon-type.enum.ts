@@ -6,7 +6,7 @@ export enum IconType {
   Smoking = 'smoking_rooms',
   Pool = 'pool',
   Kitchen = 'kitchen',
-  HotTub = 'hot_tub',
+  Home = 'home',
   Golf = 'golf_course',
   Coffee = 'free_breakfast',
   Fitness = 'fitness_center',
@@ -97,6 +97,10 @@ export enum IconType {
   Flag = 'flag',
   Woman = 'woman',
   Man = 'man',
-  Transgender = 'transgender'
+  Transgender = 'transgender',
+  Loyalty = 'loyalty',
+  Wallet = 'wallet',
+  BalanceWallet = 'account_balance_wallet',
+  Calculate = 'calculate'
 
 }
