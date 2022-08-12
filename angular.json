@@ -109,6 +109,16 @@
             ],
             "scripts": []
           }
+        },
+        "deploy": {
+          "builder": "@angular/fire:deploy",
+          "options": {
+            "prerender": false,
+            "ssr": false,
+            "browserTarget": "MyMoney:build:production",
+            "firebaseProject": "mymoney-993366",
+            "firebaseHostingSite": "mymoney-993366"
+          }
         }
       }
     }

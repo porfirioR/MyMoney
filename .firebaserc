@@ -1,0 +1,14 @@
+{
+  "projects": {
+    "default": "mymoney-993366"
+  },
+  "targets": {
+    "mymoney-993366": {
+      "hosting": {
+        "MyMoney": [
+          "mymoney-993366"
+        ]
+      }
+    }
+  }
+}

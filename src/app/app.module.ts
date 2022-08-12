@@ -37,6 +37,9 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { NewCategoryComponent } from './components/new-category/new-category.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RegisterMovementComponent } from './components/register-movement/register-movement.component';
+import { initializeApp,provideFirebaseApp } from '@angular/fire/app';
+import { provideAuth,getAuth } from '@angular/fire/auth';
+import { provideFirestore,getFirestore } from '@angular/fire/firestore';
 
 @NgModule({
   declarations: [
@@ -82,10 +85,9 @@ import { RegisterMovementComponent } from './components/register-movement/regist
     MatListModule,
     MatSnackBarModule,
 
-    AngularFireModule.initializeApp(environment.firebaseConfig),
-    AngularFirestoreModule, // firestore
-    AngularFireAuthModule, // auth
-    AngularFireStorageModule, // storage
+    provideFirebaseApp(() => initializeApp(environment.firebase)),
+    provideAuth(() => getAuth()),
+    provideFirestore(() => getFirestore()), // storage
   ],
   providers: [],
   bootstrap: [AppComponent],
