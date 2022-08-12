@@ -14,9 +14,17 @@ import { HelperService } from '../../services/helper.service';
 })
 export class RegisterMovementComponent implements OnInit {
   protected categoryType = CategoryType
-  protected formGroup!: FormGroup
-  private categoryList!: CategoryModel[]
+  protected formGroup: FormGroup = new FormGroup( {
+    type: new FormControl(this.categoryType.expense),
+    icon: new FormControl('', Validators.required),
+    categoryId: new FormControl('', Validators.required),
+    memorandum: new FormControl(''),
+    date: new FormControl('', Validators.required),
+    amount: new FormControl('', [Validators.required, Validators.min(0), Validators.minLength(1)])
+  })
   protected currentCategories!: CategoryModel[]
+  protected loading = true
+  private categoryList!: CategoryModel[]
 
   constructor(private categoryService: CategoryService, protected location: Location) { }
 
@@ -25,14 +33,6 @@ export class RegisterMovementComponent implements OnInit {
       next: (categories: CategoryModel[]) => {
         this.categoryList = categories.filter(x => x.active)
         this.currentCategories = HelperService.categoriesByType(this.categoryList, this.categoryType.expense)
-        this.formGroup = new FormGroup( {
-          type: new FormControl(this.categoryType.expense),
-          icon: new FormControl(''),
-          categoryId: new FormControl('', Validators.required),
-          memorandum: new FormControl(''),
-          date: new FormControl(''),
-          amount: new FormControl('', [Validators.required, Validators.min(0), Validators.minLength(1)])
-        })
         this.formGroup.controls['type'].valueChanges.subscribe({
           next: (value) => {
             this.currentCategories = HelperService.categoriesByType(this.categoryList, value)
@@ -43,6 +43,7 @@ export class RegisterMovementComponent implements OnInit {
             }
           }
         })
+        this.loading = false
       }, error: (e) => {
         throw e;
       }
@@ -57,4 +58,9 @@ export class RegisterMovementComponent implements OnInit {
   protected exit = () => {
     this.location.back()
   }
+
+  protected save = () => {
+
+  }
+
 }

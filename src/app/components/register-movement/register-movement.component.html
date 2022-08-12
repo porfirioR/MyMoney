@@ -1,4 +1,4 @@
-<form [formGroup]="formGroup">
+<form [formGroup]="formGroup" (submit)="save()">
   <mat-toolbar color="primary">
     <button mat-icon-button (click)="exit()">
       <mat-icon>keyboard_backspace</mat-icon>
@@ -17,31 +17,39 @@
       <mat-icon>home</mat-icon>
     </button>
   </mat-toolbar>
-  <mat-card>
+  <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+  <mat-card *ngIf="!loading">
     <div class="icon-list">
-      <button class="btn-icon" mat-mini-fab (click)="selectedIcon(category)"
-        *ngFor="let category of currentCategories"
-        [color]="category.icon === formGroup.get('icon')?.value ? 'primary': ''">
-        <i class="material-icons-outlined">{{category.icon}}</i>
-      </button>
+      <span class="btn-block" *ngFor="let category of currentCategories">
+        <button class="btn-icon" mat-fab (click)="selectedIcon(category)"
+          [color]="category.icon === formGroup.get('icon')?.value && category.id === formGroup.get('categoryId')?.value? 'primary': ''">
+          <i class="material-icons-outlined">{{category.icon}}</i>
+        </button>
+        <label>{{category.name}}</label>
+      </span>
     </div>
-  </mat-card>
-  <mat-card *ngIf="formGroup.get('icon')?.value">
     <mat-card-content>
-      <mat-form-field appearance="fill" class="w-35">
+      <mat-form-field appearance="fill" class="w-100">
         <span matPrefix>
-          <mat-icon class="mat-18">{{formGroup.get('icon')?.value}}</mat-icon>
+          <mat-icon>{{formGroup.get('icon')?.value}}</mat-icon>
         </span>
-        <input matInput type="text" formControlName="memorandum" placeholder="Memorándum">
+        <mat-label>Memorándum</mat-label>
+        <input matInput type="text" formControlName="memorandum">
       </mat-form-field>
-      <mat-form-field appearance="fill" class="w-20">
-        <input matInput type="number" formControlName="amount" placeholder="Amount">
+      <mat-form-field appearance="fill" class="w-100">
+        <mat-label>Amount</mat-label>
+        <input matInput type="number" formControlName="amount">
       </mat-form-field>
-      <mat-form-field appearance="fill" class="w-32">
-        <input matInput [matDatepicker]="picker" formControlName="date" placeholder="Date">
+      <mat-form-field appearance="fill" class="w-100">
+        <mat-label>Date</mat-label>
+        <input matInput [matDatepicker]="picker" formControlName="date">
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
       </mat-form-field>
     </mat-card-content>
+    <mat-card-footer>
+      <button mat-stroked-button color="primary" (click)="exit()">Cancel</button>
+      <button mat-stroked-button color="primary" type="submit" [disabled]="formGroup.invalid">Save</button>
+    </mat-card-footer>
   </mat-card>
 </form>

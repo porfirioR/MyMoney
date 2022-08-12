@@ -28,12 +28,21 @@
 .mat-form-field {
   margin-right: 0.5rem;
 }
-.w-35 {
-  width: 35%;
+
+.mat-card-footer {
+  display: flex;
+  justify-content: space-evenly;
+  padding-bottom: 1.34375em;
 }
-.w-20 {
-  width: 20%;
+
+.btn-block {
+  display: flex;
+  flex-direction: column;
+  margin: 5px 6px 5px 6px;
+  align-items: center;
+  font-size: 10px;
 }
-.w-32 {
-  width: 32%;
+
+.mat-card-content {
+  margin: 0.6rem;
 }
