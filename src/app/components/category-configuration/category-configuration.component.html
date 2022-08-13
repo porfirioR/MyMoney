@@ -7,7 +7,8 @@
     <mat-icon>add</mat-icon>
   </button>
 </mat-toolbar>
-<mat-tab-group mat-stretch-tabs mat-align-tabs="center" (selectedTabChange)="tabChanged($event)">
+<mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+<mat-tab-group mat-stretch-tabs mat-align-tabs="center" *ngIf="!loading" (selectedTabChange)="tabChanged($event)">
   <mat-tab [label]="categoryType.expense">
     <ng-container *ngFor="let item of expenseCategory">
       <app-category-row [category]="item" (updateCategoryEvent)="reorderCategory($event)"></app-category-row>

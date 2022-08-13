@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { Route, Router } from '@angular/router';
 import { take } from 'rxjs';
 import { YearMonthModel } from 'src/app/models/year-month-model';
+import { AuthService } from 'src/app/services/auth.service';
 import { CategoryService } from 'src/app/services/category.service';
 import { SelectYearMountComponent } from '../select-year-mount/select-year-mount.component';
 
@@ -16,7 +18,10 @@ export class PrincipalComponent implements OnInit {
   protected balance: number = 0
   protected yearMonth?: YearMonthModel
 
-  constructor(private dialog: MatDialog, private categoryService: CategoryService) {
+  constructor(private dialog: MatDialog,
+    private categoryService: CategoryService,
+    private auth: AuthService,
+    private router: Router) {
     const date = new Date();
     this.yearMonth = new YearMonthModel(date.getFullYear(), '', date.getMonth())
     categoryService.getAll().pipe(take(1)).subscribe({
@@ -41,5 +46,11 @@ export class PrincipalComponent implements OnInit {
         this.yearMonth = result;
       }
     })
+  }
+
+  protected logout = () => {
+    this.auth.logOut()
+    .then(() => this.router.navigate(['']))
+    .catch(error => console.log(error))
   }
 }

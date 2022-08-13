@@ -17,6 +17,7 @@ export class CategoryConfigurationComponent implements OnInit {
   protected incomeCategory!: CategoryModel[]
   protected currentTap!: string;
   protected categoryType = CategoryType;
+  protected loading = true
 
   constructor(private categoryService: CategoryService, protected location: Location) { }
 
@@ -25,6 +26,7 @@ export class CategoryConfigurationComponent implements OnInit {
       next: (x) => {
         this.expenseCategory = this.orderCategoryByActive(HelperService.categoriesByType(x, CategoryType.expense))
         this.incomeCategory = this.orderCategoryByActive(HelperService.categoriesByType(x, CategoryType.income))
+        this.loading = false
       }, error: (e) => {
         throw e;
       }

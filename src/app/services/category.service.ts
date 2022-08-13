@@ -1,39 +1,50 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore, DocumentChangeAction, DocumentReference } from '@angular/fire/compat/firestore';
-import { map, Observable } from 'rxjs';
+import {
+  addDoc,
+  collection,
+  collectionData,
+  CollectionReference,
+  deleteDoc,
+  doc,
+  DocumentReference,
+  Firestore,
+  orderBy,
+  Query,
+  query,
+  setDoc,
+} from '@angular/fire/firestore';
+import { Observable } from 'rxjs';
 import { CollectionType } from '../enums/collection-type.enum';
 import { CategoryModel } from '../models/category.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CategoryService {
   private categories: CollectionType = CollectionType.Categories;
 
-constructor(private readonly db: AngularFirestore) { }
+  constructor(private readonly firestore: Firestore) {}
 
   public getAll = (): Observable<CategoryModel[]> => {
-    return this.db.collection<CategoryModel>(this.categories).snapshotChanges().pipe(map((x: DocumentChangeAction<CategoryModel>[]) => {
-      const categoryList = x.map(y => {
-        const category = y.payload.doc.data() as CategoryModel
-        category.id = y.payload.doc.id
-        return category
-      })
-      return categoryList.sort((a, b) => a.type.localeCompare(b.type))
-    }))
-  }
+    const ref = query(this.getReference(), orderBy('type'))
+    return collectionData<CategoryModel>(ref as Query<CategoryModel>, {idField: 'id'})
+  };
 
   public delete = (id: string): Promise<void> => {
-    return this.db.collection<CategoryModel>(this.categories).doc(id).delete()
-  }
+    const ref = doc(this.firestore, `${this.categories}/${id}`);
+    return deleteDoc(ref);
+  };
 
-  public create = (model: CategoryModel): Promise<DocumentReference<CategoryModel>> => {
-    return this.db.collection<CategoryModel>(this.categories).add(model)
-  }
+  public create = (model: CategoryModel): Promise<DocumentReference> => {
+    return addDoc(this.getReference(), model);
+  };
 
   public update = (model: CategoryModel): Promise<void> => {
-    return this.db.collection<CategoryModel>(this.categories).doc(model.id).set(model)
-  }
+    const ref = doc(this.firestore, `${this.categories}/${model.id}`);
+    return setDoc(ref, model);
+  };
 
+  private getReference = (): CollectionReference => {
+    return collection(this.firestore, this.categories);
+  };
 }
-

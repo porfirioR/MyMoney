@@ -25,10 +25,6 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatRippleModule } from '@angular/material/core';
 import { SelectYearMountComponent } from './components/select-year-mount/select-year-mount.component';
 import { MatDialogModule } from '@angular/material/dialog';
-import { AngularFireModule } from '@angular/fire/compat';
-import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
-import { AngularFireAuthModule } from '@angular/fire/compat/auth';
-import { AngularFireStorageModule } from '@angular/fire/compat/storage';
 import { SideNavComponent } from './components/side-nav/side-nav.component';
 import { MatListModule } from '@angular/material/list';
 import { CategoryConfigurationComponent } from './components/category-configuration/category-configuration.component';
@@ -40,6 +36,7 @@ import { RegisterMovementComponent } from './components/register-movement/regist
 import { initializeApp,provideFirebaseApp } from '@angular/fire/app';
 import { provideAuth,getAuth } from '@angular/fire/auth';
 import { provideFirestore,getFirestore } from '@angular/fire/firestore';
+import { LoginComponent } from './components/login/login.component';
 
 @NgModule({
   declarations: [
@@ -50,7 +47,8 @@ import { provideFirestore,getFirestore } from '@angular/fire/firestore';
     CategoryConfigurationComponent,
     CategoryRowComponent,
     NewCategoryComponent,
-    RegisterMovementComponent
+    RegisterMovementComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,

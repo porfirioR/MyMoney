@@ -4,11 +4,14 @@ import { CategoryConfigurationComponent } from './components/category-configurat
 import { NewCategoryComponent } from './components/new-category/new-category.component';
 import { PrincipalComponent } from './components/principal/principal.component';
 import { RegisterMovementComponent } from './components/register-movement/register-movement.component';
+import { canActivate, redirectUnauthorizedTo } from '@angular/fire/auth-guard'
+import { LoginComponent } from './components/login/login.component';
 
 const routes: Routes = [
   {
     path: '',
     component: PrincipalComponent,
+    ...canActivate( () => redirectUnauthorizedTo(['/login']))
   },
   {
     path: 'category',
@@ -21,6 +24,10 @@ const routes: Routes = [
   {
     path: 'register-movement',
     component: RegisterMovementComponent,
+  },
+  {
+    path: 'login',
+    component: LoginComponent,
   }
 ];
 
