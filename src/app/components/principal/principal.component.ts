@@ -26,6 +26,7 @@ export class PrincipalComponent implements OnInit {
   protected loading = true
   protected groupDateMovementList: GroupDateMovementModel[] = []
   protected categories: CategoryModel[] = []
+  protected messageSearch = 'Search'
 
   constructor(private dialog: MatDialog,
     private categoryService: CategoryService,
@@ -71,6 +72,7 @@ export class PrincipalComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result: YearMonthModel) => {
       if (result) {
         this.yearMonth = result;
+        this.messageSearch = this.yearMonth?.monthLabel ? `${this.yearMonth?.monthLabel} ${this.yearMonth.year}` : 'Search'
       }
     })
   }
