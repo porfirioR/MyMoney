@@ -1,0 +1,26 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  color: rgba(0,0,0,.54);
+  font-size: 12px;
+}
+
+.incomeTitle {
+  margin-right: 0.5rem;
+}
+
+.movement-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0.7rem 0 0.7rem 0;
+}
+
+.material-icons-outlined {
+  margin-right: 0.5rem;
+}
+
+.icon-memorandum {
+  display: flex;
+  align-items: center;
+}

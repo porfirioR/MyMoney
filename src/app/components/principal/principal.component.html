@@ -36,14 +36,14 @@
           <p>{{balance}}</p>
         </span>
       </span>
+    </mat-card>
+    <mat-card *ngFor="let groupDateMovement of groupDateMovementList" class="mat-card-movement">
+      <app-movement [groupDateMovement]="groupDateMovement" [categories]="categories"></app-movement>
+    </mat-card>
       <mat-card-footer>
         <button mat-fab class="btn-add" routerLink="/register-movement">
           <mat-icon>add</mat-icon>
         </button>
       </mat-card-footer>
-    </mat-card>
-    <mat-card *ngFor="let groupDateMovement of groupDateMovementList" class="mat-card-movement">
-      <app-movement [groupDateMovement]="groupDateMovement"></app-movement>
-    </mat-card>
   </mat-sidenav-content>
 </mat-sidenav-container>
