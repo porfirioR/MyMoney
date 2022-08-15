@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core'
 import { Location } from '@angular/common'
 import { MatTabChangeEvent } from '@angular/material/tabs'
+import { take } from 'rxjs';
 import { CategoryType } from '../../enums/category-type.enum'
 import { CategoryModel } from '../../models/category.model'
 import { CategoryService } from '../../services/category.service'
-import { take } from 'rxjs';
-import { HelperService } from 'src/app/services/helper.service'
+import { HelperService } from '../../services/helper.service'
 
 @Component({
   selector: 'app-category-configuration',
@@ -15,8 +15,8 @@ import { HelperService } from 'src/app/services/helper.service'
 export class CategoryConfigurationComponent implements OnInit {
   protected expenseCategory!: CategoryModel[]
   protected incomeCategory!: CategoryModel[]
-  protected currentTap!: string;
-  protected categoryType = CategoryType;
+  protected currentTap!: string
+  protected categoryType = CategoryType
   protected loading = true
 
   constructor(private categoryService: CategoryService, protected location: Location) { }

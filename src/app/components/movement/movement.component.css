@@ -1,0 +1,6 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  color: rgba(0,0,0,.54);
+  font-size: 14px;
+}

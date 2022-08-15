@@ -1,11 +1,15 @@
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { take } from 'rxjs';
+import { IconType } from '../../enums/icon-type.enum';
+import { MovementModel } from '../../models/movement.model';
 import { CategoryType } from '../../enums/category-type.enum';
 import { CategoryModel } from '../../models/category.model';
 import { CategoryService } from '../../services/category.service';
 import { HelperService } from '../../services/helper.service';
+import { MovementService } from '../../services/movement.service';
 
 @Component({
   selector: 'app-register-movement',
@@ -14,19 +18,25 @@ import { HelperService } from '../../services/helper.service';
 })
 export class RegisterMovementComponent implements OnInit {
   protected categoryType = CategoryType
-  protected formGroup: FormGroup = new FormGroup( {
-    type: new FormControl(this.categoryType.expense),
-    icon: new FormControl('', Validators.required),
-    categoryId: new FormControl('', Validators.required),
-    memorandum: new FormControl(''),
+  private movementId!: string
+  protected formGroup: FormGroup = new FormGroup({
+    id: new FormControl<string | ''>(''),
+    type: new FormControl<CategoryType>(this.categoryType.expense),
+    icon: new FormControl<IconType | ''>('', Validators.required),
+    categoryId: new FormControl<string>('', Validators.required),
+    memorandum: new FormControl<string>(''),
     date: new FormControl('', Validators.required),
     amount: new FormControl('', [Validators.required, Validators.min(0), Validators.minLength(1)])
   })
   protected currentCategories!: CategoryModel[]
   protected loading = true
+  protected saving = false
   private categoryList!: CategoryModel[]
 
-  constructor(private categoryService: CategoryService, protected location: Location) { }
+  constructor(private categoryService: CategoryService,
+    private readonly movementService: MovementService,
+    protected location: Location,
+    private readonly snackBar: MatSnackBar) { }
 
   ngOnInit() {
     this.categoryService.getAll().pipe(take(1)).subscribe({
@@ -45,6 +55,7 @@ export class RegisterMovementComponent implements OnInit {
         })
         this.loading = false
       }, error: (e) => {
+        this.loading = false
         throw e;
       }
     })
@@ -60,7 +71,16 @@ export class RegisterMovementComponent implements OnInit {
   }
 
   protected save = () => {
-
+    const request: MovementModel = this.formGroup.getRawValue()
+    request.date?.setHours(0, 0, 0, 0)
+    request.time = request.date?.getTime() as number
+    delete request.date
+    this.saving = true
+    this.movementService.create(request).then(() => {
+      this.saving = false
+      this.snackBar.open(`Movement was ${this.movementId ? 'updated' : 'created'}`, '', { duration: 3000 })
+      this.location.back()
+    }).catch((error) => console.log(error))
   }
 
 }

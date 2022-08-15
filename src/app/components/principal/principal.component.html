@@ -12,32 +12,38 @@
         {{yearMonth?.monthLabel ? yearMonth?.monthLabel : 'Search'}}
       </button>
     </mat-toolbar>
-    <mat-card class="amount">
-      <span matRipple [matRippleCentered]="true" [matRippleUnbounded]="true">
-        <label>
-          Ingresos
-        </label>
-        <p>{{income}}</p>
+    <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+    <mat-card class="mat-card-header">
+      <span class="amount-header">
+        <span matRipple [matRippleCentered]="true" [matRippleUnbounded]="true">
+          <label>
+            Ingresos
+          </label>
+          <p>{{income}}</p>
+        </span>
+        <hr>
+        <span matRipple [matRippleCentered]="true" [matRippleUnbounded]="true">
+          <label>
+            Gastos
+          </label>
+          <p>{{expenses}}</p>
+        </span>
+        <hr>
+        <span>
+          <label>
+            Equilibrio
+          </label>
+          <p>{{balance}}</p>
+        </span>
       </span>
-      <hr>
-      <span matRipple [matRippleCentered]="true" [matRippleUnbounded]="true">
-        <label>
-          Gastos
-        </label>
-        <p>{{expenses}}</p>
-      </span>
-      <hr>
-      <span>
-        <label>
-          Equilibrio
-        </label>
-        <p>{{balance}}</p>
-      </span>
+      <mat-card-footer>
+        <button mat-fab class="btn-add" routerLink="/register-movement">
+          <mat-icon>add</mat-icon>
+        </button>
+      </mat-card-footer>
     </mat-card>
-    <mat-card-footer>
-      <button mat-fab class="btn-add" routerLink="/register-movement">
-        <mat-icon>add</mat-icon>
-      </button>
-    </mat-card-footer>	
+    <mat-card *ngFor="let groupDateMovement of groupDateMovementList" class="mat-card-movement">
+      <app-movement [groupDateMovement]="groupDateMovement"></app-movement>
+    </mat-card>
   </mat-sidenav-content>
 </mat-sidenav-container>

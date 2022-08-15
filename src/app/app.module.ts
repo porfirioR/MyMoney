@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { LOCALE_ID, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -37,6 +37,12 @@ import { initializeApp,provideFirebaseApp } from '@angular/fire/app';
 import { provideAuth,getAuth } from '@angular/fire/auth';
 import { provideFirestore,getFirestore } from '@angular/fire/firestore';
 import { LoginComponent } from './components/login/login.component';
+import { MovementComponent } from './components/movement/movement.component';
+
+import localEs from '@angular/common/locales/es'
+import { registerLocaleData } from '@angular/common'
+registerLocaleData(localEs, 'es')
+
 
 @NgModule({
   declarations: [
@@ -48,7 +54,8 @@ import { LoginComponent } from './components/login/login.component';
     CategoryRowComponent,
     NewCategoryComponent,
     RegisterMovementComponent,
-    LoginComponent
+    LoginComponent,
+    MovementComponent
   ],
   imports: [
     BrowserModule,
@@ -87,7 +94,7 @@ import { LoginComponent } from './components/login/login.component';
     provideAuth(() => getAuth()),
     provideFirestore(() => getFirestore()), // storage
   ],
-  providers: [],
+  providers: [ { provide: LOCALE_ID, useValue: 'es' } ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

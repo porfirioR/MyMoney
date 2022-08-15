@@ -1,10 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Route, Router } from '@angular/router';
-import { take } from 'rxjs';
-import { YearMonthModel } from 'src/app/models/year-month-model';
-import { AuthService } from 'src/app/services/auth.service';
-import { CategoryService } from 'src/app/services/category.service';
+import { combineLatest, take } from 'rxjs';
+import { GroupDateMovementModel } from 'src/app/models/group-date-movement.model';
+import { CategoryType } from '../../enums/category-type.enum';
+import { MovementModel } from '../../models/movement.model';
+import { YearMonthModel } from '../../models/year-month-model';
+import { AuthService } from '../../services/auth.service';
+import { CategoryService } from '../../services/category.service';
+import { MovementService } from '../../services/movement.service';
 import { SelectYearMountComponent } from '../select-year-mount/select-year-mount.component';
 
 @Component({
@@ -17,23 +21,48 @@ export class PrincipalComponent implements OnInit {
   protected expenses: number = 0
   protected balance: number = 0
   protected yearMonth?: YearMonthModel
+  protected movements: MovementModel[] = []
+  protected loading = true
+  protected groupDateMovementList: GroupDateMovementModel[] = []
 
   constructor(private dialog: MatDialog,
     private categoryService: CategoryService,
-    private auth: AuthService,
+    private readonly movementService: MovementService,
     private router: Router) {
     const date = new Date();
     this.yearMonth = new YearMonthModel(date.getFullYear(), '', date.getMonth())
     categoryService.getAll().pipe(take(1)).subscribe({
       next: (x) => {
-        console.log(x);
       }, error: (e) => {
         throw e;
       }
     })
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    const expenses = this.movementService.getBySelectedMonth(CategoryType.expense, this.yearMonth?.month as number, this.yearMonth?.year as number)
+    const income = this.movementService.getBySelectedMonth(CategoryType.income, this.yearMonth?.month as number, this.yearMonth?.year as number)
+    combineLatest([expenses, income]).subscribe({
+      next: ([expenseMovement, incomeMovement]) => {
+        this.movements = expenseMovement.concat(incomeMovement)
+        this.movements.forEach(x => x.date = new Date(x.time))
+        this.movements = this.movements.sort((a, b) => a.time - b.time)
+        this.movements.forEach((movement: MovementModel) => {
+          const date = movement.date as Date
+          const dateMovement = this.groupDateMovementList.find(x => x.date.getTime() === date.getTime())
+          dateMovement ?
+            dateMovement.movements.push(movement) :
+            this.groupDateMovementList.push(new GroupDateMovementModel(date, [movement]))
+        })
+        console.log(this.groupDateMovementList)
+        
+        this.loading = false
+      }, error: (e) => {
+        this.loading = false
+        throw e;
+      }
+    })
+  }
 
   protected openBottomSheet = (): void => {
     const dialogRef = this.dialog.open(SelectYearMountComponent, {
@@ -46,11 +75,5 @@ export class PrincipalComponent implements OnInit {
         this.yearMonth = result;
       }
     })
-  }
-
-  protected logout = () => {
-    this.auth.logOut()
-    .then(() => this.router.navigate(['']))
-    .catch(error => console.log(error))
   }
 }
