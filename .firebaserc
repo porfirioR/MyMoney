@@ -1,6 +1,7 @@
 {
   "projects": {
-    "default": "mymoney-993366"
+    "default": "mymoney-993366",
+    "staging": "mymoney-993366"
   },
   "targets": {
     "mymoney-993366": {
@@ -10,5 +11,6 @@
         ]
       }
     }
-  }
+  },
+  "etags": {}
 }
