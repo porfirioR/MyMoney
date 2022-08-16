@@ -16,6 +16,9 @@
 .mat-toolbar {
   display: flex;
   justify-content: space-between;
+  position: fixed;
+  z-index: 1;
+  top: 0;
 }
 
 .mat-fab.mat-accent {
@@ -36,4 +39,8 @@
   height: 60px;
   bottom: 40px;
   right: 40px;
+}
+
+.mat-drawer-content {
+  display: unset;
 }

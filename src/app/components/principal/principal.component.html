@@ -19,31 +19,31 @@
           <label>
             Ingresos
           </label>
-          <p>{{income}}</p>
+          <p>{{income | number:'':'es'}}</p>
         </span>
         <hr>
         <span matRipple [matRippleCentered]="true" [matRippleUnbounded]="true">
           <label>
             Gastos
           </label>
-          <p>{{expenses}}</p>
+          <p>{{expenses | number:'':'es'}}</p>
         </span>
         <hr>
         <span>
           <label>
             Equilibrio
           </label>
-          <p>{{balance}}</p>
+          <p>{{balance | number:'':'es'}}</p>
         </span>
       </span>
     </mat-card>
     <mat-card *ngFor="let groupDateMovement of groupDateMovementList" class="mat-card-movement">
       <app-movement [groupDateMovement]="groupDateMovement" [categories]="categories"></app-movement>
     </mat-card>
-      <mat-card-footer>
-        <button mat-fab class="btn-add" routerLink="/register-movement">
-          <mat-icon>add</mat-icon>
-        </button>
-      </mat-card-footer>
+    <mat-card-footer>
+      <button mat-fab class="btn-add" routerLink="/register-movement">
+        <mat-icon>add</mat-icon>
+      </button>
+    </mat-card-footer>
   </mat-sidenav-content>
 </mat-sidenav-container>

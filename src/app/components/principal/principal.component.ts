@@ -48,13 +48,23 @@ export class PrincipalComponent implements OnInit {
         this.movements = this.movements.sort((a, b) => a.time - b.time)
         this.movements.forEach((movement: MovementModel) => {
           const date = movement.date as Date
-          const dateMovement = this.groupDateMovementList.find(x => x.date.getTime() === date.getTime())
-          dateMovement ?
-            dateMovement.movements.push(movement) :
-            this.groupDateMovementList.push(new GroupDateMovementModel(date, [movement]))
+          let dateMovement = this.groupDateMovementList.find(x => x.date.getTime() === date.getTime())
+          if (dateMovement) {
+            dateMovement.movements.push(movement)
+          } else {
+            dateMovement = new GroupDateMovementModel(date, [movement])
+            this.groupDateMovementList.push(dateMovement)
+          }
+          if(movement.type === CategoryType.income) {
+            dateMovement.income += movement.amount
+            this.income += movement.amount
+          } else {
+            dateMovement.expense += movement.amount
+            this.expenses += movement.amount
+          }
         })
         console.log(this.groupDateMovementList)
-        
+        this.balance = this.income - this.expenses
         this.loading = false
       }, error: (e) => {
         this.loading = false

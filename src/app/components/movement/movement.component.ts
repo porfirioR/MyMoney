@@ -22,7 +22,7 @@ export class MovementComponent implements OnInit {
     this.groupDateMovement.movements.forEach(x => x.categoryName = this.categories.find(y => y.id === x.categoryId)?.name as string)
   }
 
-  protected edit = () => { 
+  protected edit = () => {
 
-  } 
+  }
 }
