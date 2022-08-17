@@ -5,20 +5,11 @@
 }
 
 .mat-card-movement {
-  margin: 0.5rem 1rem 0.5rem 1rem;
+  margin: 0.5rem 1rem;
 }
 
 .amount-header {
   display: flex;
-  padding-bottom: 12px;
-}
-
-.mat-toolbar {
-  display: flex;
-  justify-content: space-between;
-  position: fixed;
-  z-index: 1;
-  top: 0;
 }
 
 .mat-fab.mat-accent {
@@ -43,4 +34,8 @@
 
 .mat-drawer-content {
   display: unset;
+}
+
+label ~ p {
+  margin-bottom: 6px;
 }

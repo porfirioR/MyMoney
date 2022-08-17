@@ -3,7 +3,7 @@
     <button mat-icon-button (click)="exit()">
       <mat-icon>keyboard_backspace</mat-icon>
     </button>
-    <mat-form-field >
+    <mat-form-field>
       <mat-select formControlName="type">
         <mat-option [value]="categoryType.expense">
           {{categoryType.expense}}
@@ -17,6 +17,7 @@
       <mat-icon>home</mat-icon>
     </button>
   </mat-toolbar>
+  <div class="header-height"></div>
   <mat-progress-bar mode="indeterminate" *ngIf="loading || saving"></mat-progress-bar>
   <mat-card *ngIf="!loading">
     <div class="icon-list">
@@ -49,7 +50,8 @@
     </mat-card-content>
     <mat-card-footer>
       <button mat-stroked-button color="primary" (click)="exit()">Cancel</button>
-      <button mat-stroked-button color="primary" type="submit" [disabled]="formGroup.invalid" (click)="save()">Save</button>
+      <button mat-stroked-button color="primary" type="submit" [disabled]="formGroup.invalid"
+        (click)="save()">Save</button>
     </mat-card-footer>
   </mat-card>
 </form>

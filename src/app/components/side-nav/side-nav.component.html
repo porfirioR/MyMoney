@@ -6,11 +6,8 @@
   </mat-list-item>
   <mat-divider></mat-divider>
   <div mat-subheader>Notes</div>
-  <!-- <mat-list-item *ngFor="let note of notes">
-    <div mat-line>{{note.name}}</div>
-    <div mat-line> {{note.updated | date}} </div>
-  </mat-list-item> -->
-  <button mat-icon-button (click)="logout()" color="primary">
-    <mat-icon>exit_to_app</mat-icon>
-  </button>
+  <mat-list-item (click)="logout()">
+    <mat-icon mat-list-icon color="primary">exit_to_app</mat-icon>
+    <span mat-line>Exit</span>
+  </mat-list-item>
 </mat-list>

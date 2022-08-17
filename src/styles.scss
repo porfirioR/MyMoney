@@ -6,3 +6,15 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .w-100 {
   width: 100%;
 }
+
+.header-height {
+  height: 56px;
+}
+
+.mat-toolbar {
+  display: flex;
+  justify-content: space-between;
+  position: fixed;
+  z-index: 5;
+  top: 0;
+}

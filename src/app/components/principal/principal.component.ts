@@ -1,13 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Route, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { combineLatest, take } from 'rxjs';
 import { CategoryModel } from 'src/app/models/category.model';
 import { GroupDateMovementModel } from 'src/app/models/group-date-movement.model';
 import { CategoryType } from '../../enums/category-type.enum';
 import { MovementModel } from '../../models/movement.model';
 import { YearMonthModel } from '../../models/year-month-model';
-import { AuthService } from '../../services/auth.service';
 import { CategoryService } from '../../services/category.service';
 import { MovementService } from '../../services/movement.service';
 import { SelectYearMountComponent } from '../select-year-mount/select-year-mount.component';

@@ -17,8 +17,8 @@ export class MovementComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    this.totalIncome = this.groupDateMovement.movements.filter(x => x.type === CategoryType.income).map(x => x.amount).reduce((partialSum, a) => partialSum + a, 0)
-    this.totalExpense = this.groupDateMovement.movements.filter(x => x.type === CategoryType.expense).map(x => x.amount).reduce((partialSum, a) => partialSum + a, 0)
+    this.totalIncome = this.groupDateMovement.income
+    this.totalExpense = this.groupDateMovement.expense
     this.groupDateMovement.movements.forEach(x => x.categoryName = this.categories.find(y => y.id === x.categoryId)?.name as string)
   }
 
