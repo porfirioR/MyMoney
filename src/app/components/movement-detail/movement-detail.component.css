@@ -1,0 +1,12 @@
+.mat-card {
+  margin: 0.5rem 1rem;
+}
+
+.top-block {
+  margin-top: 62px;
+}
+
+.mat-card-header {
+  display: flex;
+  justify-content: space-between;
+}

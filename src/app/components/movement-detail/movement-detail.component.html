@@ -7,3 +7,28 @@
     <mat-icon>delete</mat-icon>
   </button>
 </mat-toolbar>
+<div class="top-block"></div>
+<mat-card *ngIf="movement">
+  <mat-card-header>
+    <button mat-icon-button>
+      <mat-icon>{{movement.icon}}</mat-icon>
+    </button>
+    <span>{{movement.categoryName}}</span>
+    <button mat-icon-button (click)="editMovement()">
+      <mat-icon>edit</mat-icon>
+    </button>
+  </mat-card-header>
+  <mat-card-content>
+    <p>
+      <label>Memorandum</label>
+      <span>{{movement.memorandum}}</span>
+    </p>
+    <p>
+      <label>Category</label>
+      <span>{{movement.categoryName}}</span>
+    </p>
+  </mat-card-content>
+  <mat-card-footer>
+    Footer
+  </mat-card-footer>
+</mat-card>

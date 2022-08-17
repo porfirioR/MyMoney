@@ -13,11 +13,13 @@ export class MovementDetailComponent implements OnInit {
   constructor(private readonly location: Location, private readonly router: Router) {
 
     this.movement = this.router.getCurrentNavigation()?.extras.state as MovementModel
+    if (!this.movement) {
+      this.location.back()
+    }
    }
 
   ngOnInit() {
     console.log(this.movement)
-    
   }
 
   protected exit = () => {
@@ -25,6 +27,10 @@ export class MovementDetailComponent implements OnInit {
   }
 
   protected deleteMovement = () => {
+
+  }
+
+  protected editMovement = () => {
 
   }
 }
