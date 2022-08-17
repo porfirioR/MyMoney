@@ -41,6 +41,7 @@ import { MovementComponent } from './components/movement/movement.component';
 
 import localEs from '@angular/common/locales/es'
 import { registerLocaleData } from '@angular/common'
+import { MovementDetailComponent } from './components/movement-detail/movement-detail.component';
 registerLocaleData(localEs, 'es')
 
 
@@ -55,7 +56,8 @@ registerLocaleData(localEs, 'es')
     NewCategoryComponent,
     RegisterMovementComponent,
     LoginComponent,
-    MovementComponent
+    MovementComponent,
+    MovementDetailComponent
   ],
   imports: [
     BrowserModule,

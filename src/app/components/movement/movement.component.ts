@@ -1,4 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { MovementModel } from 'src/app/models/movement.model';
 import { CategoryType } from '../../enums/category-type.enum';
 import { CategoryModel } from '../../models/category.model';
 import { GroupDateMovementModel } from '../../models/group-date-movement.model';
@@ -14,7 +16,7 @@ export class MovementComponent implements OnInit {
   protected totalIncome!: number
   protected totalExpense!: number
   public categoryType!: CategoryType
-  constructor() { }
+  constructor(private readonly router : Router) { }
 
   ngOnInit() {
     this.totalIncome = this.groupDateMovement.income
@@ -22,7 +24,7 @@ export class MovementComponent implements OnInit {
     this.groupDateMovement.movements.forEach(x => x.categoryName = this.categories.find(y => y.id === x.categoryId)?.name as string)
   }
 
-  protected edit = () => {
-
+  protected goToDetails = (movement: MovementModel) => {
+    this.router.navigateByUrl('/details', { state: movement})
   }
 }

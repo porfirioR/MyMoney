@@ -6,6 +6,7 @@ import { PrincipalComponent } from './components/principal/principal.component';
 import { RegisterMovementComponent } from './components/register-movement/register-movement.component';
 import { canActivate, redirectUnauthorizedTo } from '@angular/fire/auth-guard'
 import { LoginComponent } from './components/login/login.component';
+import { MovementDetailComponent } from './components/movement-detail/movement-detail.component';
 
 const routes: Routes = [
   {
@@ -28,6 +29,10 @@ const routes: Routes = [
   {
     path: 'login',
     component: LoginComponent,
+  },
+  {
+    path: 'details',
+    component: MovementDetailComponent
   }
 ];
 

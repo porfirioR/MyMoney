@@ -44,7 +44,7 @@ export class PrincipalComponent implements OnInit {
         this.categories = categories
         this.movements = expenseMovement.concat(incomeMovement)
         this.movements.forEach(x => x.date = new Date(x.time))
-        this.movements = this.movements.sort((a, b) => a.time - b.time)
+        this.movements = this.movements.sort((a, b) => b.time - a.time)
         this.movements.forEach((movement: MovementModel) => {
           const date = movement.date as Date
           let dateMovement = this.groupDateMovementList.find(x => x.date.getTime() === date.getTime())

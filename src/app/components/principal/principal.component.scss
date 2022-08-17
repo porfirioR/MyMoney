@@ -29,7 +29,7 @@
   width: 60px;
   height: 60px;
   bottom: 40px;
-  right: 40px;
+  right: 18px;
 }
 
 .mat-drawer-content {
@@ -38,4 +38,8 @@
 
 label ~ p {
   margin-bottom: 6px;
+}
+
+.end-principal {
+  margin-top: 24px;
 }

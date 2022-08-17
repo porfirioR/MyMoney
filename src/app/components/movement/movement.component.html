@@ -14,7 +14,7 @@
 <mat-divider></mat-divider>
 <mat-card-content>
   <span mat-button *ngFor="let movement of groupDateMovement.movements">
-    <span class="movement-row">
+    <span class="movement-row" [routerLink]="['details']" [state]="movement">
       <span class="icon-memorandum">
         <i class="material-icons-outlined">{{movement.icon}}</i>
         <span>{{movement.memorandum ? movement.memorandum : movement.categoryName}}</span>
