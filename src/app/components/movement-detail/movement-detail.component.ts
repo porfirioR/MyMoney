@@ -10,13 +10,13 @@ import { MovementModel } from '../../models/movement.model';
 })
 export class MovementDetailComponent implements OnInit {
   protected movement!: MovementModel
-  constructor(private readonly location: Location, private readonly router: Router) {
 
+  constructor(private readonly location: Location, private readonly router: Router) {
     this.movement = this.router.getCurrentNavigation()?.extras.state as MovementModel
     if (!this.movement) {
       this.location.back()
     }
-   }
+  }
 
   ngOnInit() {
     console.log(this.movement)

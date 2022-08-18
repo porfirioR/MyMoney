@@ -13,7 +13,7 @@
       <mat-icon>{{movement.icon}}</mat-icon>
     </button>
     <span>{{movement.categoryName}}</span>
-    <button mat-icon-button (click)="editMovement()">
+    <button mat-icon-button [routerLink]="['movement-update', movement.id]">
       <mat-icon>edit</mat-icon>
     </button>
   </span>

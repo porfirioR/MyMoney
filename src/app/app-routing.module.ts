@@ -12,7 +12,7 @@ const routes: Routes = [
   {
     path: '',
     component: PrincipalComponent,
-    ...canActivate( () => redirectUnauthorizedTo(['/login']))
+    ...canActivate( () => redirectUnauthorizedTo(['/login'])),
   },
   {
     path: 'category',
@@ -27,12 +27,17 @@ const routes: Routes = [
     component: RegisterMovementComponent,
   },
   {
-    path: 'login',
-    component: LoginComponent,
-  },
-  {
     path: 'details',
     component: MovementDetailComponent
+  },
+  {
+    path: 'details/movement-update/:id',
+    component: RegisterMovementComponent
+
+  },
+  {
+    path: 'login',
+    component: LoginComponent,
   }
 ];
 

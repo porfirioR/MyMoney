@@ -62,7 +62,7 @@ export class PrincipalComponent implements OnInit {
             this.expenses += movement.amount
           }
         })
-        console.log(this.groupDateMovementList)
+        this.movementService.setMovementList(this.movements)
         this.balance = this.income - this.expenses
         this.loading = false
       }, error: (e) => {
