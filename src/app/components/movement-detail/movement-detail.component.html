@@ -7,9 +7,8 @@
     <mat-icon>delete</mat-icon>
   </button>
 </mat-toolbar>
-<div class="top-block"></div>
 <mat-card *ngIf="movement">
-  <mat-card-header>
+  <span class="mat-card-header">
     <button mat-icon-button>
       <mat-icon>{{movement.icon}}</mat-icon>
     </button>
@@ -17,18 +16,25 @@
     <button mat-icon-button (click)="editMovement()">
       <mat-icon>edit</mat-icon>
     </button>
-  </mat-card-header>
+  </span>
+</mat-card>
+<mat-card *ngIf="movement">
   <mat-card-content>
     <p>
-      <label>Memorandum</label>
+      <label>Memorandum: </label>
       <span>{{movement.memorandum}}</span>
     </p>
     <p>
-      <label>Category</label>
-      <span>{{movement.categoryName}}</span>
+      <label>Category: </label>
+      <span>{{movement.type}}</span>
+    </p>
+    <p>
+      <label>Date: </label>
+      <span>{{movement.date | date: 'dd/MM/YYY E'}}</span>
+    </p>
+    <p>
+      <label>Amount: </label>
+      <span>{{movement.amount | number:'':'es'}}</span>
     </p>
   </mat-card-content>
-  <mat-card-footer>
-    Footer
-  </mat-card-footer>
 </mat-card>

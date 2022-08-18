@@ -1,0 +1,32 @@
+.mat-card {
+  margin: 0.5rem 1rem;
+}
+
+.mat-toolbar-block {
+  margin-top: 62px;
+}
+
+.mat-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  & > span {
+    font-weight: bold;
+    font-size: 20px;
+  }
+}
+
+.mat-card-content{
+  & > p {
+    margin-top: 12px;
+    > label {
+      font-weight: bold;
+    }
+  }
+}
+
+.mat-toolbar {
+  position: unset;
+  z-index: unset;
+  top: unset;
+}

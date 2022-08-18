@@ -1,12 +1,12 @@
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { MovementModel } from 'src/app/models/movement.model';
+import { Router } from '@angular/router';
+import { MovementModel } from '../../models/movement.model';
 
 @Component({
   selector: 'app-movement-detail',
   templateUrl: './movement-detail.component.html',
-  styleUrls: ['./movement-detail.component.css']
+  styleUrls: ['./movement-detail.component.scss']
 })
 export class MovementDetailComponent implements OnInit {
   protected movement!: MovementModel

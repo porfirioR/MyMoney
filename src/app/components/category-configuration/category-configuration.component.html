@@ -7,6 +7,7 @@
     <mat-icon>add</mat-icon>
   </button>
 </mat-toolbar>
+<div class="mat-toolbar-block"></div>
 <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
 <mat-tab-group mat-stretch-tabs mat-align-tabs="center" *ngIf="!loading" (selectedTabChange)="tabChanged($event)">
   <mat-tab [label]="categoryType.expense">
