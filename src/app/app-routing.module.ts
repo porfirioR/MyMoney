@@ -27,13 +27,12 @@ const routes: Routes = [
     component: RegisterMovementComponent,
   },
   {
-    path: 'details',
-    component: MovementDetailComponent
+    path: 'details/:id',
+    component: MovementDetailComponent,
   },
   {
-    path: 'details/movement-update/:id',
+    path: 'movement-update/:id',
     component: RegisterMovementComponent
-
   },
   {
     path: 'login',
