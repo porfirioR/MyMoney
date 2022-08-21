@@ -42,6 +42,7 @@ import { MovementComponent } from './components/movement/movement.component';
 import localEs from '@angular/common/locales/es'
 import { registerLocaleData } from '@angular/common'
 import { MovementDetailComponent } from './components/movement-detail/movement-detail.component';
+import { DialogDeleteComponent } from './components/dialog-delete/dialog-delete.component';
 registerLocaleData(localEs, 'es')
 
 
@@ -57,7 +58,8 @@ registerLocaleData(localEs, 'es')
     RegisterMovementComponent,
     LoginComponent,
     MovementComponent,
-    MovementDetailComponent
+    MovementDetailComponent,
+    DialogDeleteComponent
   ],
   imports: [
     BrowserModule,

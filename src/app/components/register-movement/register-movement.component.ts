@@ -86,7 +86,7 @@ export class RegisterMovementComponent implements OnInit {
     this.saving = true
     let request$: Promise<void> | Promise<DocumentReference<DocumentData>> | Promise<[DocumentReference<DocumentData>, void]>
     if (this.movementId && request.type !== this.updateMovement?.type) {
-      request$ = Promise.all([this.movementService.create(request), this.movementService.delete(this.movementId, request.type)])
+      request$ = Promise.all([this.movementService.create(request), this.movementService.delete(this.movementId, this.updateMovement?.type as CategoryType)])
     } else if(this.movementId) {
       request.id = this.movementId
       request$ = this.movementService.update(request)

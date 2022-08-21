@@ -12,8 +12,8 @@
         {{yearMonth?.monthLabel ? yearMonth?.monthLabel : 'Search'}}
       </button>
     </mat-toolbar>
-    <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
     <div class="header-height"></div>
+    <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
     <mat-card class="mat-card-header">
       <span class="amount-header">
         <span matRipple [matRippleCentered]="true" [matRippleUnbounded]="true">
@@ -38,9 +38,11 @@
         </span>
       </span>
     </mat-card>
-    <mat-card *ngFor="let groupDateMovement of groupDateMovementList" class="mat-card-movement">
-      <app-movement [groupDateMovement]="groupDateMovement" [categories]="categories"></app-movement>
-    </mat-card>
+    <ng-container *ngIf="!loading">
+      <mat-card *ngFor="let groupDateMovement of groupDateMovementList" class="mat-card-movement">
+        <app-movement [groupDateMovement]="groupDateMovement" [categories]="categories"></app-movement>
+      </mat-card>
+    </ng-container>
     <div class="end-principal"></div>
     <mat-card-footer>
       <button mat-fab class="btn-add" routerLink="/register-movement">
