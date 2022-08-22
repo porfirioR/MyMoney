@@ -14,16 +14,17 @@ export class SelectYearMountComponent implements OnInit {
   ]
   protected formGroup: FormGroup = new FormGroup({})
 
-  constructor(public dialogRef: MatDialogRef<SelectYearMountComponent>,
-    @Inject(MAT_DIALOG_DATA) private yearMonth: YearMonthModel) {
-      const currentYear = this.yearMonth.year
-      const currentMonth = this.yearMonth.monthLabel ? this.yearMonth.monthLabel : this.months[this.yearMonth.month] as string
-      this.formGroup = new FormGroup( {
-        year: new FormControl(currentYear),
-        month: new FormControl(currentMonth),
-        selectedYear: new FormControl(currentYear),
-        selectedMonth: new FormControl(currentMonth)
-      })
+  constructor(
+      private dialogRef: MatDialogRef<SelectYearMountComponent>,
+      @Inject(MAT_DIALOG_DATA) private yearMonth: YearMonthModel) {
+    const currentYear = this.yearMonth.year
+    const currentMonth = this.yearMonth.monthLabel ? this.yearMonth.monthLabel : this.months[this.yearMonth.month] as string
+    this.formGroup = new FormGroup( {
+      year: new FormControl(currentYear),
+      month: new FormControl(currentMonth),
+      selectedYear: new FormControl(currentYear),
+      selectedMonth: new FormControl(currentMonth)
+    })
   }
 
   ngOnInit() {
