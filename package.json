@@ -8,7 +8,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "pwa": "ng build --configuration=production && http-server -p 8080 -c-1 dist/my-money/",
-    "genProd": "ng build --configuration=production"
+    "prod": "ng build --configuration=production"
   },
   "private": true,
   "dependencies": {
