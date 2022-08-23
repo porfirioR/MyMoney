@@ -15,6 +15,9 @@ export class CategoryRowComponent implements OnInit {
   constructor(private readonly categoryService: CategoryService, private readonly snackBar: MatSnackBar) { }
 
   ngOnInit() {
+    if (this.category && this.category.owner !== 'system') {
+      this.category.name += ' (personalizado)'
+    }
   }
 
   protected deactivateReactivateCategory = (active: boolean) => {

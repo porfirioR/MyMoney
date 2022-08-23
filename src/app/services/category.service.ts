@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
-import { addDoc, collection, collectionData, CollectionReference, deleteDoc, doc, DocumentReference, Firestore, orderBy, Query, query, setDoc } from '@angular/fire/firestore';
-import { Observable } from 'rxjs';
+import { getAuth, onAuthStateChanged } from '@angular/fire/auth';
+import { addDoc, collection, collectionData, CollectionReference, deleteDoc, doc, DocumentReference, Firestore, orderBy, Query, query, setDoc, where } from '@angular/fire/firestore';
+import { Router } from '@angular/router';
+import { Observable, tap } from 'rxjs';
 import { CollectionType } from '../enums/collection-type.enum';
 import { CategoryModel } from '../models/category.model';
 
@@ -9,11 +11,20 @@ import { CategoryModel } from '../models/category.model';
 })
 export class CategoryService {
   private categories: CollectionType = CollectionType.Categories
+  private email!: string
 
-  constructor(private readonly firestore: Firestore) {}
+  constructor(private readonly firestore: Firestore, private readonly router: Router) {
+    onAuthStateChanged(getAuth(), (user) => {
+      if (user) {
+        this.email = user.email as string
+      } else {
+        this.router.navigate([''])
+      }
+    })
+  }
 
   public getAll = (): Observable<CategoryModel[]> => {
-    const ref = query(this.getReference(), orderBy('type'))
+    const ref = query(this.getReference(), where('owner', 'in', ['system', this.email]), orderBy('type'))
     return collectionData<CategoryModel>(ref as Query<CategoryModel>, { idField: 'id' })
   }
 
@@ -23,6 +34,7 @@ export class CategoryService {
   }
 
   public create = (model: CategoryModel): Promise<DocumentReference> => {
+    model.owner = this.email
     return addDoc(this.getReference(), model)
   }
 

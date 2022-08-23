@@ -7,4 +7,6 @@ export class CategoryModel {
   name!: string
   type!: CategoryType
   icon!: IconType
+  color!: string
+  owner!: string
 }

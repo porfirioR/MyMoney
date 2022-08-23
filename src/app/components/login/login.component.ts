@@ -18,10 +18,7 @@ export class LoginComponent implements OnInit {
   private login = () => {
     this.authService
       .loginWithGoogle()
-      .then((x: UserCredential) => {
-        console.log(x)
-        this.router.navigate([''])
-      })
-      .catch((x) => console.log(x));
+      .then((x: UserCredential) => this.router.navigate(['']))
+      .catch((x) => console.log(x))
   };
 }

@@ -10,6 +10,7 @@ export class HelperService {
 constructor() { }
 
 public static categoriesByType = (categories: CategoryModel[], type: CategoryType): CategoryModel[] => {
+  categories.sort((a, b) => b.owner.localeCompare(a.owner))
   return categories.filter(x => x.type === type)
 }
 }

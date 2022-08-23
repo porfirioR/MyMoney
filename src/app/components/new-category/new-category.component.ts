@@ -2,14 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { CategoryType } from '../../enums/category-type.enum';
-import { NewCategoryModel } from '../../models/new-category.model';
-import { NewCategoryGroupModel } from '../../models/new-category-group.model';
 import { CategoryGroupIconType } from '../../enums/category-group-icon-type.enum';
 import { IconType } from '../../enums/icon-type.enum';
+import { NewCategoryModel } from '../../models/new-category.model';
+import { NewCategoryGroupModel } from '../../models/new-category-group.model';
+import { CategoryModel } from '../../models/category.model';
 import { CategoryService } from '../../services/category.service';
-import { CategoryModel } from 'src/app/models/category.model';
-import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-new-category',
