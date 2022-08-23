@@ -50,10 +50,6 @@ export class MovementService {
     return deleteDoc(ref)
   }
 
-  private getReference = (category: CategoryType): CollectionReference => {
-    return collection(this.firestore, `${this.collections}/${this.email}/${category.toLowerCase()}`)
-  };
-
   public getMovementById = (id: string): MovementModel | undefined  => {
     return this.movementList.find(x => x.id === id)
   }
@@ -64,5 +60,9 @@ export class MovementService {
 
   public deleteMovementForList = (id: string): void => {
     this.movementList = this.movementList.filter(x => x.id === id)
+  }
+
+  private getReference = (category: CategoryType): CollectionReference => {
+    return collection(this.firestore, `${this.collections}/${this.email}/${category.toLowerCase()}`)
   }
 }

@@ -19,7 +19,7 @@ export class MovementDetailComponent implements OnInit {
   constructor(private readonly location: Location,
     private readonly movementService: MovementService,
     private readonly activatedRoute: ActivatedRoute,
-    private readonly router: Router,private dialog: MatDialog, private readonly snackBar: MatSnackBar) {
+    private readonly router: Router, private readonly dialog: MatDialog, private readonly snackBar: MatSnackBar) {
     this.activatedRoute.params.subscribe({
       next: (params) => {
         this.movement = this.movementService.getMovementById(params['id'])
