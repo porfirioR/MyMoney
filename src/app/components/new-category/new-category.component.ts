@@ -106,8 +106,8 @@ export class NewCategoryComponent implements OnInit {
   protected save = () => {
     const category: CategoryModel = this.formGroup.getRawValue()
     this.categoryService.create(category).then((result) => {
-      const request = new UserCategoryModel(category.active, result.id)
-      this.userCategoryService.upsertCategory(request).then(() => {
+      const userCategory = new UserCategoryModel(category.active, result.id)
+      this.userCategoryService.upsertCategory(userCategory).then(() => {
         this.snackBar.open('Category was created', '', { duration: 3000 })
         this.location.back()
       })

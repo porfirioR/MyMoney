@@ -27,13 +27,18 @@ export class UserCategoryService {
   }
 
   public upsertCategory = (userCategory: UserCategoryModel): Promise<void> | Promise<DocumentReference<DocumentData>>   => {
-    const request = new UserCategoryRequest(userCategory.active, userCategory.category, this.email)
+    const request: UserCategoryRequest = {
+      active: userCategory.active, 
+      email: this.email,
+      category: doc(this.firestore, `${CollectionType.Categories}/${userCategory.categoryId}`)
+    }
+    request.category = doc(this.firestore, `${CollectionType.Categories}/${userCategory.categoryId}`)
     const model = this.userCategories.find(x => x.categoryId == userCategory.categoryId)
     if (model) {
       const ref = doc(this.firestore, `${this.userCategoryType}/${model.id}`)
       return setDoc(ref, request)
     } else {
-      return addDoc(this.getReference(), request)
+      return addDoc(this.getReference(),Object.assign({}, request))
     }
   }
 

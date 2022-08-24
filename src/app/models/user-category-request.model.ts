@@ -1,5 +1,7 @@
+import { DocumentReference } from "firebase/firestore";
 
-export class UserCategoryRequest {
-  
-  constructor(public active: boolean, public category: string, public email: string) { }
+export interface UserCategoryRequest {
+  category: DocumentReference
+  active: boolean
+  email: string
 }

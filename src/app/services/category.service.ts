@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { getAuth, onAuthStateChanged } from '@angular/fire/auth';
 import { addDoc, collection, collectionData, CollectionReference, deleteDoc, doc, DocumentReference, Firestore, orderBy, Query, query, setDoc, where } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
-import { Observable, tap } from 'rxjs';
+import { Observable } from 'rxjs';
 import { CollectionType } from '../enums/collection-type.enum';
 import { ResourceType } from '../enums/resource-type.enum';
 import { CategoryModel } from '../models/category.model';
@@ -25,7 +25,10 @@ export class CategoryService {
   }
 
   public getAll = (): Observable<CategoryModel[]> => {
-    const ref = query(this.getReference(), where('owner', 'in', [ ResourceType.ownerSystem, this.email]), orderBy('type'))
+    if (!this.email) {
+      this.router.navigate([''])
+    }
+    const ref = query(this.getReference(), where('owner', 'in', [ ResourceType.ownerSystem, this.email ]), orderBy('type'))
     return collectionData<CategoryModel>(ref as Query<CategoryModel>, { idField: 'id' })
   }
 
@@ -46,5 +49,9 @@ export class CategoryService {
 
   private getReference = (): CollectionReference => {
     return collection(this.firestore, this.categories)
+  }
+
+  private aux = () => {
+    return 
   }
 }
