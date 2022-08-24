@@ -6,6 +6,7 @@ import { CategoryType } from '../../enums/category-type.enum'
 import { CategoryModel } from '../../models/category.model'
 import { CategoryService } from '../../services/category.service'
 import { HelperService } from '../../services/helper.service'
+import { CategoryEvent } from '../../models/category-event.model';
 
 @Component({
   selector: 'app-category-configuration',
@@ -38,14 +39,17 @@ export class CategoryConfigurationComponent implements OnInit {
     this.location.back()
   }
 
-
-
   protected tabChanged = (tabChangeEvent: MatTabChangeEvent): void => {
     this.currentTap = tabChangeEvent.tab.textLabel;
   }
 
-  protected reorderCategory = (type: CategoryType) => {
-    type === CategoryType.income ?
+  protected updateCategories = (result: CategoryEvent) => {
+    if(result.categoryId) {
+      result.categoryType === CategoryType.income ?
+      this.incomeCategory = this.incomeCategory.filter(x => x.id !== result.categoryId) :
+      this.expenseCategory = this.expenseCategory.filter(x => x.id !== result.categoryId)
+    }
+    result.categoryType === CategoryType.income ?
       this.incomeCategory = this.orderCategoryByActive(this.incomeCategory) :
       this.expenseCategory = this.orderCategoryByActive(this.expenseCategory)
   }

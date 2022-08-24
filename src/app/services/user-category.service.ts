@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { CollectionType } from '../enums/collection-type.enum';
 import { UserCategoryRequest } from '../models/user-category-request.model';
-import { UserCategory } from '../models/user-category.model';
+import { UserCategoryModel } from '../models/user-category.model';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +14,7 @@ export class UserCategoryService {
   protected email!: string;
   private userCategoryType: CollectionType = CollectionType.UserCategories
 
-  private userCategories: UserCategory[] = []
+  private userCategories: UserCategoryModel[] = []
 
   constructor(private readonly firestore: Firestore, private readonly router: Router) {
     onAuthStateChanged(getAuth(), (user) => {
@@ -26,7 +26,7 @@ export class UserCategoryService {
     })
   }
 
-  public upsertCategory = (userCategory: UserCategory): Promise<void> | Promise<DocumentReference<DocumentData>>   => {
+  public upsertCategory = (userCategory: UserCategoryModel): Promise<void> | Promise<DocumentReference<DocumentData>>   => {
     const request = new UserCategoryRequest(userCategory.active, userCategory.category, this.email)
     const model = this.userCategories.find(x => x.categoryId == userCategory.categoryId)
     if (model) {
@@ -37,9 +37,9 @@ export class UserCategoryService {
     }
   }
 
-  protected getUserCategories = (): Observable<UserCategory[]> => {
+  protected getUserCategories = (): Observable<UserCategoryModel[]> => {
     const ref = query(this.getReference(), where('email', '==', this.email), orderBy('active'))
-    return collectionData<UserCategory>(ref as Query<UserCategory>, { idField: 'id' })
+    return collectionData<UserCategoryModel>(ref as Query<UserCategoryModel>, { idField: 'id' })
   }
 
   private getReference = (): CollectionReference => {

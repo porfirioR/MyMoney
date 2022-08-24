@@ -4,6 +4,7 @@ import { addDoc, collection, collectionData, CollectionReference, deleteDoc, doc
 import { Router } from '@angular/router';
 import { Observable, tap } from 'rxjs';
 import { CollectionType } from '../enums/collection-type.enum';
+import { ResourceType } from '../enums/resource-type.enum';
 import { CategoryModel } from '../models/category.model';
 
 @Injectable({
@@ -24,7 +25,7 @@ export class CategoryService {
   }
 
   public getAll = (): Observable<CategoryModel[]> => {
-    const ref = query(this.getReference(), where('owner', 'in', ['system', this.email]), orderBy('type'))
+    const ref = query(this.getReference(), where('owner', 'in', [ ResourceType.ownerSystem, this.email]), orderBy('type'))
     return collectionData<CategoryModel>(ref as Query<CategoryModel>, { idField: 'id' })
   }
 

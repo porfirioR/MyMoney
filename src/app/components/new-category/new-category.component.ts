@@ -9,7 +9,9 @@ import { IconType } from '../../enums/icon-type.enum';
 import { NewCategoryModel } from '../../models/new-category.model';
 import { NewCategoryGroupModel } from '../../models/new-category-group.model';
 import { CategoryModel } from '../../models/category.model';
+import { UserCategoryModel } from '../../models/user-category.model';
 import { CategoryService } from '../../services/category.service';
+import { UserCategoryService } from '../../services/user-category.service';
 
 @Component({
   selector: 'app-new-category',
@@ -75,7 +77,8 @@ export class NewCategoryComponent implements OnInit {
   constructor(protected location: Location,
     protected route: ActivatedRoute,
     private categoryService: CategoryService,
-    private snackBar: MatSnackBar) { }
+    private snackBar: MatSnackBar,
+    private readonly userCategoryService: UserCategoryService) { }
 
   ngOnInit() {
     this.route.params.subscribe({
@@ -102,9 +105,12 @@ export class NewCategoryComponent implements OnInit {
 
   protected save = () => {
     const category: CategoryModel = this.formGroup.getRawValue()
-    this.categoryService.create(category).then(() => {
-      this.snackBar.open('Category was created', '', { duration: 3000 })
-      this.location.back()
+    this.categoryService.create(category).then((result) => {
+      const request = new UserCategoryModel(category.active, result.id)
+      this.userCategoryService.upsertCategory(request).then(() => {
+        this.snackBar.open('Category was created', '', { duration: 3000 })
+        this.location.back()
+      })
     })
   }
 }
