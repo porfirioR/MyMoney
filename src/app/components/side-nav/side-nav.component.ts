@@ -13,6 +13,7 @@ export class SideNavComponent implements OnInit {
   protected navItems: NavItemModel[] = [
     new NavItemModel('dashboard', 'Category', ItemAction.categoryConfiguration),
     new NavItemModel('launch', 'Export', ItemAction.exportData),
+    new NavItemModel('cloud_upload', 'Import', ItemAction.importData),
     new NavItemModel('stars', 'About us', ItemAction.showData),
   ];
 
@@ -23,9 +24,9 @@ export class SideNavComponent implements OnInit {
   protected performItemAction = (action: ItemAction) => {
     switch (action) {
       case ItemAction.categoryConfiguration:
+      case ItemAction.importData:
         this.router.navigate([action]);
         break;
-
       default:
         break;
     }

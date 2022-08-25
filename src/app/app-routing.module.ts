@@ -7,6 +7,7 @@ import { RegisterMovementComponent } from './components/register-movement/regist
 import { canActivate, redirectUnauthorizedTo } from '@angular/fire/auth-guard'
 import { LoginComponent } from './components/login/login.component';
 import { MovementDetailComponent } from './components/movement-detail/movement-detail.component';
+import { ImportMovementComponent } from './components/import-movement/import-movement.component';
 
 const routes: Routes = [
   {
@@ -33,6 +34,10 @@ const routes: Routes = [
   {
     path: 'movement-update/:id',
     component: RegisterMovementComponent
+  },
+  {
+    path: 'import',
+    component: ImportMovementComponent
   },
   {
     path: 'login',

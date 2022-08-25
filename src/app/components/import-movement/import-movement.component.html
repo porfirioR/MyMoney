@@ -1,0 +1,23 @@
+<mat-toolbar color="primary">
+  <button mat-icon-button (click)="exit()">
+    <mat-icon>keyboard_backspace</mat-icon>
+  </button>
+  <span>Import Movement</span>
+</mat-toolbar>
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Please upload your file</mat-card-title>
+    <mat-card-subtitle>subtitle</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+  </mat-card-content>
+  <mat-card-actions>
+    <input type="file" class="file-input" accept=".csv" (change)="onFileSelected($event)" #fileUpload>
+    <div class="file-upload">
+      {{fileName || "No file uploaded yet."}}
+      <button mat-mini-fab color="primary" class="upload-btn" (click)="fileUpload.click()">
+          <mat-icon>attach_file</mat-icon>
+      </button>
+    </div>
+  </mat-card-actions>
+</mat-card>

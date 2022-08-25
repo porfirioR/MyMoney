@@ -1,0 +1,10 @@
+.mat-toolbar {
+  justify-content: unset;
+  & > span {
+    margin: auto;
+  }
+}
+
+.file-input {
+  display: none;
+}

@@ -20,7 +20,7 @@ export class CategoryConfigurationComponent implements OnInit {
   protected categoryType = CategoryType
   protected loading = true
 
-  constructor(private categoryService: CategoryService, protected location: Location) { }
+  constructor(private categoryService: CategoryService, private readonly location: Location) { }
 
   ngOnInit() {
     this.categoryService.getAll().pipe(take(1)).subscribe({
