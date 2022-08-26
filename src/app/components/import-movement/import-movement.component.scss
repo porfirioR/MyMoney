@@ -1,5 +1,6 @@
 .mat-toolbar {
   justify-content: unset;
+  position: unset;
   & > span {
     margin: auto;
   }
@@ -13,4 +14,9 @@
   display: flex;
   justify-content: center;
   margin-bottom: 0 !important;
+}
+
+.mat-card {
+  margin: 1rem;
+  height: calc(50%);
 }

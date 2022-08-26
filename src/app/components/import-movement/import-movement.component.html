@@ -4,7 +4,6 @@
   </button>
   <span>Import Movement</span>
 </mat-toolbar>
-<div class="mat-toolbar-block"></div>
 <mat-card>
   <mat-card-header>
     <mat-card-title>Instructions</mat-card-title>
@@ -23,7 +22,7 @@
     <button mat-stroked-button (click)="fileUpload.click()">
       <input type="file" class="file-input" accept=".csv" (change)="onFileSelected($event)" #fileUpload>
       <div class="file-upload">
-        {{fileName || "No file uploaded yet."}}
+        {{file.name || "No file uploaded yet."}}
         <button mat-icon-button color="primary">
           <mat-icon>attach_file</mat-icon>
         </button>
