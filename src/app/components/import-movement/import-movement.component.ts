@@ -12,8 +12,7 @@ export class ImportMovementComponent implements OnInit {
 
   constructor(private readonly location: Location) { }
   
-  ngOnInit() {
-  }
+  ngOnInit() { }
 
   protected exit = () => {
     this.location.back()
@@ -32,6 +31,7 @@ export class ImportMovementComponent implements OnInit {
   }
 
   protected processFile = () => {
+    //https://web.dev/i18n/es/read-files/
     const reader = new FileReader();
     reader.addEventListener('load', (event: ProgressEvent<FileReader>) => {
       const result = event?.target?.result;
