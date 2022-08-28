@@ -5,7 +5,7 @@ import { MovementService } from '../../services/movement.service';
 import { MovementModel } from '../../models/movement.model';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogDeleteComponent } from '../dialog-delete/dialog-delete.component';
-import { CategoryType } from 'src/app/enums/category-type.enum';
+import { CategoryType } from '../../enums/category-type.enum';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({

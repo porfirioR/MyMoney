@@ -3,6 +3,8 @@ import { Router } from '@angular/router';
 import { ItemAction } from '../../enums/item-action.enum';
 import { AuthService } from '../../services/auth.service';
 import { NavItemModel } from '../../models/nav-item.model';
+import { UserService } from '../../services/user.service';
+import { UserDataModel } from '../../models/user-data.model';
 
 @Component({
   selector: 'app-side-nav',
@@ -17,7 +19,7 @@ export class SideNavComponent implements OnInit {
     new NavItemModel('stars', 'About us', ItemAction.showData),
   ];
 
-  constructor(private auth: AuthService, protected router: Router) {}
+  constructor(private auth: AuthService, protected router: Router, private readonly userService: UserService) {}
 
   ngOnInit() {}
 
@@ -33,8 +35,15 @@ export class SideNavComponent implements OnInit {
   }
 
   protected logout = () => {
-    this.auth.logOut()
-    .then(() => this.router.navigate(['']))
+    this.auth.logOut().then(() => {
+      const userData: UserDataModel = {
+        email: '',
+        activeCategories: [],
+        allCategories: []
+      }
+      this.userService.setUserValues(userData)
+      this.router.navigate([''])
+    })
     .catch(error => console.log(error))
   }
   

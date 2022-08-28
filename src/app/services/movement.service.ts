@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { CategoryType } from '../enums/category-type.enum';
 import { CollectionType } from '../enums/collection-type.enum';
 import { MovementModel } from '../models/movement.model';
+import { UserService } from './user.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,14 +15,15 @@ export class MovementService {
   private email!: string
   private movementList: MovementModel[] = []
 
-  constructor(private readonly firestore: Firestore, private readonly router: Router) {
-    onAuthStateChanged(getAuth(), (user) => {
-      if (user) {
-        this.email = user.email as string
-      } else {
-        this.router.navigate([''])
-      }
-    })
+  constructor(private readonly firestore: Firestore, private readonly router: Router, private readonly userService: UserService) {
+    this.email = this.userService.getUserEmail()
+    // onAuthStateChanged(getAuth(), (user) => {
+    //   if (user) {
+    //     this.email = user.email as string
+    //   } else {
+    //     this.router.navigate([''])
+    //   }
+    // })
   }
 
   public getBySelectedMonth = (category: CategoryType, month: number, year: number) => {

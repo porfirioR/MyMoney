@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { CollectionType } from '../enums/collection-type.enum';
 import { ResourceType } from '../enums/resource-type.enum';
 import { CategoryModel } from '../models/category.model';
+import { UserService } from './user.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,17 +15,18 @@ export class CategoryService {
   private categories: CollectionType = CollectionType.Categories
   private email!: string
 
-  constructor(private readonly firestore: Firestore, private readonly router: Router) {
-    onAuthStateChanged(getAuth(), (user) => {
-      if (user) {
-        this.email = user.email as string
-      } else {
-        this.router.navigate([''])
-      }
-    })
+  constructor(private readonly firestore: Firestore, private readonly router: Router, private readonly userService: UserService) {
+    // onAuthStateChanged(getAuth(), (user) => {
+    //   if (user) {
+    //     this.email = this.userService.getUserEmail()
+    //   } else {
+    //     this.router.navigate([''])
+    //   }
+    // })
   }
 
   public getAll = (): Observable<CategoryModel[]> => {
+    this.email = this.userService.getUserEmail()
     if (!this.email) {
       this.router.navigate([''])
     }
@@ -51,7 +53,4 @@ export class CategoryService {
     return collection(this.firestore, this.categories)
   }
 
-  private aux = () => {
-    return 
-  }
 }

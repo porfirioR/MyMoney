@@ -1,6 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { MovementModel } from 'src/app/models/movement.model';
 import { CategoryType } from '../../enums/category-type.enum';
 import { CategoryModel } from '../../models/category.model';
 import { GroupDateMovementModel } from '../../models/group-date-movement.model';

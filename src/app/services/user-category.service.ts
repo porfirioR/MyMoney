@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { CollectionType } from '../enums/collection-type.enum';
 import { UserCategoryRequest } from '../models/user-category-request.model';
 import { UserCategoryModel } from '../models/user-category.model';
+import { UserService } from './user.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,14 +17,15 @@ export class UserCategoryService {
 
   private userCategories: UserCategoryModel[] = []
 
-  constructor(private readonly firestore: Firestore, private readonly router: Router) {
-    onAuthStateChanged(getAuth(), (user) => {
-      if (user) {
-        this.email = user.email as string
-      } else {
-        this.router.navigate([''])
-      }
-    })
+  constructor(private readonly firestore: Firestore, private readonly router: Router, private readonly userService: UserService) {
+    this.email = this.userService.getUserEmail()
+    // onAuthStateChanged(getAuth(), (user) => {
+    //   if (user) {
+    //     this.email = user.email as string
+    //   } else {
+    //     this.router.navigate([''])
+    //   }
+    // })
   }
 
   public upsertCategory = (userCategory: UserCategoryModel): Promise<void> | Promise<DocumentReference<DocumentData>>   => {

@@ -10,8 +10,9 @@
   </mat-card-header>
   <mat-card-content>
     <mat-list dense>
-      <mat-list-item>Hard procedure</mat-list-item>
+      <mat-list-item>Expensive procedure(it may take a few minutes)</mat-list-item>
       <mat-list-item>Format file .csv</mat-list-item>
+      <mat-list-item>Required first row: {{csvHeader}}</mat-list-item>
       <mat-list-item>All categories need to be exist</mat-list-item>
       <mat-list-item>After load file will be show one button to check file</mat-list-item>
       <mat-list-item>Check if all columns are correct</mat-list-item>
@@ -22,11 +23,12 @@
     <button mat-stroked-button (click)="fileUpload.click()">
       <input type="file" class="file-input" accept=".csv" (change)="onFileSelected($event)" #fileUpload>
       <div class="file-upload">
-        {{file.name || "No file uploaded yet."}}
-        <button mat-icon-button color="primary">
-          <mat-icon>attach_file</mat-icon>
-        </button>
+        {{file?.name || "No file uploaded yet."}}
+        <mat-icon color="primary">attach_file</mat-icon>
       </div>
+    </button>
+    <button mat-icon-button color="primary" *ngIf="file" (click)="processFile()">
+      <mat-icon>history</mat-icon>
     </button>
   </mat-card-actions>
 </mat-card>
