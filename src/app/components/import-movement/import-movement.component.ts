@@ -17,7 +17,7 @@ import { DialogUploadMovementComponent } from '../dialog-upload-movement/dialog-
 export class ImportMovementComponent implements OnInit {
   protected fileName!: string
   protected file?: File
-  protected csvHeader = 'Date,Expense/Income,Category,Memorandum,Amount';
+  protected csvHeader = 'Date,Expense/Income,Category,Memorandum,Amount\r';
   private importRequest: MovementModel[] = []
   protected errorMessageList: string[] = []
   protected loading = false
@@ -57,7 +57,7 @@ export class ImportMovementComponent implements OnInit {
       const result = event?.target?.result
       const content = result as string
       const rows = content.split('\n')
-      if (rows.length !== 0) {
+      if (rows.length === 0) {
         this.loading = false
         this.openPopUp = false
         this.snackBar.open('Empty file', '', { duration: 3000 })
