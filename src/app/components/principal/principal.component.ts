@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
 import { combineLatest, Observable, take } from 'rxjs';
 import { CategoryModel } from '../../models/category.model';
 import { GroupDateMovementModel } from '../../models/group-date-movement.model';
@@ -10,6 +9,7 @@ import { YearMonthModel } from '../../models/year-month-model';
 import { CategoryService } from '../../services/category.service';
 import { MovementService } from '../../services/movement.service';
 import { SelectYearMountComponent } from '../select-year-mount/select-year-mount.component';
+import { UserCategoryService } from '../../services/user-category.service';
 
 @Component({
   selector: 'app-principal',
@@ -27,7 +27,10 @@ export class PrincipalComponent implements OnInit {
   protected categories: CategoryModel[] = []
   protected messageSearch = 'Search'
 
-  constructor(private dialog: MatDialog, private categoryService: CategoryService, private readonly movementService: MovementService, private router: Router) {
+  constructor(private readonly dialog: MatDialog,
+              private readonly categoryService: CategoryService,
+              private readonly movementService: MovementService,
+              private readonly userCategoryService: UserCategoryService) {
     const date = new Date();
     this.yearMonth = new YearMonthModel(date.getFullYear(), '', date.getMonth())
   }
@@ -35,8 +38,9 @@ export class PrincipalComponent implements OnInit {
   ngOnInit() {
     const requestMovement$ = this.getMovements()
     const categories$ = this.categoryService.getAll().pipe(take(1))
-    combineLatest([categories$, requestMovement$]).subscribe({
-      next: ([categories, movements]) => {
+    const userCategories$ = this.userCategoryService.getUserCategories()
+    combineLatest([categories$, requestMovement$, userCategories$]).subscribe({
+      next: ([categories, movements, userCategories]) => {
         this.categories = categories
         this.prepareMovementListToView(movements)
       }, error: (e) => {

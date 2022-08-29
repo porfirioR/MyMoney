@@ -15,15 +15,7 @@ export class CategoryService {
   private categories: CollectionType = CollectionType.Categories
   private email!: string
 
-  constructor(private readonly firestore: Firestore, private readonly router: Router, private readonly userService: UserService) {
-    // onAuthStateChanged(getAuth(), (user) => {
-    //   if (user) {
-    //     this.email = this.userService.getUserEmail()
-    //   } else {
-    //     this.router.navigate([''])
-    //   }
-    // })
-  }
+  constructor(private readonly firestore: Firestore, private readonly router: Router, private readonly userService: UserService) { }
 
   public getAll = (): Observable<CategoryModel[]> => {
     this.email = this.userService.getUserEmail()

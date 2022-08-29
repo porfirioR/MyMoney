@@ -19,16 +19,20 @@
       <mat-list-item>If all right will pop-up saying length of records and if you want save all</mat-list-item>
     </mat-list>
   </mat-card-content>
+  <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
   <mat-card-actions>
-    <button mat-stroked-button (click)="fileUpload.click()">
+    <button mat-stroked-button (click)="fileUpload.click()" [disabled]="loading">
       <input type="file" class="file-input" accept=".csv" (change)="onFileSelected($event)" #fileUpload>
       <div class="file-upload">
         {{file?.name || "No file uploaded yet."}}
         <mat-icon color="primary">attach_file</mat-icon>
       </div>
     </button>
-    <button mat-icon-button color="primary" *ngIf="file" (click)="processFile()">
+    <button mat-icon-button color="primary" *ngIf="file" (click)="processFile()" [disabled]="loading">
       <mat-icon>history</mat-icon>
+    </button>
+    <button mat-icon-button color="primary" *ngIf="!loading && openPopUp" (click)="openDialog()">
+      <mat-icon>cloud_upload</mat-icon>
     </button>
   </mat-card-actions>
 </mat-card>

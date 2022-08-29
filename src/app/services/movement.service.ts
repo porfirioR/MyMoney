@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { getAuth, onAuthStateChanged } from '@angular/fire/auth';
-import { addDoc, collection, collectionData, CollectionReference, deleteDoc, doc, DocumentReference, Firestore, orderBy, Query, query, setDoc, where } from '@angular/fire/firestore';
+import { addDoc, collection, collectionData, CollectionReference, deleteDoc, doc, DocumentReference, Firestore, orderBy, Query, query, setDoc, where, WriteBatch, writeBatch } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
 import { CategoryType } from '../enums/category-type.enum';
 import { CollectionType } from '../enums/collection-type.enum';
@@ -15,15 +15,9 @@ export class MovementService {
   private email!: string
   private movementList: MovementModel[] = []
 
-  constructor(private readonly firestore: Firestore, private readonly router: Router, private readonly userService: UserService) {
+  constructor(private readonly firestore: Firestore,
+              private readonly userService: UserService) {
     this.email = this.userService.getUserEmail()
-    // onAuthStateChanged(getAuth(), (user) => {
-    //   if (user) {
-    //     this.email = user.email as string
-    //   } else {
-    //     this.router.navigate([''])
-    //   }
-    // })
   }
 
   public getBySelectedMonth = (category: CategoryType, month: number, year: number) => {
@@ -64,7 +58,17 @@ export class MovementService {
     this.movementList = this.movementList.filter(x => x.id === id)
   }
 
+  public openBranch = (): WriteBatch => {
+    return writeBatch(this.firestore)
+  }
+
   private getReference = (category: CategoryType): CollectionReference => {
     return collection(this.firestore, `${this.collections}/${this.email}/${category.toLowerCase()}`)
   }
+
+  public batchReference = (category: CategoryType): DocumentReference => {
+    return doc(this.firestore, `${this.collections}/${this.email}/${category.toLowerCase()}`)
+  }
+
+
 }

@@ -44,7 +44,7 @@ export class UserCategoryService {
     }
   }
 
-  protected getUserCategories = (): Observable<UserCategoryModel[]> => {
+  public getUserCategories = (): Observable<UserCategoryModel[]> => {
     const ref = query(this.getReference(), where('email', '==', this.email), orderBy('active'))
     return collectionData<UserCategoryModel>(ref as Query<UserCategoryModel>, { idField: 'id' })
   }
