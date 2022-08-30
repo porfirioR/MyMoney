@@ -22,8 +22,8 @@ export class UserService extends ItemObservable<UserDataModel> {
     return this.Item.email
   }
 
-  public getAllCategories = (): string => {
-    return this.Item.email
+  public getAllCategories = (): CategoryModel[] => {
+    return this.Item.allCategories
   }
 
   public setUserValues = (user: UserDataModel): void => {
@@ -39,6 +39,7 @@ export class UserService extends ItemObservable<UserDataModel> {
     this.setItem(item)
     return activeCategories
   }
+
   public getActiveCategories =() => {
     return this.Item.activeCategories
   }

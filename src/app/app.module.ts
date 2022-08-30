@@ -45,6 +45,7 @@ import { MovementDetailComponent } from './components/movement-detail/movement-d
 import { DialogDeleteComponent } from './components/dialog-delete/dialog-delete.component';
 import { ImportMovementComponent } from './components/import-movement/import-movement.component';
 import { DialogUploadMovementComponent } from './components/dialog-upload-movement/dialog-upload-movement.component';
+import { LogoutComponent } from './components/logout/logout.component';
 registerLocaleData(localEs, 'es')
 
 
@@ -64,6 +65,7 @@ registerLocaleData(localEs, 'es')
     DialogDeleteComponent,
     ImportMovementComponent,
     DialogUploadMovementComponent,
+    LogoutComponent
   ],
   imports: [
     BrowserModule,

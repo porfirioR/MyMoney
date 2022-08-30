@@ -8,12 +8,13 @@ import { canActivate, redirectUnauthorizedTo } from '@angular/fire/auth-guard'
 import { LoginComponent } from './components/login/login.component';
 import { MovementDetailComponent } from './components/movement-detail/movement-detail.component';
 import { ImportMovementComponent } from './components/import-movement/import-movement.component';
+import { LogoutComponent } from './components/logout/logout.component';
 
 const routes: Routes = [
   {
     path: '',
     component: PrincipalComponent,
-    ...canActivate( () => redirectUnauthorizedTo(['/login'])),
+    ...canActivate( () => redirectUnauthorizedTo(['/logout'])),
   },
   {
     path: 'category',
@@ -42,6 +43,10 @@ const routes: Routes = [
   {
     path: 'login',
     component: LoginComponent,
+  },
+  {
+    path: 'logout',
+    component: LogoutComponent,
   }
 ];
 

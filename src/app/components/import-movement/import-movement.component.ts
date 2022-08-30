@@ -91,17 +91,10 @@ export class ImportMovementComponent implements OnInit {
       })
 
       if (this.errorMessageList.length === 0 && this.importRequest.length > 0) {
-        this.loading = false
         this.openPopUp = true
       }
+      this.loading = false
     })
-
-    reader.addEventListener('progress', (event) => {
-      if (event.loaded && event.total) {
-        const percent = (event.loaded / event.total) * 100;
-        console.log(`Progress: ${Math.round(percent)}`);
-      }
-    });
     reader.readAsText(this.file as File);
   }
 

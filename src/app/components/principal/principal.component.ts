@@ -10,6 +10,10 @@ import { CategoryService } from '../../services/category.service';
 import { MovementService } from '../../services/movement.service';
 import { SelectYearMountComponent } from '../select-year-mount/select-year-mount.component';
 import { UserCategoryService } from '../../services/user-category.service';
+import { UserService } from 'src/app/services/user.service';
+import { getAuth, onAuthStateChanged } from '@angular/fire/auth';
+import { Router } from '@angular/router';
+import { UserDataModel } from 'src/app/models/user-data.model';
 
 @Component({
   selector: 'app-principal',
@@ -30,9 +34,24 @@ export class PrincipalComponent implements OnInit {
   constructor(private readonly dialog: MatDialog,
               private readonly categoryService: CategoryService,
               private readonly movementService: MovementService,
-              private readonly userCategoryService: UserCategoryService) {
+              private readonly userCategoryService: UserCategoryService,
+              private readonly userService: UserService,
+              private readonly router: Router
+              ) {
     const date = new Date();
     this.yearMonth = new YearMonthModel(date.getFullYear(), '', date.getMonth())
+    onAuthStateChanged(getAuth(), (user) => {
+      if (user) {
+        const userData: UserDataModel = {
+          email: user.email as string,
+          activeCategories: [],
+          allCategories: []
+        }
+        this.userService.setUserValues(userData)
+      } else {
+        this.router.navigate(['logout'])
+      }
+    })
   }
 
   ngOnInit() {
@@ -43,6 +62,7 @@ export class PrincipalComponent implements OnInit {
       next: ([categories, movements, userCategories]) => {
         this.categories = categories
         this.prepareMovementListToView(movements)
+        this.userService.setCategories(categories, userCategories)
       }, error: (e) => {
         this.loading = false
         throw e;
