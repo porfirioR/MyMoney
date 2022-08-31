@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { CategoryModel } from '../models/category.model';
 import { UserCategoryModel } from '../models/user-category.model';
 import { UserDataModel } from '../models/user-data.model';
@@ -9,7 +10,7 @@ import { ItemObservable } from '../observables/item.observable';
 })
 export class UserService extends ItemObservable<UserDataModel> {
 
-  constructor() {
+  constructor(private readonly router: Router) {
     const initial: UserDataModel = {
       activeCategories: [],
       allCategories: [],
@@ -41,6 +42,10 @@ export class UserService extends ItemObservable<UserDataModel> {
   }
 
   public getActiveCategories =() => {
-    return this.Item.activeCategories
+    const categories = this.Item.activeCategories
+    if (categories.length === 0) {
+      this.router.navigate([''])
+    }
+    return categories
   }
 }

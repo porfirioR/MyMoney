@@ -17,7 +17,7 @@ import { DialogUploadMovementComponent } from '../dialog-upload-movement/dialog-
 export class ImportMovementComponent implements OnInit {
   protected fileName!: string
   protected file?: File
-  protected csvHeader = 'Date,Expense/Income,Category,Memorandum,Amount\r';
+  protected csvHeader = 'Date,Expense/Income,Category,Memorandum,Amount';
   private importRequest: MovementModel[] = []
   protected errorMessageList: string[] = []
   protected loading = false
@@ -41,7 +41,8 @@ export class ImportMovementComponent implements OnInit {
       switch (file.type) {
         case 'text/csv':
           this.file = file;
-          break;
+        this.errorMessageList = []
+        break;
         default:
           this.openPopUp = false
           this.file = undefined
@@ -53,6 +54,7 @@ export class ImportMovementComponent implements OnInit {
   protected processFile = () => {
     const reader = new FileReader();
     reader.addEventListener('load', (event: ProgressEvent<FileReader>) => {
+      this.errorMessageList = []
       this.loading = true
       const result = event?.target?.result
       const content = result as string
@@ -146,7 +148,7 @@ export class ImportMovementComponent implements OnInit {
     } else if(!Number.isInteger(month) || month < 1 || month > 12) {
       invalid = true
       errors.push(`Invalid month ${month} in row ${index}`)
-    } else if(!Number.isInteger(day) || day < 0 || day > 31 || ([1, 3, 5, 7, 8, 10, 12].includes(month) && day > 30)) {
+    } else if(!Number.isInteger(day) || day < 0 || day > 31 || (![1, 3, 5, 7, 8, 10, 12].includes(month) && day > 30)) {
       invalid = true
       errors.push(`Invalid day ${day} in row ${index}`)
     } else if (CategoryType.expense !== importMovement.type && CategoryType.income !== importMovement.type) {
