@@ -26,9 +26,9 @@ export class RegisterMovementComponent implements OnInit {
     type: new FormControl<CategoryType>(this.categoryType.expense),
     icon: new FormControl<IconType | ''>('', Validators.required),
     categoryId: new FormControl<string>('', Validators.required),
-    memorandum: new FormControl<string>(''),
+    memorandum: new FormControl<string>('', Validators.maxLength(50)),
     date: new FormControl('', Validators.required),
-    amount: new FormControl('', [Validators.required, Validators.min(0), Validators.minLength(1)])
+    amount: new FormControl('', [Validators.required, Validators.min(0), Validators.minLength(1), Validators.max(999999999999)])
   })
   protected currentCategories!: CategoryModel[]
   protected loading = true
@@ -59,6 +59,12 @@ export class RegisterMovementComponent implements OnInit {
               this.formGroup.controls['icon'].setValue('')
               this.formGroup.controls['categoryId'].setValue('')
             }
+          }
+        })
+        this.formGroup.controls['memorandum'].valueChanges.subscribe({
+          next: (value: string) => {
+            const newValue = value.replace(/,/g, '')
+            this.formGroup.controls['memorandum'].patchValue(newValue, { emitEvent: false })
           }
         })
         this.loading = false

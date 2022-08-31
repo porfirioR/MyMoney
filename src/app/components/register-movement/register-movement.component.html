@@ -36,10 +36,12 @@
         </span>
         <mat-label>Memorándum</mat-label>
         <input matInput type="text" formControlName="memorandum">
+        <mat-error *ngIf="formGroup.get('memorandum')?.hasError('maxlength')">Value cannot exceed 50 character.</mat-error>
       </mat-form-field>
       <mat-form-field appearance="fill" class="w-100">
         <mat-label>Amount</mat-label>
-        <input matInput type="number" formControlName="amount">
+        <input matInput type="text" formControlName="amount" [mask]="'separator.0'" thousandSeparator=".">
+        <mat-error *ngIf="formGroup.get('amount')?.hasError('maxlength') || formGroup.get('amount')?.hasError('max')">Value cannot exceed 12 digit.</mat-error>
       </mat-form-field>
       <mat-form-field appearance="fill" class="w-100">
         <mat-label>Date</mat-label>

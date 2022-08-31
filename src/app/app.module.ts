@@ -46,6 +46,7 @@ import { DialogDeleteComponent } from './components/dialog-delete/dialog-delete.
 import { ImportMovementComponent } from './components/import-movement/import-movement.component';
 import { DialogUploadMovementComponent } from './components/dialog-upload-movement/dialog-upload-movement.component';
 import { LogoutComponent } from './components/logout/logout.component';
+import { NgxMaskModule } from 'ngx-mask';
 registerLocaleData(localEs, 'es')
 
 
@@ -99,6 +100,7 @@ registerLocaleData(localEs, 'es')
     MatDialogModule,
     MatListModule,
     MatSnackBarModule,
+    NgxMaskModule.forRoot(),
 
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => getAuth()),
