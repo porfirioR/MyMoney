@@ -1,0 +1,15 @@
+.mat-card-actions {
+  display: flex;
+  justify-content: center;
+}
+
+.mat-toolbar {
+  justify-content: unset;
+  position: unset;
+  & > span {
+    margin: auto;
+  }
+}
+.mat-card {
+  margin: 1rem;
+}

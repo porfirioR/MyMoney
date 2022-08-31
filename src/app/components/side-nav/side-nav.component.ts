@@ -27,6 +27,7 @@ export class SideNavComponent implements OnInit {
     switch (action) {
       case ItemAction.categoryConfiguration:
       case ItemAction.importData:
+      case ItemAction.exportData:
         this.router.navigate([action]);
         break;
       default:

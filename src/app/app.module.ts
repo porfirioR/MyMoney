@@ -47,6 +47,7 @@ import { ImportMovementComponent } from './components/import-movement/import-mov
 import { DialogUploadMovementComponent } from './components/dialog-upload-movement/dialog-upload-movement.component';
 import { LogoutComponent } from './components/logout/logout.component';
 import { NgxMaskModule } from 'ngx-mask';
+import { ExportMovementComponent } from './components/export-movement/export-movement.component';
 registerLocaleData(localEs, 'es')
 
 
@@ -65,6 +66,7 @@ registerLocaleData(localEs, 'es')
     MovementDetailComponent,
     DialogDeleteComponent,
     ImportMovementComponent,
+    ExportMovementComponent,
     DialogUploadMovementComponent,
     LogoutComponent
   ],

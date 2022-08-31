@@ -66,5 +66,13 @@ export class MovementService {
     return doc(this.firestore, `${this.collections}/${this.userService.getUserEmail()}/${category.toLowerCase()}`)
   }
 
+  public getMovementToExport = (category: CategoryType, startDate: Date, endDate: Date) => {
+    startDate.setHours(0, 0, 0)
+    const startTime = startDate.getTime()
+    endDate.setHours(23, 59, 59)
+    const endTime = endDate.getTime()
 
+    const ref = query(this.getReference(category), where('time', '>=', startTime), where('time', '<=', endTime), orderBy('time'))
+    return collectionData<MovementModel>(ref as Query<MovementModel>, { idField: 'id' })
+  }
 }
