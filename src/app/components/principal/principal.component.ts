@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { combineLatest, Observable, take } from 'rxjs';
 import { CategoryModel } from '../../models/category.model';
 import { GroupDateMovementModel } from '../../models/group-date-movement.model';
@@ -10,10 +11,9 @@ import { CategoryService } from '../../services/category.service';
 import { MovementService } from '../../services/movement.service';
 import { SelectYearMountComponent } from '../select-year-mount/select-year-mount.component';
 import { UserCategoryService } from '../../services/user-category.service';
-import { UserService } from 'src/app/services/user.service';
+import { UserService } from '../../services/user.service';
 import { getAuth, onAuthStateChanged } from '@angular/fire/auth';
-import { Router } from '@angular/router';
-import { UserDataModel } from 'src/app/models/user-data.model';
+import { UserDataModel } from '../../models/user-data.model';
 
 @Component({
   selector: 'app-principal',
@@ -47,7 +47,7 @@ export class PrincipalComponent implements OnInit {
           activeCategories: [],
           allCategories: []
         }
-        this.userService.setUserValues(userData)
+        this.userService.setUser(userData)
       } else {
         this.router.navigate(['logout'])
       }
@@ -82,6 +82,7 @@ export class PrincipalComponent implements OnInit {
         this.messageSearch = this.yearMonth?.monthLabel ? `${this.yearMonth?.monthLabel} ${this.yearMonth.year}` : 'Search'
         this.getMovements().subscribe({
           next: (movements) => {
+            this.movements = []
             this.prepareMovementListToView(movements)
           }, error: (e) => {
             this.loading = false

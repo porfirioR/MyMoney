@@ -42,7 +42,7 @@ export class SideNavComponent implements OnInit {
         activeCategories: [],
         allCategories: []
       }
-      this.userService.setUserValues(userData)
+      this.userService.setUser(userData)
       this.router.navigate(['logout'])
     })
     .catch(error => console.log(error))

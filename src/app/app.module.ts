@@ -48,6 +48,8 @@ import { DialogUploadMovementComponent } from './components/dialog-upload-moveme
 import { LogoutComponent } from './components/logout/logout.component';
 import { NgxMaskModule } from 'ngx-mask';
 import { ExportMovementComponent } from './components/export-movement/export-movement.component';
+import { UserGuard } from './guards/user.guard';
+import { UserService } from './services/user.service';
 registerLocaleData(localEs, 'es')
 
 
@@ -108,7 +110,11 @@ registerLocaleData(localEs, 'es')
     provideAuth(() => getAuth()),
     provideFirestore(() => getFirestore()), // storage
   ],
-  providers: [ { provide: LOCALE_ID, useValue: 'es' } ],
+  providers: [
+    { provide: LOCALE_ID, useValue: 'es' },
+    UserService,
+    UserGuard
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

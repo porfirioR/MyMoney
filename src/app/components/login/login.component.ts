@@ -25,7 +25,7 @@ export class LoginComponent implements OnInit {
         activeCategories: [],
         allCategories: []
       }
-      this.userService.setUserValues(userData)
+      this.userService.setUser(userData)
       this.router.navigate([''])
     })
     .catch((x) => console.log(x))
