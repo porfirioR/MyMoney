@@ -8,6 +8,7 @@ import { MovementModel } from '../../models/movement.model';
 import { CategoryModel } from '../../models/category.model';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogUploadMovementComponent } from '../dialog-upload-movement/dialog-upload-movement.component';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-import-movement',
@@ -17,7 +18,7 @@ import { DialogUploadMovementComponent } from '../dialog-upload-movement/dialog-
 export class ImportMovementComponent implements OnInit {
   protected fileName!: string
   protected file?: File
-  protected csvHeader = 'Date,Expense/Income,Category,Memorandum,Amount';
+  protected csvHeader = environment.header;
   private importRequest: MovementModel[] = []
   protected errorMessageList: string[] = []
   protected loading = false

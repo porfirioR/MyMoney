@@ -20,10 +20,12 @@ export class UserService extends ItemObservable<UserDataModel> {
   }
 
   public getUserEmail = (): string => {
+    this.checkValidUserData()
     return this.Item.email
   }
 
   public getAllCategories = (): CategoryModel[] => {
+    this.checkValidUserData()
     return this.Item.allCategories
   }
 
@@ -42,10 +44,13 @@ export class UserService extends ItemObservable<UserDataModel> {
   }
 
   public getActiveCategories =() => {
-    const categories = this.Item.activeCategories
-    if (categories.length === 0) {
+    this.checkValidUserData()
+    return this.Item.activeCategories
+  }
+
+  private checkValidUserData = () => {
+    if (this.Item.allCategories.length === 0 || this.Item.activeCategories.length === 0 || !this.Item.email) {
       this.router.navigate([''])
     }
-    return categories
   }
 }

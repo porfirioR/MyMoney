@@ -15,6 +15,7 @@ export const environment = {
     messagingSenderId: '',
     measurementId: '',
   },
+  header: 'Date(dd/MM/yyy),Expense/Income,Category,Memorandum,Amount'
 };
 
 /*
