@@ -12,13 +12,11 @@ import { UserService } from './user.service';
   providedIn: 'root'
 })
 export class UserCategoryService {
-  protected email!: string;
   private userCategoryType: CollectionType = CollectionType.UserCategories
 
   private userCategories: UserCategoryModel[] = []
 
   constructor(private readonly firestore: Firestore, private readonly router: Router, private readonly userService: UserService) {
-    this.email = this.userService.getUserEmail()
     // onAuthStateChanged(getAuth(), (user) => {
     //   if (user) {
     //     this.email = user.email as string
@@ -30,8 +28,8 @@ export class UserCategoryService {
 
   public upsertCategory = (userCategory: UserCategoryModel): Promise<void> | Promise<DocumentReference<DocumentData>>   => {
     const request: UserCategoryRequest = {
-      active: userCategory.active, 
-      email: this.email,
+      active: userCategory.active,
+      email: this.userService.getUserEmail(),
       category: doc(this.firestore, `${CollectionType.Categories}/${userCategory.categoryId}`)
     }
     request.category = doc(this.firestore, `${CollectionType.Categories}/${userCategory.categoryId}`)
@@ -45,7 +43,7 @@ export class UserCategoryService {
   }
 
   public getUserCategories = (): Observable<UserCategoryModel[]> => {
-    const ref = query(this.getReference(), where('email', '==', this.email), orderBy('active'))
+    const ref = query(this.getReference(), where('email', '==', this.userService.getUserEmail()), orderBy('active'))
     return collectionData<UserCategoryModel>(ref as Query<UserCategoryModel>, { idField: 'id' })
   }
 

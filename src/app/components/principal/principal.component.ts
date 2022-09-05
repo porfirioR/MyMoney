@@ -76,13 +76,17 @@ export class PrincipalComponent implements OnInit {
       data: this.yearMonth
     })
 
-    dialogRef.afterClosed().subscribe((result: YearMonthModel) => {
-      if (result) {
+    dialogRef.afterClosed().pipe(take(1)).subscribe((result: YearMonthModel) => {
+      if (result && (this.yearMonth?.month !== result.month || this.yearMonth?.year !== result.year)) {
         this.yearMonth = result;
         this.messageSearch = this.yearMonth?.monthLabel ? `${this.yearMonth?.monthLabel} ${this.yearMonth.year}` : 'Search'
+        this.movements = []
+        this.income = 0
+        this.expenses = 0
+        this.groupDateMovementList = []
+        this.balance = 0
         this.getMovements().subscribe({
           next: (movements) => {
-            this.movements = []
             this.prepareMovementListToView(movements)
           }, error: (e) => {
             this.loading = false
@@ -104,11 +108,6 @@ export class PrincipalComponent implements OnInit {
     this.movements = movements[0].concat(movements[1])
     this.movements.forEach(x => x.date = new Date(x.time))
     this.movements = this.movements.sort((a, b) => b.time - a.time)
-    if (this.movements.length === 0) {
-      this.groupDateMovementList = []
-      this.income = 0
-      this.expenses = 0
-    }
     this.movements.forEach((movement: MovementModel) => {
       const date = movement.date as Date
       let dateMovement = this.groupDateMovementList.find(x => x.date.getTime() === date.getTime())

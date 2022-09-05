@@ -12,9 +12,7 @@ export class MovementService {
   private collections: CollectionType = CollectionType.Movements
   private movementList: MovementModel[] = []
 
-  constructor(private readonly firestore: Firestore,
-              private readonly userService: UserService) {
-  }
+  constructor(private readonly firestore: Firestore, private readonly userService: UserService) { }
 
   public getBySelectedMonth = (category: CategoryType, month: number, year: number) => {
     const startDate = new Date(year, month, 1)

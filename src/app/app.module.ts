@@ -108,13 +108,14 @@ registerLocaleData(localEs, 'es')
 
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => getAuth()),
-    provideFirestore(() => getFirestore()), // storage
+    provideFirestore(() => getFirestore())
   ],
   providers: [
     { provide: LOCALE_ID, useValue: 'es' },
     UserService,
-    UserGuard
+    UserGuard,
   ],
   bootstrap: [AppComponent],
+  exports: []
 })
 export class AppModule {}

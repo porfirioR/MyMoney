@@ -13,9 +13,13 @@ export class UserService extends ItemObservable<UserDataModel> {
     super()
   }
 
-  public getUserEmail = (): string => this.item.email
+  public getUserEmail = (): string => {
+    return this.item!.email as string
+  }
 
-  public getAllCategories = (): CategoryModel[] => this.item.allCategories
+  public getAllCategories = (): CategoryModel[] =>  {
+    return this.item!.allCategories
+  }
 
   public setUser = (user: UserDataModel): void => {
     this.setItem(user)
@@ -24,13 +28,15 @@ export class UserService extends ItemObservable<UserDataModel> {
   public setCategories = (allCategories: CategoryModel[], userCategories: UserCategoryModel[]): CategoryModel[] => {
     const ignoreSystemCategories = userCategories.map(x => x.categoryId)
     const activeCategories = allCategories.filter(x => !ignoreSystemCategories.includes(x.id))
-    const item = this.item
+    const item = this.item!
     item.allCategories = allCategories
     item.activeCategories = activeCategories
     this.setItem(item)
     return activeCategories
   }
 
-  public getActiveCategories =() => this.item.activeCategories
+  public getActiveCategories = () => {
+    return this.item!.activeCategories
+  }
 
 }

@@ -20,6 +20,7 @@ const routes: Routes = [
   },
   {
     path: 'category',
+    canActivate: [UserGuard],
     component: CategoryConfigurationComponent,
   },
   {
