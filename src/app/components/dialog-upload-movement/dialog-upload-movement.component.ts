@@ -24,6 +24,7 @@ export class DialogUploadMovementComponent implements OnInit {
     const types = this.data.map(x => x.type).filter((value, index, self) => self.indexOf(value) === index)
     const references = types.map(type => ({type: type, reference: this.movementService.batchReference(type)}))
     this.data.forEach((request, i) => {
+      request.amount = Math.abs(request.amount)
       batch.set(references.find(x => x.type === request.type)?.reference as DocumentReference<DocumentData>, Object.assign({}, request))
       let index = i + 1
       if (index % 500 === 0 || index === this.data.length) {

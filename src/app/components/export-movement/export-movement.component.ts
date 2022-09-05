@@ -1,13 +1,13 @@
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { BehaviorSubject, combineLatest, combineLatestAll, combineLatestWith, concat, concatMap, endWith, forkJoin, merge, Observable, take, tap, timeout, zip } from 'rxjs';
+import { combineLatest } from 'rxjs';
 import { CategoryType } from '../../enums/category-type.enum';
 import { ExportRequestModel } from '../../models/export-request.model';
+import { MovementModel } from '../../models/movement.model';
 import { environment } from '../../../environments/environment';
 import { MovementService } from '../../services/movement.service';
 import { UserService } from '../../services/user.service';
-import { MovementModel } from 'src/app/models/movement.model';
 
 @Component({
   selector: 'app-export-movement',
@@ -43,7 +43,6 @@ export class ExportMovementComponent implements OnInit {
     const movements$ = this.request.categories.map(x => this.movementService.getMovementToExport(x, this.request.startDate, this.request.endDate))
     combineLatest(movements$).subscribe({
       next: (response: MovementModel[][] | MovementModel[]) => {
-        console.log(response);
         this.temporal = this.temporal.concat(response.flatMap(x => x))
       }, error: (e) => {
         this.loading = false
@@ -54,11 +53,7 @@ export class ExportMovementComponent implements OnInit {
     
     setTimeout(() => {
       const unique = this.temporal.filter((x, i, self) => i !== self.indexOf(x))
-      console.log(this.temporal);
-      console.log(unique);
-      
-      this.loading = false
-      // this.returnExport(this.temporal)
+      this.returnExport(unique)
     }, 10000);
   }
 
@@ -83,5 +78,6 @@ export class ExportMovementComponent implements OnInit {
     document.body.appendChild(a)
     a.click()
     document.body.removeChild(a)
+    this.loading = false
   }
 }
