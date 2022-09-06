@@ -42,7 +42,9 @@ export class ImportMovementComponent implements OnInit {
       switch (file.type) {
         case 'text/csv':
           this.file = file;
-        this.errorMessageList = []
+          this.errorMessageList = []
+          this.openPopUp = false
+          this.importRequest = []
         break;
         default:
           this.openPopUp = false
@@ -65,7 +67,7 @@ export class ImportMovementComponent implements OnInit {
         this.openPopUp = false
         this.snackBar.open('Empty file', '', { duration: 3000 })
         return
-      } else if (rows.shift() !== this.csvHeader) {
+      } else if (!rows.shift()?.startsWith(this.csvHeader)) {
         this.loading = false
         this.openPopUp = false
         this.snackBar.open('Invalid first row', '', { duration: 3000 })
@@ -83,7 +85,7 @@ export class ImportMovementComponent implements OnInit {
           const request: MovementModel = {
             amount: Number(importMovementRequest.amount),
             type: importMovementRequest.type === CategoryType.expense ? CategoryType.expense : CategoryType.income,
-            time: new Date(`${importMovementRequest.date as string}:00:00:00`).getTime(),
+            time: new Date(`${importMovementRequest.date as string} 00:00:00`).getTime(),
             categoryId: category.id,
             categoryName: category.name,
             icon: category.icon,
@@ -112,7 +114,7 @@ export class ImportMovementComponent implements OnInit {
         this.openPopUp = false
         this.file = undefined
         this.importRequest = []
-        this.snackBar.open('Load all movement was successful', '', { duration: 3000 })
+        this.snackBar.open('Load all movement was successful', '', { duration: 10000 })
       }
     })
   }
@@ -135,10 +137,10 @@ export class ImportMovementComponent implements OnInit {
       invalid = true
       errors.push(`Invalid column value, expected some value but was empty in row ${index}`)
     }
-    const dateArray = importMovement.date?.split('-')
+    const dateArray = importMovement.date?.split('/')
     if (dateArray && dateArray.length !== 3) {
       invalid = true
-      errors.push(`Invalid column date, expected yyyy-mm-dd but was ${importMovement.date} in row ${index}`)
+      errors.push(`Invalid column date, expected yyyy/mm/dd but was ${importMovement.date} in row ${index}`)
     }
     const year = Number((dateArray as string[]).shift())
     const month = Number((dateArray as string[]).shift())

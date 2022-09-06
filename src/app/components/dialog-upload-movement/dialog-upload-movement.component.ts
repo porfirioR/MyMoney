@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MovementService } from '../../services/movement.service';
 import { MovementModel } from '../../models/movement.model';
-import { DocumentData, DocumentReference } from '@angular/fire/firestore';
+import { CollectionReference, doc, DocumentData } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-dialog-upload-movement',
@@ -13,7 +13,9 @@ export class DialogUploadMovementComponent implements OnInit {
   protected loading = false
   constructor(private readonly dialogRef: MatDialogRef<DialogUploadMovementComponent>,
               @Inject(MAT_DIALOG_DATA) protected data: MovementModel[],
-              private readonly movementService: MovementService) { }
+              private readonly movementService: MovementService) {
+                dialogRef.disableClose = true;
+              }
 
   ngOnInit() { }
 
@@ -25,7 +27,8 @@ export class DialogUploadMovementComponent implements OnInit {
     const references = types.map(type => ({type: type, reference: this.movementService.batchReference(type)}))
     this.data.forEach((request, i) => {
       request.amount = Math.abs(request.amount)
-      batch.set(references.find(x => x.type === request.type)?.reference as DocumentReference<DocumentData>, Object.assign({}, request))
+      const docReference = doc(references.find(x => x.type === request.type)?.reference as CollectionReference<DocumentData>)
+      batch.set(docReference, Object.assign({}, request))
       let index = i + 1
       if (index % 500 === 0 || index === this.data.length) {
         commits.push(batch.commit())

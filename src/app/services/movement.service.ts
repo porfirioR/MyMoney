@@ -60,8 +60,8 @@ export class MovementService {
     return collection(this.firestore, `${this.collections}/${this.userService.getUserEmail()}/${category.toLowerCase()}`)
   }
 
-  public batchReference = (category: CategoryType): DocumentReference => {
-    return doc(this.firestore, `${this.collections}/${this.userService.getUserEmail()}/${category.toLowerCase()}`)
+  public batchReference = (category: CategoryType): CollectionReference => {
+    return collection(this.firestore, `${this.collections}/${this.userService.getUserEmail()}/${category.toLowerCase()}`)
   }
 
   public getMovementToExport = (category: CategoryType, startDate: Date, endDate: Date) => {
