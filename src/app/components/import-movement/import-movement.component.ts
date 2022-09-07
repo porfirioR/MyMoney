@@ -85,7 +85,7 @@ export class ImportMovementComponent implements OnInit {
           const request: MovementModel = {
             amount: Number(importMovementRequest.amount),
             type: importMovementRequest.type === CategoryType.expense ? CategoryType.expense : CategoryType.income,
-            time: new Date(`${importMovementRequest.date as string} 00:00:00`).getTime(),
+            time: new Date(`${importMovementRequest.date!} 00:00:00`).getTime(),
             categoryId: category.id,
             categoryName: category.name,
             icon: category.icon,
@@ -142,9 +142,9 @@ export class ImportMovementComponent implements OnInit {
       invalid = true
       errors.push(`Invalid column date, expected yyyy/mm/dd but was ${importMovement.date} in row ${index}`)
     }
-    const year = Number((dateArray as string[]).shift())
-    const month = Number((dateArray as string[]).shift())
-    const day = Number((dateArray as string[]).shift())
+    const year = Number((dateArray!).shift())
+    const month = Number((dateArray!).shift())
+    const day = Number((dateArray!).shift())
     if (!Number.isInteger(year) || year < 2015) {
       invalid = true
       errors.push(`Invalid year, expected min year 2015 but was ${year} in row ${index}`)

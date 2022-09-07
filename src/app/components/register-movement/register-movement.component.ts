@@ -87,12 +87,12 @@ export class RegisterMovementComponent implements OnInit {
   protected save = () => {
     const request: MovementModel = this.formGroup.getRawValue()
     request.date?.setHours(0, 0, 0, 0)
-    request.time = request.date?.getTime() as number
+    request.time = request.date?.getTime()!
     delete request.date
     this.saving = true
     let request$: Promise<void> | Promise<DocumentReference<DocumentData>> | Promise<[DocumentReference<DocumentData>, void]>
     if (this.movementId && request.type !== this.updateMovement?.type) {
-      request$ = Promise.all([this.movementService.create(request), this.movementService.delete(this.movementId, this.updateMovement?.type as CategoryType)])
+      request$ = Promise.all([this.movementService.create(request), this.movementService.delete(this.movementId, this.updateMovement?.type!)])
     } else if(this.movementId) {
       request.id = this.movementId
       request$ = this.movementService.update(request)
@@ -101,7 +101,7 @@ export class RegisterMovementComponent implements OnInit {
     }
     request$.then(() => {
       this.saving = false
-      const movementUpdated = this.movementService.getMovementById(this.movementId) as MovementModel
+      const movementUpdated = this.movementService.getMovementById(this.movementId)!
       if (request.id) {
         movementUpdated.type = request.type
         movementUpdated.icon = request.icon

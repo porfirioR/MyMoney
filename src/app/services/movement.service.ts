@@ -36,7 +36,7 @@ export class MovementService {
   }
 
   public delete = (id: string, type: CategoryType): Promise<void> => {
-    const ref = doc(this.firestore, `${this.collections}/${this.userService.getUserEmail()}/${type.toLowerCase()}/${id}`)
+    const ref = this.getMovementDocumentReferenceById(type, id)
     return deleteDoc(ref)
   }
 
@@ -52,15 +52,11 @@ export class MovementService {
     this.movementList = this.movementList.filter(x => x.id === id)
   }
 
-  public openBranch = (): WriteBatch => {
+  public openBatch = (): WriteBatch => {
     return writeBatch(this.firestore)
   }
 
-  private getReference = (category: CategoryType): CollectionReference => {
-    return collection(this.firestore, `${this.collections}/${this.userService.getUserEmail()}/${category.toLowerCase()}`)
-  }
-
-  public batchReference = (category: CategoryType): CollectionReference => {
+  public getReference = (category: CategoryType): CollectionReference => {
     return collection(this.firestore, `${this.collections}/${this.userService.getUserEmail()}/${category.toLowerCase()}`)
   }
 
@@ -73,4 +69,11 @@ export class MovementService {
     const ref = query(this.getReference(category), where('time', '>=', startTime), where('time', '<=', endTime), orderBy('time'))
     return collectionData<MovementModel>(ref as Query<MovementModel>, { idField: 'id' })
   }
+
+  public getMovementsByCategoryId = (category: CategoryType, categoryId: string) => {
+    const ref = query(this.getReference(category), where('categoryId', '==', categoryId), orderBy('time'))
+    return collectionData<MovementModel>(ref as Query<MovementModel>, { idField: 'id' })
+  }
+
+  public getMovementDocumentReferenceById = (type: CategoryType, id: string) => doc(this.firestore, `${this.collections}/${this.userService.getUserEmail()}/${type.toLowerCase()}/${id}`)
 }

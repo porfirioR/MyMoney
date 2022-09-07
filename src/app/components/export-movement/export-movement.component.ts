@@ -22,7 +22,7 @@ export class ExportMovementComponent implements OnInit {
     endDate: new FormControl('', [Validators.required]),
     categories: new FormControl('', [Validators.required])
   })
-  private temporal:MovementModel[] = []
+  private movementListResponse:MovementModel[] = []
   protected categories = CategoryType
   private request!: ExportRequestModel
   constructor(private readonly location: Location,
@@ -37,13 +37,13 @@ export class ExportMovementComponent implements OnInit {
   }
 
   protected export = () => {
-    this.temporal = []
+    this.movementListResponse = []
     this.loading = true
-    this.request = this.formGroup.getRawValue() as ExportRequestModel
+    this.request = this.formGroup.getRawValue()
     const movements$ = this.request.categories.map(x => this.movementService.getMovementToExport(x, this.request.startDate, this.request.endDate))
     combineLatest(movements$).subscribe({
       next: (response: MovementModel[][] | MovementModel[]) => {
-        this.temporal = this.temporal.concat(response.flatMap(x => x))
+        this.movementListResponse = this.movementListResponse.concat(response.flatMap(x => x))
       }, error: (e) => {
         this.loading = false
         console.error(e);
@@ -52,7 +52,7 @@ export class ExportMovementComponent implements OnInit {
     })
     
     setTimeout(() => {
-      const unique = this.temporal.filter((x, i, self) => i !== self.indexOf(x))
+      const unique = this.movementListResponse.filter((x, i, self) => i !== self.indexOf(x))
       this.returnExport(unique)
     }, 10000);
   }

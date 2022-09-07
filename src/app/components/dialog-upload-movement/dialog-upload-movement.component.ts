@@ -21,10 +21,10 @@ export class DialogUploadMovementComponent implements OnInit {
 
   protected upload = () => {
     this.loading = true
-    let batch = this.movementService.openBranch()
+    let batch = this.movementService.openBatch()
     let commits: Promise<void>[] = []
     const types = this.data.map(x => x.type).filter((value, index, self) => self.indexOf(value) === index)
-    const references = types.map(type => ({type: type, reference: this.movementService.batchReference(type)}))
+    const references = types.map(type => ({type: type, reference: this.movementService.getReference(type)}))
     this.data.forEach((request, i) => {
       request.amount = Math.abs(request.amount)
       const docReference = doc(references.find(x => x.type === request.type)?.reference as CollectionReference<DocumentData>)
@@ -33,7 +33,7 @@ export class DialogUploadMovementComponent implements OnInit {
       if (index % 500 === 0 || index === this.data.length) {
         commits.push(batch.commit())
         if (index % 500 === 0) {
-          batch = this.movementService.openBranch()
+          batch = this.movementService.openBatch()
         }
       }
     })

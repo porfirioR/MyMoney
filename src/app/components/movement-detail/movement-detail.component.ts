@@ -47,7 +47,7 @@ export class MovementDetailComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.movementService.delete(this.movement?.id as string, this.movement?.type as CategoryType).then(() => {
+        this.movementService.delete(this.movement?.id!, this.movement?.type!).then(() => {
           this.snackBar.open('Movement was deleted', '', { duration: 3000 })
           this.exit()
         }).catch((reason: any) => {

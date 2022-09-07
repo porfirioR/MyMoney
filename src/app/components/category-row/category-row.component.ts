@@ -8,6 +8,7 @@ import { UserCategoryModel } from '../../models/user-category.model'
 import { DialogDeleteComponent } from '../dialog-delete/dialog-delete.component'
 import { CategoryEvent } from '../../models/category-event.model'
 import { ResourceType } from '../../enums/resource-type.enum'
+import { MovementService } from '../../services/movement.service'
 
 @Component({
   selector: 'app-category-row',
@@ -21,7 +22,8 @@ export class CategoryRowComponent implements OnInit {
   constructor(private readonly categoryService: CategoryService,
               private readonly snackBar: MatSnackBar,
               private readonly dialog: MatDialog,
-              private readonly userCategoryService: UserCategoryService) { }
+              private readonly userCategoryService: UserCategoryService,
+              private readonly movementService: MovementService) { }
 
   ngOnInit() {
     if (this.category && this.category.owner !== this.ownerSystem) {
@@ -43,7 +45,7 @@ export class CategoryRowComponent implements OnInit {
             .then(() => {
               const categoryEvent = new CategoryEvent(this.category.type)
               this.category.active = request.active
-              this.updateCategoryEvent.emit(categoryEvent)
+              this.deleteAllMovementReferences(categoryEvent)
               this.snackBar.open('The category was deleted', '', { duration: 3000 })
             })
             .catch((reason) => this.snackBar.open(reason, '', { duration: 3000 }))
@@ -52,7 +54,7 @@ export class CategoryRowComponent implements OnInit {
             .then(() => {
               this.snackBar.open('The category was deleted', '', { duration: 3000 })
               const categoryEvent = new CategoryEvent(this.category.type, this.category.id)
-              this.updateCategoryEvent.emit(categoryEvent)
+              this.deleteAllMovementReferences(categoryEvent)
             })
             .catch((reason) => this.snackBar.open(reason, '', { duration: 3000 }))
           }
@@ -68,6 +70,29 @@ export class CategoryRowComponent implements OnInit {
         this.updateCategoryEvent.emit(categoryEvent)
       })
     }
+  }
+
+  private deleteAllMovementReferences = (categoryEvent: CategoryEvent) => {
+    let batch = this.movementService.openBatch()
+    let commits: Promise<void>[] = []
+    this.movementService.getMovementsByCategoryId(this.category.type, this.category.id).subscribe({
+      next: (movements) => {
+        movements.forEach((request, i) => {
+          const docReference = this.movementService.getMovementDocumentReferenceById(this.category.type, request.id!)
+          batch.delete(docReference)
+          let index = i + 1
+          if (index % 500 === 0 || index === movements.length) {
+            commits.push(batch.commit())
+            if (index % 500 === 0) {
+              batch = this.movementService.openBatch()
+            }
+          }
+        })
+        Promise.all(commits)
+        .then(() => this.updateCategoryEvent.emit(categoryEvent))
+        .catch((e) => console.error(e))
+      }, error: (e) => console.error(e)
+    })
   }
 
 }

@@ -14,7 +14,7 @@ export class UserService extends ItemObservable<UserDataModel> {
   }
 
   public getUserEmail = (): string => {
-    return this.item!.email as string
+    return this.item!.email!
   }
 
   public getAllCategories = (): CategoryModel[] =>  {

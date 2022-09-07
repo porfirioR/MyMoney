@@ -21,7 +21,7 @@ export class LoginComponent implements OnInit {
     this.authService.loginWithGoogle()
     .then((x: UserCredential) => {
       const userData: UserDataModel = {
-        email: x.user.email as string,
+        email: x.user.email!,
         activeCategories: [],
         allCategories: []
       }

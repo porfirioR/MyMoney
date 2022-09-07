@@ -20,7 +20,7 @@ export class MovementComponent implements OnInit {
   ngOnInit() {
     this.totalIncome = this.groupDateMovement.income
     this.totalExpense = this.groupDateMovement.expense
-    this.groupDateMovement.movements.forEach(x => x.categoryName = this.categories.find(y => y.id === x.categoryId)?.name as string)
+    this.groupDateMovement.movements.forEach(x => x.categoryName = this.categories.find(y => y.id === x.categoryId)?.name!)
   }
 
 }

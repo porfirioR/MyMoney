@@ -43,7 +43,7 @@ export class PrincipalComponent implements OnInit {
     onAuthStateChanged(getAuth(), (user) => {
       if (user) {
         const userData: UserDataModel = {
-          email: user.email as string,
+          email: user.email!,
           activeCategories: [],
           allCategories: []
         }
@@ -99,8 +99,8 @@ export class PrincipalComponent implements OnInit {
 
   private getMovements = (): Observable<[MovementModel[], MovementModel[]]> => {
     this.loading = true
-    const expenseList$ = this.movementService.getBySelectedMonth(CategoryType.expense, this.yearMonth?.month as number, this.yearMonth?.year as number)
-    const incomeList$ = this.movementService.getBySelectedMonth(CategoryType.income, this.yearMonth?.month as number, this.yearMonth?.year as number)
+    const expenseList$ = this.movementService.getBySelectedMonth(CategoryType.expense, this.yearMonth?.month!, this.yearMonth?.year!)
+    const incomeList$ = this.movementService.getBySelectedMonth(CategoryType.income, this.yearMonth?.month!, this.yearMonth?.year!)
     return combineLatest([expenseList$, incomeList$])
   }
 
@@ -109,7 +109,7 @@ export class PrincipalComponent implements OnInit {
     this.movements.forEach(x => x.date = new Date(x.time))
     this.movements = this.movements.sort((a, b) => b.time - a.time)
     this.movements.forEach((movement: MovementModel) => {
-      const date = movement.date as Date
+      const date = movement.date!
       let dateMovement = this.groupDateMovementList.find(x => x.date.getTime() === date.getTime())
       if (dateMovement) {
         dateMovement.movements.push(movement)

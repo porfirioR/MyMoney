@@ -17,7 +17,7 @@ export class SelectYearMountComponent implements OnInit {
   constructor(private dialogRef: MatDialogRef<SelectYearMountComponent>,
               @Inject(MAT_DIALOG_DATA) private yearMonth: YearMonthModel) {
     const currentYear = this.yearMonth.year
-    const currentMonth = this.yearMonth.monthLabel ? this.yearMonth.monthLabel : this.months[this.yearMonth.month] as string
+    const currentMonth = this.yearMonth.monthLabel ? this.yearMonth.monthLabel : this.months[this.yearMonth.month]
     this.formGroup = new FormGroup( {
       year: new FormControl(currentYear),
       month: new FormControl(currentMonth),
