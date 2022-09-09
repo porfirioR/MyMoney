@@ -11,6 +11,7 @@ import { ImportMovementComponent } from './components/import-movement/import-mov
 import { ExportMovementComponent } from './components/export-movement/export-movement.component';
 import { LogoutComponent } from './components/logout/logout.component';
 import { UserGuard } from './guards/user.guard';
+import { ReportMonthComponent } from './components/report-month/report-month.component';
 
 const routes: Routes = [
   {
@@ -52,6 +53,11 @@ const routes: Routes = [
     path: 'export',
     canActivate: [UserGuard],
     component: ExportMovementComponent
+  },
+  {
+    path: 'report-month/:type',
+    canActivate: [UserGuard],
+    component: ReportMonthComponent
   },
   {
     path: 'login',

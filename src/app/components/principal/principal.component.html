@@ -16,14 +16,14 @@
     <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
     <mat-card class="mat-card-header">
       <span class="amount-header">
-        <span matRipple [matRippleCentered]="true" [matRippleUnbounded]="true">
+        <span matRipple [matRippleCentered]="true" [matRippleUnbounded]="true" [routerLink]="['report-month', categoryType.income]">
           <label>
             Ingresos
           </label>
           <p>{{income | number:'':'es'}}</p>
         </span>
         <hr>
-        <span matRipple [matRippleCentered]="true" [matRippleUnbounded]="true">
+        <span matRipple [matRippleCentered]="true" [matRippleUnbounded]="true" [routerLink]="['report-month', categoryType.expense]">
           <label>
             Gastos
           </label>

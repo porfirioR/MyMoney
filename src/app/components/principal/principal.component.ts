@@ -30,7 +30,7 @@ export class PrincipalComponent implements OnInit {
   protected groupDateMovementList: GroupDateMovementModel[] = []
   protected categories: CategoryModel[] = []
   protected messageSearch = 'Search'
-
+  protected categoryType = CategoryType
   constructor(private readonly dialog: MatDialog,
               private readonly categoryService: CategoryService,
               private readonly movementService: MovementService,

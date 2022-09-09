@@ -50,6 +50,8 @@ import { NgxMaskModule } from 'ngx-mask';
 import { ExportMovementComponent } from './components/export-movement/export-movement.component';
 import { UserGuard } from './guards/user.guard';
 import { UserService } from './services/user.service';
+import { NgChartsModule } from 'ng2-charts';
+import { ReportMonthComponent } from './components/report-month/report-month.component';
 registerLocaleData(localEs, 'es')
 
 
@@ -70,7 +72,8 @@ registerLocaleData(localEs, 'es')
     ImportMovementComponent,
     ExportMovementComponent,
     DialogUploadMovementComponent,
-    LogoutComponent
+    LogoutComponent,
+    ReportMonthComponent
   ],
   imports: [
     BrowserModule,
@@ -84,7 +87,8 @@ registerLocaleData(localEs, 'es')
     BrowserAnimationsModule,
     FormsModule,
     ReactiveFormsModule,
-
+    NgChartsModule,
+    
     MatToolbarModule,
     MatIconModule,
     MatTabsModule,
