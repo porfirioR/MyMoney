@@ -27,7 +27,7 @@
         <button class="btn-icon" mat-mini-fab (click)="updateIcon(icon)"
             *ngFor="let icon of group.icons"
             [color]="icon === formGroup.get('icon')?.value ? 'primary': ''">
-          <i class="material-icons-outlined">{{icon}}</i>
+          <i class="material-icons-outlined notranslate">{{icon}}</i>
         </button>
       </div>
     </span>

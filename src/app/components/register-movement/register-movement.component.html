@@ -24,9 +24,9 @@
       <span class="btn-block" *ngFor="let category of currentCategories">
         <button class="btn-icon" mat-fab (click)="selectedIcon(category)"
           [color]="category.icon === formGroup.get('icon')?.value && category.id === formGroup.get('categoryId')?.value? 'primary': ''">
-          <i class="material-icons-outlined">{{category.icon}}</i>
+          <i class="material-icons-outlined notranslate">{{category.icon}}</i>
         </button>
-        <label>{{category.name}}</label>
+        <label>{{category.name | translate}}</label>
       </span>
     </div>
     <mat-card-content>

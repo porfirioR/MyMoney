@@ -5,8 +5,8 @@
   <button mat-icon-button (click)="deactivateReactivateCategory(category.active)" *ngIf="!category.active">
     <mat-icon class="icon-color-green">add_circle_outline</mat-icon>
   </button>
-  <i class="material-icons-outlined">{{category.icon}}</i>
-  <span class="category-name">{{category.name}}</span>
+  <i class="material-icons-outlined notranslate">{{category.icon}}</i>
+  <span class="category-name">{{category.name | translate}}</span>
   <button mat-icon-button disabled>
     <mat-icon>menu</mat-icon>
   </button>

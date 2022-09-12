@@ -24,6 +24,8 @@
     "@angular/platform-browser-dynamic": "^14.0.0",
     "@angular/router": "^14.0.0",
     "@angular/service-worker": "^14.0.0",
+    "@ngx-translate/core": "^14.0.0",
+    "@ngx-translate/http-loader": "^7.0.0",
     "chart.js": "^3.9.1",
     "firebase": "^9.9.2",
     "firebaseui": "^6.0.1",

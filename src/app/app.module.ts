@@ -52,6 +52,9 @@ import { UserGuard } from './guards/user.guard';
 import { UserService } from './services/user.service';
 import { NgChartsModule } from 'ng2-charts';
 import { ReportMonthComponent } from './components/report-month/report-month.component';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 registerLocaleData(localEs, 'es')
 
 
@@ -77,6 +80,14 @@ registerLocaleData(localEs, 'es')
   ],
   imports: [
     BrowserModule,
+    HttpClientModule,
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: HttpLoaderFactory,
+        deps: [HttpClient]
+      }
+    }),
     AppRoutingModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: environment.production,
@@ -123,3 +134,7 @@ registerLocaleData(localEs, 'es')
   exports: []
 })
 export class AppModule {}
+
+export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
+  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+}

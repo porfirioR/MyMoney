@@ -17,7 +17,7 @@
   </mat-tab>
   <mat-tab [label]="categoryType.income">
     <span *ngFor="let item of incomeCategory">
-      <app-category-row [category]="item"  (updateCategoryEvent)="updateCategories($event)"></app-category-row>
+      <app-category-row [category]="item" (updateCategoryEvent)="updateCategories($event)"></app-category-row>
     </span>
   </mat-tab>
 </mat-tab-group>
