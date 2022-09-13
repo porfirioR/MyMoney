@@ -19,7 +19,7 @@ import { UserCategoryService } from '../../services/user-category.service';
   styleUrls: ['./new-category.component.scss'],
 })
 export class NewCategoryComponent implements OnInit {
-  protected type!: string;
+  protected title!: string
   protected currentCategory: NewCategoryModel = new NewCategoryModel(
     CategoryType.income,
     [
@@ -83,12 +83,13 @@ export class NewCategoryComponent implements OnInit {
   ngOnInit() {
     this.route.params.subscribe({
       next: (value) => {
-        this.type = value['type']
+        const type = value['type']
+        this.title = `Add ${type} category`
         this.currentCategory
         this.formGroup = new FormGroup({
           name: new FormControl('', Validators.required),
           icon: new FormControl(this.currentCategory.groups[0].icons[0], Validators.required),
-          type: new FormControl(this.type, Validators.required),
+          type: new FormControl(type, Validators.required),
           active: new FormControl(true)
         })
       }

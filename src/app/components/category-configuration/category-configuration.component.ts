@@ -7,6 +7,7 @@ import { CategoryModel } from '../../models/category.model'
 import { CategoryService } from '../../services/category.service'
 import { HelperService } from '../../services/helper.service'
 import { CategoryEvent } from '../../models/category-event.model';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-category-configuration',
@@ -20,7 +21,9 @@ export class CategoryConfigurationComponent implements OnInit {
   protected categoryType = CategoryType
   protected loading = true
 
-  constructor(private categoryService: CategoryService, private readonly location: Location) { }
+  constructor(private categoryService: CategoryService,
+              private readonly location: Location,
+              private readonly userService: UserService) { }
 
   ngOnInit() {
     this.categoryService.getAll().pipe(take(1)).subscribe({
