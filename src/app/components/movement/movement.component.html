@@ -4,10 +4,10 @@
   </span>
   <span>
     <span class="incomeTitle" *ngIf="totalIncome && totalIncome > 0">
-      Ingresos: {{totalIncome | number:'':'es'}}
+      {{'Incomes' | translate}}: {{totalIncome | number:'':'es'}}
     </span>
     <span *ngIf="totalExpense && totalExpense > 0">
-      Gastos: {{totalExpense | number:'':'es'}}
+      {{'Expenses' | translate}}: {{totalExpense | number:'':'es'}}
     </span>
   </span>
 </span>

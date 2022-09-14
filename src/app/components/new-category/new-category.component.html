@@ -14,7 +14,7 @@
       <mat-icon>{{formGroup.get('icon')?.value}}</mat-icon>
     </button>
     <mat-form-field class="mat-from-field">
-      <input matInput placeholder="Category name" formControlName="name">
+      <input matInput placeholder="Category name" formControlName="name" #inputCategoryName>
     </mat-form-field>
     <button mat-icon-button color="primary" [disabled]="formGroup.invalid" (click)="save()">
       <mat-icon>done</mat-icon>

@@ -1,17 +1,17 @@
 import { Location } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { combineLatest, Observable, take } from 'rxjs';
+import { combineLatest, take } from 'rxjs';
 import { IconType } from '../../enums/icon-type.enum';
 import { MovementModel } from '../../models/movement.model';
 import { CategoryType } from '../../enums/category-type.enum';
 import { CategoryModel } from '../../models/category.model';
-import { CategoryService } from '../../services/category.service';
 import { HelperService } from '../../services/helper.service';
 import { MovementService } from '../../services/movement.service';
 import { ActivatedRoute } from '@angular/router';
 import { DocumentData, DocumentReference } from '@angular/fire/firestore';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-register-movement',
@@ -19,6 +19,7 @@ import { DocumentData, DocumentReference } from '@angular/fire/firestore';
   styleUrls: ['./register-movement.component.scss']
 })
 export class RegisterMovementComponent implements OnInit {
+  @ViewChild("memorandum") inputMemorandum?: ElementRef;
   protected categoryType = CategoryType
   private movementId!: string
   protected formGroup: FormGroup = new FormGroup({
@@ -27,7 +28,7 @@ export class RegisterMovementComponent implements OnInit {
     icon: new FormControl<IconType | ''>('', Validators.required),
     categoryId: new FormControl<string>('', Validators.required),
     memorandum: new FormControl<string>('', Validators.maxLength(50)),
-    date: new FormControl('', Validators.required),
+    date: new FormControl({value: '', disabled: true}, Validators.required),
     amount: new FormControl('', [Validators.required, Validators.min(0), Validators.minLength(1), Validators.max(999999999999)])
   })
   protected currentCategories!: CategoryModel[]
@@ -36,21 +37,24 @@ export class RegisterMovementComponent implements OnInit {
   private categoryList!: CategoryModel[]
   private updateMovement?: MovementModel
 
-  constructor(private categoryService: CategoryService,
+  constructor(
     private readonly movementService: MovementService,
     protected location: Location,
     private readonly snackBar: MatSnackBar,
-    private readonly activatedRoute: ActivatedRoute) { }
+    private readonly activatedRoute: ActivatedRoute,
+    private readonly userService: UserService) { }
 
   ngOnInit() {
-    combineLatest([this.activatedRoute.params, this.categoryService.getAll().pipe(take(1))]).subscribe({
+    combineLatest([this.activatedRoute.params, this.userService.getActiveCategories$().pipe(take(1))]).subscribe({
       next: ([params, categories]) => {
         this.movementId = params['id']
-        this.categoryList = categories.filter(x => x.active)
+        this.categoryList = categories
         this.updateMovement = this.movementService.getMovementById(this.movementId)
         this.updateMovement ?
           this.patchFormGroup(this.updateMovement) :
           this.currentCategories = HelperService.categoriesByType(this.categoryList, this.categoryType.expense)
+        this.formGroup.controls['icon'].setValue(this.categoryList[0].icon)
+        this.formGroup.controls['categoryId'].setValue(this.categoryList[0].id)
         this.formGroup.controls['type'].valueChanges.subscribe({
           next: (value) => {
             this.currentCategories = HelperService.categoriesByType(this.categoryList, value)
@@ -78,6 +82,7 @@ export class RegisterMovementComponent implements OnInit {
   protected selectedIcon = (category: CategoryModel) => {
     this.formGroup.controls['icon'].setValue(category.icon)
     this.formGroup.controls['categoryId'].setValue(category.id)
+    this.inputMemorandum?.nativeElement.focus()
   }
 
   protected exit = () => {

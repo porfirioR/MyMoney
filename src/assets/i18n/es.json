@@ -2,5 +2,14 @@
   "Dentist": "Dentista",
   "home": "casa",
   "Add Expense category": "Agregar categoría gasto",
-  "Add Income category": "Agregar categoría ingreso"
+  "Add Income category": "Agregar categoría ingreso",
+  "Incomes": "Ingresos",
+  "Expenses": "Gastos",
+  "Difference": "Diferencia",
+  "Search": "Buscar",
+  "My Money": "Mi dinero",
+  "Memorandum": "Memorándum",
+  "Save": "Guardar",
+  "Date": "Fecha",
+  "Amount": "Monto"
 }

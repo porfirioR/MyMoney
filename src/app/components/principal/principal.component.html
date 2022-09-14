@@ -7,9 +7,9 @@
       <button mat-icon-button (click)="sidenav.toggle()">
         <mat-icon>menu</mat-icon>
       </button>
-      <span>My Money</span>
+      <span>{{'My Money' | translate}}</span>
       <button mat-stroked-button (click)="openBottomSheet()">
-        {{yearMonth?.monthLabel ? yearMonth?.monthLabel : 'Search'}}
+        {{yearMonth?.monthLabel ? yearMonth?.monthLabel : 'Search' | translate}}
       </button>
     </mat-toolbar>
     <div class="header-height"></div>
@@ -18,21 +18,21 @@
       <span class="amount-header">
         <span matRipple [matRippleCentered]="true" [matRippleUnbounded]="true" [routerLink]="['report-month', categoryType.income]">
           <label>
-            {{'Ingresos' | translate}}
+            {{'Incomes' | translate}}
           </label>
           <p>{{income | number:'':'es'}}</p>
         </span>
         <hr>
         <span matRipple [matRippleCentered]="true" [matRippleUnbounded]="true" [routerLink]="['report-month', categoryType.expense]">
           <label>
-            Gastos
+            {{'Expenses' | translate}}
           </label>
           <p>{{expenses | number:'':'es'}}</p>
         </span>
         <hr>
         <span>
           <label>
-            Equilibrio
+            {{'Difference' | translate}}
           </label>
           <p>{{balance | number:'':'es'}}</p>
         </span>

@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { map, Observable } from 'rxjs';
 import { CategoryModel } from '../models/category.model';
 import { UserCategoryModel } from '../models/user-category.model';
 import { UserDataModel } from '../models/user-data.model';
@@ -37,6 +38,10 @@ export class UserService extends ItemObservable<UserDataModel> {
 
   public getActiveCategories = () => {
     return this.item!.activeCategories
+  }
+
+  public getActiveCategories$ = (): Observable<CategoryModel[]> => {
+    return this.getItemObservable$.pipe(map(x => x.activeCategories))
   }
 
 }

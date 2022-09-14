@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Location } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
@@ -19,6 +19,8 @@ import { UserCategoryService } from '../../services/user-category.service';
   styleUrls: ['./new-category.component.scss'],
 })
 export class NewCategoryComponent implements OnInit {
+  @ViewChild("inputCategoryName") inputCategoryName?: ElementRef;
+
   protected title!: string
   protected currentCategory: NewCategoryModel = new NewCategoryModel(
     CategoryType.income,
@@ -75,11 +77,11 @@ export class NewCategoryComponent implements OnInit {
   protected formGroup!: FormGroup
 
   constructor(protected location: Location,
-    protected route: ActivatedRoute,
-    private categoryService: CategoryService,
-    private snackBar: MatSnackBar,
-    private readonly userCategoryService: UserCategoryService) { }
-
+  protected route: ActivatedRoute,
+  private categoryService: CategoryService,
+  private snackBar: MatSnackBar,
+  private readonly userCategoryService: UserCategoryService) { }
+  
   ngOnInit() {
     this.route.params.subscribe({
       next: (value) => {
@@ -102,6 +104,7 @@ export class NewCategoryComponent implements OnInit {
 
   protected updateIcon = (icon: IconType) => {
     this.formGroup.get('icon')?.setValue(icon)
+    this.inputCategoryName?.nativeElement.focus()
   }
 
   protected save = () => {

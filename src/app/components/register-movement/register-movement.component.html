@@ -34,26 +34,26 @@
         <span matPrefix>
           <mat-icon>{{formGroup.get('icon')?.value}}</mat-icon>
         </span>
-        <mat-label>Memorándum</mat-label>
-        <input matInput type="text" formControlName="memorandum">
+        <mat-label>{{'Memorandum' | translate}}</mat-label>
+        <input matInput type="text" formControlName="memorandum" #memorandum>
         <mat-error *ngIf="formGroup.get('memorandum')?.hasError('maxlength')">Value cannot exceed 50 character.</mat-error>
       </mat-form-field>
       <mat-form-field appearance="fill" class="w-100">
-        <mat-label>Amount</mat-label>
+        <mat-label>{{'Amount' | translate}}</mat-label>
         <input matInput type="text" formControlName="amount" [mask]="'separator.0'" thousandSeparator=".">
         <mat-error *ngIf="formGroup.get('amount')?.hasError('maxlength') || formGroup.get('amount')?.hasError('max')">Value cannot exceed 12 digit.</mat-error>
       </mat-form-field>
       <mat-form-field appearance="fill" class="w-100">
-        <mat-label>Date</mat-label>
+        <mat-label>{{'Date' | translate}}</mat-label>
         <input matInput [matDatepicker]="picker" formControlName="date">
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-        <mat-datepicker #picker></mat-datepicker>
+        <mat-datepicker #picker disabled="false"></mat-datepicker>
       </mat-form-field>
     </mat-card-content>
     <mat-card-footer>
       <button mat-stroked-button color="primary" (click)="exit()">Cancel</button>
       <button mat-stroked-button color="primary" type="submit" [disabled]="formGroup.invalid"
-        (click)="save()">Save</button>
+        (click)="save()">{{'Save' | translate}}</button>
     </mat-card-footer>
   </mat-card>
 </form>
