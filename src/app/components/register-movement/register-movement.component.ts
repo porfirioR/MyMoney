@@ -2,15 +2,15 @@ import { Location } from '@angular/common';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ActivatedRoute } from '@angular/router';
+import { DocumentData, DocumentReference } from '@angular/fire/firestore';
 import { combineLatest, take } from 'rxjs';
 import { IconType } from '../../enums/icon-type.enum';
-import { MovementModel } from '../../models/movement.model';
 import { CategoryType } from '../../enums/category-type.enum';
+import { MovementModel } from '../../models/movement.model';
 import { CategoryModel } from '../../models/category.model';
 import { HelperService } from '../../services/helper.service';
 import { MovementService } from '../../services/movement.service';
-import { ActivatedRoute } from '@angular/router';
-import { DocumentData, DocumentReference } from '@angular/fire/firestore';
 import { UserService } from '../../services/user.service';
 
 @Component({
@@ -50,11 +50,14 @@ export class RegisterMovementComponent implements OnInit {
         this.movementId = params['id']
         this.categoryList = categories
         this.updateMovement = this.movementService.getMovementById(this.movementId)
-        this.updateMovement ?
-          this.patchFormGroup(this.updateMovement) :
+        if (this.updateMovement) {
+          this.patchFormGroup(this.updateMovement)
+        } else {
           this.currentCategories = HelperService.categoriesByType(this.categoryList, this.categoryType.expense)
-        this.formGroup.controls['icon'].setValue(this.categoryList[0].icon)
-        this.formGroup.controls['categoryId'].setValue(this.categoryList[0].id)
+          this.formGroup.controls['icon'].setValue(this.currentCategories[0].icon)
+          this.formGroup.controls['categoryId'].setValue(this.currentCategories[0].id)
+        }
+
         this.formGroup.controls['type'].valueChanges.subscribe({
           next: (value) => {
             this.currentCategories = HelperService.categoriesByType(this.categoryList, value)
@@ -74,7 +77,7 @@ export class RegisterMovementComponent implements OnInit {
         this.loading = false
       }, error: (e) => {
         this.loading = false
-        throw e;
+        throw e
       }
     })
   }

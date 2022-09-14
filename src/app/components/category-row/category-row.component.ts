@@ -1,22 +1,23 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core'
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core'
 import { MatSnackBar } from '@angular/material/snack-bar'
 import { MatDialog } from '@angular/material/dialog'
 import { CategoryService } from '../../services/category.service'
 import { UserCategoryService } from '../../services/user-category.service'
+import { MovementService } from '../../services/movement.service'
 import { CategoryModel } from '../../models/category.model'
 import { UserCategoryModel } from '../../models/user-category.model'
 import { DialogDeleteComponent } from '../dialog-delete/dialog-delete.component'
 import { CategoryEvent } from '../../models/category-event.model'
+import { MovementModel } from '../../models/movement.model'
 import { ResourceType } from '../../enums/resource-type.enum'
-import { MovementService } from '../../services/movement.service'
-import { MovementModel } from 'src/app/models/movement.model'
+import { take } from 'rxjs'
 
 @Component({
   selector: 'app-category-row',
   templateUrl: './category-row.component.html',
   styleUrls: ['./category-row.component.scss']
 })
-export class CategoryRowComponent implements OnInit {
+export class CategoryRowComponent implements OnInit, OnDestroy {
   @Input() category!: CategoryModel
   @Output() updateCategoryEvent = new EventEmitter<CategoryEvent>()
   private ownerSystem = ResourceType.ownerSystem
@@ -31,16 +32,20 @@ export class CategoryRowComponent implements OnInit {
       this.category.name += ' (propio)'
     }
   }
+  
+  ngOnDestroy(): void {
+    
+  }
 
   protected deactivateReactivateCategory = (active: boolean): void => {
     if (active) {
-      this.movementService.getMovementsByCategoryId(this.category.type, this.category.id).subscribe({
+      this.movementService.getMovementsByCategoryId(this.category.type, this.category.id).pipe(take(10)).subscribe({
         next: (deleteMovementList) => {
           const dialogRef = this.dialog.open(DialogDeleteComponent, {
             width: '350px',
             data: { title: 'Delete category', message: `Are you sure you want to delete this category?. All movements (${deleteMovementList.length}) related to this category will be deleted` }
           })
-          dialogRef.afterClosed().subscribe(result => {
+          dialogRef.afterClosed().pipe(take(1)).subscribe(result => {
             if (result) {
               if (this.category.owner === this.ownerSystem) {
                 const request = new UserCategoryModel(!active, this.category.id)
