@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { combineLatest, Observable, take } from 'rxjs';
+import { combineLatest, Observable, take, tap } from 'rxjs';
 import { CategoryModel } from '../../models/category.model';
 import { GroupDateMovementModel } from '../../models/group-date-movement.model';
 import { CategoryType } from '../../enums/category-type.enum';
@@ -14,6 +14,7 @@ import { UserCategoryService } from '../../services/user-category.service';
 import { UserService } from '../../services/user.service';
 import { getAuth, onAuthStateChanged } from '@angular/fire/auth';
 import { UserDataModel } from '../../models/user-data.model';
+import { collectionData, getDoc } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-principal',
@@ -55,14 +56,13 @@ export class PrincipalComponent implements OnInit {
   }
 
   ngOnInit() {
-    const requestMovement$ = this.getMovements()
+    const requestMovement$ = this.getMovements().pipe(take(1))
     const categories$ = this.categoryService.getAll().pipe(take(1))
-    const userCategories$ = this.userCategoryService.getUserCategories()
+    const userCategories$ = this.userCategoryService.getUserCategories().pipe(take(1), tap(x => x.forEach(y => y.categoryId = y.category!.path.split('\/').pop()!)))
     combineLatest([categories$, requestMovement$, userCategories$]).subscribe({
       next: ([categories, movements, userCategories]) => {
-        this.categories = categories
         this.prepareMovementListToView(movements)
-        this.userService.setCategories(categories, userCategories)
+        this.categories = this.userService.setCategories(categories, userCategories)
       }, error: (e) => {
         this.loading = false
         throw e;

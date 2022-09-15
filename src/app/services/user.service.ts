@@ -22,13 +22,18 @@ export class UserService extends ItemObservable<UserDataModel> {
     return this.item!.allCategories
   }
 
+  public getAllCategories$ = (): Observable<CategoryModel[]> => {
+    return this.getItemObservable$.pipe(map(x => x.allCategories))
+  }
+
   public setUser = (user: UserDataModel): void => {
     this.setItem(user)
   }
 
   public setCategories = (allCategories: CategoryModel[], userCategories: UserCategoryModel[]): CategoryModel[] => {
     const ignoreSystemCategories = userCategories.map(x => x.categoryId)
-    const activeCategories = allCategories.filter(x => !ignoreSystemCategories.includes(x.id))
+    allCategories.forEach(x => x.active = !ignoreSystemCategories.includes(x.id))
+    const activeCategories = allCategories.filter(x => x.active)
     const item = this.item!
     item.allCategories = allCategories
     item.activeCategories = activeCategories

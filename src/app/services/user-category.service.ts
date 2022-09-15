@@ -16,15 +16,7 @@ export class UserCategoryService {
 
   private userCategories: UserCategoryModel[] = []
 
-  constructor(private readonly firestore: Firestore, private readonly router: Router, private readonly userService: UserService) {
-    // onAuthStateChanged(getAuth(), (user) => {
-    //   if (user) {
-    //     this.email = user.email as string
-    //   } else {
-    //     this.router.navigate([''])
-    //   }
-    // })
-  }
+  constructor(private readonly firestore: Firestore, private readonly router: Router, private readonly userService: UserService) { }
 
   public upsertCategory = (userCategory: UserCategoryModel): Promise<void> | Promise<DocumentReference<DocumentData>>   => {
     const request: UserCategoryRequest = {
@@ -38,7 +30,7 @@ export class UserCategoryService {
       const ref = doc(this.firestore, `${this.userCategoryType}/${model.id}`)
       return setDoc(ref, request)
     } else {
-      return addDoc(this.getReference(),Object.assign({}, request))
+      return addDoc(this.getReference(), Object.assign({}, request))
     }
   }
 

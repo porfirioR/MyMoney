@@ -39,7 +39,7 @@ export class CategoryRowComponent implements OnInit, OnDestroy {
 
   protected deactivateReactivateCategory = (active: boolean): void => {
     if (active) {
-      this.movementService.getMovementsByCategoryId(this.category.type, this.category.id).pipe(take(10)).subscribe({
+      const result = this.movementService.getMovementsByCategoryId(this.category.type, this.category.id).subscribe({
         next: (deleteMovementList) => {
           const dialogRef = this.dialog.open(DialogDeleteComponent, {
             width: '350px',
@@ -68,6 +68,7 @@ export class CategoryRowComponent implements OnInit, OnDestroy {
               }
             }
           })
+          result.unsubscribe()
         }, error: (e) => {
           console.error(e);
           throw e;

@@ -4,10 +4,9 @@ import { MatTabChangeEvent } from '@angular/material/tabs'
 import { take } from 'rxjs';
 import { CategoryType } from '../../enums/category-type.enum'
 import { CategoryModel } from '../../models/category.model'
-import { CategoryService } from '../../services/category.service'
-import { HelperService } from '../../services/helper.service'
 import { CategoryEvent } from '../../models/category-event.model';
-import { UserService } from 'src/app/services/user.service';
+import { HelperService } from '../../services/helper.service'
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-category-configuration',
@@ -21,17 +20,18 @@ export class CategoryConfigurationComponent implements OnInit {
   protected categoryType = CategoryType
   protected loading = true
 
-  constructor(private categoryService: CategoryService,
+  constructor(
               private readonly location: Location,
               private readonly userService: UserService) { }
 
   ngOnInit() {
-    this.categoryService.getAll().pipe(take(1)).subscribe({
-      next: (x) => {
-        this.expenseCategory = this.orderCategoryByActive(HelperService.categoriesByType(x, CategoryType.expense))
-        this.incomeCategory = this.orderCategoryByActive(HelperService.categoriesByType(x, CategoryType.income))
+    this.userService.getAllCategories$().subscribe({
+      next: (categories) => {
+        this.expenseCategory = this.orderCategoryByActive(HelperService.categoriesByType(categories, CategoryType.expense))
+        this.incomeCategory = this.orderCategoryByActive(HelperService.categoriesByType(categories, CategoryType.income))
         this.loading = false
       }, error: (e) => {
+        this.loading = false
         throw e;
       }
     })
