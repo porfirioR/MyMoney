@@ -32,7 +32,7 @@ export class UserService extends ItemObservable<UserDataModel> {
 
   public setCategories = (allCategories: CategoryModel[], userCategories: UserCategoryModel[]): CategoryModel[] => {
     const ignoreSystemCategories = userCategories.map(x => x.categoryId)
-    allCategories.forEach(x => x.active = !ignoreSystemCategories.includes(x.id))
+    allCategories.forEach(x => x.active = ignoreSystemCategories.includes(x.id) ? userCategories.find(x => x.categoryId === x.id)?.active! : true)
     const activeCategories = allCategories.filter(x => x.active)
     const item = this.item!
     item.allCategories = allCategories

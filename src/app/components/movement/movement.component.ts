@@ -1,5 +1,4 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { CategoryType } from '../../enums/category-type.enum';
 import { CategoryModel } from '../../models/category.model';
 import { GroupDateMovementModel } from '../../models/group-date-movement.model';
@@ -14,13 +13,16 @@ export class MovementComponent implements OnInit {
   @Input() categories!: CategoryModel[]
   protected totalIncome!: number
   protected totalExpense!: number
-  public categoryType!: CategoryType
-  constructor(private readonly router : Router) { }
+
+  constructor() { }
 
   ngOnInit() {
     this.totalIncome = this.groupDateMovement.income
     this.totalExpense = this.groupDateMovement.expense
-    this.groupDateMovement.movements.forEach(x => x.categoryName = this.categories.find(y => y.id === x.categoryId)?.name!)
+    this.groupDateMovement.movements.forEach(x => {
+      x.categoryName = this.categories.find(y => y.id === x.categoryId)?.name!
+      x.amount = x.type === CategoryType.expense ? -x.amount : x.amount
+    })
   }
 
 }

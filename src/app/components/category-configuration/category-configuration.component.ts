@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core'
 import { Location } from '@angular/common'
 import { MatTabChangeEvent } from '@angular/material/tabs'
-import { take } from 'rxjs';
 import { CategoryType } from '../../enums/category-type.enum'
 import { CategoryModel } from '../../models/category.model'
 import { CategoryEvent } from '../../models/category-event.model';
@@ -20,8 +19,7 @@ export class CategoryConfigurationComponent implements OnInit {
   protected categoryType = CategoryType
   protected loading = true
 
-  constructor(
-              private readonly location: Location,
+  constructor(private readonly location: Location,
               private readonly userService: UserService) { }
 
   ngOnInit() {
