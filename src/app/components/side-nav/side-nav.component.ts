@@ -40,7 +40,8 @@ export class SideNavComponent implements OnInit {
       const userData: UserDataModel = {
         email: '',
         activeCategories: [],
-        allCategories: []
+        allCategories: [],
+        userCategories: []
       }
       this.userService.setUser(userData)
       this.router.navigate(['logout'])

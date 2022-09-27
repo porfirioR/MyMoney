@@ -41,6 +41,7 @@
       <mat-form-field appearance="fill" class="w-100">
         <mat-label>{{'Amount' | translate}}</mat-label>
         <input matInput type="text" formControlName="amount" [mask]="'separator.0'" thousandSeparator=".">
+        <mat-error *ngIf="formGroup.get('amount')?.errors">{{formGroup.get('amount')?.errors}}</mat-error>
         <mat-error *ngIf="formGroup.get('amount')?.hasError('maxlength') || formGroup.get('amount')?.hasError('max')">Value cannot exceed 12 digit.</mat-error>
       </mat-form-field>
       <mat-form-field appearance="fill" class="w-100">

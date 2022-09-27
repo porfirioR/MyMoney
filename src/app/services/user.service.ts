@@ -18,6 +18,13 @@ export class UserService extends ItemObservable<UserDataModel> {
     return this.item!.email!
   }
 
+  public setCategory = (category: CategoryModel): void => {
+    const user = this.item!
+    user!.allCategories = this.getAllCategories().concat(category)
+    user!.activeCategories = this.getActiveCategories().concat(category)
+    this.setUser(user)
+  }
+
   public getAllCategories = (): CategoryModel[] =>  {
     return this.item!.allCategories
   }
@@ -31,12 +38,13 @@ export class UserService extends ItemObservable<UserDataModel> {
   }
 
   public setCategories = (allCategories: CategoryModel[], userCategories: UserCategoryModel[]): CategoryModel[] => {
-    const ignoreSystemCategories = userCategories.map(x => x.categoryId)
-    allCategories.forEach(x => x.active = ignoreSystemCategories.includes(x.id) ? userCategories.find(x => x.categoryId === x.id)?.active! : true)
+    const allUserCategories = userCategories.map(x => x.categoryId)
+    allCategories.forEach(x => x.active = allUserCategories.includes(x.id) ? userCategories.find(y => y.categoryId === x.id)?.active!: true)
     const activeCategories = allCategories.filter(x => x.active)
     const item = this.item!
     item.allCategories = allCategories
-    item.activeCategories = activeCategories
+    item.activeCategories = activeCategories,
+    item.userCategories = userCategories
     this.setItem(item)
     return activeCategories
   }
@@ -47,6 +55,10 @@ export class UserService extends ItemObservable<UserDataModel> {
 
   public getActiveCategories$ = (): Observable<CategoryModel[]> => {
     return this.getItemObservable$.pipe(map(x => x.activeCategories))
+  }
+
+  public getUserCategories = (): UserCategoryModel[] => {
+    return this.item?.userCategories!
   }
 
 }

@@ -86,6 +86,7 @@ export class RegisterMovementComponent implements OnInit {
     this.formGroup.controls['icon'].setValue(category.icon)
     this.formGroup.controls['categoryId'].setValue(category.id)
     this.inputMemorandum?.nativeElement.focus()
+    this.formGroup.markAllAsTouched()
   }
 
   protected exit = () => {
@@ -133,6 +134,6 @@ export class RegisterMovementComponent implements OnInit {
     this.formGroup.patchValue({ categoryId: movement.categoryId})
     this.formGroup.patchValue({ memorandum: movement.memorandum})
     this.formGroup.patchValue({ date: movement.date})
-    this.formGroup.patchValue({ amount: movement.amount})
+    this.formGroup.patchValue({ amount: Math.abs(movement.amount)})
   }
 }

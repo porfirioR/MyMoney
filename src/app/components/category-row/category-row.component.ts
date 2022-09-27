@@ -28,7 +28,7 @@ export class CategoryRowComponent implements OnInit, OnDestroy {
               private readonly movementService: MovementService) { }
 
   ngOnInit() {
-    if (this.category && this.category.owner !== this.ownerSystem) {
+    if (this.category && this.category.owner !== this.ownerSystem && !this.category.name.endsWith('(propio)')) {
       this.category.name += ' (propio)'
     }
   }
@@ -75,14 +75,16 @@ export class CategoryRowComponent implements OnInit, OnDestroy {
         }
       })
     } else {
-      const updateCategory = Object.assign({} as CategoryModel, this.category)
-      updateCategory.active = !active
-      this.categoryService.update(updateCategory).then(() => {
-        this.snackBar.open('Category was restarted', '', { duration: 3000 })
-        this.category.active = updateCategory.active
-        const categoryEvent = new CategoryEvent(this.category.type)
-        this.updateCategoryEvent.emit(categoryEvent)
-      })
+      if (this.category.owner === this.ownerSystem) {
+        const request = new UserCategoryModel(!active, this.category.id)
+        this.userCategoryService.upsertCategory(request)
+        .then(() => {
+          this.category.active = request.active
+          this.snackBar.open('Category was restarted', '', { duration: 3000 })
+          const categoryEvent = new CategoryEvent(this.category.type)
+          this.updateCategoryEvent.emit(categoryEvent)
+        })
+      }
     }
   }
 

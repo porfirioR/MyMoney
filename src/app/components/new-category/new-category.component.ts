@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Location } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
@@ -12,6 +12,7 @@ import { CategoryModel } from '../../models/category.model';
 import { UserCategoryModel } from '../../models/user-category.model';
 import { CategoryService } from '../../services/category.service';
 import { UserCategoryService } from '../../services/user-category.service';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-new-category',
@@ -77,10 +78,11 @@ export class NewCategoryComponent implements OnInit {
   protected formGroup!: FormGroup
 
   constructor(protected location: Location,
-  protected route: ActivatedRoute,
-  private categoryService: CategoryService,
-  private snackBar: MatSnackBar,
-  private readonly userCategoryService: UserCategoryService) { }
+              protected route: ActivatedRoute,
+              private categoryService: CategoryService,
+              private snackBar: MatSnackBar,
+              private readonly userCategoryService: UserCategoryService,
+              private userService: UserService) { }
   
   ngOnInit() {
     this.route.params.subscribe({
@@ -92,7 +94,8 @@ export class NewCategoryComponent implements OnInit {
           name: new FormControl('', Validators.required),
           icon: new FormControl(this.currentCategory.groups[0].icons[0], Validators.required),
           type: new FormControl(type, Validators.required),
-          active: new FormControl(true)
+          active: new FormControl(true),
+          owner: new FormControl(this.userService.getUserEmail())
         })
       }
     })
@@ -111,8 +114,10 @@ export class NewCategoryComponent implements OnInit {
     const category: CategoryModel = this.formGroup.getRawValue()
     this.categoryService.create(category).then((result) => {
       const userCategory = new UserCategoryModel(category.active, result.id)
-      this.userCategoryService.upsertCategory(userCategory).then(() => {
+      this.userCategoryService.upsertCategory(userCategory).then((response) => {
+        category.id = response!.id
         this.snackBar.open('Category was created', '', { duration: 3000 })
+        this.userService.setCategory(category)
         this.location.back()
       })
     })

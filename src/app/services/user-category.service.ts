@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
-import { getAuth, onAuthStateChanged } from '@angular/fire/auth';
 import { addDoc, collection, collectionData, CollectionReference, doc, DocumentData, DocumentReference, Firestore, orderBy, Query, query, setDoc, where } from '@angular/fire/firestore';
-import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { CollectionType } from '../enums/collection-type.enum';
 import { UserCategoryRequest } from '../models/user-category-request.model';
@@ -14,9 +12,8 @@ import { UserService } from './user.service';
 export class UserCategoryService {
   private userCategoryType: CollectionType = CollectionType.UserCategories
 
-  private userCategories: UserCategoryModel[] = []
 
-  constructor(private readonly firestore: Firestore, private readonly router: Router, private readonly userService: UserService) { }
+  constructor(private readonly firestore: Firestore, private readonly userService: UserService) { }
 
   public upsertCategory = (userCategory: UserCategoryModel): Promise<void> | Promise<DocumentReference<DocumentData>>   => {
     const request: UserCategoryRequest = {
@@ -25,7 +22,7 @@ export class UserCategoryService {
       category: doc(this.firestore, `${CollectionType.Categories}/${userCategory.categoryId}`)
     }
     request.category = doc(this.firestore, `${CollectionType.Categories}/${userCategory.categoryId}`)
-    const model = this.userCategories.find(x => x.categoryId == userCategory.categoryId)
+    const model = this.userService.getUserCategories().find(x => x.categoryId == userCategory.categoryId)
     if (model) {
       const ref = doc(this.firestore, `${this.userCategoryType}/${model.id}`)
       return setDoc(ref, request)

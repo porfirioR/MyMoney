@@ -23,7 +23,8 @@ export class LoginComponent implements OnInit {
       const userData: UserDataModel = {
         email: x.user.email!,
         activeCategories: [],
-        allCategories: []
+        allCategories: [],
+        userCategories: []
       }
       this.userService.setUser(userData)
       this.router.navigate([''])

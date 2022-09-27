@@ -1,12 +1,11 @@
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { MovementService } from '../../services/movement.service';
 import { MovementModel } from '../../models/movement.model';
-import { MatDialog } from '@angular/material/dialog';
 import { DialogDeleteComponent } from '../dialog-delete/dialog-delete.component';
-import { CategoryType } from '../../enums/category-type.enum';
-import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-movement-detail',
@@ -32,8 +31,7 @@ export class MovementDetailComponent implements OnInit {
     })
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() { }
 
   protected exit = () => {
     this.location.back()

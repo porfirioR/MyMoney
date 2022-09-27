@@ -46,7 +46,8 @@ export class PrincipalComponent implements OnInit {
         const userData: UserDataModel = {
           email: user.email!,
           activeCategories: [],
-          allCategories: []
+          allCategories: [],
+          userCategories: []
         }
         this.userService.setUser(userData)
       } else {
@@ -58,9 +59,10 @@ export class PrincipalComponent implements OnInit {
   ngOnInit() {
     const requestMovement$ = this.getMovements().pipe(take(1))
     const categories$ = this.categoryService.getAll().pipe(take(1))
-    const userCategories$ = this.userCategoryService.getUserCategories().pipe(take(1), tap(x => x.forEach(y => y.categoryId = y.category!.path.split('\/').pop()!)))
+    const userCategories$ = this.userCategoryService.getUserCategories().pipe(take(1))
     combineLatest([categories$, requestMovement$, userCategories$]).subscribe({
       next: ([categories, movements, userCategories]) => {
+        userCategories.forEach(y => y.categoryId = y.category!.path.split('\/').pop()!)
         this.prepareMovementListToView(movements)
         this.categories = this.userService.setCategories(categories, userCategories)
       }, error: (e) => {
