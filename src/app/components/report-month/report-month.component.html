@@ -1,8 +1,65 @@
-<canvas baseChart width="400" height="400"
-  [data]="lineChartData"
-  [labels]="lineChartLabels"
-  [options]="lineChartOptions"
-  [legend]="lineChartLegend"
-  [type]="lineChartType"
-  [plugins]="lineChartPlugins">
-</canvas>
+<form [formGroup]="formGroup">
+  <mat-toolbar color="primary">
+  <button mat-icon-button (click)="exit()">
+    <mat-icon>keyboard_backspace</mat-icon>
+  </button>
+  <mat-form-field>
+    <mat-select formControlName="type">
+      <mat-option [value]="categoryType.expense">
+        {{categoryType.expense}}
+      </mat-option>
+      <mat-option [value]="categoryType.income">
+        {{categoryType.income}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <button mat-icon-button routerLink="/">
+    <mat-icon>home</mat-icon>
+  </button>
+</mat-toolbar>
+<mat-card>
+  <canvas baseChart width="200" height="200"
+    [data]="lineChartData"
+    [labels]="lineChartLabels"
+    [options]="lineChartOptions"
+    [legend]="lineChartLegend"
+    [type]="lineChartType"
+    [plugins]="lineChartPlugins">
+  </canvas>
+</mat-card>
+<!-- 
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Title</mat-card-title>
+    <mat-card-subtitle>Subtitle</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    Text content
+  </mat-card-content>
+  <mat-card-actions align="start">
+
+  </mat-card-actions>
+  <mat-card-footer>
+    Footer
+  </mat-card-footer>
+</mat-card> -->
+<mat-accordion>
+  <mat-expansion-panel hideToggle *ngFor="let group of groupMovementCategoryModel">
+    <mat-expansion-panel-header>
+      <mat-panel-description>
+        <i class="material-icons-outlined notranslate">{{group.icon}}</i>
+        {{group.categoryName}}
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    <p *ngFor="let movement of group.movements" class="row">
+      <span>
+        - {{movement.memorandum ? movement.memorandum : group.categoryName}}
+      </span>
+      <span>
+        {{movement.amount | number:'':'es'}}
+      </span>
+    </p>
+  </mat-expansion-panel>
+
+</mat-accordion>
+</form>

@@ -1,0 +1,9 @@
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mat-expansion-panel, mat-card {
+  margin: 1rem;
+}

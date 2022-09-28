@@ -3,7 +3,7 @@
     {{groupDateMovement.date | date: 'dd/MM E'}}
   </span>
   <span>
-    <span class="incomeTitle" *ngIf="totalIncome && totalIncome > 0">
+    <span class="income-title" *ngIf="totalIncome && totalIncome > 0">
       {{'Incomes' | translate}}: {{totalIncome | number:'':'es'}}
     </span>
     <span *ngIf="totalExpense && totalExpense > 0">
