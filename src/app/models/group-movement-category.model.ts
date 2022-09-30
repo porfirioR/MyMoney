@@ -6,6 +6,7 @@ export class GroupMovementCategoryModel {
   constructor(
     public categoryName: string,
     public icon: IconType,
+    public amount: number = 0,
     public movements: MovementModel[] = []
   ) { }
 }

@@ -7,6 +7,7 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { PrincipalComponent } from './components/principal/principal.component';
+
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -23,13 +24,15 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatRippleModule } from '@angular/material/core';
-import { SelectYearMountComponent } from './components/select-year-mount/select-year-mount.component';
 import { MatDialogModule } from '@angular/material/dialog';
-import { SideNavComponent } from './components/side-nav/side-nav.component';
 import { MatListModule } from '@angular/material/list';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatExpansionModule } from '@angular/material/expansion';
+
+import { SelectYearMountComponent } from './components/select-year-mount/select-year-mount.component';
+import { SideNavComponent } from './components/side-nav/side-nav.component';
 import { CategoryConfigurationComponent } from './components/category-configuration/category-configuration.component';
 import { CategoryRowComponent } from './components/category-row/category-row.component';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { NewCategoryComponent } from './components/new-category/new-category.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RegisterMovementComponent } from './components/register-movement/register-movement.component';
@@ -119,6 +122,8 @@ registerLocaleData(localEs, 'es')
     MatDialogModule,
     MatListModule,
     MatSnackBarModule,
+    MatExpansionModule,
+
     NgxMaskModule.forRoot(),
 
     provideFirebaseApp(() => initializeApp(environment.firebase)),

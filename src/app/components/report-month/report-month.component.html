@@ -17,14 +17,14 @@
     <mat-icon>home</mat-icon>
   </button>
 </mat-toolbar>
+<div class="header-height"></div>
 <mat-card>
-  <canvas baseChart width="200" height="200"
-    [data]="lineChartData"
-    [labels]="lineChartLabels"
-    [options]="lineChartOptions"
-    [legend]="lineChartLegend"
-    [type]="lineChartType"
-    [plugins]="lineChartPlugins">
+  <canvas baseChart width="200" height="150"
+    [data]="chartData"
+    [labels]="doughnutChartLabels"
+    [options]="chartOptions"
+    [legend]="chartLegend"
+    [type]="chartType">
   </canvas>
 </mat-card>
 <!-- 
@@ -46,19 +46,26 @@
 <mat-accordion>
   <mat-expansion-panel hideToggle *ngFor="let group of groupMovementCategoryModel">
     <mat-expansion-panel-header>
-      <mat-panel-description>
+      <mat-panel-title>
         <i class="material-icons-outlined notranslate">{{group.icon}}</i>
-        {{group.categoryName}}
-      </mat-panel-description>
+        <span>
+          {{group.categoryName}}
+        </span>
+        <span>
+          {{group.amount | number:'':'es'}}
+        </span>
+      </mat-panel-title>
     </mat-expansion-panel-header>
-    <p *ngFor="let movement of group.movements" class="row">
-      <span>
-        - {{movement.memorandum ? movement.memorandum : group.categoryName}}
-      </span>
-      <span>
-        {{movement.amount | number:'':'es'}}
-      </span>
-    </p>
+    <ul>
+      <li *ngFor="let movement of group.movements" class="row">
+        <span>
+          - {{movement.memorandum ? movement.memorandum : group.categoryName}}
+        </span>
+        <span>
+          {{movement.amount | number:'':'es'}}
+        </span>
+      </li>
+    </ul>
   </mat-expansion-panel>
 
 </mat-accordion>

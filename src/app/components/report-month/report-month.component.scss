@@ -1,9 +1,20 @@
-.row {
+.row, .mat-expansion-panel-header-title {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
+li {
+  margin-bottom: 0.3rem;
+}
+
 .mat-expansion-panel, mat-card {
   margin: 1rem;
+}
+
+ul {
+  padding-inline-start: 10px;
+}
+form {
+  padding-bottom: 0.1rem;
 }
