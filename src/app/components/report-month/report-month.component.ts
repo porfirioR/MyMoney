@@ -52,11 +52,13 @@ export class ReportMonthComponent implements OnInit {
     this.activatedRoute.params.subscribe({
       next: (params) => {
         const type = params['type']
+        this.formGroup.controls['type'].setValue(type)
         this.getMovementsByType(type)
       }, error: (e) => {
         throw e;
       }
     })
+    this.formGroup.controls['type'].valueChanges.subscribe(this.getMovementsByType)
   }
 
   
@@ -70,9 +72,7 @@ export class ReportMonthComponent implements OnInit {
         let amountMovements = 0
         movements.forEach(x => amountMovements += x.amount)
         this.doughnutChartLabels = this.groupMovementCategoryModel.map(x => this.labelMovements(x, amountMovements))
-        console.log(this.doughnutChartLabels);
-        
-        this.chartData.labels = this.groupMovementCategoryModel.map(x => x.categoryName)
+        this.chartData.labels = this.doughnutChartLabels
         this.chartData.datasets[0].label = type
         this.chartData.datasets[0].data = this.groupMovementCategoryModel.map(x => x.amount)
         this.loading = false
@@ -106,6 +106,6 @@ export class ReportMonthComponent implements OnInit {
   private labelMovements = (x: GroupMovementCategoryModel, amountMovements: number) => {
     let total = 0
     x.movements.forEach(x => total += x.amount)
-    return `${x.categoryName} ${ ((total * 100)/amountMovements).toFixed(1)}`
+    return `${x.categoryName} ${((total * 100)/amountMovements).toFixed(1)}%`
   }
 }

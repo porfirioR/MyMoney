@@ -18,55 +18,41 @@
   </button>
 </mat-toolbar>
 <div class="header-height"></div>
-<mat-card>
-  <canvas baseChart width="200" height="150"
-    [data]="chartData"
-    [labels]="doughnutChartLabels"
-    [options]="chartOptions"
-    [legend]="chartLegend"
-    [type]="chartType">
-  </canvas>
-</mat-card>
-<!-- 
-<mat-card>
-  <mat-card-header>
-    <mat-card-title>Title</mat-card-title>
-    <mat-card-subtitle>Subtitle</mat-card-subtitle>
-  </mat-card-header>
-  <mat-card-content>
-    Text content
-  </mat-card-content>
-  <mat-card-actions align="start">
-
-  </mat-card-actions>
-  <mat-card-footer>
-    Footer
-  </mat-card-footer>
-</mat-card> -->
-<mat-accordion>
-  <mat-expansion-panel hideToggle *ngFor="let group of groupMovementCategoryModel">
-    <mat-expansion-panel-header>
-      <mat-panel-title>
-        <i class="material-icons-outlined notranslate">{{group.icon}}</i>
-        <span>
-          {{group.categoryName}}
-        </span>
-        <span>
-          {{group.amount | number:'':'es'}}
-        </span>
-      </mat-panel-title>
-    </mat-expansion-panel-header>
-    <ul>
-      <li *ngFor="let movement of group.movements" class="row">
-        <span>
-          - {{movement.memorandum ? movement.memorandum : group.categoryName}}
-        </span>
-        <span>
-          {{movement.amount | number:'':'es'}}
-        </span>
-      </li>
-    </ul>
-  </mat-expansion-panel>
-
-</mat-accordion>
+<ng-container *ngIf="!loading">
+  <mat-card>
+    <canvas baseChart width="200" height="150"
+      [data]="chartData"
+      [labels]="doughnutChartLabels"
+      [options]="chartOptions"
+      [legend]="chartLegend"
+      [type]="chartType">
+    </canvas>
+  </mat-card>
+  <mat-accordion>
+    <mat-expansion-panel hideToggle *ngFor="let group of groupMovementCategoryModel">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <i class="material-icons-outlined notranslate">{{group.icon}}</i>
+          <span>
+            {{group.categoryName}}
+          </span>
+          <span>
+            {{group.amount | number:'':'es'}}
+          </span>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <ul>
+        <li *ngFor="let movement of group.movements" class="row">
+          <span>
+            - {{movement.memorandum ? movement.memorandum : group.categoryName}}
+          </span>
+          <span>
+            {{movement.amount | number:'':'es'}}
+          </span>
+        </li>
+      </ul>
+    </mat-expansion-panel>
+  
+  </mat-accordion>
+</ng-container>
 </form>
