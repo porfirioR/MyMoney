@@ -1,6 +1,7 @@
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { ChartConfiguration, ChartOptions, ChartType } from 'chart.js';
 import { take } from 'rxjs';
@@ -10,6 +11,7 @@ import { MovementModel } from '../../models/movement.model';
 import { YearMonthModel } from '../../models/year-month-model';
 import { MovementService } from '../../services/movement.service';
 import { UserService } from '../../services/user.service';
+import { SelectYearMountComponent } from '../select-year-mount/select-year-mount.component';
 
 @Component({
   selector: 'app-report-month',
@@ -37,6 +39,7 @@ export class ReportMonthComponent implements OnInit {
   protected yearMonth?: YearMonthModel
   protected categoryType = CategoryType
   protected groupMovementCategoryModel!: GroupMovementCategoryModel[]
+  protected messageSearch = 'Search'
   protected formGroup: FormGroup = new FormGroup({
     type: new FormControl<CategoryType>(this.categoryType.expense),
   })
@@ -44,7 +47,8 @@ export class ReportMonthComponent implements OnInit {
   constructor(private readonly activatedRoute: ActivatedRoute,
               private readonly movementService: MovementService,
               protected location: Location,
-              private readonly userService: UserService) { }
+              private readonly userService: UserService,
+              private readonly dialog: MatDialog) { }
   
   ngOnInit(): void {
     const date = new Date();
@@ -107,5 +111,20 @@ export class ReportMonthComponent implements OnInit {
     let total = 0
     x.movements.forEach(x => total += x.amount)
     return `${x.categoryName} ${((total * 100)/amountMovements).toFixed(1)}%`
+  }
+
+  protected openBottomSheet = (): void => {
+    const dialogRef = this.dialog.open(SelectYearMountComponent, {
+      width: '400px',
+      data: this.yearMonth
+    })
+
+    dialogRef.afterClosed().pipe(take(1)).subscribe((result: YearMonthModel) => {
+      if (result && (this.yearMonth?.month !== result.month || this.yearMonth?.year !== result.year)) {
+        this.yearMonth = result;
+        this.messageSearch = this.yearMonth?.monthLabel ? `${this.yearMonth?.monthLabel} ${this.yearMonth.year}` : 'Search'
+        this.getMovementsByType(this.formGroup.controls['type'].value)
+      }
+    })
   }
 }

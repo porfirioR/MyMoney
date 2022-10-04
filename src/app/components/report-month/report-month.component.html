@@ -13,8 +13,8 @@
       </mat-option>
     </mat-select>
   </mat-form-field>
-  <button mat-icon-button routerLink="/">
-    <mat-icon>home</mat-icon>
+  <button mat-stroked-button (click)="openBottomSheet()">
+    {{messageSearch | translate}}
   </button>
 </mat-toolbar>
 <div class="header-height"></div>
