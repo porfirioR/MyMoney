@@ -2,7 +2,7 @@
   <button mat-icon-button (click)="exit()">
     <mat-icon>keyboard_backspace</mat-icon>
   </button>
-  <span>Import Movements</span>
+  <span>Import movements</span>
 </mat-toolbar>
 <mat-card>
   <mat-card-header>
@@ -10,13 +10,13 @@
   </mat-card-header>
   <mat-card-content>
     <mat-list dense>
-      <mat-list-item>Expensive procedure(it may take a few minutes)</mat-list-item>
-      <mat-list-item>Format file .csv</mat-list-item>
-      <mat-list-item>Required first row: {{csvHeader}}</mat-list-item>
-      <mat-list-item>All categories need to be exist</mat-list-item>
-      <mat-list-item>After load file will be show one button to check file</mat-list-item>
-      <mat-list-item>Check if all columns are correct</mat-list-item>
-      <mat-list-item>If all right will pop-up saying length of records and if you want save all</mat-list-item>
+      <mat-list-item>-Expensive procedure(it may take a few minutes)</mat-list-item>
+      <mat-list-item>-Format file .csv</mat-list-item>
+      <mat-list-item>-Required first row: {{csvHeader}}</mat-list-item>
+      <mat-list-item>-All categories need to exist</mat-list-item>
+      <mat-list-item>-After the load file will be shown one button to check the file</mat-list-item>
+      <mat-list-item>-Check if all columns are correct</mat-list-item>
+      <mat-list-item>-If all right will pop-up saying the length records and if you want to save all</mat-list-item>
     </mat-list>
   </mat-card-content>
   <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>

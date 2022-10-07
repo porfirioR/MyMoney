@@ -11,5 +11,18 @@
   "Memorandum": "Memorándum",
   "Save": "Guardar",
   "Date": "Fecha",
-  "Amount": "Monto"
+  "Amount": "Monto",
+  "Delete category": "Categoría borrada",
+  "Category was restarted": "La categoría fue restaurada",
+  "Invalid column value, expected some value but was empty in row": "Valor invalidó en la columna, se esperaba algún valor pero esta vacía en fila",
+  "Invalid column date, expected yyyy/mm/dd but was":"Valor invalidó en columna fecha, se esperaba yyyy/mm/dd pero fue",
+  "Invalid year, expected min year 2015 but was":"Año invalidó, se esperaba el año 2015 como mínimo pero fue",
+  "Category was created":"La categoría fue creada",
+  "Movement was":"El movimiento fue",
+  "Are you sure you want to remove this move?": "¿Estás seguro que quieres eliminar este movimiento?",
+  "Invalid type, expected":"Tipo invalidó, se esperaba",
+  "Invalid amount":"Monto invalidó",
+  "Hi, you are logout": "Hola, estás desconectado",
+  "Login": "Ingresar",
+  "If you want login please click on": "Si desea iniciar sesión, haga clic en"
 }

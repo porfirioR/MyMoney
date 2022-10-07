@@ -21,18 +21,19 @@ export class CategoryRowComponent implements OnInit, OnDestroy {
   @Input() category!: CategoryModel
   @Output() updateCategoryEvent = new EventEmitter<CategoryEvent>()
   private ownerSystem = ResourceType.ownerSystem
+
   constructor(private readonly categoryService: CategoryService,
               private readonly snackBar: MatSnackBar,
               private readonly dialog: MatDialog,
               private readonly userCategoryService: UserCategoryService,
               private readonly movementService: MovementService) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
     if (this.category && this.category.owner !== this.ownerSystem && !this.category.name.endsWith('(propio)')) {
       this.category.name += ' (propio)'
     }
   }
-  
+
   ngOnDestroy(): void {
     
   }

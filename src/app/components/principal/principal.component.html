@@ -7,7 +7,7 @@
       <button mat-icon-button (click)="sidenav.toggle()">
         <mat-icon>menu</mat-icon>
       </button>
-      <span>{{'My Money' | translate}}</span>
+      <span>{{title | translate}}</span>
       <button mat-stroked-button (click)="openBottomSheet()">
         {{messageSearch | translate}}
       </button>
@@ -34,7 +34,7 @@
           <label>
             {{'Difference' | translate}}
           </label>
-          <p>{{balance | number:'':'es'}}</p>
+          <p>{{balance | number:'': 'es'}}</p>
         </span>
       </span>
     </mat-card>

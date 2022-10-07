@@ -100,6 +100,7 @@ export class ReportMonthComponent implements OnInit {
         groups.push(new GroupMovementCategoryModel(movement.categoryName, movement.icon, movement.amount, [movement]))
       }
     });
+    groups.sort((a, b) => a.amount - b.amount)
     return groups
   };
 

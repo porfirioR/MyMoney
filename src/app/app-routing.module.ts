@@ -12,60 +12,72 @@ import { ExportMovementComponent } from './components/export-movement/export-mov
 import { LogoutComponent } from './components/logout/logout.component';
 import { UserGuard } from './guards/user.guard';
 import { ReportMonthComponent } from './components/report-month/report-month.component';
+import { environment } from '../environments/environment';
 
 const routes: Routes = [
   {
     path: '',
     component: PrincipalComponent,
     ...canActivate(() => redirectUnauthorizedTo(['/logout'])),
+    title: environment.title
   },
   {
     path: 'category',
     canActivate: [UserGuard],
     component: CategoryConfigurationComponent,
+    title: 'Category'
   },
   {
     path: 'category/new-category/:type',
     canActivate: [UserGuard],
     component: NewCategoryComponent,
+    title: 'New category'
   },
   {
     path: 'register-movement',
     canActivate: [UserGuard],
     component: RegisterMovementComponent,
+    title: 'Register movement'
   },
   {
     path: 'details/:id',
     canActivate: [UserGuard],
     component: MovementDetailComponent,
+    title: 'Details'
   },
   {
     path: 'movement-update/:id',
     canActivate: [UserGuard],
-    component: RegisterMovementComponent
+    component: RegisterMovementComponent,
+    title: 'Movement update'
   },
   {
     path: 'import',
     canActivate: [UserGuard],
-    component: ImportMovementComponent
+    component: ImportMovementComponent,
+    title: 'Import'
   },
   {
     path: 'export',
     canActivate: [UserGuard],
-    component: ExportMovementComponent
+    component: ExportMovementComponent,
+    title: 'Export'
   },
   {
     path: 'report-month/:type',
     canActivate: [UserGuard],
-    component: ReportMonthComponent
+    component: ReportMonthComponent,
+    title: 'Report'
   },
   {
     path: 'login',
     component: LoginComponent,
+    title: 'Login'
   },
   {
     path: 'logout',
     component: LogoutComponent,
+    title: 'Logout'
   }
 ];
 

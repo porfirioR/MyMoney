@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { environment } from '../environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -7,7 +8,8 @@ import { TranslateService } from '@ngx-translate/core';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'MyMoney';
+  protected title = environment.title
+
   constructor(private readonly translate: TranslateService) {
     translate.addLangs(['en', 'es'])
     translate.setDefaultLang('en')

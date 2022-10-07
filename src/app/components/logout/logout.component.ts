@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-logout',
@@ -7,14 +8,12 @@ import { Router } from '@angular/router';
   styleUrls: ['./logout.component.scss']
 })
 export class LogoutComponent implements OnInit {
-
+  protected title = environment.title
   constructor(private readonly router: Router) { }
 
-  ngOnInit() {
-  }
+  ngOnInit() { }
 
   protected goToLogin = () => {
     this.router.navigate(['login'])
-
   }
 }

@@ -1,18 +1,17 @@
 <mat-toolbar color="primary">
-  <span>My Money</span>
+  <span>{{title | translate}}</span>
 </mat-toolbar>
 <div>
   <span>
     <p>
-      Hi, you are logout
+      {{'Hi, you are logout' | translate}}
     </p>
     <p>
-      If you want login please click on
+      {{'If you want login please click on' | translate}}
     </p>
   </span>
-
   <button mat-stroked-button color="primary" (click)="goToLogin()">
     <mat-icon>account_circle</mat-icon>
-    Login
+    {{'Login' | translate}}
   </button>
 </div>

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { combineLatest, Observable, take, tap } from 'rxjs';
+import { combineLatest, Observable, take } from 'rxjs';
 import { CategoryModel } from '../../models/category.model';
 import { GroupDateMovementModel } from '../../models/group-date-movement.model';
 import { CategoryType } from '../../enums/category-type.enum';
@@ -14,7 +14,7 @@ import { UserCategoryService } from '../../services/user-category.service';
 import { UserService } from '../../services/user.service';
 import { getAuth, onAuthStateChanged } from '@angular/fire/auth';
 import { UserDataModel } from '../../models/user-data.model';
-import { collectionData, getDoc } from '@angular/fire/firestore';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-principal',
@@ -32,6 +32,7 @@ export class PrincipalComponent implements OnInit {
   protected categories: CategoryModel[] = []
   protected messageSearch = 'Search'
   protected categoryType = CategoryType
+  protected title = environment.title
   constructor(private readonly dialog: MatDialog,
               private readonly categoryService: CategoryService,
               private readonly movementService: MovementService,
