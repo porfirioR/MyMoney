@@ -58,6 +58,8 @@ import { ReportMonthComponent } from './components/report-month/report-month.com
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { CustomColorDirective } from './directive/custom-color.directive';
+import { EditCategoryComponent } from './components/edit-category/edit-category.component';
 registerLocaleData(localEs, 'es')
 
 
@@ -79,7 +81,9 @@ registerLocaleData(localEs, 'es')
     ExportMovementComponent,
     DialogUploadMovementComponent,
     LogoutComponent,
-    ReportMonthComponent
+    ReportMonthComponent,
+    EditCategoryComponent,
+    CustomColorDirective
   ],
   imports: [
     BrowserModule,

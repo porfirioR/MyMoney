@@ -34,9 +34,7 @@ export class CategoryRowComponent implements OnInit, OnDestroy {
     }
   }
 
-  ngOnDestroy(): void {
-    
-  }
+  ngOnDestroy(): void { }
 
   protected deactivateReactivateCategory = (active: boolean): void => {
     if (active) {

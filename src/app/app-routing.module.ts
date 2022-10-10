@@ -1,18 +1,19 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { canActivate, redirectUnauthorizedTo } from '@angular/fire/auth-guard'
 import { CategoryConfigurationComponent } from './components/category-configuration/category-configuration.component';
 import { NewCategoryComponent } from './components/new-category/new-category.component';
 import { PrincipalComponent } from './components/principal/principal.component';
 import { RegisterMovementComponent } from './components/register-movement/register-movement.component';
-import { canActivate, redirectUnauthorizedTo } from '@angular/fire/auth-guard'
 import { LoginComponent } from './components/login/login.component';
 import { MovementDetailComponent } from './components/movement-detail/movement-detail.component';
 import { ImportMovementComponent } from './components/import-movement/import-movement.component';
 import { ExportMovementComponent } from './components/export-movement/export-movement.component';
 import { LogoutComponent } from './components/logout/logout.component';
-import { UserGuard } from './guards/user.guard';
 import { ReportMonthComponent } from './components/report-month/report-month.component';
+import { UserGuard } from './guards/user.guard';
 import { environment } from '../environments/environment';
+import { EditCategoryComponent } from './components/edit-category/edit-category.component';
 
 const routes: Routes = [
   {
@@ -32,6 +33,12 @@ const routes: Routes = [
     canActivate: [UserGuard],
     component: NewCategoryComponent,
     title: 'New category'
+  },
+  {
+    path: 'category/edit-category/:id',
+    canActivate: [UserGuard],
+    component: EditCategoryComponent,
+    title: 'Edit category'
   },
   {
     path: 'register-movement',

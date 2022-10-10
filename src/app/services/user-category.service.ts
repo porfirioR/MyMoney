@@ -12,7 +12,6 @@ import { UserService } from './user.service';
 export class UserCategoryService {
   private userCategoryType: CollectionType = CollectionType.UserCategories
 
-
   constructor(private readonly firestore: Firestore, private readonly userService: UserService) { }
 
   public upsertCategory = (userCategory: UserCategoryModel): Promise<void> | Promise<DocumentReference<DocumentData>>   => {

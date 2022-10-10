@@ -1,0 +1,33 @@
+.mat-toolbar {
+  justify-content: unset;
+  position: unset;
+  & > span {
+    margin: auto;
+  }
+}
+
+.mat-card {
+  margin: 1rem;
+}
+
+.mat-card-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  & > span {
+    font-weight: bold;
+    font-size: 20px;
+  }
+}
+
+.icon-button {
+  display: flex;
+  justify-content: center;
+  padding-bottom: 1rem;
+}
+
+.mat-card-footer {
+  display: flex;
+  justify-content: space-evenly;
+  padding-bottom: 1.34375em;
+}
