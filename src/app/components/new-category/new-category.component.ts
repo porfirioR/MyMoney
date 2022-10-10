@@ -21,7 +21,6 @@ import { UserService } from '../../services/user.service';
 })
 export class NewCategoryComponent implements OnInit {
   @ViewChild("inputCategoryName") inputCategoryName?: ElementRef;
-
   protected title!: string
   protected currentCategory: NewCategoryModel = new NewCategoryModel(
     CategoryType.income,
@@ -83,7 +82,7 @@ export class NewCategoryComponent implements OnInit {
               private snackBar: MatSnackBar,
               private readonly userCategoryService: UserCategoryService,
               private userService: UserService) { }
-  
+
   ngOnInit() {
     this.route.params.subscribe({
       next: (value) => {

@@ -18,7 +18,10 @@ export class UserCategoryService {
     const request: UserCategoryRequest = {
       active: userCategory.active,
       email: this.userService.getUserEmail(),
-      category: doc(this.firestore, `${CollectionType.Categories}/${userCategory.categoryId}`)
+      category: doc(this.firestore, `${CollectionType.Categories}/${userCategory.categoryId}`),
+      backgroundColor: userCategory.backgroundColor,
+      color: userCategory.color,
+      order: userCategory.order
     }
     request.category = doc(this.firestore, `${CollectionType.Categories}/${userCategory.categoryId}`)
     const model = this.userService.getUserCategories().find(x => x.categoryId == userCategory.categoryId)

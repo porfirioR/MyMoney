@@ -15,19 +15,15 @@ export class CustomColorDirective implements AfterViewInit, OnChanges {
  }
 
   ngOnChanges(changes: SimpleChanges) {
-    console.log(changes);
     if (changes['color']) {
-      console.log(this.color);
       this.updateColor()
     } else if (changes['backgroundColor']) {
-      console.log(this.backgroundColor);
       this.updateBackgroundColor()
     }
   }
 
-
   private updateColor = () => {
-    this.element.nativeElement.style.color = this.color;
+    this.element.nativeElement.style.color = this.color
   }
 
   private updateBackgroundColor = () => {

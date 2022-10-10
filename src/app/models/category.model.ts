@@ -8,5 +8,7 @@ export class CategoryModel {
   type!: CategoryType
   icon!: IconType
   color!: string
+  backgroundColor!: string
+  order!: number
   owner!: string
 }

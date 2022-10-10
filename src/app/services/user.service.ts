@@ -61,4 +61,8 @@ export class UserService extends ItemObservable<UserDataModel> {
     return this.item?.userCategories!
   }
 
+  public getUserCategories$ = (): Observable<UserCategoryModel[]> => {
+    return this.getItemObservable$.pipe(map(x => x.userCategories))
+  }
+
 }

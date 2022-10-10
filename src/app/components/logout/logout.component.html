@@ -1,17 +1,17 @@
 <mat-toolbar color="primary">
   <span>{{title | translate}}</span>
 </mat-toolbar>
-<div>
-  <span>
-    <p>
-      {{'Hi, you are logout' | translate}}
-    </p>
-    <p>
-      {{'If you want login please click on' | translate}}
-    </p>
-  </span>
-  <button mat-stroked-button color="primary" (click)="goToLogin()">
-    <mat-icon>account_circle</mat-icon>
-    {{'Login' | translate}}
-  </button>
-</div>
+
+<mat-card>
+  <img matCardImage src="../../../assets/img/project-image.svg">
+  <mat-card-header>
+    <mat-card-title>Welcome</mat-card-title>
+    <mat-card-subtitle>{{'If you want login please click on' | translate}}</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-footer>
+    <button mat-stroked-button color="primary" (click)="goToLogin()">
+      <mat-icon>account_circle</mat-icon>
+      {{'Login' | translate}}
+    </button>
+  </mat-card-footer>
+</mat-card>
