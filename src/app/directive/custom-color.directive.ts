@@ -4,8 +4,8 @@ import { AfterViewInit, Directive, ElementRef, Input, SimpleChanges, OnChanges }
   selector: '[customColor]'
 })
 export class CustomColorDirective implements AfterViewInit, OnChanges {
-  @Input('color') color: string = '#fff';
-  @Input('backgroundColor') backgroundColor: string = '#673ab7'
+  @Input('color') color: string | undefined = '#fff';
+  @Input('backgroundColor') backgroundColor: string | undefined = '#673ab7'
 
   constructor(private element: ElementRef) { }
 
@@ -17,7 +17,8 @@ export class CustomColorDirective implements AfterViewInit, OnChanges {
   ngOnChanges(changes: SimpleChanges) {
     if (changes['color']) {
       this.updateColor()
-    } else if (changes['backgroundColor']) {
+    }
+    if (changes['backgroundColor']) {
       this.updateBackgroundColor()
     }
   }

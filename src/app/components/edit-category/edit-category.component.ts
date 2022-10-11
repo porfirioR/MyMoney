@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { CategoryModel } from '../../models/category.model';
 import { Location } from '@angular/common'
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { UserService } from '../../services/user.service';
-import { combineLatest, take } from 'rxjs';
-import { UserCategoryService } from 'src/app/services/user-category.service';
-import { UserCategoryModel } from 'src/app/models/user-category.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { combineLatest, take } from 'rxjs';
+import { UserCategoryService } from '../../services/user-category.service';
+import { UserService } from '../../services/user.service';
+import { CategoryModel } from '../../models/category.model';
+import { UserCategoryModel } from '../../models/user-category.model';
 
 @Component({
   selector: 'app-edit-category',
@@ -27,24 +27,24 @@ export class EditCategoryComponent implements OnInit {
               private readonly activatedRoute: ActivatedRoute,
               private readonly userCategory: UserCategoryService,
               private snackBar: MatSnackBar,
-    ) {
-      combineLatest([this.activatedRoute.params, this.userService.getAllCategories$().pipe(take(1)), this.userService.getUserCategories$().pipe(take(1))]).subscribe({
-        next: ([params, categories, userCategories]) => {
-          this.category = categories.find(x => x.id === params['id'])
-          if (!this.category) {
-            this.exit()
-          }
-          const userCategory = userCategories.find(x => x.categoryId === this.category!.id)
-          if (userCategory) {
-            this.formGroup.controls['color'].setValue(userCategory.color)
-            this.formGroup.controls['backgroundColor'].setValue(userCategory.backgroundColor)
-            this.formGroup.controls['order'].setValue(userCategory.order)
-          }
-        }, error: (e) => {
-          throw e;
+  ) {
+    combineLatest([this.activatedRoute.params, this.userService.getAllCategories$().pipe(take(1)), this.userService.getUserCategories$().pipe(take(1))]).subscribe({
+      next: ([params, categories, userCategories]) => {
+        this.category = categories.find(x => x.id === params['id'])
+        if (!this.category) {
+          this.exit()
         }
-      })
-    }
+        const userCategory = userCategories.find(x => x.categoryId === this.category!.id)
+        if (userCategory) {
+          this.formGroup.controls['color'].setValue(userCategory.color)
+          this.formGroup.controls['backgroundColor'].setValue(userCategory.backgroundColor)
+          this.formGroup.controls['order'].setValue(userCategory.order)
+        }
+      }, error: (e) => {
+        throw e;
+      }
+    })
+  }
 
   ngOnInit() {
   }

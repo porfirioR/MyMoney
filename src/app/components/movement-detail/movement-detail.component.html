@@ -9,7 +9,9 @@
 </mat-toolbar>
 <mat-card *ngIf="movement">
   <span class="mat-card-header">
-    <button mat-icon-button>
+    <button mat-icon-button customColor
+            [color]="movement!.color"
+            [backgroundColor]="movement!.backgroundColor">
       <mat-icon>{{movement.icon}}</mat-icon>
     </button>
     <span>{{movement.categoryName}}</span>

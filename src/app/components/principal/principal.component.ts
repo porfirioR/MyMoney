@@ -15,6 +15,7 @@ import { UserService } from '../../services/user.service';
 import { getAuth, onAuthStateChanged } from '@angular/fire/auth';
 import { UserDataModel } from '../../models/user-data.model';
 import { environment } from '../../../environments/environment';
+import { UserCategoryModel } from '../../models/user-category.model';
 
 @Component({
   selector: 'app-principal',
@@ -33,6 +34,7 @@ export class PrincipalComponent implements OnInit {
   protected messageSearch = 'Search'
   protected categoryType = CategoryType
   protected title = environment.title
+  private userCategories: UserCategoryModel[] = []
   constructor(private readonly dialog: MatDialog,
               private readonly categoryService: CategoryService,
               private readonly movementService: MovementService,
@@ -64,6 +66,7 @@ export class PrincipalComponent implements OnInit {
     combineLatest([categories$, requestMovement$, userCategories$]).subscribe({
       next: ([categories, movements, userCategories]) => {
         userCategories.forEach(y => y.categoryId = y.category!.path.split('\/').pop()!)
+        this.userCategories = userCategories
         this.prepareMovementListToView(movements)
         this.categories = this.userService.setCategories(categories, userCategories)
       }, error: (e) => {
@@ -112,6 +115,11 @@ export class PrincipalComponent implements OnInit {
     this.movements.forEach(x => x.date = new Date(x.time))
     this.movements = this.movements.sort((a, b) => b.time - a.time)
     this.movements.forEach((movement: MovementModel) => {
+      const userCategory = this.userCategories.find(x => x.categoryId === movement.categoryId)
+      if (userCategory) {
+        movement.color = userCategory.color
+        movement.backgroundColor = userCategory.backgroundColor
+      }
       const date = movement.date!
       let dateMovement = this.groupDateMovementList.find(x => x.date.getTime() === date.getTime())
       if (dateMovement) {

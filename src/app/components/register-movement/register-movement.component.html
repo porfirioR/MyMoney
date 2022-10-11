@@ -22,8 +22,10 @@
   <mat-card *ngIf="!loading">
     <div class="icon-list">
       <span class="btn-block" *ngFor="let category of currentCategories">
-        <button class="btn-icon" mat-fab (click)="selectedIcon(category)"
-          [color]="category.icon === formGroup.get('icon')?.value && category.id === formGroup.get('categoryId')?.value? 'primary': ''">
+        <button class="btn-icon" mat-fab customColor
+                (click)="selectedIcon(category)"
+                [color]="category.icon === formGroup.get('icon')?.value && category.id === formGroup.get('categoryId')?.value ? category.color : ''"
+                [backgroundColor]="category.icon === formGroup.get('icon')?.value && category.id === formGroup.get('categoryId')?.value ? category.backgroundColor : ''">
           <i class="material-icons-outlined notranslate">{{category.icon}}</i>
         </button>
         <label>{{category.name | translate}}</label>
@@ -32,7 +34,11 @@
     <mat-card-content>
       <mat-form-field appearance="fill" class="w-100">
         <span matPrefix>
-          <mat-icon>{{formGroup.get('icon')?.value}}</mat-icon>
+          <button mat-icon-button customColor
+                  [color]="formGroup.get('color')?.value"
+                  [backgroundColor]="formGroup.get('backgroundColor')?.value">
+            <mat-icon>{{formGroup.get('icon')?.value}}</mat-icon>
+          </button>
         </span>
         <mat-label>{{'Memorandum' | translate}}</mat-label>
         <input matInput type="text" formControlName="memorandum" #memorandum>

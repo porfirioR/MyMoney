@@ -29,7 +29,9 @@ export class RegisterMovementComponent implements OnInit {
     categoryId: new FormControl<string>('', Validators.required),
     memorandum: new FormControl<string>('', Validators.maxLength(50)),
     date: new FormControl({value: '', disabled: true}, Validators.required),
-    amount: new FormControl('', [Validators.required, Validators.min(0), Validators.minLength(1), Validators.max(999999999999)])
+    amount: new FormControl('', [Validators.required, Validators.min(0), Validators.minLength(1), Validators.max(999999999999)]),
+    color: new FormControl(''),
+    backgroundColor: new FormControl('')
   })
   protected currentCategories!: CategoryModel[]
   protected loading = true
@@ -54,8 +56,11 @@ export class RegisterMovementComponent implements OnInit {
           this.patchFormGroup(this.updateMovement)
         } else {
           this.currentCategories = HelperService.categoriesByType(this.categoryList, this.categoryType.expense)
-          this.formGroup.controls['icon'].setValue(this.currentCategories[0].icon)
-          this.formGroup.controls['categoryId'].setValue(this.currentCategories[0].id)
+          const currentCategory = this.currentCategories[0]
+          this.formGroup.controls['icon'].setValue(currentCategory.icon)
+          this.formGroup.controls['categoryId'].setValue(currentCategory.id)
+          this.formGroup.patchValue({ color: currentCategory.color })
+          this.formGroup.patchValue({ backgroundColor: currentCategory.backgroundColor })
         }
 
         this.formGroup.controls['type'].valueChanges.subscribe({
@@ -85,6 +90,8 @@ export class RegisterMovementComponent implements OnInit {
   protected selectedIcon = (category: CategoryModel) => {
     this.formGroup.controls['icon'].setValue(category.icon)
     this.formGroup.controls['categoryId'].setValue(category.id)
+    this.formGroup.controls['color'].setValue(category ? category.color : '')
+    this.formGroup.controls['backgroundColor'].setValue(category ? category.backgroundColor : '')
     this.inputMemorandum?.nativeElement.focus()
     this.formGroup.markAllAsTouched()
   }
@@ -129,11 +136,14 @@ export class RegisterMovementComponent implements OnInit {
 
   private patchFormGroup = (movement: MovementModel) => {
     this.currentCategories = HelperService.categoriesByType(this.categoryList, movement.type)
+    const currentCategory = this.currentCategories.find(x => x.id === movement.categoryId)
     this.formGroup.patchValue({ type: movement.type})
     this.formGroup.patchValue({ icon: movement.icon})
     this.formGroup.patchValue({ categoryId: movement.categoryId})
     this.formGroup.patchValue({ memorandum: movement.memorandum})
     this.formGroup.patchValue({ date: movement.date})
     this.formGroup.patchValue({ amount: Math.abs(movement.amount)})
+    this.formGroup.patchValue({ color: currentCategory ? currentCategory.color : ''})
+    this.formGroup.patchValue({ backgroundColor: currentCategory ? currentCategory.backgroundColor : ''})
   }
 }

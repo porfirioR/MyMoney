@@ -6,6 +6,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MovementService } from '../../services/movement.service';
 import { MovementModel } from '../../models/movement.model';
 import { DialogDeleteComponent } from '../dialog-delete/dialog-delete.component';
+import { combineLatest, take } from 'rxjs';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-movement-detail',
@@ -18,15 +20,25 @@ export class MovementDetailComponent implements OnInit {
   constructor(private readonly location: Location,
     private readonly movementService: MovementService,
     private readonly activatedRoute: ActivatedRoute,
-    private readonly router: Router, private readonly dialog: MatDialog, private readonly snackBar: MatSnackBar) {
-    this.activatedRoute.params.subscribe({
-      next: (params) => {
+    private readonly router: Router,
+    private readonly dialog: MatDialog,
+    private readonly snackBar: MatSnackBar,
+    private readonly userService: UserService
+  ) {
+    combineLatest([this.activatedRoute.params, this.userService.getUserCategories$().pipe(take(1))]).subscribe({
+      next: ([params, userCategories]) => {
         this.movement = this.movementService.getMovementById(params['id'])
         if (!this.movement) {
           this.exit()
         }
+        const userCategory = userCategories.find(x => x.categoryId === this.movement!.categoryId)
+        if (userCategory) {
+          this.movement!.color = userCategory.color
+          this.movement!.backgroundColor = userCategory.backgroundColor
+        }
       }, error: (e) => {
-        throw e;
+        console.error(e)
+        throw e
       }
     })
   }
@@ -52,7 +64,7 @@ export class MovementDetailComponent implements OnInit {
           this.snackBar.open(reason, '', { duration: 3000 })
         })
       }
-    });
+    })
   }
 
   protected editMovement = (id?: string) => {
