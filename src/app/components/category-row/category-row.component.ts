@@ -29,8 +29,8 @@ export class CategoryRowComponent implements OnInit, OnDestroy {
               private readonly movementService: MovementService) { }
 
   ngOnInit(): void {
-    if (this.category && this.category.owner !== this.ownerSystem && !this.category.name.endsWith('(propio)')) {
-      this.category.name += ' (propio)'
+    if (this.category && this.category.owner !== this.ownerSystem && !this.category.name.endsWith('(user)')) {
+      this.category.name += ' (user)'
     }
   }
 

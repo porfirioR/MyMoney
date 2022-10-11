@@ -35,8 +35,6 @@ export class EditCategoryComponent implements OnInit {
             this.exit()
           }
           const userCategory = userCategories.find(x => x.categoryId === this.category!.id)
-          console.log(userCategory);
-          
           if (userCategory) {
             this.formGroup.controls['color'].setValue(userCategory.color)
             this.formGroup.controls['backgroundColor'].setValue(userCategory.backgroundColor)
@@ -71,7 +69,6 @@ export class EditCategoryComponent implements OnInit {
       this.category!.color = request.color
       this.category!.backgroundColor = request.backgroundColor
       this.category!.order = request.order
-      this.userService.setCategory(this.category!)
       this.location.back()
     })
   }

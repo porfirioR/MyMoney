@@ -39,7 +39,18 @@ export class UserService extends ItemObservable<UserDataModel> {
 
   public setCategories = (allCategories: CategoryModel[], userCategories: UserCategoryModel[]): CategoryModel[] => {
     const allUserCategories = userCategories.map(x => x.categoryId)
-    allCategories.forEach(x => x.active = allUserCategories.includes(x.id) ? userCategories.find(y => y.categoryId === x.id)?.active!: true)
+    allCategories.forEach(x => {
+      if (allUserCategories.includes(x.id)) {
+        const userCategory = userCategories.find(y => y.categoryId === x.id)!
+        x.active = userCategory.active
+        x.color = userCategory.color
+        x.backgroundColor = userCategory.backgroundColor,
+        x.order = userCategory.order
+      } else {
+        x.active = true,
+        x.order = 1000
+      }
+    })
     const activeCategories = allCategories.filter(x => x.active)
     const item = this.item!
     item.allCategories = allCategories

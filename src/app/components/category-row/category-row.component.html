@@ -5,7 +5,11 @@
   <button mat-icon-button (click)="deactivateReactivateCategory(category.active)" *ngIf="!category.active">
     <mat-icon class="icon-color-green">add_circle_outline</mat-icon>
   </button>
-  <i class="material-icons-outlined notranslate">{{category.icon}}</i>
+  <button mat-mini-fab customColor
+          [color]="category.color"
+          [backgroundColor]="category.backgroundColor">
+    <i class="material-icons-outlined notranslate">{{category.icon}}</i>
+  </button>
   <span class="category-name">{{category.name | translate}}</span>
   <button mat-icon-button [routerLink]="['edit-category', category.id]">
     <mat-icon>edit</mat-icon>

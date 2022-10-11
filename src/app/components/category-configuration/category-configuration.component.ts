@@ -55,5 +55,9 @@ export class CategoryConfigurationComponent implements OnInit {
       this.expenseCategory = this.orderCategoryByActive(this.expenseCategory)
   }
 
-  private orderCategoryByActive = (categories: CategoryModel[]) => categories.sort((a, b) => a.active === b.active ? 0 : a.active ? -1 : 1)
+  private orderCategoryByActive = (categories: CategoryModel[]) => categories.sort((a, b) => {
+    const compareActive = a.active === b.active ? 0 : a.active ? -1 : 1
+    const compareOrder = a.order - b.order
+    return compareActive || compareOrder
+  })
 }
