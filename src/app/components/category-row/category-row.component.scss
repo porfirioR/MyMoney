@@ -19,11 +19,14 @@
 }
 
 .material-icons-outlined {
-  font-size: large;
-  padding-bottom: 6px;
+  font-size: medium;
 }
 
 .mat-mini-fab {
-  width: 30px;
-  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  box-shadow: unset;
 }

@@ -6,10 +6,10 @@
   <mat-form-field>
     <mat-select formControlName="type">
       <mat-option [value]="categoryType.expense">
-        {{categoryType.expense}}
+        {{categoryType.expense | translate}}
       </mat-option>
       <mat-option [value]="categoryType.income">
-        {{categoryType.income}}
+        {{categoryType.income | translate}}
       </mat-option>
     </mat-select>
   </mat-form-field>
@@ -32,7 +32,11 @@
     <mat-expansion-panel hideToggle *ngFor="let group of groupMovementCategoryModel">
       <mat-expansion-panel-header>
         <mat-panel-title>
+          <button mat-mini-fab customColor
+            [color]="group!.color"
+            [backgroundColor]="group!.backgroundColor">
           <i class="material-icons-outlined notranslate">{{group.icon}}</i>
+        </button>
           <span>
             {{group.categoryName}}
           </span>
@@ -52,7 +56,6 @@
         </li>
       </ul>
     </mat-expansion-panel>
-  
   </mat-accordion>
 </ng-container>
 </form>

@@ -87,22 +87,25 @@ export class ReportMonthComponent implements OnInit {
     })
   }
 
-  public groupByCategoryName = (movements: MovementModel[]): GroupMovementCategoryModel[] => {
+  private groupByCategoryName = (movements: MovementModel[]): GroupMovementCategoryModel[] => {
     const groups: GroupMovementCategoryModel[] = []
     movements.forEach((movement) => {
-      movement.categoryName = this.userService.getActiveCategories().find(x => x.id === movement.categoryId)?.name!
+      const category = this.userService.getActiveCategories().find(x => x.id === movement.categoryId)!
+      movement.categoryName = category.name!
+      movement.color = category.color!
+      movement.backgroundColor = category.backgroundColor!
       const movementCategory = groups.find(x => x.categoryName == movement.categoryName)
       if (movementCategory) {
         movementCategory.movements.push(movement)
         movementCategory.movements.sort((a, b) => a.time - b.time)
         movementCategory.amount += movement.amount
       } else {
-        groups.push(new GroupMovementCategoryModel(movement.categoryName, movement.icon, movement.amount, [movement]))
+        groups.push(new GroupMovementCategoryModel(movement.categoryName, movement.icon, movement.color!, movement.backgroundColor!, movement.amount, [movement]))
       }
-    });
+    })
     groups.sort((a, b) => b.amount - a.amount)
     return groups
-  };
+  }
 
   protected exit = () => {
     this.location.back()
