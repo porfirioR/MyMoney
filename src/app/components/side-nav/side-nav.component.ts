@@ -18,10 +18,12 @@ export class SideNavComponent implements OnInit {
     new NavItemModel('cloud_upload', 'Import', ItemAction.importData),
     new NavItemModel('stars', 'About us', ItemAction.showData),
   ];
-
+  protected email: string = ''
   constructor(private auth: AuthService, protected router: Router, private readonly userService: UserService) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.email = this.userService.getUserEmail()
+  }
 
   protected performItemAction = (action: ItemAction) => {
     switch (action) {
@@ -46,7 +48,7 @@ export class SideNavComponent implements OnInit {
       this.userService.setUser(userData)
       this.router.navigate(['logout'])
     })
-    .catch(error => console.log(error))
+    .catch(error => console.error(error))
   }
   
 }
