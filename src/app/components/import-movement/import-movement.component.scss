@@ -24,7 +24,6 @@
 
 .mat-card {
   margin: 1rem;
-  height: calc(42%);
 }
 
 .file-error {
@@ -33,4 +32,20 @@
 
 .mat-card-content {
   margin-bottom: 1rem;
+}
+
+.mat-card-header {
+  display: flex;
+  justify-content: center;
+}
+
+span.mat-list-item-content {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  box-sizing: border-box;
+  padding: 0;
+  position: relative;
+  height: inherit;
+  font-size: smaller;
 }

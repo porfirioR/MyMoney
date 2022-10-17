@@ -10,13 +10,13 @@
   </mat-card-header>
   <mat-card-content>
     <mat-list dense>
-      <mat-list-item>-Expensive procedure(it may take a few minutes)</mat-list-item>
-      <mat-list-item>-Format file .csv</mat-list-item>
-      <mat-list-item>-Required first row: {{csvHeader}}</mat-list-item>
-      <mat-list-item>-All categories need to exist</mat-list-item>
-      <mat-list-item>-After the load file will be shown one button to check the file</mat-list-item>
-      <mat-list-item>-Check if all columns are correct</mat-list-item>
-      <mat-list-item>-If all right will pop-up saying the length records and if you want to save all</mat-list-item>
+      <span class="mat-list-item-content">Expensive procedure(it may take a few minutes)</span>
+      <span class="mat-list-item-content">Format file .csv</span>
+      <span class="mat-list-item-content">Required first row: {{csvHeader}}</span>
+      <span class="mat-list-item-content">All categories need to exist</span>
+      <span class="mat-list-item-content">After the load file will be shown one button to check the file</span>
+      <span class="mat-list-item-content">Check if all columns are correct</span>
+      <span class="mat-list-item-content">If all right will pop-up saying the length records and if you want to save all</span>
     </mat-list>
   </mat-card-content>
   <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>

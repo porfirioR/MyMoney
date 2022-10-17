@@ -1,6 +1,11 @@
 <mat-list>
   <div mat-subheader>User</div>
-  {{email}}
+  <div class="user-block">
+    <img *ngIf="photo" [src]="photo" />
+    <p>
+      {{displayName}}
+    </p>
+  </div>
   <mat-divider></mat-divider>
 
   <div mat-subheader>Actions</div>

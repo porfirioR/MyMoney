@@ -5,6 +5,7 @@ import { AuthService } from '../../services/auth.service';
 import { NavItemModel } from '../../models/nav-item.model';
 import { UserService } from '../../services/user.service';
 import { UserDataModel } from '../../models/user-data.model';
+import { DomSanitizer, SafeHtml, SafeUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-side-nav',
@@ -18,11 +19,23 @@ export class SideNavComponent implements OnInit {
     new NavItemModel('cloud_upload', 'Import', ItemAction.importData),
     new NavItemModel('stars', 'About us', ItemAction.showData),
   ];
-  protected email: string = ''
-  constructor(private auth: AuthService, protected router: Router, private readonly userService: UserService) {}
+  protected displayName: string = ''
+  protected photo!: SafeUrl
+
+  constructor(private auth: AuthService,
+              protected router: Router,
+              private readonly userService: UserService) {}
 
   ngOnInit() {
-    this.email = this.userService.getUserEmail()
+    this.userService.getItemObservable$.subscribe({
+      next: (user) => {
+        this.photo = user.photo!,
+        this.displayName = user.displayName
+      }, error: (e) => {
+        console.error(e);
+        throw e;
+      }
+    })
   }
 
   protected performItemAction = (action: ItemAction) => {
@@ -43,7 +56,9 @@ export class SideNavComponent implements OnInit {
         email: '',
         activeCategories: [],
         allCategories: [],
-        userCategories: []
+        userCategories: [],
+        photo: null,
+        displayName: ''
       }
       this.userService.setUser(userData)
       this.router.navigate(['logout'])

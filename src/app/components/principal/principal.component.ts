@@ -50,7 +50,9 @@ export class PrincipalComponent implements OnInit {
           email: user.email!,
           activeCategories: [],
           allCategories: [],
-          userCategories: []
+          userCategories: [],
+          photo: user.photoURL,
+          displayName: user.displayName!
         }
         this.userService.setUser(userData)
       } else {

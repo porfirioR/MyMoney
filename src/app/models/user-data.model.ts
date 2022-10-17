@@ -6,4 +6,6 @@ export interface UserDataModel {
   allCategories: CategoryModel[]
   activeCategories: CategoryModel[]
   userCategories: UserCategoryModel[]
+  photo: string | null
+  displayName: string
 }

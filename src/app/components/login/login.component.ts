@@ -24,7 +24,9 @@ export class LoginComponent implements OnInit {
         email: x.user.email!,
         activeCategories: [],
         allCategories: [],
-        userCategories: []
+        userCategories: [],
+        photo: x.user.photoURL,
+        displayName: x.user.displayName!
       }
       this.userService.setUser(userData)
       this.router.navigate([''])
