@@ -24,5 +24,7 @@
   "Invalid amount":"Monto invalidó",
   "Hi, you are logout": "Hola, estás desconectado",
   "Login": "Ingresar",
-  "If you want login please click on": "Si desea iniciar sesión, haga clic en"
+  "If you want login please click on": "Si desea iniciar sesión, haga clic en",
+  "Project name": "Nombre proyecto",
+  "Author": "Autor"
 }

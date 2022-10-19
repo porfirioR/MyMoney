@@ -68,8 +68,10 @@ export class RegisterMovementComponent implements OnInit {
             this.currentCategories = HelperService.categoriesByType(this.categoryList, value)
             const currentCategory = this.currentCategories.find(x => x.id === this.formGroup.controls['categoryId'].value)
             if(!currentCategory) {
-              this.formGroup.controls['icon'].setValue('')
-              this.formGroup.controls['categoryId'].setValue('')
+              this.formGroup.controls['icon'].setValue(this.currentCategories[0].icon)
+              this.formGroup.controls['categoryId'].setValue(this.currentCategories[0].id)
+              this.formGroup.controls['color'].setValue(this.currentCategories[0].color)
+              this.formGroup.controls['backgroundColor'].setValue(this.currentCategories[0].backgroundColor)
             }
           }
         })

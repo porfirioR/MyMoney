@@ -60,6 +60,7 @@ import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { CustomColorDirective } from './directive/custom-color.directive';
 import { EditCategoryComponent } from './components/edit-category/edit-category.component';
+import { AboutUsComponent } from './components/about-us/about-us.component';
 registerLocaleData(localEs, 'es')
 
 
@@ -83,6 +84,7 @@ registerLocaleData(localEs, 'es')
     LogoutComponent,
     ReportMonthComponent,
     EditCategoryComponent,
+    AboutUsComponent,
     CustomColorDirective
   ],
   imports: [

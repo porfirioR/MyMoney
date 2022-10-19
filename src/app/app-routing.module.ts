@@ -14,6 +14,7 @@ import { ReportMonthComponent } from './components/report-month/report-month.com
 import { UserGuard } from './guards/user.guard';
 import { environment } from '../environments/environment';
 import { EditCategoryComponent } from './components/edit-category/edit-category.component';
+import { AboutUsComponent } from './components/about-us/about-us.component';
 
 const routes: Routes = [
   {
@@ -75,6 +76,12 @@ const routes: Routes = [
     canActivate: [UserGuard],
     component: ReportMonthComponent,
     title: 'Report'
+  },
+  {
+    path: 'about-us',
+    canActivate: [UserGuard],
+    component: AboutUsComponent,
+    title: 'About us'
   },
   {
     path: 'login',
