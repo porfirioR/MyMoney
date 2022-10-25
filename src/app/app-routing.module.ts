@@ -15,6 +15,7 @@ import { UserGuard } from './guards/user.guard';
 import { environment } from '../environments/environment';
 import { EditCategoryComponent } from './components/edit-category/edit-category.component';
 import { AboutUsComponent } from './components/about-us/about-us.component';
+import { ConfigurationComponent } from './components/configuration/configuration.component';
 
 const routes: Routes = [
   {
@@ -82,6 +83,12 @@ const routes: Routes = [
     canActivate: [UserGuard],
     component: AboutUsComponent,
     title: 'About us'
+  },
+  {
+    path: 'configuration',
+    canActivate: [UserGuard],
+    component: ConfigurationComponent,
+    title: 'Configuration'
   },
   {
     path: 'login',

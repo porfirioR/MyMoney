@@ -2,7 +2,7 @@
   <button mat-icon-button (click)="exit()">
     <mat-icon>keyboard_backspace</mat-icon>
   </button>
-  <span>{{'About us' | translate}}</span>
+  <span>{{'Configuration' | translate}}</span>
   <button mat-icon-button (click)="exit()">
     <mat-icon>home</mat-icon>
   </button>
@@ -10,13 +10,8 @@
 <mat-card>
   <mat-card-content>
     <mat-list>
-      <mat-list-item>{{'Project name' | translate}}: {{title}}</mat-list-item>
-      <mat-list-item>
-        <span>
-          Github: &nbsp
-        </span>
-        <a href="https://github.com/porfirioR/MyMoney" target="_blank">{{'Github page' |
-          translate}}</a>
+      <mat-list-item>Github:
+        <a href="https://github.com/porfirioR/MyMoney" target="_blank">{{'Github page' | translate}}</a>
       </mat-list-item>
       <mat-list-item>{{'Author' | translate}}: Porfirio Perez</mat-list-item>
     </mat-list>

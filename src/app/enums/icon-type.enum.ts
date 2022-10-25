@@ -101,6 +101,7 @@ export enum IconType {
   Loyalty = 'loyalty',
   Wallet = 'wallet',
   BalanceWallet = 'account_balance_wallet',
-  Calculate = 'calculate'
+  Calculate = 'calculate',
+  Pets = 'pets'
 
 }

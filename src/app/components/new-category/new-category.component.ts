@@ -58,7 +58,7 @@ export class NewCategoryComponent implements OnInit {
         IconType.Marry, IconType.Child, IconType.Baby, IconType.Pregnant,
         IconType.Diversity, IconType.People, IconType.Spa, IconType.Hotel,
         IconType.Home, IconType.Florist, IconType.Old, IconType.OldWoman,
-        IconType.Man, IconType.Woman, IconType.Transgender
+        IconType.Man, IconType.Woman, IconType.Transgender, IconType.Pets
       ]),
       new NewCategoryGroupModel(CategoryGroupIconType.Electronic, [
         IconType.Tv, IconType.Print, IconType.Computer, IconType.Kitchen,
