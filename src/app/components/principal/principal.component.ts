@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterContentChecked } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { combineLatest, Observable, take } from 'rxjs';
@@ -22,7 +22,7 @@ import { UserCategoryModel } from '../../models/user-category.model';
   templateUrl: './principal.component.html',
   styleUrls: ['./principal.component.scss'],
 })
-export class PrincipalComponent implements OnInit {
+export class PrincipalComponent implements OnInit, AfterContentChecked {
   protected income: number = 0
   protected expenses: number = 0
   protected balance: number = 0
@@ -77,7 +77,15 @@ export class PrincipalComponent implements OnInit {
       }
     })
   }
-
+ngAfterContentChecked(): void {
+  //Called after every check of the component's or directive's content.
+  //Add 'implements AfterContentChecked' to the class.
+  console.log(document.body.style.marginLeft);
+  const body = document.getElementsByTagName('body')[0]
+  const style = window.getComputedStyle(body)
+  console.log(document.getElementsByTagName('body')[0].style.marginLeft);
+  
+}
   protected openBottomSheet = (): void => {
     const dialogRef = this.dialog.open(SelectYearMountComponent, {
       width: '400px',

@@ -1,7 +1,12 @@
 /* You can add global styles to this file, and also import other style files */
+html, body {
+  height: 100%;
+}
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
 
 .w-100 {
   width: 100%;
@@ -22,3 +27,28 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .mat-toolbar-block {
   margin-top: 56px;
 }
+
+@media only screen and (min-width: 768px) {
+  /* For desktop: */
+  .content {
+    max-width: 500px;
+    margin: auto;
+    padding: 10px;
+  }
+  .mat-toolbar {
+    width: 500px !important;
+  }
+  // .btn-add {
+  //   right: calc(30%) !important;
+  // }
+}
+// @media only screen and (min-width: 1000px) {
+//   .btn-add {
+//     right: calc(27%) !important;
+//   }
+// }
+// @media only screen and (min-width: 2000px) {
+//   .btn-add {
+//     right: calc(100% - 500px) !important;
+//   }
+// }
