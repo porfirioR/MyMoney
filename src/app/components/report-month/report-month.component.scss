@@ -1,4 +1,5 @@
-.row, .mat-expansion-panel-header-title {
+.row,
+.mat-expansion-panel-header-title {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -8,7 +9,8 @@ li {
   margin-bottom: 0.3rem;
 }
 
-.mat-expansion-panel, mat-card {
+.mat-expansion-panel,
+mat-card {
   margin: 1rem;
 }
 
@@ -22,4 +24,25 @@ form {
 
 .mat-mini-fab {
   box-shadow: unset;
+}
+
+.mat-tab-group.mat-primary .mat-ink-bar,
+.mat-form-field.mat-focused .mat-form-field-ripple,
+.mat-progress-bar-fill::after {
+  background-color: white !important;
+}
+.mat-icon.mat-primary,
+.mat-stroked-button.mat-primary,
+.mat-icon-button.mat-primary,
+.mat-form-field.mat-focused .mat-form-field-label,
+.mat-primary .mat-option.mat-selected:not(.mat-option-disabled),
+.mat-datepicker-toggle-active,
+.mat-form-field.mat-focused.mat-primary .mat-select-arrow {
+  color: white !important;
+}
+.mat-form-field.mat-focused.mat-primary .mat-select-arrow {
+  color: black !important;
+}
+.mat-toolbar.mat-primary {
+  color: white;
 }

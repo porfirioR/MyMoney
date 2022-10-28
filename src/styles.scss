@@ -1,4 +1,7 @@
-/* You can add global styles to this file, and also import other style files */
+@import 'assets/scss/media-file.scss';
+@import 'assets/scss/update-primary-color.scss';
+
+
 html,
 body {
   height: 100%;
@@ -33,66 +36,3 @@ body {
   border-color: white !important;
 }
 
-/*
-  Calculate the percentage of side margins:
-    Subtract between 100% width and max-width 
-    The result divide by two
-    The second result divide by the 100% width and multiply by 100 to get percentage for sides
-  
-  Example:
-    100% width: 768px
-    max-width: 520px (padding 10px for each side)
-
-    (100% width - max-width) = 768 - 520 => 248px
-    248 / 2 => 124px
-    (124 / 768) * 100 = 16.14583 ~ 16%
-*/
-@media only screen and (min-width: 768px) {
-  .content {
-    max-width: 500px;
-    margin: auto calc(16%);
-    padding: 0 10px;
-  }
-  .mat-toolbar {
-    width: 500px !important;
-  }
-  .btn-add {
-    right: calc(100% - calc(15% + 500px)) !important;
-  }
-}
-
-@media only screen and (min-width: 1024px) {
-  .content {
-    max-width: 500px;
-    margin: auto calc(25%);
-    padding: 0;
-  }
-  .btn-add {
-    right: calc(100% - calc(25% + 480px)) !important;
-  }
-}
-
-@media only screen and (min-width: 1440px) {
-  .content {
-    max-width: 500px;
-    margin: auto calc(32%);
-    padding: 0 10px;
-  }
-  .btn-add {
-    right: calc(100% - calc(30% + 520px)) !important;
-  }
-}
-
-@media only screen and (min-width: 2560px) {
-  .content {
-    max-width: 544px;
-    margin: auto calc(39%);
-    padding: 0 10px;
-  }
-  .mat-toolbar {
-    width: 544px !important;
-  }
-  .btn-add {
-    right: calc(100% - calc(39.5% + 520px)) !important;
-  }
-}

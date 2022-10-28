@@ -1,0 +1,47 @@
+// Variables
+$primaryColor: #82b366;
+
+.mat-toolbar.mat-primary,
+.mat-fab.mat-primary,
+.mat-mini-fab.mat-primary,
+.mat-primary .mat-pseudo-checkbox-checked {
+  background: $primaryColor;
+}
+
+.mat-icon.mat-primary,
+.mat-stroked-button.mat-primary,
+.mat-icon-button.mat-primary,
+.mat-form-field.mat-focused .mat-form-field-label,
+.mat-primary .mat-option.mat-selected:not(.mat-option-disabled),
+.mat-datepicker-toggle-active,
+.mat-form-field.mat-focused.mat-primary .mat-select-arrow,
+.title-color,
+.file-upload {
+  color: $primaryColor;
+}
+
+.mat-tab-group.mat-primary .mat-ink-bar,
+.mat-form-field.mat-focused .mat-form-field-ripple,
+.mat-calendar-body-selected, .mat-progress-bar-fill::after {
+  background-color: $primaryColor;
+}
+
+.mat-stroked-button {
+  border-color: $primaryColor;
+}
+
+.mat-input-element {
+  caret-color: $primaryColor;
+}
+
+.mat-card-actions .mat-stroked-button, .mat-stroked-button.mat-primary {
+  border-color: $primaryColor !important;
+}
+
+.mat-progress-bar-buffer {
+  background-color: #d1e9ca;
+}
+
+.cdk-program-focused .mat-calendar-body-active > .mat-calendar-body-cell-content:not(.mat-calendar-body-selected):not(.mat-calendar-body-comparison-identical) {
+  background-color: #82b3654d;
+}
