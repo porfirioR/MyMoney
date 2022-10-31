@@ -14,10 +14,11 @@ import { DomSanitizer, SafeHtml, SafeUrl } from '@angular/platform-browser';
 })
 export class SideNavComponent implements OnInit {
   protected navItems: NavItemModel[] = [
-    new NavItemModel('dashboard', 'Category', ItemAction.categoryConfiguration),
-    new NavItemModel('launch', 'Export', ItemAction.exportData),
-    new NavItemModel('cloud_upload', 'Import', ItemAction.importData),
-    new NavItemModel('stars', 'About us', ItemAction.showData),
+    new NavItemModel('dashboard', 'Category', ItemAction.category),
+    new NavItemModel('launch', 'Export', ItemAction.export),
+    new NavItemModel('cloud_upload', 'Import', ItemAction.import),
+    new NavItemModel('stars', 'About us', ItemAction.aboutUs),
+    new NavItemModel('build', 'Configuration', ItemAction.configuration),
   ];
   protected displayName: string = ''
   protected photo!: SafeUrl
@@ -39,16 +40,7 @@ export class SideNavComponent implements OnInit {
   }
 
   protected performItemAction = (action: ItemAction) => {
-    switch (action) {
-      case ItemAction.categoryConfiguration:
-      case ItemAction.importData:
-      case ItemAction.exportData:
-      case ItemAction.showData:
-        this.router.navigate([action]);
-        break;
-      default:
-        break;
-    }
+    this.router.navigate([action])
   }
 
   protected logout = () => {

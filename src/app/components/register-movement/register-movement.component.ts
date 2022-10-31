@@ -36,9 +36,9 @@ export class RegisterMovementComponent implements OnInit {
   protected currentCategories!: CategoryModel[]
   protected loading = true
   protected saving = false
+  protected title: string = 'Register movement'
   private categoryList!: CategoryModel[]
   private updateMovement?: MovementModel
-
   constructor(
     private readonly movementService: MovementService,
     protected location: Location,
@@ -53,6 +53,7 @@ export class RegisterMovementComponent implements OnInit {
         this.categoryList = categories
         this.updateMovement = this.movementService.getMovementById(this.movementId)
         if (this.updateMovement) {
+          this.title = 'Movement update'
           this.patchFormGroup(this.updateMovement)
         } else {
           this.currentCategories = HelperService.categoriesByType(this.categoryList, this.categoryType.expense)

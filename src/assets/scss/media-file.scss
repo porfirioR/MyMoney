@@ -16,13 +16,18 @@
   .content {
     max-width: 500px;
     margin: auto calc(16%);
-    padding: 0 10px;
   }
+
   .mat-toolbar {
     width: 500px !important;
   }
+
   .btn-add {
     right: calc(100% - calc(15% + 500px)) !important;
+  }
+
+  .header-height {
+    height: 64px !important;
   }
 }
 
@@ -30,10 +35,14 @@
   .content {
     max-width: 500px;
     margin: auto calc(25%);
-    padding: 0;
   }
+
   .btn-add {
     right: calc(100% - calc(25% + 480px)) !important;
+  }
+
+  .header-height {
+    height: 64px !important;
   }
 }
 
@@ -41,10 +50,14 @@
   .content {
     max-width: 500px;
     margin: auto calc(32%);
-    padding: 0 10px;
   }
+
   .btn-add {
     right: calc(100% - calc(30% + 520px)) !important;
+  }
+
+  .header-height {
+    height: 64px !important;
   }
 }
 
@@ -52,12 +65,17 @@
   .content {
     max-width: 544px;
     margin: auto calc(39%);
-    padding: 0 10px;
   }
+
   .mat-toolbar {
     width: 544px !important;
   }
+
   .btn-add {
     right: calc(100% - calc(39.5% + 520px)) !important;
+  }
+
+  .header-height {
+    height: 64px !important;
   }
 }

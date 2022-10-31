@@ -1,6 +1,7 @@
 export enum ItemAction {
-  categoryConfiguration = 'category',
-  exportData = 'export',
-  importData = 'import',
-  showData = 'about-us'
+  category = 'category',
+  export = 'export',
+  import = 'import',
+  aboutUs = 'about-us',
+  configuration = 'configuration'
 }

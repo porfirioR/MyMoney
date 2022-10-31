@@ -3,7 +3,14 @@
     <button mat-icon-button (click)="exit()">
       <mat-icon>keyboard_backspace</mat-icon>
     </button>
-    <mat-form-field>
+    <span>{{'Report' | translate}}</span>
+    <button mat-stroked-button (click)="openBottomSheet()">
+      {{messageSearch | translate}}
+    </button>
+  </mat-toolbar>
+  <div class="header-height"></div>
+  <mat-card>
+    <mat-form-field class="w-100">
       <mat-select formControlName="type">
         <mat-option [value]="categoryType.expense">
           {{categoryType.expense | translate}}
@@ -13,11 +20,7 @@
         </mat-option>
       </mat-select>
     </mat-form-field>
-    <button mat-stroked-button (click)="openBottomSheet()">
-      {{messageSearch | translate}}
-    </button>
-  </mat-toolbar>
-  <div class="header-height"></div>
+  </mat-card>
   <ng-container *ngIf="!loading">
     <mat-card>
       <canvas baseChart width="200" height="150" [data]="chartData" [labels]="doughnutChartLabels"
@@ -35,7 +38,7 @@
               {{group.categoryName}}
             </span>
             <span>
-              {{group.amount | number:'':'es'}}
+              {{group.amount | number:'' : numberType}}
             </span>
           </mat-panel-title>
         </mat-expansion-panel-header>
@@ -45,7 +48,7 @@
               - {{movement.memorandum ? movement.memorandum : group.categoryName}}
             </span>
             <span>
-              {{movement.amount | number:'':'es'}}
+              {{movement.amount | number:'' : numberType}}
             </span>
           </li>
         </ul>

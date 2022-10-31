@@ -1,0 +1,11 @@
+.mat-toolbar {
+  justify-content: unset;
+  position: unset;
+  & > span {
+    margin: auto;
+  }
+}
+
+.mat-card {
+  margin: 0.5rem 1rem;
+}

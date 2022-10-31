@@ -8,6 +8,7 @@ import { MovementModel } from '../../models/movement.model';
 import { DialogDeleteComponent } from '../dialog-delete/dialog-delete.component';
 import { combineLatest, take } from 'rxjs';
 import { UserService } from '../../services/user.service';
+import { NumberType } from '../../enums/number-type.enum';
 
 @Component({
   selector: 'app-movement-detail',
@@ -16,6 +17,7 @@ import { UserService } from '../../services/user.service';
 })
 export class MovementDetailComponent implements OnInit {
   protected movement?: MovementModel
+  protected numberType = NumberType.Spanish
 
   constructor(private readonly location: Location,
     private readonly movementService: MovementService,

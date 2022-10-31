@@ -4,10 +4,10 @@
   </span>
   <span>
     <span class="income-title" *ngIf="totalIncome && totalIncome > 0">
-      {{'Incomes' | translate}}: {{totalIncome | number:'':'es'}}
+      {{'Incomes' | translate}}: {{totalIncome | number:'' : numberType}}
     </span>
     <span *ngIf="totalExpense && totalExpense > 0">
-      {{'Expenses' | translate}}: {{totalExpense | number:'':'es'}}
+      {{'Expenses' | translate}}: {{totalExpense | number:'' : numberType}}
     </span>
   </span>
 </span>
@@ -23,7 +23,7 @@
         </button>
         <span>{{movement.memorandum ? movement.memorandum : movement.categoryName | translate}}</span>
       </span>
-      <span>{{movement.amount | number:'':'es'}}</span>
+      <span>{{movement.amount | number:'' : numberType}}</span>
     </span>
   </span>
 </mat-card-content>

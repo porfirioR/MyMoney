@@ -16,6 +16,7 @@ import { getAuth, onAuthStateChanged } from '@angular/fire/auth';
 import { UserDataModel } from '../../models/user-data.model';
 import { environment } from '../../../environments/environment';
 import { UserCategoryModel } from '../../models/user-category.model';
+import { NumberType } from '../../enums/number-type.enum';
 
 @Component({
   selector: 'app-principal',
@@ -34,7 +35,9 @@ export class PrincipalComponent implements OnInit {
   protected messageSearch = 'Search'
   protected categoryType = CategoryType
   protected title = environment.title
+  protected numberType = NumberType.Spanish
   private userCategories: UserCategoryModel[] = []
+
   constructor(private readonly dialog: MatDialog,
               private readonly categoryService: CategoryService,
               private readonly movementService: MovementService,
@@ -71,6 +74,7 @@ export class PrincipalComponent implements OnInit {
         this.userCategories = userCategories
         this.prepareMovementListToView(movements)
         this.categories = this.userService.setCategories(categories, userCategories)
+        this.loading = false
       }, error: (e) => {
         this.loading = false
         throw e;

@@ -1,19 +1,38 @@
-<mat-toolbar color="primary">
-  <button mat-icon-button (click)="exit()">
-    <mat-icon>keyboard_backspace</mat-icon>
-  </button>
-  <span>{{'Configuration' | translate}}</span>
-  <button mat-icon-button (click)="exit()">
-    <mat-icon>home</mat-icon>
-  </button>
-</mat-toolbar>
-<mat-card>
-  <mat-card-content>
-    <mat-list>
-      <mat-list-item>Github:
-        <a href="https://github.com/porfirioR/MyMoney" target="_blank">{{'Github page' | translate}}</a>
-      </mat-list-item>
-      <mat-list-item>{{'Author' | translate}}: Porfirio Perez</mat-list-item>
-    </mat-list>
-  </mat-card-content>
-</mat-card>
+<form [formGroup]="formGroup">
+  <mat-toolbar color="primary">
+    <button mat-icon-button (click)="exit()">
+      <mat-icon>keyboard_backspace</mat-icon>
+    </button>
+    <span>{{'Configuration' | translate}}</span>
+    <button mat-icon-button (click)="exit()">
+      <mat-icon>home</mat-icon>
+    </button>
+  </mat-toolbar>
+  <mat-card>
+    <mat-card-content>
+      <mat-form-field class="w-100">
+        <mat-select formControlName="numberType">
+          <mat-option [value]="numberType.Spanish">
+            {{'Spanish' | translate}}
+          </mat-option>
+          <mat-option [value]="numberType.English">
+            {{'English' | translate}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <span>
+        {{amount | number:'' : formGroup.get('numberType')!.value}}
+      </span>
+    </mat-card-content>
+  </mat-card>
+  <mat-card>
+    <mat-card-footer>
+      <button mat-stroked-button color="primary" (click)="exit()">
+        Cancel
+      </button>
+      <button mat-stroked-button color="primary" type="submit" [disabled]="formGroup.invalid" (click)="save()">
+        {{'Save' | translate}}
+      </button>
+    </mat-card-footer>
+  </mat-card>
+</form>

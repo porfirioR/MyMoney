@@ -5,6 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { ChartConfiguration, ChartOptions, ChartType } from 'chart.js';
 import { take } from 'rxjs';
+import { NumberType } from '../../enums/number-type.enum';
 import { CategoryType } from '../../enums/category-type.enum';
 import { GroupMovementCategoryModel } from '../../models/group-movement-category.model';
 import { MovementModel } from '../../models/movement.model';
@@ -34,7 +35,6 @@ export class ReportMonthComponent implements OnInit {
   }
   protected chartLegend = true;
   protected chartType: ChartType = 'doughnut'
-
   protected loading: boolean = false
   protected yearMonth?: YearMonthModel
   protected categoryType = CategoryType
@@ -43,6 +43,7 @@ export class ReportMonthComponent implements OnInit {
   protected formGroup: FormGroup = new FormGroup({
     type: new FormControl<CategoryType>(this.categoryType.expense),
   })
+  protected numberType = NumberType.Spanish
 
   constructor(private readonly activatedRoute: ActivatedRoute,
               private readonly movementService: MovementService,

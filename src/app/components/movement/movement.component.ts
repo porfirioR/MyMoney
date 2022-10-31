@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { NumberType } from '../../enums/number-type.enum';
 import { CategoryType } from '../../enums/category-type.enum';
 import { CategoryModel } from '../../models/category.model';
 import { GroupDateMovementModel } from '../../models/group-date-movement.model';
@@ -13,6 +14,7 @@ export class MovementComponent implements OnInit {
   @Input() categories!: CategoryModel[]
   protected totalIncome!: number
   protected totalExpense!: number
+  protected numberType = NumberType.Spanish
 
   constructor() { }
 

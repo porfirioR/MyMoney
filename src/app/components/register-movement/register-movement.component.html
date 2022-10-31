@@ -3,16 +3,7 @@
     <button mat-icon-button (click)="exit()">
       <mat-icon>keyboard_backspace</mat-icon>
     </button>
-    <mat-form-field>
-      <mat-select formControlName="type">
-        <mat-option [value]="categoryType.expense">
-          {{categoryType.expense}}
-        </mat-option>
-        <mat-option [value]="categoryType.income">
-          {{categoryType.income}}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
+    <span>{{title | translate}}</span>
     <button mat-icon-button routerLink="/">
       <mat-icon>home</mat-icon>
     </button>
@@ -20,12 +11,23 @@
   <div class="header-height"></div>
   <mat-progress-bar mode="indeterminate" *ngIf="loading || saving"></mat-progress-bar>
   <mat-card *ngIf="!loading">
+    <mat-card-content>
+      <mat-form-field class="w-100">
+        <mat-select formControlName="type">
+          <mat-option [value]="categoryType.expense">
+            {{categoryType.expense | translate}}
+          </mat-option>
+          <mat-option [value]="categoryType.income">
+            {{categoryType.income | translate}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </mat-card-content>
     <div class="icon-list">
       <span class="btn-block" *ngFor="let category of currentCategories">
-        <button class="btn-icon" mat-fab customColor
-                (click)="selectedIcon(category)"
-                [color]="category.icon === formGroup.get('icon')?.value && category.id === formGroup.get('categoryId')?.value ? category.color : ''"
-                [backgroundColor]="category.icon === formGroup.get('icon')?.value && category.id === formGroup.get('categoryId')?.value ? category.backgroundColor : ''">
+        <button class="btn-icon" mat-fab customColor (click)="selectedIcon(category)"
+          [color]="category.icon === formGroup.get('icon')?.value && category.id === formGroup.get('categoryId')?.value ? category.color : ''"
+          [backgroundColor]="category.icon === formGroup.get('icon')?.value && category.id === formGroup.get('categoryId')?.value ? category.backgroundColor : ''">
           <i class="material-icons-outlined notranslate">{{category.icon}}</i>
         </button>
         <label>{{category.name | translate}}</label>
@@ -34,20 +36,21 @@
     <mat-card-content>
       <mat-form-field appearance="fill" class="w-100">
         <span matPrefix>
-          <button mat-icon-button customColor class="button-mat-prefix"
-                  [color]="formGroup.get('color')?.value"
-                  [backgroundColor]="formGroup.get('backgroundColor')?.value">
+          <button mat-icon-button customColor class="button-mat-prefix" [color]="formGroup.get('color')?.value"
+            [backgroundColor]="formGroup.get('backgroundColor')?.value">
             <mat-icon>{{formGroup.get('icon')?.value}}</mat-icon>
           </button>
         </span>
         <mat-label>{{'Memorandum' | translate}}</mat-label>
         <input matInput type="text" formControlName="memorandum" #memorandum>
-        <mat-error *ngIf="formGroup.get('memorandum')?.hasError('maxlength')">Value cannot exceed 50 character.</mat-error>
+        <mat-error *ngIf="formGroup.get('memorandum')?.hasError('maxlength')">Value cannot exceed 50 character.
+        </mat-error>
       </mat-form-field>
       <mat-form-field appearance="fill" class="w-100">
         <mat-label>{{'Amount' | translate}}</mat-label>
         <input matInput type="text" formControlName="amount" [mask]="'separator.0'" thousandSeparator=".">
-        <mat-error *ngIf="formGroup.get('amount')?.hasError('maxlength') || formGroup.get('amount')?.hasError('max')">Value cannot exceed 12 digit.</mat-error>
+        <mat-error *ngIf="formGroup.get('amount')?.hasError('maxlength') || formGroup.get('amount')?.hasError('max')">
+          Value cannot exceed 12 digit.</mat-error>
       </mat-form-field>
       <mat-form-field appearance="fill" class="w-100">
         <mat-label>{{'Date' | translate}}</mat-label>
@@ -58,8 +61,8 @@
     </mat-card-content>
     <mat-card-footer>
       <button mat-stroked-button color="primary" (click)="exit()">Cancel</button>
-      <button mat-stroked-button color="primary" type="submit" [disabled]="formGroup.invalid"
-        (click)="save()">{{'Save' | translate}}</button>
+      <button mat-stroked-button color="primary" type="submit" [disabled]="formGroup.invalid" (click)="save()">{{'Save'
+        | translate}}</button>
     </mat-card-footer>
   </mat-card>
 </form>
