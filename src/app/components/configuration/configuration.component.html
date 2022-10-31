@@ -11,6 +11,18 @@
   <mat-card>
     <mat-card-content>
       <mat-form-field class="w-100">
+        <mat-label>{{'Language' | translate}}</mat-label>
+        <mat-select formControlName="languageType">
+          <mat-option [value]="language.value" *ngFor="let language of languageType | keyvalue">
+            {{language.key | translate}}
+          </mat-option>
+        </mat-select>
+        <mat-hint align="start">
+          {{'Example language' | translate}}
+        </mat-hint>
+      </mat-form-field>
+      <mat-form-field class="w-100">
+        <mat-label>{{'Numbers format' | translate}}</mat-label>
         <mat-select formControlName="numberType">
           <mat-option [value]="numberType.Spanish">
             {{'Spanish' | translate}}
@@ -19,10 +31,10 @@
             {{'English' | translate}}
           </mat-option>
         </mat-select>
+        <mat-hint align="start">
+          {{'Example' | translate}}: {{amount | number:'' : formGroup.get('numberType')!.value}}
+        </mat-hint>
       </mat-form-field>
-      <span>
-        {{amount | number:'' : formGroup.get('numberType')!.value}}
-      </span>
     </mat-card-content>
   </mat-card>
   <mat-card>

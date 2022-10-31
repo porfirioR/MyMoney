@@ -29,5 +29,9 @@
   "Author": "Autor",
   "Report": "Reporte",
   "Register movement": "Registrar movimiento",
-  "Movement update": "Actualizar movimiento "
+  "Movement update": "Actualizar movimiento ",
+  "Numbers format": "Formato de números",
+  "Example": "Ejemplo",
+  "Example language": "Ejemplo idioma",
+  "Language": "Idioma"
 }
