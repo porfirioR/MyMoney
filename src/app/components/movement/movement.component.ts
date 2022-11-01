@@ -12,9 +12,9 @@ import { GroupDateMovementModel } from '../../models/group-date-movement.model';
 export class MovementComponent implements OnInit {
   @Input() groupDateMovement!: GroupDateMovementModel
   @Input() categories!: CategoryModel[]
+  @Input() numberType = NumberType.English
   protected totalIncome!: number
   protected totalExpense!: number
-  protected numberType = NumberType.Spanish
 
   constructor() { }
 

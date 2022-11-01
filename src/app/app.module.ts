@@ -43,6 +43,7 @@ import { LoginComponent } from './components/login/login.component';
 import { MovementComponent } from './components/movement/movement.component';
 
 import localEs from '@angular/common/locales/es'
+import localeEn from '@angular/common/locales/en';
 import { registerLocaleData } from '@angular/common'
 import { MovementDetailComponent } from './components/movement-detail/movement-detail.component';
 import { DialogDeleteComponent } from './components/dialog-delete/dialog-delete.component';
@@ -62,6 +63,7 @@ import { CustomColorDirective } from './directive/custom-color.directive';
 import { EditCategoryComponent } from './components/edit-category/edit-category.component';
 import { AboutUsComponent } from './components/about-us/about-us.component';
 import { ConfigurationComponent } from './components/configuration/configuration.component';
+registerLocaleData(localeEn, 'en')
 registerLocaleData(localEs, 'es')
 
 
@@ -140,6 +142,7 @@ registerLocaleData(localEs, 'es')
   ],
   providers: [
     { provide: LOCALE_ID, useValue: 'es' },
+    { provide: LOCALE_ID, useValue: 'en' },
     UserService,
     UserGuard,
   ],

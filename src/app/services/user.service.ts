@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { CategoryModel } from '../models/category.model';
+import { ConfigurationModel } from '../models/configuration.model';
 import { UserCategoryModel } from '../models/user-category.model';
 import { UserDataModel } from '../models/user-data.model';
 import { ItemObservable } from '../observables/item.observable';
@@ -60,6 +61,10 @@ export class UserService extends ItemObservable<UserDataModel> {
     return activeCategories
   }
 
+  public setConfiguration = (configuration: ConfigurationModel) => {
+    this.item!.userConfiguration = configuration
+  }
+
   public getActiveCategories = () => {
     return this.item!.activeCategories
   }
@@ -74,6 +79,10 @@ export class UserService extends ItemObservable<UserDataModel> {
 
   public getUserCategories$ = (): Observable<UserCategoryModel[]> => {
     return this.getItemObservable$.pipe(map(x => x.userCategories))
+  }
+
+  public getUserConfiguration$ = (): Observable<ConfigurationModel> => {
+    return this.getItemObservable$.pipe(map(x => x.userConfiguration))
   }
 
 }

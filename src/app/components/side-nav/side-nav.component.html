@@ -1,5 +1,5 @@
 <mat-list>
-  <div mat-subheader>User</div>
+  <div mat-subheader>{{'User' | translate}}</div>
   <div class="user-block">
     <img *ngIf="photo" [src]="photo" />
     <p>
@@ -7,17 +7,14 @@
     </p>
   </div>
   <mat-divider></mat-divider>
-
-  <div mat-subheader>Actions</div>
+  <div mat-subheader>{{'Actions' | translate}}</div>
   <mat-list-item *ngFor="let item of navItems" (click)="performItemAction(item.action)">
     <mat-icon mat-list-icon color="primary">{{item.icon}}</mat-icon>
-    <span mat-line>{{item.name}}</span>
+    <span mat-line>{{item.name | translate}}</span>
   </mat-list-item>
   <mat-divider></mat-divider>
-
-  <div mat-subheader>Notes</div>
   <mat-list-item (click)="logout()">
     <mat-icon mat-list-icon color="primary">exit_to_app</mat-icon>
-    <span mat-line>Exit</span>
+    <span mat-line>{{'Exit' | translate}}</span>
   </mat-list-item>
 </mat-list>

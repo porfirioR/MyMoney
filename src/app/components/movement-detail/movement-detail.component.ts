@@ -17,7 +17,7 @@ import { NumberType } from '../../enums/number-type.enum';
 })
 export class MovementDetailComponent implements OnInit {
   protected movement?: MovementModel
-  protected numberType = NumberType.Spanish
+  protected numberType = NumberType.English
 
   constructor(private readonly location: Location,
     private readonly movementService: MovementService,

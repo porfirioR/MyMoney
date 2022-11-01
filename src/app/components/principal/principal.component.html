@@ -41,7 +41,7 @@
       </span>
     </mat-card>
     <mat-card *ngFor="let groupDateMovement of groupDateMovementList" class="mat-card-movement">
-      <app-movement [groupDateMovement]="groupDateMovement" [categories]="categories"></app-movement>
+      <app-movement [groupDateMovement]="groupDateMovement" [categories]="categories" [numberType]="numberType"></app-movement>
     </mat-card>
     <mat-card-footer>
       <button mat-fab color="primary" class="btn-add" routerLink="/register-movement" [disabled]="loading">

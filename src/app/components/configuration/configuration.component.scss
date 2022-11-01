@@ -11,5 +11,9 @@
 }
 
 .mat-form-field { 
-  margin-bottom: 1rem;
+  margin-bottom: 1rem !important;
+}
+
+.mat-hint { 
+  padding-bottom: 1rem;
 }

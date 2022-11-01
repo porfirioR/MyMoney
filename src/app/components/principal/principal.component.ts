@@ -17,6 +17,12 @@ import { UserDataModel } from '../../models/user-data.model';
 import { environment } from '../../../environments/environment';
 import { UserCategoryModel } from '../../models/user-category.model';
 import { NumberType } from '../../enums/number-type.enum';
+import { ConfigurationModel } from '../../models/configuration.model';
+import { LanguageType } from '../../enums/language-type.enum';
+import { ConfigurationService } from '../../services/configuration.service';
+import { TranslateService } from '@ngx-translate/core';
+import { registerLocaleData } from '@angular/common';
+import localEs from '@angular/common/locales/es'
 
 @Component({
   selector: 'app-principal',
@@ -35,7 +41,7 @@ export class PrincipalComponent implements OnInit {
   protected messageSearch = 'Search'
   protected categoryType = CategoryType
   protected title = environment.title
-  protected numberType = NumberType.Spanish
+  protected numberType = NumberType.English
   private userCategories: UserCategoryModel[] = []
 
   constructor(private readonly dialog: MatDialog,
@@ -43,6 +49,8 @@ export class PrincipalComponent implements OnInit {
               private readonly movementService: MovementService,
               private readonly userCategoryService: UserCategoryService,
               private readonly userService: UserService,
+              private readonly configurationService: ConfigurationService,
+              private translate: TranslateService,
               private readonly router: Router
               ) {
     const date = new Date();
@@ -55,7 +63,8 @@ export class PrincipalComponent implements OnInit {
           allCategories: [],
           userCategories: [],
           photo: user.photoURL,
-          displayName: user.displayName!
+          displayName: user.displayName!,
+          userConfiguration: new ConfigurationModel(LanguageType.English, NumberType.English, user.email!)
         }
         this.userService.setUser(userData)
       } else {
@@ -68,12 +77,22 @@ export class PrincipalComponent implements OnInit {
     const requestMovement$ = this.getMovements().pipe(take(1))
     const categories$ = this.categoryService.getAll().pipe(take(1))
     const userCategories$ = this.userCategoryService.getUserCategories().pipe(take(1))
-    combineLatest([categories$, requestMovement$, userCategories$]).subscribe({
-      next: ([categories, movements, userCategories]) => {
+    const configuration$ = this.configurationService.getConfiguration().pipe(take(1))
+    combineLatest([categories$, requestMovement$, userCategories$, configuration$]).subscribe({
+      next: ([categories, movements, userCategories, configuration]) => {
         userCategories.forEach(y => y.categoryId = y.category!.path.split('\/').pop()!)
         this.userCategories = userCategories
         this.prepareMovementListToView(movements)
         this.categories = this.userService.setCategories(categories, userCategories)
+        if (configuration) {
+          this.userService.setConfiguration(configuration)
+          this.numberType = configuration.number
+          this.translate.setDefaultLang(configuration.language)
+          this.translate.use(configuration.language)
+          if (configuration.language === LanguageType.Spanish) {
+            registerLocaleData(localEs, 'es')
+          }
+        }
         this.loading = false
       }, error: (e) => {
         this.loading = false

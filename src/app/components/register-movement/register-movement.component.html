@@ -60,9 +60,10 @@
       </mat-form-field>
     </mat-card-content>
     <mat-card-footer>
-      <button mat-stroked-button color="primary" (click)="exit()">Cancel</button>
-      <button mat-stroked-button color="primary" type="submit" [disabled]="formGroup.invalid" (click)="save()">{{'Save'
-        | translate}}</button>
+      <button mat-stroked-button color="primary" (click)="exit()">{{'Cancel' | translate}}</button>
+      <button mat-stroked-button color="primary" type="submit" [disabled]="formGroup.invalid" (click)="save()">
+        {{'Save' | translate}}
+      </button>
     </mat-card-footer>
   </mat-card>
 </form>

@@ -8,22 +8,12 @@
       <mat-icon>home</mat-icon>
     </button>
   </mat-toolbar>
-  <mat-card>
+  <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+  <mat-card *ngIf="!loading">
     <mat-card-content>
       <mat-form-field class="w-100">
-        <mat-label>{{'Language' | translate}}</mat-label>
-        <mat-select formControlName="languageType">
-          <mat-option [value]="language.value" *ngFor="let language of languageType | keyvalue">
-            {{language.key | translate}}
-          </mat-option>
-        </mat-select>
-        <mat-hint align="start">
-          {{'Example language' | translate}}
-        </mat-hint>
-      </mat-form-field>
-      <mat-form-field class="w-100">
         <mat-label>{{'Numbers format' | translate}}</mat-label>
-        <mat-select formControlName="numberType">
+        <mat-select formControlName="number">
           <mat-option [value]="numberType.Spanish">
             {{'Spanish' | translate}}
           </mat-option>
@@ -32,7 +22,19 @@
           </mat-option>
         </mat-select>
         <mat-hint align="start">
-          {{'Example' | translate}}: {{amount | number:'' : formGroup.get('numberType')!.value}}
+          {{'Example' | translate}}: {{amount | number:'' : formGroup.get('number')!.value}}
+        </mat-hint>
+      </mat-form-field>
+      <mat-form-field class="w-100">
+        <mat-label>{{'System language' | translate}}</mat-label>
+        <mat-select formControlName="language">
+          <mat-option [value]="language.value" *ngFor="let language of language | keyvalue">
+            {{language.key}}
+          </mat-option>
+        </mat-select>
+        <mat-hint align="start">
+          <strong>**{{'System language' | translate}}</strong>
+          {{'only changes the elements of the views and some words, not all those entered by the user' | translate}}
         </mat-hint>
       </mat-form-field>
     </mat-card-content>
@@ -40,7 +42,7 @@
   <mat-card>
     <mat-card-footer>
       <button mat-stroked-button color="primary" (click)="exit()">
-        Cancel
+        {{'Cancel' | translate}}
       </button>
       <button mat-stroked-button color="primary" type="submit" [disabled]="formGroup.invalid" (click)="save()">
         {{'Save' | translate}}

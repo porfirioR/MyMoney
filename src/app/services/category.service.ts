@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { getAuth, onAuthStateChanged } from '@angular/fire/auth';
 import { addDoc, collection, collectionData, CollectionReference, deleteDoc, doc, DocumentReference, Firestore, orderBy, Query, query, setDoc, where } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';

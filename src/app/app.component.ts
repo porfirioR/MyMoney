@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { environment } from '../environments/environment';
+import { LanguageType } from './enums/language-type.enum';
 
 @Component({
   selector: 'app-root',
@@ -11,8 +12,8 @@ export class AppComponent {
   protected title = environment.title
 
   constructor(private readonly translate: TranslateService) {
-    translate.addLangs(['en', 'es'])
-    translate.setDefaultLang('en')
-    translate.use('en')
+    translate.addLangs([LanguageType.English, LanguageType.Spanish])
+    translate.setDefaultLang(LanguageType.English)
+    translate.use(LanguageType.English)
   }
 }

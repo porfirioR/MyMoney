@@ -1,4 +1,5 @@
 import { CategoryModel } from "./category.model"
+import { ConfigurationModel } from "./configuration.model"
 import { UserCategoryModel } from "./user-category.model"
 
 export interface UserDataModel {
@@ -7,5 +8,6 @@ export interface UserDataModel {
   activeCategories: CategoryModel[]
   userCategories: UserCategoryModel[]
   photo: string | null
-  displayName: string
+  displayName: string,
+  userConfiguration: ConfigurationModel
 }

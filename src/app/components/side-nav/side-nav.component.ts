@@ -1,11 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { SafeUrl } from '@angular/platform-browser';
 import { ItemAction } from '../../enums/item-action.enum';
 import { AuthService } from '../../services/auth.service';
 import { NavItemModel } from '../../models/nav-item.model';
 import { UserService } from '../../services/user.service';
 import { UserDataModel } from '../../models/user-data.model';
-import { DomSanitizer, SafeHtml, SafeUrl } from '@angular/platform-browser';
+import { ConfigurationModel } from '../../models/configuration.model';
+import { LanguageType } from '../../enums/language-type.enum';
+import { NumberType } from '../../enums/number-type.enum';
 
 @Component({
   selector: 'app-side-nav',
@@ -51,7 +54,8 @@ export class SideNavComponent implements OnInit {
         allCategories: [],
         userCategories: [],
         photo: null,
-        displayName: ''
+        displayName: '',
+        userConfiguration: new ConfigurationModel(LanguageType.English, NumberType.English,'')
       }
       this.userService.setUser(userData)
       this.router.navigate(['logout'])

@@ -1,5 +1,6 @@
 export enum CollectionType {
   Categories = 'categories',
   Movements = 'movements',
-  UserCategories = 'user_categories'
+  UserCategories = 'user_categories',
+  Configurations = 'configurations'
 }
