@@ -4,8 +4,8 @@
       <mat-icon>keyboard_backspace</mat-icon>
     </button>
     <span>{{'Report' | translate}}</span>
-    <button mat-stroked-button (click)="openBottomSheet()">
-      {{messageSearch | translate}}
+    <button mat-stroked-button (click)="openYearMonth()">
+      {{yearMonth.shortMonth | translate}} {{yearMonth.year}}
     </button>
   </mat-toolbar>
   <div class="header-height"></div>

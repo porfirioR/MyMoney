@@ -11,8 +11,8 @@
 <div class="months">
   <button class="btn-month" mat-mini-fab
       (click)="changeMonth(month)"
-      *ngFor="let month of months"
+      *ngFor="let month of months | enumArrayLoop"
       [color]="month === formGroup.get('month')?.value && formGroup.get('year')?.value === formGroup.get('selectedYear')?.value? 'primary': ''">
-    {{month}}
+    {{month | translate}}
   </button>
 </div>

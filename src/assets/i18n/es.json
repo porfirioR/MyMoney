@@ -49,5 +49,17 @@
   "System language": "Idioma del sistema",
   "only changes the elements of the views and some words, not all those entered by the user": "solo cambia los elementos de las vistas y algunas palabras, no todas las ingresadas por el usuario",
   "User configuration was updated": "La configuración del usuario fue actualizada",
-  "User configuration was created": "La configuración del usuario fue creada"
+  "User configuration was created": "La configuración del usuario fue creada",
+  "jan": "ene",
+  "feb": "feb",
+  "mar": "mar",
+  "apr": "abr",
+  "may": "may",
+  "jun": "jun",
+  "jul": "jul",
+  "aug": "ago",
+  "sep": "sep",
+  "oct": "oct",
+  "nov": "nov",
+  "dec": "dic"
 }

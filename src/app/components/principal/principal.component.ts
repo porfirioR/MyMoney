@@ -9,7 +9,7 @@ import { MovementModel } from '../../models/movement.model';
 import { YearMonthModel } from '../../models/year-month-model';
 import { CategoryService } from '../../services/category.service';
 import { MovementService } from '../../services/movement.service';
-import { SelectYearMountComponent } from '../select-year-mount/select-year-mount.component';
+import { SelectYearMonthComponent } from '../select-year-mount/select-year-month.component';
 import { UserCategoryService } from '../../services/user-category.service';
 import { UserService } from '../../services/user.service';
 import { getAuth, onAuthStateChanged } from '@angular/fire/auth';
@@ -23,6 +23,8 @@ import { ConfigurationService } from '../../services/configuration.service';
 import { TranslateService } from '@ngx-translate/core';
 import { registerLocaleData } from '@angular/common';
 import localEs from '@angular/common/locales/es'
+import { MonthType } from '../../enums/month-type.enum';
+import { HelperService } from 'src/app/services/helper.service';
 
 @Component({
   selector: 'app-principal',
@@ -33,12 +35,11 @@ export class PrincipalComponent implements OnInit {
   protected income: number = 0
   protected expenses: number = 0
   protected balance: number = 0
-  protected yearMonth?: YearMonthModel
+  protected yearMonth!: YearMonthModel
   protected movements: MovementModel[] = []
   protected loading = true
   protected groupDateMovementList: GroupDateMovementModel[] = []
   protected categories: CategoryModel[] = []
-  protected messageSearch = 'Search'
   protected categoryType = CategoryType
   protected title = environment.title
   protected numberType = NumberType.English
@@ -53,8 +54,7 @@ export class PrincipalComponent implements OnInit {
               private translate: TranslateService,
               private readonly router: Router
               ) {
-    const date = new Date();
-    this.yearMonth = new YearMonthModel(date.getFullYear(), '', date.getMonth())
+    this.yearMonth = HelperService.getSearchMessage()
     onAuthStateChanged(getAuth(), (user) => {
       if (user) {
         const userData: UserDataModel = {
@@ -101,7 +101,7 @@ export class PrincipalComponent implements OnInit {
     })
   }
   protected openBottomSheet = (): void => {
-    const dialogRef = this.dialog.open(SelectYearMountComponent, {
+    const dialogRef = this.dialog.open(SelectYearMonthComponent, {
       width: '400px',
       data: this.yearMonth
     })
@@ -109,7 +109,6 @@ export class PrincipalComponent implements OnInit {
     dialogRef.afterClosed().pipe(take(1)).subscribe((result: YearMonthModel) => {
       if (result && (this.yearMonth?.month !== result.month || this.yearMonth?.year !== result.year)) {
         this.yearMonth = result;
-        this.messageSearch = this.yearMonth?.monthLabel ? `${this.yearMonth?.monthLabel} ${this.yearMonth.year}` : 'Search'
         this.movements = []
         this.income = 0
         this.expenses = 0

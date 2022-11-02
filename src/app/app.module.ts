@@ -29,7 +29,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatExpansionModule } from '@angular/material/expansion';
 
-import { SelectYearMountComponent } from './components/select-year-mount/select-year-mount.component';
+import { SelectYearMonthComponent } from './components/select-year-mount/select-year-month.component';
 import { SideNavComponent } from './components/side-nav/side-nav.component';
 import { CategoryConfigurationComponent } from './components/category-configuration/category-configuration.component';
 import { CategoryRowComponent } from './components/category-row/category-row.component';
@@ -63,15 +63,16 @@ import { CustomColorDirective } from './directive/custom-color.directive';
 import { EditCategoryComponent } from './components/edit-category/edit-category.component';
 import { AboutUsComponent } from './components/about-us/about-us.component';
 import { ConfigurationComponent } from './components/configuration/configuration.component';
-registerLocaleData(localeEn, 'en')
+import { EnumArrayLoopPipe } from './directive/enum-array-loop.pipe';
 registerLocaleData(localEs, 'es')
+registerLocaleData(localeEn, 'en')
 
 
 @NgModule({
   declarations: [
     AppComponent,
     PrincipalComponent,
-    SelectYearMountComponent,
+    SelectYearMonthComponent,
     SideNavComponent,
     CategoryConfigurationComponent,
     CategoryRowComponent,
@@ -89,7 +90,8 @@ registerLocaleData(localEs, 'es')
     EditCategoryComponent,
     AboutUsComponent,
     ConfigurationComponent,
-    CustomColorDirective
+    CustomColorDirective,
+    EnumArrayLoopPipe,
   ],
   imports: [
     BrowserModule,
@@ -135,7 +137,6 @@ registerLocaleData(localEs, 'es')
     MatExpansionModule,
 
     NgxMaskModule.forRoot(),
-
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => getAuth()),
     provideFirestore(() => getFirestore())

@@ -9,23 +9,28 @@
       </button>
       <span>{{title | translate}}</span>
       <button mat-stroked-button (click)="openBottomSheet()">
-        {{messageSearch | translate}}
+        {{yearMonth.shortMonth | translate}} {{yearMonth.year}}
       </button>
     </mat-toolbar>
     <div class="header-height"></div>
     <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
     <mat-card class="mat-card-header" *ngIf="!loading">
       <span class="amount-header">
-        <span matRipple [matRippleCentered]="true" [matRippleUnbounded]="true"
-          [routerLink]="['report-month', categoryType.income]">
+        <span matRipple
+          [matRippleCentered]="true"
+          [matRippleUnbounded]="true"
+          [routerLink]="['report-month', categoryType.income]"
+          [queryParams]="yearMonth">
           <label>
             {{'Incomes' | translate}}
           </label>
           <p>{{income | number:'' : numberType}}</p>
         </span>
         <hr>
-        <span matRipple [matRippleCentered]="true" [matRippleUnbounded]="true"
-          [routerLink]="['report-month', categoryType.expense]">
+        <span matRipple [matRippleCentered]="true"
+          [matRippleUnbounded]="true"
+          [routerLink]="['report-month', categoryType.expense]"
+          [queryParams]="yearMonth">
           <label>
             {{'Expenses' | translate}}
           </label>

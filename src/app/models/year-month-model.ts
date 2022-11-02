@@ -1,3 +1,8 @@
+import { MonthType } from "../enums/month-type.enum";
+
 export class YearMonthModel {
-  constructor(public year: number, public monthLabel: string, public month: number) { }
+  public shortMonth!: string
+  constructor(public year: number, public month: MonthType) {
+    this.shortMonth = MonthType[month]
+  }
 }

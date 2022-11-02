@@ -4,7 +4,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { ChartConfiguration, ChartOptions, ChartType } from 'chart.js';
-import { take } from 'rxjs';
+import { combineLatest, take } from 'rxjs';
 import { NumberType } from '../../enums/number-type.enum';
 import { CategoryType } from '../../enums/category-type.enum';
 import { GroupMovementCategoryModel } from '../../models/group-movement-category.model';
@@ -12,7 +12,8 @@ import { MovementModel } from '../../models/movement.model';
 import { YearMonthModel } from '../../models/year-month-model';
 import { MovementService } from '../../services/movement.service';
 import { UserService } from '../../services/user.service';
-import { SelectYearMountComponent } from '../select-year-mount/select-year-mount.component';
+import { SelectYearMonthComponent } from '../select-year-mount/select-year-month.component';
+import { HelperService } from 'src/app/services/helper.service';
 
 @Component({
   selector: 'app-report-month',
@@ -36,10 +37,9 @@ export class ReportMonthComponent implements OnInit {
   protected chartLegend = true;
   protected chartType: ChartType = 'doughnut'
   protected loading: boolean = false
-  protected yearMonth?: YearMonthModel
+  protected yearMonth!: YearMonthModel
   protected categoryType = CategoryType
   protected groupMovementCategoryModel!: GroupMovementCategoryModel[]
-  protected messageSearch = 'Search'
   protected formGroup: FormGroup = new FormGroup({
     type: new FormControl<CategoryType>(this.categoryType.expense),
   })
@@ -52,10 +52,10 @@ export class ReportMonthComponent implements OnInit {
               private readonly dialog: MatDialog) { }
   
   ngOnInit(): void {
-    const date = new Date();
-    this.yearMonth = new YearMonthModel(date.getFullYear(), '', date.getMonth())
-    this.activatedRoute.params.subscribe({
-      next: (params) => {
+    combineLatest([this.activatedRoute.params, this.activatedRoute.queryParams])
+    .subscribe({
+      next: ([params, queryParams]) => {
+        this.yearMonth = queryParams as YearMonthModel
         const type = params['type']
         this.formGroup.controls['type'].setValue(type)
         this.getMovementsByType(type)
@@ -73,7 +73,6 @@ export class ReportMonthComponent implements OnInit {
       next: (movements) => {
         movements.sort((a, b) => a.categoryId.localeCompare(b.categoryId))
         this.groupMovementCategoryModel = this.groupByCategoryName(movements)
-
         let amountMovements = 0
         movements.forEach(x => amountMovements += x.amount)
         this.doughnutChartLabels = this.groupMovementCategoryModel.map(x => this.labelMovements(x, amountMovements))
@@ -118,8 +117,8 @@ export class ReportMonthComponent implements OnInit {
     return `${x.categoryName} ${((total * 100)/amountMovements).toFixed(1)}%`
   }
 
-  protected openBottomSheet = (): void => {
-    const dialogRef = this.dialog.open(SelectYearMountComponent, {
+  protected openYearMonth = (): void => {
+    const dialogRef = this.dialog.open(SelectYearMonthComponent, {
       width: '400px',
       data: this.yearMonth
     })
@@ -127,7 +126,6 @@ export class ReportMonthComponent implements OnInit {
     dialogRef.afterClosed().pipe(take(1)).subscribe((result: YearMonthModel) => {
       if (result && (this.yearMonth?.month !== result.month || this.yearMonth?.year !== result.year)) {
         this.yearMonth = result;
-        this.messageSearch = this.yearMonth?.monthLabel ? `${this.yearMonth?.monthLabel} ${this.yearMonth.year}` : 'Search'
         this.getMovementsByType(this.formGroup.controls['type'].value)
       }
     })
