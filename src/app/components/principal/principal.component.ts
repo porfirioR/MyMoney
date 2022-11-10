@@ -24,7 +24,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { registerLocaleData } from '@angular/common';
 import localEs from '@angular/common/locales/es'
 import { MonthType } from '../../enums/month-type.enum';
-import { HelperService } from 'src/app/services/helper.service';
+import { HelperService } from '../../services/helper.service';
 
 @Component({
   selector: 'app-principal',
@@ -100,7 +100,8 @@ export class PrincipalComponent implements OnInit {
       }
     })
   }
-  protected openBottomSheet = (): void => {
+
+  protected openYearMonth = (): void => {
     const dialogRef = this.dialog.open(SelectYearMonthComponent, {
       width: '400px',
       data: this.yearMonth
@@ -115,9 +116,8 @@ export class PrincipalComponent implements OnInit {
         this.groupDateMovementList = []
         this.balance = 0
         this.getMovements().subscribe({
-          next: (movements) => {
-            this.prepareMovementListToView(movements)
-          }, error: (e) => {
+          next: (movements) => this.prepareMovementListToView(movements),
+          error: (e) => {
             this.loading = false
             throw e;
           }

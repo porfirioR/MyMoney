@@ -5,9 +5,9 @@ import { ConfigurationService } from '../../services/configuration.service';
 import { LanguageType } from '../../enums/language-type.enum';
 import { NumberType } from '../../enums/number-type.enum';
 import { TranslateService } from '@ngx-translate/core';
-import { UserService } from 'src/app/services/user.service';
+import { UserService } from '../../services/user.service';
 import { take } from 'rxjs';
-import { ConfigurationModel } from 'src/app/models/configuration.model';
+import { ConfigurationModel } from '../../models/configuration.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({

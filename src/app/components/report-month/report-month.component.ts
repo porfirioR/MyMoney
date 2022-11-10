@@ -13,7 +13,6 @@ import { YearMonthModel } from '../../models/year-month-model';
 import { MovementService } from '../../services/movement.service';
 import { UserService } from '../../services/user.service';
 import { SelectYearMonthComponent } from '../select-year-mount/select-year-month.component';
-import { HelperService } from 'src/app/services/helper.service';
 
 @Component({
   selector: 'app-report-month',

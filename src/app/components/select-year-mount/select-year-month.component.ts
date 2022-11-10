@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { HelperService } from 'src/app/services/helper.service';
+import { HelperService } from '../../services/helper.service';
 import { MonthType } from '../../enums/month-type.enum';
 import { YearMonthModel } from '../../models/year-month-model';
 
@@ -17,7 +17,7 @@ export class SelectYearMonthComponent implements OnInit {
   constructor(private dialogRef: MatDialogRef<SelectYearMonthComponent>,
               @Inject(MAT_DIALOG_DATA) private yearMonth: YearMonthModel) {
     const currentYear = this.yearMonth.year
-    const currentMonth = this.yearMonth.month ? this.yearMonth.month : this.months[this.yearMonth.month]
+    const currentMonth = this.months[this.yearMonth.month]
     this.formGroup = new FormGroup( {
       year: new FormControl(currentYear),
       month: new FormControl(currentMonth),

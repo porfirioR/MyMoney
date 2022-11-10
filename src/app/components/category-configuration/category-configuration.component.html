@@ -2,7 +2,7 @@
   <button mat-icon-button (click)="exit()">
     <mat-icon>keyboard_backspace</mat-icon>
   </button>
-  <span>Category configuration</span>
+  <span>{{'Category configuration' | translate}}</span>
   <button mat-icon-button [routerLink]="['new-category', currentTap]" title="Add category">
     <mat-icon>add</mat-icon>
   </button>
@@ -10,14 +10,15 @@
 <div class="mat-toolbar-block"></div>
 <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
 <mat-tab-group mat-stretch-tabs mat-align-tabs="center" *ngIf="!loading" (selectedTabChange)="tabChanged($event)">
-  <mat-tab [label]="categoryType.expense">
-    <ng-container *ngFor="let item of expenseCategory">
-      <app-category-row [category]="item" (updateCategoryEvent)="updateCategories($event)"></app-category-row>
-    </ng-container>
-  </mat-tab>
-  <mat-tab [label]="categoryType.income">
+  
+  <mat-tab [label]="categoryType.income | translate">
     <span *ngFor="let item of incomeCategory">
       <app-category-row [category]="item" (updateCategoryEvent)="updateCategories($event)"></app-category-row>
     </span>
+  </mat-tab>
+  <mat-tab [label]="categoryType.expense | translate">
+    <ng-container *ngFor="let item of expenseCategory">
+      <app-category-row [category]="item" (updateCategoryEvent)="updateCategories($event)"></app-category-row>
+    </ng-container>
   </mat-tab>
 </mat-tab-group>

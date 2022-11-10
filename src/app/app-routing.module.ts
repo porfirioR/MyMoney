@@ -11,11 +11,11 @@ import { ImportMovementComponent } from './components/import-movement/import-mov
 import { ExportMovementComponent } from './components/export-movement/export-movement.component';
 import { LogoutComponent } from './components/logout/logout.component';
 import { ReportMonthComponent } from './components/report-month/report-month.component';
-import { UserGuard } from './guards/user.guard';
-import { environment } from '../environments/environment';
 import { EditCategoryComponent } from './components/edit-category/edit-category.component';
 import { AboutUsComponent } from './components/about-us/about-us.component';
 import { ConfigurationComponent } from './components/configuration/configuration.component';
+import { UserGuard } from './guards/user.guard';
+import { environment } from '../environments/environment';
 
 const routes: Routes = [
   {

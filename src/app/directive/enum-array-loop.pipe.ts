@@ -6,8 +6,8 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class EnumArrayLoopPipe implements PipeTransform {
 
   transform(data: Object): any {
-    const keys = Object.keys(data);
-    return keys.slice(keys.length / 2);;
+    const keys = Object.keys(data)
+    return keys.slice(keys.length / 2)
   }
 
 }

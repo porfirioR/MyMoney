@@ -4,9 +4,9 @@ import { Router } from '@angular/router';
 import { UserService } from '../../services/user.service';
 import { AuthService } from '../../services/auth.service';
 import { UserDataModel } from '../../models/user-data.model';
-import { ConfigurationModel } from 'src/app/models/configuration.model';
-import { LanguageType } from 'src/app/enums/language-type.enum';
-import { NumberType } from 'src/app/enums/number-type.enum';
+import { ConfigurationModel } from '../../models/configuration.model';
+import { LanguageType } from '../../enums/language-type.enum';
+import { NumberType } from '../../enums/number-type.enum';
 
 @Component({
   selector: 'app-login',

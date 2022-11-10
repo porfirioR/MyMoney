@@ -21,7 +21,8 @@
   "Invalid column date, expected yyyy/mm/dd but was":"Valor invalidó en columna fecha, se esperaba yyyy/mm/dd pero fue",
   "Invalid year, expected min year 2015 but was":"Año invalidó, se esperaba el año 2015 como mínimo pero fue",
   "Category was created":"La categoría fue creada",
-  "Movement was":"El movimiento fue",
+  "Movement was created":"El movimiento fue credado",
+  "Movement was updated":"El movimiento fue actualizado",
   "Are you sure you want to remove this move?": "¿Estás seguro que quieres eliminar este movimiento?",
   "Invalid type, expected":"Tipo invalidó, se esperaba",
   "Invalid amount":"Monto invalidó",
@@ -61,5 +62,6 @@
   "sep": "sep",
   "oct": "oct",
   "nov": "nov",
-  "dec": "dic"
+  "dec": "dic",
+  "Category configuration": "Configuración de categoría"
 }
