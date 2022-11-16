@@ -23,19 +23,19 @@
 <mat-card *ngIf="movement">
   <mat-card-content>
     <p>
-      <label>Memorandum: </label>
+      <label>{{'Memorandum' | translate }}: </label>
       <span>{{movement.memorandum}}</span>
     </p>
     <p>
-      <label>Category: </label>
+      <label>{{'Category' | translate}}: </label>
       <span>{{movement.type}}</span>
     </p>
     <p>
-      <label>Date: </label>
+      <label>{{'Date' | translate}}: </label>
       <span>{{movement.date | date: 'dd/MM/YYY E'}}</span>
     </p>
     <p>
-      <label>Amount: </label>
+      <label>{{'Amount' | translate}}: </label>
       <span>{{movement.amount | number:'' : numberType}}</span>
     </p>
   </mat-card-content>

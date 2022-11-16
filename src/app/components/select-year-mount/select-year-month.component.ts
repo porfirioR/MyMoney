@@ -11,7 +11,7 @@ import { YearMonthModel } from '../../models/year-month-model';
   styleUrls: ['./select-year-month.component.scss']
 })
 export class SelectYearMonthComponent implements OnInit {
-  protected months  = MonthType
+  protected months = MonthType
   protected formGroup: FormGroup = new FormGroup({})
 
   constructor(private dialogRef: MatDialogRef<SelectYearMonthComponent>,

@@ -26,8 +26,8 @@
     <div class="icon-list">
       <span class="btn-block" *ngFor="let category of currentCategories">
         <button class="btn-icon" mat-fab customColor (click)="selectedIcon(category)"
-          [color]="category.icon === formGroup.get('icon')?.value && category.id === formGroup.get('categoryId')?.value ? category.color : ''"
-          [backgroundColor]="category.icon === formGroup.get('icon')?.value && category.id === formGroup.get('categoryId')?.value ? category.backgroundColor : ''">
+          [color]="category.icon === formGroup.get('icon')?.value && category.id === formGroup.get('categoryId')?.value ? category.color : '#000000'"
+          [backgroundColor]="category.icon === formGroup.get('icon')?.value && category.id === formGroup.get('categoryId')?.value ? category.backgroundColor : '#ffffff'">
           <i class="material-icons-outlined notranslate">{{category.icon}}</i>
         </button>
         <label>{{category.name | translate}}</label>
