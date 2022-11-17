@@ -12,8 +12,8 @@ export class AppComponent {
   protected title = environment.title
 
   constructor(private readonly translate: TranslateService) {
-    translate.addLangs([LanguageType.English, LanguageType.Spanish])
-    translate.setDefaultLang(LanguageType.English)
-    translate.use(LanguageType.English)
+    this.translate.addLangs([LanguageType.English, LanguageType.Spanish])
+    this.translate.setDefaultLang(LanguageType.English)
+    this.translate.use(LanguageType.English)
   }
 }

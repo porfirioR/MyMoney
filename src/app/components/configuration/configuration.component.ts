@@ -20,7 +20,7 @@ export class ConfigurationComponent implements OnInit {
   protected language = LanguageType
   protected amount = 1000000000
   protected loading = true
-
+  protected date = new Date()
   protected formGroup: FormGroup = new FormGroup({
     id: new FormControl(),
     number: new FormControl(this.numberType.English),
@@ -51,6 +51,8 @@ export class ConfigurationComponent implements OnInit {
       next: (language) => {
         this.translate.setDefaultLang(language)
         this.translate.use(language)
+        console.log(this.translate.currentLang);
+        
       }, error: (e) => {
         console.error(e)
         throw e;
