@@ -11,6 +11,7 @@ import { CategoryEvent } from '../../models/category-event.model'
 import { MovementModel } from '../../models/movement.model'
 import { ResourceType } from '../../enums/resource-type.enum'
 import { take } from 'rxjs'
+import { TranslateService } from '@ngx-translate/core'
 
 @Component({
   selector: 'app-category-row',
@@ -26,11 +27,14 @@ export class CategoryRowComponent implements OnInit, OnDestroy {
               private readonly snackBar: MatSnackBar,
               private readonly dialog: MatDialog,
               private readonly userCategoryService: UserCategoryService,
-              private readonly movementService: MovementService) { }
+              private readonly movementService: MovementService,
+              private translate: TranslateService,
+            ) { }
 
   ngOnInit(): void {
-    if (this.category && this.category.owner !== this.ownerSystem && !this.category.name.endsWith('(user)')) {
-      this.category.name += ' (user)'
+    const user = this.translate.instant('(user)')
+    if (this.category && this.category.owner !== this.ownerSystem && !this.category.name.endsWith(user)) {
+      this.category.name += ` ${user}`
     }
   }
 
@@ -42,7 +46,7 @@ export class CategoryRowComponent implements OnInit, OnDestroy {
         next: (deleteMovementList) => {
           const dialogRef = this.dialog.open(DialogDeleteComponent, {
             width: '350px',
-            data: { title: 'Delete category', message: `Are you sure you want to delete this category?. All movements (${deleteMovementList.length}) related to this category will be deleted` }
+            data: { title: this.translate.instant('category-messages.title-delete'), message: this.translate.instant('category-messages.question', {length: deleteMovementList.length}) }
           })
           dialogRef.afterClosed().pipe(take(1)).subscribe(result => {
             if (result) {
@@ -53,13 +57,13 @@ export class CategoryRowComponent implements OnInit, OnDestroy {
                   const categoryEvent = new CategoryEvent(this.category.type)
                   this.category.active = request.active
                   this.deleteAllMovementReferences(categoryEvent, deleteMovementList)
-                  this.snackBar.open('The category was deleted', '', { duration: 3000 })
+                  this.snackBar.open(this.translate.instant('category-messages.deleted'), '', { duration: 3000 })
                 })
                 .catch((reason) => this.snackBar.open(reason, '', { duration: 3000 }))
               } else {
                 this.categoryService.delete(this.category.id)
                 .then(() => {
-                  this.snackBar.open('The category was deleted', '', { duration: 3000 })
+                  this.snackBar.open(this.translate.instant('category-messages.deleted'), '', { duration: 3000 })
                   const categoryEvent = new CategoryEvent(this.category.type, this.category.id)
                   this.deleteAllMovementReferences(categoryEvent, deleteMovementList)
                 })
@@ -79,7 +83,7 @@ export class CategoryRowComponent implements OnInit, OnDestroy {
         this.userCategoryService.upsertCategory(request)
         .then(() => {
           this.category.active = request.active
-          this.snackBar.open('Category was restarted', '', { duration: 3000 })
+          this.snackBar.open(this.translate.instant('category-messages.title-restarted'), '', { duration: 3000 })
           const categoryEvent = new CategoryEvent(this.category.type)
           this.updateCategoryEvent.emit(categoryEvent)
         })

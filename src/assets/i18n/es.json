@@ -1,8 +1,8 @@
 {
   "Dentist": "Dentista",
   "home": "casa",
-  "Add Expense category": "Agregar categoría gasto",
-  "Add Income category": "Agregar categoría ingreso",
+  "Add Expense category": "Agregar categoría de gastos",
+  "Add Income category": "Agregar categoría de ingresos",
   "Incomes": "Ingresos",
   "Expenses": "Gastos",
   "Income": "Ingreso",
@@ -15,12 +15,9 @@
   "Save": "Guardar",
   "Date": "Fecha",
   "Amount": "Monto",
-  "Delete category": "Categoría borrada",
-  "Category was restarted": "La categoría fue restaurada",
   "Invalid column value, expected some value but was empty in row": "Valor invalidó en la columna, se esperaba algún valor pero esta vacía en fila",
   "Invalid column date, expected yyyy/mm/dd but was":"Valor invalidó en columna fecha, se esperaba yyyy/mm/dd pero fue",
   "Invalid year, expected min year 2015 but was":"Año invalidó, se esperaba el año 2015 como mínimo pero fue",
-  "Category was created":"La categoría fue creada",
   "Movement was created":"El movimiento fue credado",
   "Movement was updated":"El movimiento fue actualizado",
   "Are you sure you want to remove this move?": "¿Estás seguro que quieres eliminar este movimiento?",
@@ -63,5 +60,38 @@
   "oct": "oct",
   "nov": "nov",
   "dec": "dic",
-  "Category configuration": "Configuración de categoría"
+  "Category configuration": "Configuración de categoría",
+  "Empty file": "Archivo vacío",
+  "Invalid first row": "Primera fila inválida",
+  "All moves loaded successfully": "Todos los movimientos se cargaron con éxito",
+  "(user)": "(usuario)",
+  "Food": "Alimento",
+  "Transport": "Transporte",
+  "Shopping": "Compras",
+  "Entertainment": "Entretenimiento",
+  "Maps": "Mapas",
+  "Medical": "Médico",
+  "Family": "Familia",
+  "Electronic": "Electrónica",
+  "Education":"Educación",
+  "Order":"Orden",
+  "Icon color": "Color del icono",
+  "Background color": "Color de fondo",
+  "Value cannot less than zero": "El valor no puede ser menor que cero",
+  "Details": "Detalles",
+  "Edit category": "Editar categoría",
+  "Category name": "Nombre categoría",
+
+
+
+
+
+
+  "category-messages": {
+    "question": "¿Está seguro de que desea eliminar esta categoría?. Todos los movimientos relacionados ({{length}}) con esta categoría serán eliminados",
+    "deleted": "La categoría fue borrada",
+    "title-delete": "Categoría borrada",
+    "title-restarted": "La categoría fue restaurada",
+    "created": "La categoría fue creada"
+  }
 }

@@ -2,7 +2,7 @@
   <button mat-icon-button (click)="exit()">
     <mat-icon>keyboard_backspace</mat-icon>
   </button>
-  <span>{{'Details' | translate}}</span>
+  <span translate>Details</span>
   <button mat-icon-button (click)="deleteMovement()">
     <mat-icon>delete</mat-icon>
   </button>
@@ -23,19 +23,19 @@
 <mat-card *ngIf="movement">
   <mat-card-content>
     <p>
-      <label>{{'Memorandum' | translate }}: </label>
+      <label translate>Memorandum: </label>
       <span>{{movement.memorandum}}</span>
     </p>
     <p>
-      <label>{{'Category' | translate}}: </label>
-      <span>{{movement.type}}</span>
+      <label translate>Category: </label>
+      <span translate>{{movement.type}}</span>
     </p>
     <p>
-      <label>{{'Date' | translate}}: </label>
+      <label translate>Date: </label>
       <span>{{movement.date | date: 'dd/MM/YYY E'}}</span>
     </p>
     <p>
-      <label>{{'Amount' | translate}}: </label>
+      <label translate>Amount: </label>
       <span>{{movement.amount | number:'' : numberType}}</span>
     </p>
   </mat-card-content>

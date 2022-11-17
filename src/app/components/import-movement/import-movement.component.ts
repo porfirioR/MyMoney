@@ -1,12 +1,12 @@
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog } from '@angular/material/dialog';
 import { UserService } from '../../services/user.service';
 import { ImportMovementRequestModel } from '../../models/import-movement-request.model';
 import { CategoryType } from '../../enums/category-type.enum';
 import { MovementModel } from '../../models/movement.model';
 import { CategoryModel } from '../../models/category.model';
-import { MatDialog } from '@angular/material/dialog';
 import { DialogUploadMovementComponent } from '../dialog-upload-movement/dialog-upload-movement.component';
 import { environment } from '../../../environments/environment';
 
@@ -114,7 +114,7 @@ export class ImportMovementComponent implements OnInit {
         this.openPopUp = false
         this.file = undefined
         this.importRequest = []
-        this.snackBar.open('Load all movement was successful', '', { duration: 10000 })
+        this.snackBar.open('All movements loaded successfully', '', { duration: 10000 })
       }
     })
   }

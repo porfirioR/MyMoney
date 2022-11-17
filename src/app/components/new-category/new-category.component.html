@@ -2,7 +2,7 @@
   <button mat-icon-button (click)="exit()">
     <mat-icon>keyboard_backspace</mat-icon>
   </button>
-  <span>{{title | translate}}</span>
+  <span translate>{{title}}</span>
   <button mat-icon-button routerLink="/">
     <mat-icon>home</mat-icon>
   </button>
@@ -14,7 +14,8 @@
       <mat-icon>{{formGroup.get('icon')?.value}}</mat-icon>
     </button>
     <mat-form-field class="mat-from-field">
-      <input matInput placeholder="Category name" formControlName="name" #inputCategoryName>
+        <mat-label translate>Category name</mat-label>
+        <input matInput formControlName="name" #inputCategoryName>
     </mat-form-field>
     <button mat-icon-button color="primary" [disabled]="formGroup.invalid" (click)="save()">
       <mat-icon>done</mat-icon>
@@ -22,7 +23,7 @@
   </div>
   <mat-card-content class="category-group">
     <span *ngFor="let group of currentCategory.groups">
-      <mat-card-subtitle>{{group.groupName}}</mat-card-subtitle>
+      <mat-card-subtitle translate>{{group.groupName}}</mat-card-subtitle>
       <div class="icon-list">
         <button class="btn-icon" mat-mini-fab (click)="updateIcon(icon)"
             *ngFor="let icon of group.icons"
