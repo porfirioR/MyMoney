@@ -1,14 +1,15 @@
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormControl, FormGroup } from '@angular/forms';
+import { take } from 'rxjs';
 import { ConfigurationService } from '../../services/configuration.service';
+import { UserService } from '../../services/user.service';
 import { LanguageType } from '../../enums/language-type.enum';
 import { NumberType } from '../../enums/number-type.enum';
-import { TranslateService } from '@ngx-translate/core';
-import { UserService } from '../../services/user.service';
-import { take } from 'rxjs';
 import { ConfigurationModel } from '../../models/configuration.model';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { DateAdapter } from '@angular/material/core';
 
 @Component({
   selector: 'app-configuration',
@@ -32,6 +33,7 @@ export class ConfigurationComponent implements OnInit {
     private translate: TranslateService,
     private userService: UserService,
     private readonly snackBar: MatSnackBar,
+    private dateAdapter: DateAdapter<Date>,
     ) { }
 
   ngOnInit() {
@@ -51,8 +53,7 @@ export class ConfigurationComponent implements OnInit {
       next: (language) => {
         this.translate.setDefaultLang(language)
         this.translate.use(language)
-        console.log(this.translate.currentLang);
-        
+        this.dateAdapter.setLocale(language)
       }, error: (e) => {
         console.error(e)
         throw e;

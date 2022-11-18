@@ -3,12 +3,14 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MovementService } from '../../services/movement.service';
-import { MovementModel } from '../../models/movement.model';
-import { DialogDeleteComponent } from '../dialog-delete/dialog-delete.component';
+import { TranslateService } from '@ngx-translate/core';
 import { combineLatest, take } from 'rxjs';
+import { DialogDeleteComponent } from '../dialog-delete/dialog-delete.component';
+import { MovementService } from '../../services/movement.service';
 import { UserService } from '../../services/user.service';
+import { MovementModel } from '../../models/movement.model';
 import { NumberType } from '../../enums/number-type.enum';
+import { LanguageType } from '../../enums/language-type.enum';
 
 @Component({
   selector: 'app-movement-detail',
@@ -18,6 +20,7 @@ import { NumberType } from '../../enums/number-type.enum';
 export class MovementDetailComponent implements OnInit {
   protected movement?: MovementModel
   protected numberType = NumberType.English
+  protected language = LanguageType.English
 
   constructor(private readonly location: Location,
     private readonly movementService: MovementService,
@@ -25,10 +28,11 @@ export class MovementDetailComponent implements OnInit {
     private readonly router: Router,
     private readonly dialog: MatDialog,
     private readonly snackBar: MatSnackBar,
-    private readonly userService: UserService
-  ) {
-    combineLatest([this.activatedRoute.params, this.userService.getUserCategories$().pipe(take(1))]).subscribe({
-      next: ([params, userCategories]) => {
+    private readonly userService: UserService,
+    private translate: TranslateService,
+    ) {
+    combineLatest([this.activatedRoute.params, this.userService.getUserCategories$().pipe(take(1)), this.userService.getUserConfiguration$().pipe(take(1))]).subscribe({
+      next: ([params, userCategories, config]) => {
         this.movement = this.movementService.getMovementById(params['id'])
         if (!this.movement) {
           this.exit()
@@ -38,6 +42,8 @@ export class MovementDetailComponent implements OnInit {
           this.movement!.color = userCategory.color
           this.movement!.backgroundColor = userCategory.backgroundColor
         }
+        this.numberType = config.number
+        this.language = config.language
       }, error: (e) => {
         console.error(e)
         throw e
@@ -54,13 +60,13 @@ export class MovementDetailComponent implements OnInit {
   protected deleteMovement = () => {
     const dialogRef = this.dialog.open(DialogDeleteComponent, {
       width: '350px',
-      data: { title: 'Delete movement', message: 'Are you sure you want to remove this move?' }
+      data: { title: this.translate.instant('movement-messages.title-delete'), message: this.translate.instant('movement-messages.question-delete') }
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.movementService.delete(this.movement?.id!, this.movement?.type!).then(() => {
-          this.snackBar.open('Movement was deleted', '', { duration: 3000 })
+          this.snackBar.open(this.translate.instant('movement-messages.deleted'), '', { duration: 3000 })
           this.exit()
         }).catch((reason: any) => {
           this.snackBar.open(reason, '', { duration: 3000 })

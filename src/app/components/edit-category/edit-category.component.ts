@@ -3,6 +3,7 @@ import { Location } from '@angular/common'
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { TranslateService } from '@ngx-translate/core';
 import { combineLatest, take } from 'rxjs';
 import { UserCategoryService } from '../../services/user-category.service';
 import { UserService } from '../../services/user.service';
@@ -27,7 +28,9 @@ export class EditCategoryComponent implements OnInit {
               private readonly activatedRoute: ActivatedRoute,
               private readonly userCategory: UserCategoryService,
               private snackBar: MatSnackBar,
-  ) {
+              private translate: TranslateService,
+            )
+  {
     combineLatest([this.activatedRoute.params, this.userService.getAllCategories$().pipe(take(1)), this.userService.getUserCategories$().pipe(take(1))]).subscribe({
       next: ([params, categories, userCategories]) => {
         this.category = categories.find(x => x.id === params['id'])
@@ -65,7 +68,7 @@ export class EditCategoryComponent implements OnInit {
       this.formGroup.get('order')!.value
     )
     this.userCategory.upsertCategory(request).then((response) => {
-      this.snackBar.open('Category was updated', '', { duration: 3000 })
+      this.snackBar.open(this.translate.instant('category-messages.updated'), '', { duration: 3000 })
       this.category!.color = request.color
       this.category!.backgroundColor = request.backgroundColor
       this.category!.order = request.order

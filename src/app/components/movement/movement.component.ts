@@ -1,8 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { NumberType } from '../../enums/number-type.enum';
 import { CategoryType } from '../../enums/category-type.enum';
+import { LanguageType } from '../../enums/language-type.enum';
 import { CategoryModel } from '../../models/category.model';
 import { GroupDateMovementModel } from '../../models/group-date-movement.model';
+import { take } from 'rxjs';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-movement',
@@ -15,10 +18,21 @@ export class MovementComponent implements OnInit {
   @Input() numberType = NumberType.English
   protected totalIncome!: number
   protected totalExpense!: number
+  protected language = LanguageType.English
 
-  constructor() { }
+  constructor(
+    private userService: UserService,
+    ) { }
 
   ngOnInit() {
+    this.userService.getUserConfiguration$().pipe(take(1)).subscribe({
+      next: (config) => {
+        this.language = config.language
+      }, error: (e) => {
+        console.error(e)
+        throw e;
+      }
+    })
     this.totalIncome = this.groupDateMovement.income
     this.totalExpense = this.groupDateMovement.expense
     this.groupDateMovement.movements.forEach(x => {

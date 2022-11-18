@@ -8,6 +8,12 @@
     "deleted": "The category was deleted",
     "title-delete": "Delete category",
     "title-restarted": "Category was restarted",
-    "created": "Category was created"
+    "created": "Category was created",
+    "updated": "Category was updated"
+  },
+  "movement-messages": {
+    "title-delete": "Delete movement",
+    "question-delete": "Are you sure you want to remove this move?",
+    "deleted": "Movement was deleted"
   }
 }

@@ -12,6 +12,7 @@ import { CategoryModel } from '../../models/category.model';
 import { HelperService } from '../../services/helper.service';
 import { MovementService } from '../../services/movement.service';
 import { UserService } from '../../services/user.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-register-movement',
@@ -44,7 +45,9 @@ export class RegisterMovementComponent implements OnInit {
     protected location: Location,
     private readonly snackBar: MatSnackBar,
     private readonly activatedRoute: ActivatedRoute,
-    private readonly userService: UserService) { }
+    private readonly userService: UserService,
+    private translate: TranslateService
+    ) { }
 
   ngOnInit() {
     combineLatest([this.activatedRoute.params, this.userService.getActiveCategories$().pipe(take(1))]).subscribe({
@@ -132,7 +135,7 @@ export class RegisterMovementComponent implements OnInit {
       } else {
         this.movementService.deleteMovementForList(this.movementId)
       }
-      this.snackBar.open(`Movement was ${this.movementId ? 'updated' : 'created'}`, '', { duration: 3000 })
+      this.snackBar.open(this.translate.instant(`Movement was ${this.movementId ? 'updated' : 'created'}`), '', { duration: 3000 })
       this.location.back()
     }).catch((error) => console.log(error))
   }

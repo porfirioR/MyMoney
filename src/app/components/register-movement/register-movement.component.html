@@ -3,7 +3,7 @@
     <button mat-icon-button (click)="exit()">
       <mat-icon>keyboard_backspace</mat-icon>
     </button>
-    <span>{{title | translate}}</span>
+    <span translate>{{title}}</span>
     <button mat-icon-button routerLink="/">
       <mat-icon>home</mat-icon>
     </button>
@@ -30,7 +30,7 @@
           [backgroundColor]="category.icon === formGroup.get('icon')?.value && category.id === formGroup.get('categoryId')?.value ? category.backgroundColor : '#ffffff'">
           <i class="material-icons-outlined notranslate">{{category.icon}}</i>
         </button>
-        <label>{{category.name | translate}}</label>
+        <label translate>{{category.name}}</label>
       </span>
     </div>
     <mat-card-content>
@@ -41,19 +41,21 @@
             <mat-icon>{{formGroup.get('icon')?.value}}</mat-icon>
           </button>
         </span>
-        <mat-label>{{'Memorandum' | translate}}</mat-label>
+        <mat-label translate>Memorandum</mat-label>
         <input matInput type="text" formControlName="memorandum" #memorandum>
-        <mat-error *ngIf="formGroup.get('memorandum')?.hasError('maxlength')">Value cannot exceed 50 character.
+        <mat-error *ngIf="formGroup.get('memorandum')?.hasError('maxlength')">
+          {{'message-error.exceed'| translate:{ count: 50, type: 'character'} }}
         </mat-error>
       </mat-form-field>
       <mat-form-field appearance="fill" class="w-100">
-        <mat-label>{{'Amount' | translate}}</mat-label>
+        <mat-label translate>Amount</mat-label>
         <input matInput type="text" formControlName="amount" [mask]="'separator.0'" thousandSeparator=".">
         <mat-error *ngIf="formGroup.get('amount')?.hasError('maxlength') || formGroup.get('amount')?.hasError('max')">
-          Value cannot exceed 12 digit.</mat-error>
+          {{'message-error.exceed'| translate:{ count: 12, type: 'digit'} }}
+        </mat-error>
       </mat-form-field>
       <mat-form-field appearance="fill" class="w-100">
-        <mat-label>{{'Date' | translate}}</mat-label>
+        <mat-label translate>Date</mat-label>
         <input matInput [matDatepicker]="picker" formControlName="date">
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker disabled="false"></mat-datepicker>

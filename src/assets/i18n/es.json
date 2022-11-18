@@ -11,16 +11,19 @@
   "Search": "Buscar",
   "My Money": "Mi dinero",
   "Memorandum": "Memorándum",
+  "Memorandum:": "Memorándum:",
   "Cancel": "Cancelar",
   "Save": "Guardar",
   "Date": "Fecha",
+  "Date:": "Fecha:",
   "Amount": "Monto",
+  "Amount:": "Monto:",
+  "Delete": "Borrar",
   "Invalid column value, expected some value but was empty in row": "Valor invalidó en la columna, se esperaba algún valor pero esta vacía en fila",
   "Invalid column date, expected yyyy/mm/dd but was":"Valor invalidó en columna fecha, se esperaba yyyy/mm/dd pero fue",
   "Invalid year, expected min year 2015 but was":"Año invalidó, se esperaba el año 2015 como mínimo pero fue",
   "Movement was created":"El movimiento fue credado",
   "Movement was updated":"El movimiento fue actualizado",
-  "Are you sure you want to remove this move?": "¿Estás seguro que quieres eliminar este movimiento?",
   "Invalid type, expected":"Tipo invalidó, se esperaba",
   "Invalid amount":"Monto invalidó",
   "Hi, you are logout": "Hola, estás desconectado",
@@ -37,12 +40,13 @@
   "Language": "Idioma",
   "User": "Usuario",
   "Category": "Categoría",
+  "Category:": "Categoría:",
   "Export": "Exportar",
   "Import": "Importar",
   "Exit": "Salir",
   "Actions": "Acciones",
   "About us": "Sobre nosotros",
-  "Upload": "Subir",
+  "Upload": "Cargar",
   "Configuration": "Configuración",
   "System language": "Idioma del sistema",
   "only changes the elements of the views and some words, not all those entered by the user": "solo cambia los elementos de las vistas y algunas palabras, no todas las ingresadas por el usuario",
@@ -90,8 +94,17 @@
   "category-messages": {
     "question": "¿Está seguro de que desea eliminar esta categoría?. Todos los movimientos relacionados ({{length}}) con esta categoría serán eliminados",
     "deleted": "La categoría fue borrada",
-    "title-delete": "Categoría borrada",
+    "title-delete": "Borrar categoría ",
     "title-restarted": "La categoría fue restaurada",
-    "created": "La categoría fue creada"
+    "created": "La categoría fue creada",
+    "updated": "La categoría fue actualizada"
+  },
+  "message-error": {
+    "exceed": "Value cannot exceed {{count}} {{type}}."
+  },
+  "movement-messages": {
+    "title-delete": "Borrar movimiento",
+    "question-delete": "¿Estás seguro que quieres eliminar este movimiento?",
+    "deleted": "El movimiento fue borrado"
   }
 }

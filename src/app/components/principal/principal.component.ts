@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { combineLatest, Observable, take } from 'rxjs';
+import { combineLatest, debounceTime, Observable, take } from 'rxjs';
 import { CategoryModel } from '../../models/category.model';
 import { GroupDateMovementModel } from '../../models/group-date-movement.model';
 import { CategoryType } from '../../enums/category-type.enum';
@@ -25,6 +25,7 @@ import { registerLocaleData } from '@angular/common';
 import localEs from '@angular/common/locales/es'
 import { MonthType } from '../../enums/month-type.enum';
 import { HelperService } from '../../services/helper.service';
+import { DateAdapter } from '@angular/material/core';
 
 @Component({
   selector: 'app-principal',
@@ -52,8 +53,9 @@ export class PrincipalComponent implements OnInit {
               private readonly userService: UserService,
               private readonly configurationService: ConfigurationService,
               private translate: TranslateService,
-              private readonly router: Router
-              ) {
+              private readonly router: Router,
+              private dateAdapter: DateAdapter<Date>
+            ) {
     this.yearMonth = HelperService.getSearchMessage()
     onAuthStateChanged(getAuth(), (user) => {
       if (user) {
@@ -74,7 +76,7 @@ export class PrincipalComponent implements OnInit {
   }
 
   ngOnInit() {
-    const requestMovement$ = this.getMovements().pipe(take(1))
+    const requestMovement$ = this.getMovements().pipe(debounceTime(1), take(1))
     const categories$ = this.categoryService.getAll().pipe(take(1))
     const userCategories$ = this.userCategoryService.getUserCategories().pipe(take(1))
     const configuration$ = this.configurationService.getConfiguration().pipe(take(1))
@@ -90,7 +92,8 @@ export class PrincipalComponent implements OnInit {
           this.translate.setDefaultLang(configuration.language)
           this.translate.use(configuration.language)
           if (configuration.language === LanguageType.Spanish) {
-            registerLocaleData(localEs, 'es')
+            registerLocaleData(localEs, configuration.language)
+            this.dateAdapter.setLocale(configuration.language)
           }
         }
         this.loading = false
