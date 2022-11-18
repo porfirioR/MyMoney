@@ -2,21 +2,21 @@
   <button mat-icon-button (click)="exit()">
     <mat-icon>keyboard_backspace</mat-icon>
   </button>
-  <span>Import movements</span>
+  <span translate>Import movements</span>
 </mat-toolbar>
 <mat-card>
   <mat-card-header>
-    <mat-card-title>Instructions</mat-card-title>
+    <mat-card-title translate>Instructions</mat-card-title>
   </mat-card-header>
   <mat-card-content>
     <mat-list dense>
-      <span class="mat-list-item-content">Expensive procedure(it may take a few minutes)</span>
-      <span class="mat-list-item-content">Format file .csv</span>
-      <span class="mat-list-item-content">Required first row: {{csvHeader}}</span>
-      <span class="mat-list-item-content">All categories need to exist</span>
-      <span class="mat-list-item-content">After the load file will be shown one button to check the file</span>
-      <span class="mat-list-item-content">Check if all columns are correct</span>
-      <span class="mat-list-item-content">If all right will pop-up saying the length records and if you want to save all</span>
+      <span class="mat-list-item-content" translate>Expensive procedure(it may take a few minutes)</span>
+      <span class="mat-list-item-content" translate>File format .csv</span>
+      <span class="mat-list-item-content" [translate]="'movement-messages.required-row'" [translateParams]="{csvHeader:csvHeader}">- </span>
+      <span class="mat-list-item-content" translate>All categories need to exist</span>
+      <span class="mat-list-item-content" translate>After the load file will be shown one button to check the file</span>
+      <span class="mat-list-item-content" translate>Check if all columns are correct</span>
+      <span class="mat-list-item-content" translate>If everything is ok, a popup window will appear saying the number of records and if everything is correct save the records</span>
     </mat-list>
   </mat-card-content>
   <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
@@ -38,7 +38,7 @@
 </mat-card>
 <mat-card class="file-error" *ngIf="errorMessageList && errorMessageList.length > 0">
   <mat-card-header>
-    <mat-card-title>Errors</mat-card-title>
+    <mat-card-title translate>Errors</mat-card-title>
   </mat-card-header>
   <mat-card-content>
     <mat-list>

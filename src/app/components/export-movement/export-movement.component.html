@@ -3,32 +3,32 @@
     <button mat-icon-button (click)="exit()">
       <mat-icon>keyboard_backspace</mat-icon>
     </button>
-    <span>Export Movements</span>
+    <span translate>Export Movements</span>
   </mat-toolbar>
   <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
   <mat-card>
     <mat-card-content>
       <mat-form-field appearance="fill" class="w-100">
-        <mat-label>Start date</mat-label>
+        <mat-label translate>Start date</mat-label>
         <input matInput [matDatepicker]="startDatePicker" formControlName="startDate" [min]="minDate" [max]="formGroup.get('endDate')?.value">
         <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
         <mat-datepicker #startDatePicker></mat-datepicker>
       </mat-form-field>
       <mat-form-field appearance="fill" class="w-100">
-        <mat-label>End date</mat-label>
+        <mat-label translate>End date</mat-label>
         <input matInput [matDatepicker]="endDatePicker" formControlName="endDate" [min]="formGroup.get('startDate')?.value">
         <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
         <mat-datepicker #endDatePicker></mat-datepicker>
       </mat-form-field>
       <mat-form-field appearance="fill" class="w-100">
-        <mat-label>Categories</mat-label>
+        <mat-label translate>Categories</mat-label>
         <mat-select formControlName="categories" multiple>
-          <mat-option *ngFor="let category of categories | keyvalue" [value]="category.key">{{category.value}}</mat-option>
+          <mat-option *ngFor="let category of categories | keyvalue" [value]="category.key">{{category.value | translate}}</mat-option>
         </mat-select>
       </mat-form-field>
     </mat-card-content>
     <mat-card-actions>
-      <button mat-stroked-button color="primary" (click)="export()" [disabled]="formGroup.invalid || loading">Export</button>
+      <button mat-stroked-button color="primary" (click)="export()" [disabled]="formGroup.invalid || loading">{{"Export" | translate}}</button>
     </mat-card-actions>
   </mat-card>
 </form>

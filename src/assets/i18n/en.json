@@ -14,6 +14,14 @@
   "movement-messages": {
     "title-delete": "Delete movement",
     "question-delete": "Are you sure you want to remove this move?",
-    "deleted": "Movement was deleted"
+    "deleted": "Movement was deleted",
+    "required-row": "Required first row: {{csvHeader}}"
+  },
+  "import-movement-messages": {
+    "empty-file": "Empty file",
+    "invalid-row": "Primera fila inválida",
+    "loaded": "All movements loaded successfully",
+    "empty-row": "Invalid column value, expected some value but was empty in row {{index}}",
+    "invalid-length": "Invalid column length, expected 5 and count {{length}} in row {{index}}"
   }
 }

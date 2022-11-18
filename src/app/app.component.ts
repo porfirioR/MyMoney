@@ -14,8 +14,11 @@ export class AppComponent {
 
   constructor(private readonly translate: TranslateService, private dateAdapter: DateAdapter<Date>) {
     this.translate.addLangs([LanguageType.English, LanguageType.Spanish])
-    this.translate.setDefaultLang(LanguageType.English)
-    this.translate.use(LanguageType.English)
-    this.dateAdapter.setLocale(LanguageType.English)
+    const navigatorLanguage = navigator.language
+    let systemLanguage = Object.values(LanguageType).find(x => navigatorLanguage === x || navigatorLanguage.startsWith(`${x}-`))
+    systemLanguage = systemLanguage ?? LanguageType.English
+    this.translate.setDefaultLang(systemLanguage)
+    this.translate.use(systemLanguage)
+    this.dateAdapter.setLocale(systemLanguage)
   }
 }

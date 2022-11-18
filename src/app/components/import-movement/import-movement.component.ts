@@ -2,12 +2,13 @@ import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
+import { TranslateService } from '@ngx-translate/core';
+import { DialogUploadMovementComponent } from '../dialog-upload-movement/dialog-upload-movement.component';
 import { UserService } from '../../services/user.service';
 import { ImportMovementRequestModel } from '../../models/import-movement-request.model';
-import { CategoryType } from '../../enums/category-type.enum';
 import { MovementModel } from '../../models/movement.model';
 import { CategoryModel } from '../../models/category.model';
-import { DialogUploadMovementComponent } from '../dialog-upload-movement/dialog-upload-movement.component';
+import { CategoryType } from '../../enums/category-type.enum';
 import { environment } from '../../../environments/environment';
 
 @Component({
@@ -27,7 +28,9 @@ export class ImportMovementComponent implements OnInit {
   constructor(private readonly location: Location,
               private readonly userService: UserService,
               private readonly snackBar: MatSnackBar,
-              private readonly dialog: MatDialog) { }
+              private readonly dialog: MatDialog,
+              private translate: TranslateService
+              ) { }
   
   ngOnInit() { }
 
@@ -65,12 +68,12 @@ export class ImportMovementComponent implements OnInit {
       if (rows.length === 0) {
         this.loading = false
         this.openPopUp = false
-        this.snackBar.open('Empty file', '', { duration: 3000 })
+        this.snackBar.open(this.translate.instant('import-movement-messages.empty-file'), '', { duration: 3000 })
         return
       } else if (!rows.shift()?.startsWith(this.csvHeader)) {
         this.loading = false
         this.openPopUp = false
-        this.snackBar.open('Invalid first row', '', { duration: 3000 })
+        this.snackBar.open(this.translate.instant('import-movement-messages.invalid-row'), '', { duration: 3000 })
         return
       }
       rows.forEach((x, i) => {
@@ -114,7 +117,7 @@ export class ImportMovementComponent implements OnInit {
         this.openPopUp = false
         this.file = undefined
         this.importRequest = []
-        this.snackBar.open('All movements loaded successfully', '', { duration: 10000 })
+        this.snackBar.open(this.translate.instant('import-movement-messages.loaded'), '', { duration: 10000 })
       }
     })
   }
@@ -124,7 +127,7 @@ export class ImportMovementComponent implements OnInit {
     let errors: string[] = []
     if (rowMovement.length !== 5) {
       invalid = true
-      errors.push(`Invalid column length, expected 5 and count ${rowMovement.length} in row ${index}`)
+      errors.push(this.translate.instant('import-movement-messages.invalid-length', {length: rowMovement.length, index: index}))
     }
     const importMovement: ImportMovementRequestModel =  {
       date: rowMovement.shift(),
@@ -135,12 +138,12 @@ export class ImportMovementComponent implements OnInit {
     }
     if (!(importMovement.date && importMovement.type && importMovement.category && importMovement.amount)) {
       invalid = true
-      errors.push(`Invalid column value, expected some value but was empty in row ${index}`)
+      errors.push(this.translate.instant('import-movement-messages.empty-row', {index: index}))
     }
     const dateArray = importMovement.date?.split('/')
     if (dateArray && dateArray.length !== 3) {
       invalid = true
-      errors.push(`Invalid column date, expected yyyy/mm/dd but was ${importMovement.date} in row ${index}`)
+      errors.push(this.translate.instant('')`Invalid column date, expected yyyy/mm/dd but was ${importMovement.date} in row ${index}`)
     }
     const year = Number((dateArray!).shift())
     const month = Number((dateArray!).shift())

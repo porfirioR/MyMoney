@@ -65,7 +65,6 @@
   "nov": "nov",
   "dec": "dic",
   "Category configuration": "Configuración de categoría",
-  "Empty file": "Archivo vacío",
   "Invalid first row": "Primera fila inválida",
   "All moves loaded successfully": "Todos los movimientos se cargaron con éxito",
   "(user)": "(usuario)",
@@ -85,12 +84,22 @@
   "Details": "Detalles",
   "Edit category": "Editar categoría",
   "Category name": "Nombre categoría",
-
-
-
-
-
-
+  "Export Movements": "Exportar movimientos",
+  "Start date": "Fecha de inicio",
+  "End date": "Fecha límite",
+  "Categories": "Categorías",
+  "Import movements": "Importar movimientos",
+  "Instructions": "Instrucciones",
+  "Expensive procedure(it may take a few minutes)": "Procedimiento costoso (puede tardar unos minutos)",
+  "File format .csv": "Formato del archivo .csv",
+  "All categories need to exist": "Todas las categorías deben existir",
+  "After the load file will be shown one button to check the file": "Después de cargar el archivo, se mostrará un botón para verificar el archivo",
+  "Check if all columns are correct": "Comprobar si todas las columnas son correctas",
+  "If everything is ok, a popup window will appear saying the number of records and if everything is correct save the records": "Si todo está bien, aparecerá una ventana emergente diciendo la cantidad de registros y si esta todo correcto guardar los registros",
+  "Errors": "Errores",
+  
+  
+  
   "category-messages": {
     "question": "¿Está seguro de que desea eliminar esta categoría?. Todos los movimientos relacionados ({{length}}) con esta categoría serán eliminados",
     "deleted": "La categoría fue borrada",
@@ -105,6 +114,14 @@
   "movement-messages": {
     "title-delete": "Borrar movimiento",
     "question-delete": "¿Estás seguro que quieres eliminar este movimiento?",
-    "deleted": "El movimiento fue borrado"
+    "deleted": "El movimiento fue borrado",
+    "required-row": "La primera fila es requerida: {{csvHeader}}"
+  },
+  "import-movement-messages": {
+    "empty-file": "Archivo vacío",
+    "invalid-row": "Primera fila inválida",
+    "loaded": "Todos los movimientos se cargaron correctamente",
+    "empty-row": "Valor de columna no válido, esperaba algún valor pero estaba vacío en la fila {{index}}"
+
   }
 }
