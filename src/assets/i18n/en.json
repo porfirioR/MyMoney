@@ -22,6 +22,13 @@
     "invalid-row": "Primera fila inválida",
     "loaded": "All movements loaded successfully",
     "empty-row": "Invalid column value, expected some value but was empty in row {{index}}",
-    "invalid-length": "Invalid column length, expected 5 and count {{length}} in row {{index}}"
+    "invalid-length": "Invalid column length, expected 5 and count {{length}} in row {{index}}",
+    "invalid-column-date": "Invalid column date, expected yyyy/mm/dd but was ${date} in row ${index}",
+    "invalid-year": "Invalid year, expected minimum year 2015 but was ${year} in row ${index}",
+    "invalid-month": "Invalid month {{month}} in row {{index}}",
+    "invalid-day": "Invalid day {{day}} in row {{index}}",
+    "invalid-type": "Invalid type, expected expense or income but was {{type}} in row {{index}}",
+    "invalid-amount": "Invalid amount {{num}} in row {{index}}",
+    "invalid-category": "Invalid category {{category}} are inactive or not exist in row {{index}}"
   }
 }

@@ -24,7 +24,7 @@
     <button mat-stroked-button (click)="fileUpload.click()" [disabled]="loading">
       <input type="file" class="file-input" accept=".csv" (change)="onFileSelected($event)" #fileUpload>
       <div class="file-upload">
-        {{file?.name || "No file uploaded yet."}}
+        {{file?.name || "No file uploaded yet." | translate}}
         <mat-icon color="primary">attach_file</mat-icon>
       </div>
     </button>

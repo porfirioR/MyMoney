@@ -19,13 +19,13 @@
   "Amount": "Monto",
   "Amount:": "Monto:",
   "Delete": "Borrar",
-  "Invalid column value, expected some value but was empty in row": "Valor invalidó en la columna, se esperaba algún valor pero esta vacía en fila",
-  "Invalid column date, expected yyyy/mm/dd but was":"Valor invalidó en columna fecha, se esperaba yyyy/mm/dd pero fue",
-  "Invalid year, expected min year 2015 but was":"Año invalidó, se esperaba el año 2015 como mínimo pero fue",
+  "Invalid column value, expected some value but was empty in row": "Valor inválido en la columna, se esperaba algún valor pero esta vacía en fila",
+  "Invalid column date, expected yyyy/mm/dd but was":"Valor inválido en columna fecha, se esperaba yyyy/mm/dd pero fue",
+  "Invalid year, expected min year 2015 but was":"Año inválido, se esperaba el año 2015 como mínimo pero fue",
   "Movement was created":"El movimiento fue credado",
   "Movement was updated":"El movimiento fue actualizado",
-  "Invalid type, expected":"Tipo invalidó, se esperaba",
-  "Invalid amount":"Monto invalidó",
+  "Invalid type, expected":"Tipo inválido, se esperaba",
+  "Invalid amount":"Monto inválido",
   "Hi, you are logout": "Hola, estás desconectado",
   "Login": "Ingresar",
   "If you want login please click on": "Si desea iniciar sesión, haga clic en",
@@ -97,7 +97,7 @@
   "Check if all columns are correct": "Comprobar si todas las columnas son correctas",
   "If everything is ok, a popup window will appear saying the number of records and if everything is correct save the records": "Si todo está bien, aparecerá una ventana emergente diciendo la cantidad de registros y si esta todo correcto guardar los registros",
   "Errors": "Errores",
-  
+  "No file uploaded yet.": "No file uploaded yet.",
   
   
   "category-messages": {
@@ -121,7 +121,15 @@
     "empty-file": "Archivo vacío",
     "invalid-row": "Primera fila inválida",
     "loaded": "Todos los movimientos se cargaron correctamente",
-    "empty-row": "Valor de columna no válido, esperaba algún valor pero estaba vacío en la fila {{index}}"
+    "empty-row": "Valor de columna no válido, esperaba algún valor pero estaba vacío en la fila {{index}}",
+    "invalid-length": "Longitud de columna no válida, se esperaba 5 y cuenta {{length}} en la fila {{index}}",
+    "invalid-column-date": "Fecha de columna no válida, se esperaba aaaa/mm/dd pero era {{date}} en la fila {{index}}",
+    "invalid-year": "Año no válido, año mínimo esperado 2015 pero era {{year}} en la fila {{index}}",
+    "invalid-month": "Mes no válido {{month}} en la fila {{index}}",
+    "invalid-day": "Día no válido {{day}} en la fila {{index}}",
+    "invalid-type": "Tipo no válido, gasto o ingreso esperado pero fue {{type}} en la fila {{index}}",
+    "invalid-amount": "Cantidad no válida {{num}} en la fila {{index}}",
+    "invalid-category": "La categoría no válida {{category}} está inactiva o no existe en la fila {{index}}"
 
   }
 }

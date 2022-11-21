@@ -143,32 +143,32 @@ export class ImportMovementComponent implements OnInit {
     const dateArray = importMovement.date?.split('/')
     if (dateArray && dateArray.length !== 3) {
       invalid = true
-      errors.push(this.translate.instant('')`Invalid column date, expected yyyy/mm/dd but was ${importMovement.date} in row ${index}`)
+      errors.push(this.translate.instant('import-movement-messages.invalid-column-date', {date: importMovement.date, index: index}))
     }
     const year = Number((dateArray!).shift())
     const month = Number((dateArray!).shift())
     const day = Number((dateArray!).shift())
     if (!Number.isInteger(year) || year < 2015) {
       invalid = true
-      errors.push(`Invalid year, expected min year 2015 but was ${year} in row ${index}`)
+      errors.push(this.translate.instant('import-movement-messages.invalid-year', {year: year, index: index}))
     } else if(!Number.isInteger(month) || month < 1 || month > 12) {
       invalid = true
-      errors.push(`Invalid month ${month} in row ${index}`)
+      errors.push(this.translate.instant('import-movement-messages.invalid-month', {month: month, index: index}))
     } else if(!Number.isInteger(day) || day < 0 || day > 31 || (![1, 3, 5, 7, 8, 10, 12].includes(month) && day > 30)) {
       invalid = true
-      errors.push(`Invalid day ${day} in row ${index}`)
+      errors.push(this.translate.instant('import-movement-messages.invalid-day', {day: day, index: index}))
     } else if (CategoryType.expense !== importMovement.type && CategoryType.income !== importMovement.type) {
       invalid = true
-      errors.push(`Invalid type, expected ${CategoryType.expense} || ${CategoryType.income} but was ${importMovement.type} in row ${index}`)
+      errors.push(this.translate.instant('import-movement-messages.invalid-type', {type: importMovement.type, index: index}))
     }
     const num = Number(importMovement.amount)
     if (!Number.isInteger(num) || num === 0) {
       invalid = true
-      errors.push(`Invalid amount ${num} in row ${index}`)
+      errors.push(this.translate.instant('import-movement-messages.invalid-amount', {num: num, index: index}))
     }
     if (!this.userService.getActiveCategories().find(x => x.name === importMovement.category)) {
       invalid = true
-      errors.push(`Invalid category ${importMovement.category} as inactive or not exist in row ${index}`)
+      errors.push(this.translate.instant('import-movement-messages.invalid-category', {category: importMovement.category, index: index}))
     }
     return invalid ? errors : importMovement
   }
