@@ -43,8 +43,6 @@ export class EditCategoryComponent implements OnInit {
           this.formGroup.controls['backgroundColor'].setValue(userCategory.backgroundColor)
           this.formGroup.controls['order'].setValue(userCategory.order)
         }
-      }, error: (e) => {
-        throw e;
       }
     })
   }

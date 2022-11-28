@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormControl, FormGroup } from '@angular/forms';
-import { take } from 'rxjs';
+import { catchError, take } from 'rxjs';
 import { ConfigurationService } from '../../services/configuration.service';
 import { UserService } from '../../services/user.service';
 import { LanguageType } from '../../enums/language-type.enum';
@@ -37,26 +37,26 @@ export class ConfigurationComponent implements OnInit {
     ) { }
 
   ngOnInit() {
-    this.userService.getUserConfiguration$().pipe(take(1)).subscribe({
+    this.userService.getUserConfiguration$().pipe(take(1),catchError((e) => {
+      console.error(e)
+        this.loading = false
+        throw e
+      })).subscribe({
       next: (config) => {
         this.formGroup.controls['id'].setValue(config.id),
         this.formGroup.controls['number'].setValue(config.number),
         this.formGroup.controls['language'].setValue(config.language)
         this.loading = false
-      }, error: (e) => {
-        console.error(e)
-        this.loading = false
-        throw e;
       }
     })
-    this.formGroup.controls['language'].valueChanges.subscribe({
+    this.formGroup.controls['language'].valueChanges.pipe(catchError((e) => {
+      console.error(e)
+      throw e
+    })).subscribe({
       next: (language) => {
         this.translate.setDefaultLang(language)
         this.translate.use(language)
         this.dateAdapter.setLocale(language)
-      }, error: (e) => {
-        console.error(e)
-        throw e;
       }
     })
   }

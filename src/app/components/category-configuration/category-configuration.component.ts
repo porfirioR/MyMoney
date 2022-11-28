@@ -6,6 +6,7 @@ import { CategoryModel } from '../../models/category.model'
 import { CategoryEvent } from '../../models/category-event.model';
 import { HelperService } from '../../services/helper.service'
 import { UserService } from '../../services/user.service';
+import { catchError } from 'rxjs'
 
 @Component({
   selector: 'app-category-configuration',
@@ -23,14 +24,14 @@ export class CategoryConfigurationComponent implements OnInit {
               private readonly userService: UserService) { }
 
   ngOnInit() {
-    this.userService.getAllCategories$().subscribe({
+    this.userService.getAllCategories$().pipe(catchError((e) => {
+      this.loading = false
+      throw e;
+    })).subscribe({
       next: (categories) => {
         this.expenseCategory = this.orderCategoryByActive(HelperService.categoriesByType(categories, CategoryType.expense))
         this.incomeCategory = this.orderCategoryByActive(HelperService.categoriesByType(categories, CategoryType.income))
         this.loading = false
-      }, error: (e) => {
-        this.loading = false
-        throw e;
       }
     })
     this.currentTap = this.categoryType.expense

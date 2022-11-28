@@ -10,7 +10,7 @@ import { DialogDeleteComponent } from '../dialog-delete/dialog-delete.component'
 import { CategoryEvent } from '../../models/category-event.model'
 import { MovementModel } from '../../models/movement.model'
 import { ResourceType } from '../../enums/resource-type.enum'
-import { take } from 'rxjs'
+import { catchError, take } from 'rxjs'
 import { TranslateService } from '@ngx-translate/core'
 
 @Component({
@@ -48,7 +48,10 @@ export class CategoryRowComponent implements OnInit, OnDestroy {
             width: '350px',
             data: { title: this.translate.instant('category-messages.title-delete'), message: this.translate.instant('category-messages.question', {length: deleteMovementList.length}) }
           })
-          dialogRef.afterClosed().pipe(take(1)).subscribe(result => {
+          dialogRef.afterClosed().pipe(take(1)).pipe(catchError((e) => {
+            console.error(e);
+            throw e;
+          })).subscribe(result => {
             if (result) {
               if (this.category.owner === this.ownerSystem) {
                 const request = new UserCategoryModel(!active, this.category.id)
@@ -72,9 +75,6 @@ export class CategoryRowComponent implements OnInit, OnDestroy {
             }
           })
           result.unsubscribe()
-        }, error: (e) => {
-          console.error(e);
-          throw e;
         }
       })
     } else {

@@ -31,8 +31,8 @@ export class RegisterMovementComponent implements OnInit {
     memorandum: new FormControl<string>('', Validators.maxLength(50)),
     date: new FormControl({value: '', disabled: true}, Validators.required),
     amount: new FormControl('', [Validators.required, Validators.min(0), Validators.minLength(1), Validators.max(999999999999)]),
-    color: new FormControl(''),
-    backgroundColor: new FormControl('')
+    color: new FormControl('#000000'),
+    backgroundColor: new FormControl('#ffffff')
   })
   protected currentCategories!: CategoryModel[]
   protected loading = true
@@ -96,8 +96,8 @@ export class RegisterMovementComponent implements OnInit {
   protected selectedIcon = (category: CategoryModel) => {
     this.formGroup.controls['icon'].setValue(category.icon)
     this.formGroup.controls['categoryId'].setValue(category.id)
-    this.formGroup.controls['color'].setValue(category ? category.color : '')
-    this.formGroup.controls['backgroundColor'].setValue(category ? category.backgroundColor : '')
+    this.formGroup.controls['color'].setValue(category ? category.color : '#000')
+    this.formGroup.controls['backgroundColor'].setValue(category ? category.backgroundColor : '#fff')
     this.inputMemorandum?.nativeElement.focus()
     this.formGroup.markAllAsTouched()
   }
