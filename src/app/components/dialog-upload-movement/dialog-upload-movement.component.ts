@@ -1,8 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { CollectionReference, doc, DocumentData } from '@angular/fire/firestore';
 import { MovementService } from '../../services/movement.service';
 import { MovementModel } from '../../models/movement.model';
-import { CollectionReference, doc, DocumentData } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-dialog-upload-movement',
@@ -11,11 +11,13 @@ import { CollectionReference, doc, DocumentData } from '@angular/fire/firestore'
 })
 export class DialogUploadMovementComponent implements OnInit {
   protected loading = false
-  constructor(private readonly dialogRef: MatDialogRef<DialogUploadMovementComponent>,
-              @Inject(MAT_DIALOG_DATA) protected data: MovementModel[],
-              private readonly movementService: MovementService) {
-                dialogRef.disableClose = true;
-              }
+  constructor(
+    private readonly dialogRef: MatDialogRef<DialogUploadMovementComponent>,
+    @Inject(MAT_DIALOG_DATA) protected data: MovementModel[],
+    private readonly movementService: MovementService
+  ) {
+      dialogRef.disableClose = true;
+    }
 
   ngOnInit() { }
 

@@ -1,10 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { take } from 'rxjs';
 import { NumberType } from '../../enums/number-type.enum';
 import { CategoryType } from '../../enums/category-type.enum';
 import { LanguageType } from '../../enums/language-type.enum';
 import { CategoryModel } from '../../models/category.model';
 import { GroupDateMovementModel } from '../../models/group-date-movement.model';
-import { take } from 'rxjs';
 import { UserService } from '../../services/user.service';
 
 @Component({

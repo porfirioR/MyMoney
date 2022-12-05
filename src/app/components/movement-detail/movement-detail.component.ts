@@ -22,7 +22,8 @@ export class MovementDetailComponent implements OnInit {
   protected numberType = NumberType.English
   protected language = LanguageType.English
 
-  constructor(private readonly location: Location,
+  constructor(
+    private readonly location: Location,
     private readonly movementService: MovementService,
     private readonly activatedRoute: ActivatedRoute,
     private readonly router: Router,

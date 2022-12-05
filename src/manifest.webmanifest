@@ -1,6 +1,6 @@
 {
-  "name": "MyMoney",
-  "short_name": "MyMoney",
+  "name": "My Money",
+  "short_name": "My Money",
   "theme_color": "#1976d2",
   "background_color": "#fafafa",
   "display": "standalone",

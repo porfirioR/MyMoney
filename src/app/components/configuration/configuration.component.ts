@@ -1,15 +1,15 @@
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
+import { DateAdapter } from '@angular/material/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormControl, FormGroup } from '@angular/forms';
+import { TranslateService } from '@ngx-translate/core';
 import { catchError, take } from 'rxjs';
 import { ConfigurationService } from '../../services/configuration.service';
 import { UserService } from '../../services/user.service';
 import { LanguageType } from '../../enums/language-type.enum';
 import { NumberType } from '../../enums/number-type.enum';
 import { ConfigurationModel } from '../../models/configuration.model';
-import { DateAdapter } from '@angular/material/core';
 
 @Component({
   selector: 'app-configuration',

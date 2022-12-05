@@ -3,13 +3,13 @@ import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
-import { DialogUploadMovementComponent } from '../dialog-upload-movement/dialog-upload-movement.component';
 import { UserService } from '../../services/user.service';
 import { ImportMovementRequestModel } from '../../models/import-movement-request.model';
 import { MovementModel } from '../../models/movement.model';
 import { CategoryModel } from '../../models/category.model';
 import { CategoryType } from '../../enums/category-type.enum';
 import { environment } from '../../../environments/environment';
+import { DialogUploadMovementComponent } from '../dialog-upload-movement/dialog-upload-movement.component';
 
 @Component({
   selector: 'app-import-movement',
@@ -25,12 +25,13 @@ export class ImportMovementComponent implements OnInit {
   protected loading = false
   protected openPopUp = false
 
-  constructor(private readonly location: Location,
-              private readonly userService: UserService,
-              private readonly snackBar: MatSnackBar,
-              private readonly dialog: MatDialog,
-              private translate: TranslateService
-              ) { }
+  constructor(
+    private readonly location: Location,
+    private readonly userService: UserService,
+    private readonly snackBar: MatSnackBar,
+    private readonly dialog: MatDialog,
+    private translate: TranslateService
+  ) { }
   
   ngOnInit() { }
 

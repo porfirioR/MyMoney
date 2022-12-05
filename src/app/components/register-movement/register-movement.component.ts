@@ -4,6 +4,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
 import { DocumentData, DocumentReference } from '@angular/fire/firestore';
+import { TranslateService } from '@ngx-translate/core';
 import { combineLatest, take } from 'rxjs';
 import { IconType } from '../../enums/icon-type.enum';
 import { CategoryType } from '../../enums/category-type.enum';
@@ -12,7 +13,6 @@ import { CategoryModel } from '../../models/category.model';
 import { HelperService } from '../../services/helper.service';
 import { MovementService } from '../../services/movement.service';
 import { UserService } from '../../services/user.service';
-import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-register-movement',

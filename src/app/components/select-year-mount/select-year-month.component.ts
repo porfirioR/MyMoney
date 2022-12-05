@@ -14,8 +14,10 @@ export class SelectYearMonthComponent implements OnInit {
   protected months = MonthType
   protected formGroup: FormGroup = new FormGroup({})
 
-  constructor(private dialogRef: MatDialogRef<SelectYearMonthComponent>,
-              @Inject(MAT_DIALOG_DATA) private yearMonth: YearMonthModel) {
+  constructor(
+    private dialogRef: MatDialogRef<SelectYearMonthComponent>,
+    @Inject(MAT_DIALOG_DATA) private yearMonth: YearMonthModel
+  ) {
     const currentYear = this.yearMonth.year
     const currentMonth = this.months[this.yearMonth.month]
     this.formGroup = new FormGroup( {

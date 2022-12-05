@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core'
 import { Location } from '@angular/common'
 import { MatTabChangeEvent } from '@angular/material/tabs'
+import { catchError } from 'rxjs'
 import { CategoryType } from '../../enums/category-type.enum'
 import { CategoryModel } from '../../models/category.model'
 import { CategoryEvent } from '../../models/category-event.model';
 import { HelperService } from '../../services/helper.service'
 import { UserService } from '../../services/user.service';
-import { catchError } from 'rxjs'
 
 @Component({
   selector: 'app-category-configuration',

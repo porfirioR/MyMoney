@@ -3,6 +3,7 @@ import { Location } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { TranslateService } from '@ngx-translate/core';
 import { CategoryType } from '../../enums/category-type.enum';
 import { CategoryGroupIconType } from '../../enums/category-group-icon-type.enum';
 import { IconType } from '../../enums/icon-type.enum';
@@ -13,7 +14,6 @@ import { UserCategoryModel } from '../../models/user-category.model';
 import { CategoryService } from '../../services/category.service';
 import { UserCategoryService } from '../../services/user-category.service';
 import { UserService } from '../../services/user.service';
-import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-new-category',
@@ -77,13 +77,15 @@ export class NewCategoryComponent implements OnInit {
   )
   protected formGroup!: FormGroup
 
-  constructor(protected location: Location,
-              protected route: ActivatedRoute,
-              private categoryService: CategoryService,
-              private snackBar: MatSnackBar,
-              private readonly userCategoryService: UserCategoryService,
-              private userService: UserService,
-              private translateService: TranslateService) { }
+  constructor(
+    protected location: Location,
+    protected route: ActivatedRoute,
+    private categoryService: CategoryService,
+    private snackBar: MatSnackBar,
+    private readonly userCategoryService: UserCategoryService,
+    private userService: UserService,
+    private translateService: TranslateService
+  ) { }
 
   ngOnInit() {
     this.route.params.subscribe({

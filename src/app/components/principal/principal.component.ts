@@ -1,31 +1,30 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { DateAdapter } from '@angular/material/core';
+import localEs from '@angular/common/locales/es'
+import { TranslateService } from '@ngx-translate/core';
+import { registerLocaleData } from '@angular/common';
+import { getAuth, onAuthStateChanged } from '@angular/fire/auth';
 import { combineLatest, debounceTime, Observable, take } from 'rxjs';
 import { CategoryModel } from '../../models/category.model';
 import { GroupDateMovementModel } from '../../models/group-date-movement.model';
-import { CategoryType } from '../../enums/category-type.enum';
 import { MovementModel } from '../../models/movement.model';
 import { YearMonthModel } from '../../models/year-month-model';
+import { ConfigurationModel } from '../../models/configuration.model';
+import { UserDataModel } from '../../models/user-data.model';
+import { UserCategoryModel } from '../../models/user-category.model';
 import { CategoryService } from '../../services/category.service';
 import { MovementService } from '../../services/movement.service';
-import { SelectYearMonthComponent } from '../select-year-mount/select-year-month.component';
 import { UserCategoryService } from '../../services/user-category.service';
 import { UserService } from '../../services/user.service';
-import { getAuth, onAuthStateChanged } from '@angular/fire/auth';
-import { UserDataModel } from '../../models/user-data.model';
-import { environment } from '../../../environments/environment';
-import { UserCategoryModel } from '../../models/user-category.model';
-import { NumberType } from '../../enums/number-type.enum';
-import { ConfigurationModel } from '../../models/configuration.model';
-import { LanguageType } from '../../enums/language-type.enum';
-import { ConfigurationService } from '../../services/configuration.service';
-import { TranslateService } from '@ngx-translate/core';
-import { registerLocaleData } from '@angular/common';
-import localEs from '@angular/common/locales/es'
-import { MonthType } from '../../enums/month-type.enum';
 import { HelperService } from '../../services/helper.service';
-import { DateAdapter } from '@angular/material/core';
+import { ConfigurationService } from '../../services/configuration.service';
+import { SelectYearMonthComponent } from '../select-year-mount/select-year-month.component';
+import { CategoryType } from '../../enums/category-type.enum';
+import { NumberType } from '../../enums/number-type.enum';
+import { LanguageType } from '../../enums/language-type.enum';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-principal',

@@ -5,9 +5,9 @@ import { combineLatest } from 'rxjs';
 import { CategoryType } from '../../enums/category-type.enum';
 import { ExportRequestModel } from '../../models/export-request.model';
 import { MovementModel } from '../../models/movement.model';
-import { environment } from '../../../environments/environment';
 import { MovementService } from '../../services/movement.service';
 import { UserService } from '../../services/user.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-export-movement',
@@ -25,9 +25,11 @@ export class ExportMovementComponent implements OnInit {
   private movementListResponse:MovementModel[] = []
   protected categories = CategoryType
   private request!: ExportRequestModel
-  constructor(private readonly location: Location,
-              private readonly userService: UserService,
-              private readonly movementService: MovementService) { }
+  constructor(
+    private readonly location: Location,
+    private readonly userService: UserService,
+    private readonly movementService: MovementService
+  ) { }
 
   ngOnInit() {
   }

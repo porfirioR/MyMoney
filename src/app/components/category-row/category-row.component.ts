@@ -1,17 +1,17 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core'
 import { MatSnackBar } from '@angular/material/snack-bar'
 import { MatDialog } from '@angular/material/dialog'
+import { TranslateService } from '@ngx-translate/core'
+import { catchError, take } from 'rxjs'
 import { CategoryService } from '../../services/category.service'
 import { UserCategoryService } from '../../services/user-category.service'
 import { MovementService } from '../../services/movement.service'
 import { CategoryModel } from '../../models/category.model'
 import { UserCategoryModel } from '../../models/user-category.model'
-import { DialogDeleteComponent } from '../dialog-delete/dialog-delete.component'
 import { CategoryEvent } from '../../models/category-event.model'
 import { MovementModel } from '../../models/movement.model'
 import { ResourceType } from '../../enums/resource-type.enum'
-import { catchError, take } from 'rxjs'
-import { TranslateService } from '@ngx-translate/core'
+import { DialogDeleteComponent } from '../dialog-delete/dialog-delete.component'
 
 @Component({
   selector: 'app-category-row',
@@ -23,13 +23,14 @@ export class CategoryRowComponent implements OnInit, OnDestroy {
   @Output() updateCategoryEvent = new EventEmitter<CategoryEvent>()
   private ownerSystem = ResourceType.ownerSystem
 
-  constructor(private readonly categoryService: CategoryService,
-              private readonly snackBar: MatSnackBar,
-              private readonly dialog: MatDialog,
-              private readonly userCategoryService: UserCategoryService,
-              private readonly movementService: MovementService,
-              private translate: TranslateService,
-            ) { }
+  constructor(
+    private readonly categoryService: CategoryService,
+    private readonly snackBar: MatSnackBar,
+    private readonly dialog: MatDialog,
+    private readonly userCategoryService: UserCategoryService,
+    private readonly movementService: MovementService,
+    private translate: TranslateService,
+  ) { }
 
   ngOnInit(): void {
     const user = this.translate.instant('(user)')
