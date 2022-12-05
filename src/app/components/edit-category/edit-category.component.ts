@@ -9,6 +9,7 @@ import { UserCategoryService } from '../../services/user-category.service';
 import { UserService } from '../../services/user.service';
 import { CategoryModel } from '../../models/category.model';
 import { UserCategoryModel } from '../../models/user-category.model';
+import { DocumentData, DocumentReference } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-edit-category',
@@ -17,26 +18,26 @@ import { UserCategoryModel } from '../../models/user-category.model';
 })
 export class EditCategoryComponent implements OnInit {
   protected category?: CategoryModel
+  protected defaultColor = '#000000'
+  protected defaultBackgroundColor = '#ffffff'
   protected formGroup: FormGroup = new FormGroup({
-    color: new FormControl('', Validators.required),
-    backgroundColor: new FormControl('#fff', Validators.required),
+    color: new FormControl(this.defaultColor, Validators.required),
+    backgroundColor: new FormControl(this.defaultBackgroundColor, Validators.required),
     order: new FormControl(0, Validators.min(0))
   })
 
-  constructor(private readonly location: Location,
-              private readonly userService: UserService,
-              private readonly activatedRoute: ActivatedRoute,
-              private readonly userCategory: UserCategoryService,
-              private snackBar: MatSnackBar,
-              private translate: TranslateService,
-            )
-  {
+  constructor(
+    private readonly location: Location,
+    private readonly userService: UserService,
+    private readonly activatedRoute: ActivatedRoute,
+    private readonly userCategory: UserCategoryService,
+    private snackBar: MatSnackBar,
+    private translate: TranslateService,
+  ) {
     combineLatest([this.activatedRoute.params, this.userService.getAllCategories$().pipe(take(1)), this.userService.getUserCategories$().pipe(take(1))]).subscribe({
       next: ([params, categories, userCategories]) => {
         this.category = categories.find(x => x.id === params['id'])
-        if (!this.category) {
-          this.exit()
-        }
+        if (!this.category) { this.exit() }
         const userCategory = userCategories.find(x => x.categoryId === this.category!.id)
         if (userCategory) {
           this.formGroup.controls['color'].setValue(userCategory.color)
@@ -47,8 +48,7 @@ export class EditCategoryComponent implements OnInit {
     })
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() { }
 
   protected exit = () => {
     this.location.back()
@@ -58,8 +58,8 @@ export class EditCategoryComponent implements OnInit {
     const request = new UserCategoryModel(
       this.category!.active,
       this.category!.id,
-      undefined,
-      undefined,
+      this.userService.getUserEmail(),
+      this.userService.getUserCategories().find(x => x.categoryId === this.category?.id)?.id,
       undefined,
       this.formGroup.get('color')!.value,
       this.formGroup.get('backgroundColor')!.value,
@@ -70,6 +70,10 @@ export class EditCategoryComponent implements OnInit {
       this.category!.color = request.color
       this.category!.backgroundColor = request.backgroundColor
       this.category!.order = request.order
+      if (response) {
+        request.id = (response as DocumentReference<DocumentData>).id
+      }
+      this.userService.setUserCategory(request)
       this.location.back()
     })
   }

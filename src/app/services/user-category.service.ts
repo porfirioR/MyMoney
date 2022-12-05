@@ -12,12 +12,15 @@ import { UserService } from './user.service';
 export class UserCategoryService {
   private userCategoryType: CollectionType = CollectionType.UserCategories
 
-  constructor(private readonly firestore: Firestore, private readonly userService: UserService) { }
+  constructor(
+    private readonly firestore: Firestore,
+    private readonly userService: UserService
+  ) { }
 
-  public upsertCategory = (userCategory: UserCategoryModel): Promise<void> | Promise<DocumentReference<DocumentData>>   => {
+  public upsertCategory = (userCategory: UserCategoryModel): Promise<void> | Promise<DocumentReference<DocumentData>> => {
     const request: UserCategoryRequest = {
       active: userCategory.active,
-      email: this.userService.getUserEmail(),
+      email: userCategory.email!,
       category: doc(this.firestore, `${CollectionType.Categories}/${userCategory.categoryId}`),
       backgroundColor: userCategory.backgroundColor,
       color: userCategory.color,

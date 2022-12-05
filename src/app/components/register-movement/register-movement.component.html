@@ -26,8 +26,8 @@
     <div class="icon-list">
       <span class="btn-block" *ngFor="let category of currentCategories">
         <button class="btn-icon" mat-fab customColor (click)="selectedIcon(category)"
-          [color]="category.icon === formGroup.get('icon')?.value && category.id === formGroup.get('categoryId')?.value ? category.color : '#000000'"
-          [backgroundColor]="category.icon === formGroup.get('icon')?.value && category.id === formGroup.get('categoryId')?.value ? category.backgroundColor : '#ffffff'">
+          [color]="category.icon === formGroup.get('icon')?.value && category.id === formGroup.get('categoryId')?.value ? category.color : defaultColor"
+          [backgroundColor]="category.icon === formGroup.get('icon')?.value && category.id === formGroup.get('categoryId')?.value ? category.backgroundColor : defaultBackgroundColor">
           <i class="material-icons-outlined notranslate">{{category.icon}}</i>
         </button>
         <label translate>{{category.name}}</label>
@@ -56,7 +56,7 @@
       </mat-form-field>
       <mat-form-field appearance="fill" class="w-100">
         <mat-label translate>Date</mat-label>
-        <input matInput [matDatepicker]="picker" formControlName="date">
+        <input matInput [matDatepicker]="picker" formControlName="date" [min]="minDate">
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker disabled="false"></mat-datepicker>
       </mat-form-field>

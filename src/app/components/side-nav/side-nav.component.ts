@@ -26,9 +26,11 @@ export class SideNavComponent implements OnInit {
   protected displayName: string = ''
   protected photo!: SafeUrl
 
-  constructor(private auth: AuthService,
-              protected router: Router,
-              private readonly userService: UserService) {}
+  constructor(
+    private auth: AuthService,
+    protected router: Router,
+    private readonly userService: UserService
+  ) {}
 
   ngOnInit() {
     this.userService.getItemObservable$.subscribe({

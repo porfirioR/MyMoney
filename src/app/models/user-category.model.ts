@@ -8,7 +8,7 @@ export class UserCategoryModel {
     public id?: string,
     public category?: DocumentReference<DocumentData>,
     public color: string = '#000000',
-    public backgroundColor: string = '#fff',
+    public backgroundColor: string = '#ffffff',
     public order: number = 0,
   ) { }
 }

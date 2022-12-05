@@ -65,6 +65,17 @@ export class UserService extends ItemObservable<UserDataModel> {
     this.item!.userConfiguration = configuration
   }
 
+  public setUserCategory = (userCategory: UserCategoryModel) => {
+    const index = this.item!.userCategories.findIndex(x => x.id === userCategory.id)
+    if (index === -1) {
+      this.item!.userCategories = [...this.item!.userCategories, userCategory]
+    } else {
+      this.item!.userCategories[index].backgroundColor = userCategory.backgroundColor
+      this.item!.userCategories[index].color = userCategory.color
+      this.item!.userCategories[index].order = userCategory.order
+    }
+  }
+
   public getActiveCategories = () => {
     return this.item!.activeCategories
   }

@@ -30,7 +30,7 @@ export class MovementDetailComponent implements OnInit {
     private readonly snackBar: MatSnackBar,
     private readonly userService: UserService,
     private translate: TranslateService,
-    ) {
+  ) {
     combineLatest([this.activatedRoute.params, this.userService.getUserCategories$().pipe(take(1)), this.userService.getUserConfiguration$().pipe(take(1))]).subscribe({
       next: ([params, userCategories, config]) => {
         this.movement = this.movementService.getMovementById(params['id'])

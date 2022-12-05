@@ -23,16 +23,21 @@ export class RegisterMovementComponent implements OnInit {
   @ViewChild("memorandum") inputMemorandum?: ElementRef;
   protected categoryType = CategoryType
   private movementId!: string
+  protected defaultColor = '#000000'
+  protected defaultBackgroundColor = '#ffffff'
+  protected minDate = new Date('2015-01-01:00:00:00')
+
   protected formGroup: FormGroup = new FormGroup({
     id: new FormControl<string | ''>(''),
     type: new FormControl<CategoryType>(this.categoryType.expense),
     icon: new FormControl<IconType | ''>('', Validators.required),
     categoryId: new FormControl<string>('', Validators.required),
     memorandum: new FormControl<string>('', Validators.maxLength(50)),
-    date: new FormControl({value: '', disabled: true}, Validators.required),
+    date: new FormControl({value: null, disabled: true}),
     amount: new FormControl('', [Validators.required, Validators.min(0), Validators.minLength(1), Validators.max(999999999999)]),
-    color: new FormControl('#000000'),
-    backgroundColor: new FormControl('#ffffff')
+    color: new FormControl(this.defaultColor),
+    backgroundColor: new FormControl(this.defaultBackgroundColor),
+    time: new FormControl('', Validators.required)
   })
   protected currentCategories!: CategoryModel[]
   protected loading = true
@@ -47,7 +52,7 @@ export class RegisterMovementComponent implements OnInit {
     private readonly activatedRoute: ActivatedRoute,
     private readonly userService: UserService,
     private translate: TranslateService
-    ) { }
+  ) { }
 
   ngOnInit() {
     combineLatest([this.activatedRoute.params, this.userService.getActiveCategories$().pipe(take(1))]).subscribe({
@@ -63,8 +68,8 @@ export class RegisterMovementComponent implements OnInit {
           const currentCategory = this.currentCategories[0]
           this.formGroup.controls['icon'].setValue(currentCategory.icon)
           this.formGroup.controls['categoryId'].setValue(currentCategory.id)
-          this.formGroup.patchValue({ color: currentCategory.color })
-          this.formGroup.patchValue({ backgroundColor: currentCategory.backgroundColor })
+          this.formGroup.patchValue({ color: currentCategory.color ?? this.defaultColor })
+          this.formGroup.patchValue({ backgroundColor: currentCategory.backgroundColor ?? this.defaultBackgroundColor})
         }
 
         this.formGroup.controls['type'].valueChanges.subscribe({
@@ -74,8 +79,8 @@ export class RegisterMovementComponent implements OnInit {
             if(!currentCategory) {
               this.formGroup.controls['icon'].setValue(this.currentCategories[0].icon)
               this.formGroup.controls['categoryId'].setValue(this.currentCategories[0].id)
-              this.formGroup.controls['color'].setValue(this.currentCategories[0].color)
-              this.formGroup.controls['backgroundColor'].setValue(this.currentCategories[0].backgroundColor)
+              this.formGroup.controls['color'].setValue(this.currentCategories[0].color ?? this.defaultColor)
+              this.formGroup.controls['backgroundColor'].setValue(this.currentCategories[0].backgroundColor ?? this.defaultBackgroundColor)
             }
           }
         })
@@ -83,6 +88,13 @@ export class RegisterMovementComponent implements OnInit {
           next: (value: string) => {
             const newValue = value.replace(/,/g, '')
             this.formGroup.controls['memorandum'].patchValue(newValue, { emitEvent: false })
+          }
+        })
+        this.formGroup.controls['date'].valueChanges.subscribe({
+          next: (date: Date) => {
+            const dateCopy = new Date(date.getTime())
+            dateCopy.setHours(0, 0, 0, 0)
+            this.formGroup.controls['time'].setValue(dateCopy.getTime()!)
           }
         })
         this.loading = false
@@ -96,8 +108,8 @@ export class RegisterMovementComponent implements OnInit {
   protected selectedIcon = (category: CategoryModel) => {
     this.formGroup.controls['icon'].setValue(category.icon)
     this.formGroup.controls['categoryId'].setValue(category.id)
-    this.formGroup.controls['color'].setValue(category ? category.color : '#000')
-    this.formGroup.controls['backgroundColor'].setValue(category ? category.backgroundColor : '#fff')
+    this.formGroup.controls['color'].setValue(category.color ?? this.defaultColor)
+    this.formGroup.controls['backgroundColor'].setValue(category.backgroundColor ?? this.defaultBackgroundColor)
     this.inputMemorandum?.nativeElement.focus()
     this.formGroup.markAllAsTouched()
   }
@@ -108,8 +120,8 @@ export class RegisterMovementComponent implements OnInit {
 
   protected save = () => {
     const request: MovementModel = this.formGroup.getRawValue()
-    request.date?.setHours(0, 0, 0, 0)
-    request.time = request.date?.getTime()!
+    // request.date?.setHours(0, 0, 0, 0)
+    // request.time = request.date?.getTime()!
     delete request.date
     this.saving = true
     let request$: Promise<void> | Promise<DocumentReference<DocumentData>> | Promise<[DocumentReference<DocumentData>, void]>
@@ -148,8 +160,9 @@ export class RegisterMovementComponent implements OnInit {
     this.formGroup.patchValue({ categoryId: movement.categoryId})
     this.formGroup.patchValue({ memorandum: movement.memorandum})
     this.formGroup.patchValue({ date: movement.date})
+    this.formGroup.patchValue({ time: movement.date?.getTime()})
     this.formGroup.patchValue({ amount: Math.abs(movement.amount)})
-    this.formGroup.patchValue({ color: currentCategory ? currentCategory.color : ''})
-    this.formGroup.patchValue({ backgroundColor: currentCategory ? currentCategory.backgroundColor : ''})
+    this.formGroup.patchValue({ color: currentCategory && currentCategory.color ? currentCategory.color : this.defaultColor})
+    this.formGroup.patchValue({ backgroundColor: currentCategory && currentCategory.backgroundColor ? currentCategory.backgroundColor : this.defaultBackgroundColor})
   }
 }

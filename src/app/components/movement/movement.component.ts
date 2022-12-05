@@ -20,9 +20,7 @@ export class MovementComponent implements OnInit {
   protected totalExpense!: number
   protected language = LanguageType.English
 
-  constructor(
-    private userService: UserService,
-    ) { }
+  constructor(private userService: UserService) { }
 
   ngOnInit() {
     this.userService.getUserConfiguration$().pipe(take(1)).subscribe({
@@ -37,6 +35,7 @@ export class MovementComponent implements OnInit {
     this.totalExpense = this.groupDateMovement.expense
     this.groupDateMovement.movements.forEach(x => {
       x.categoryName = this.categories.find(y => y.id === x.categoryId)?.name!
+      x.memorandum = x.memorandum ? x.memorandum : x.categoryName
       x.amount = x.type === CategoryType.expense ? -x.amount : x.amount
     })
   }

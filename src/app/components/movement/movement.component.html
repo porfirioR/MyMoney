@@ -21,7 +21,7 @@
             [backgroundColor]="movement!.backgroundColor">
           <i class="material-icons-outlined notranslate">{{movement.icon}}</i>
         </button>
-        <span>{{movement.memorandum ? movement.memorandum : movement.categoryName | translate}}</span>
+        <span>{{movement.memorandum! | translate}}</span>
       </span>
       <span>{{movement.amount | number:'' : numberType}}</span>
     </span>

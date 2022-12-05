@@ -1,11 +1,11 @@
 import { BehaviorSubject, Observable } from 'rxjs';
 export class ItemObservable<T> {
-  private behaviorItem$: BehaviorSubject<T> | undefined;
+  private behaviorItem$: BehaviorSubject<T> | undefined
 
   protected constructor() { }
 
   get item(): T | undefined {
-    return this.behaviorItem$?.getValue(); 
+    return this.behaviorItem$?.getValue()
   }
 
   protected setItem(nextItem: T) : void {
