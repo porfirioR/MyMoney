@@ -35,7 +35,7 @@
               <i class="material-icons-outlined notranslate">{{group.icon}}</i>
             </button>
             <span>
-              {{group.categoryName}}
+              {{group.categoryName | translate}}
             </span>
             <span>
               {{group.amount | number:'' : numberType}}
@@ -45,7 +45,7 @@
         <ul>
           <li *ngFor="let movement of group.movements" class="row">
             <span>
-              - {{movement.memorandum ? movement.memorandum : group.categoryName}}
+              - {{movement.date | date: 'dd/MM': '': language}} {{movement.memorandum! | translate}}
             </span>
             <span>
               {{movement.amount | number:'' : numberType}}

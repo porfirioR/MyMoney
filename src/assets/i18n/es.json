@@ -1,11 +1,11 @@
 {
   "home": "casa",
-  "Add Expense category": "Agregar categoría de gastos",
-  "Add Income category": "Agregar categoría de ingresos",
   "Incomes": "Ingresos",
   "Expenses": "Gastos",
   "Income": "Ingreso",
+  "income": "ingreso",
   "Expense": "Gasto",
+  "expense":"gasto",
   "Difference": "Diferencia",
   "Search": "Buscar",
   "My Money": "Mi dinero",
@@ -39,7 +39,6 @@
   "Language": "Idioma",
   "User": "Usuario",
   "Category": "Categoría",
-  "Category:": "Categoría:",
   "Export": "Exportar",
   "Import": "Importar",
   "Exit": "Salir",
@@ -128,7 +127,7 @@
   "Sport": "Deporte",
   "Github page": "Página de Github",
   "Parking": "Estacionamiento",
-
+  "Travels": "Viajes",
   
   "category-messages": {
     "question": "¿Está seguro de que desea eliminar esta categoría?. Todos los movimientos relacionados ({{length}}) con esta categoría serán eliminados",
@@ -136,7 +135,8 @@
     "title-delete": "Borrar categoría ",
     "title-restarted": "La categoría fue restaurada",
     "created": "La categoría fue creada",
-    "updated": "La categoría fue actualizada"
+    "updated": "La categoría fue actualizada",
+    "add": "Agregar categoría de {{type}}"
   },
   "message-error": {
     "exceed": "Value cannot exceed {{count}} {{type}}."
@@ -160,6 +160,5 @@
     "invalid-type": "Tipo no válido, gasto o ingreso esperado pero fue {{type}} en la fila {{index}}",
     "invalid-amount": "Cantidad no válida {{num}} en la fila {{index}}",
     "invalid-category": "La categoría no válida {{category}} está inactiva o no existe en la fila {{index}}"
-
   }
 }

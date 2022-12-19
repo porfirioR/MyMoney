@@ -15,7 +15,7 @@ export class MovementService {
 
   constructor(private readonly firestore: Firestore, private readonly userService: UserService) { }
 
-  public getBySelectedMonth = (category: CategoryType, month: number, year: number) => {
+  public getBySelectedMonth = (category: CategoryType, month: number, year: number): Observable<MovementModel[]> => {
     const startDate = new Date(year, month, 1)
     startDate.setHours(0, 0, 0)
     const startTime = startDate.getTime()

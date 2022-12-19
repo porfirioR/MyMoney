@@ -84,14 +84,14 @@ export class NewCategoryComponent implements OnInit {
     private snackBar: MatSnackBar,
     private readonly userCategoryService: UserCategoryService,
     private userService: UserService,
-    private translateService: TranslateService
-  ) { }
+    private translateService: TranslateService,
+    ) { }
 
   ngOnInit() {
     this.route.params.subscribe({
       next: (value) => {
         const type = value['type']
-        this.title = `Add ${type} category`
+        this.title = this.translateService.instant('category-messages.add', {type: this.translateService.instant(type)})
         this.currentCategory
         this.formGroup = new FormGroup({
           name: new FormControl('', Validators.required),

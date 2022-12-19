@@ -7,6 +7,7 @@ import { CategoryModel } from '../../models/category.model'
 import { CategoryEvent } from '../../models/category-event.model';
 import { HelperService } from '../../services/helper.service'
 import { UserService } from '../../services/user.service';
+import { TranslateService } from '@ngx-translate/core'
 
 @Component({
   selector: 'app-category-configuration',
@@ -21,7 +22,8 @@ export class CategoryConfigurationComponent implements OnInit {
   protected loading = true
 
   constructor(private readonly location: Location,
-              private readonly userService: UserService) { }
+              private readonly userService: UserService,
+              private translateService: TranslateService) { }
 
   ngOnInit() {
     this.userService.getAllCategories$().pipe(catchError((e) => {
@@ -34,7 +36,7 @@ export class CategoryConfigurationComponent implements OnInit {
         this.loading = false
       }
     })
-    this.currentTap = this.categoryType.expense
+    this.currentTap = this.categoryType.income.toLocaleLowerCase()
   }
 
   protected exit = () => {
@@ -42,7 +44,7 @@ export class CategoryConfigurationComponent implements OnInit {
   }
 
   protected tabChanged = (tabChangeEvent: MatTabChangeEvent): void => {
-    this.currentTap = tabChangeEvent.tab.textLabel;
+    this.currentTap = Object.keys(this.categoryType)[tabChangeEvent.index];
   }
 
   protected updateCategories = (result: CategoryEvent) => {

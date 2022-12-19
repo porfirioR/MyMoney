@@ -13,6 +13,7 @@ import { YearMonthModel } from '../../models/year-month-model';
 import { MovementService } from '../../services/movement.service';
 import { UserService } from '../../services/user.service';
 import { SelectYearMonthComponent } from '../select-year-mount/select-year-month.component';
+import { LanguageType } from '../../enums/language-type.enum';
 
 @Component({
   selector: 'app-report-month',
@@ -43,6 +44,7 @@ export class ReportMonthComponent implements OnInit {
     type: new FormControl<CategoryType>(this.categoryType.expense),
   })
   protected numberType = NumberType.Spanish
+  protected language = LanguageType.English
 
   constructor(private readonly activatedRoute: ActivatedRoute,
               private readonly movementService: MovementService,
@@ -51,14 +53,16 @@ export class ReportMonthComponent implements OnInit {
               private readonly dialog: MatDialog) { }
   
   ngOnInit(): void {
-    combineLatest([this.activatedRoute.params, this.activatedRoute.queryParams])
+    combineLatest([this.activatedRoute.params, this.activatedRoute.queryParams, this.userService.getUserConfiguration$().pipe(take(1))])
     .subscribe({
-      next: ([params, queryParams]) => {
+      next: ([params, queryParams, config]) => {
         this.yearMonth = queryParams as YearMonthModel
         const type = params['type']
         this.formGroup.controls['type'].setValue(type)
         this.getMovementsByType(type)
+        this.language = config.language
       }, error: (e) => {
+        console.error(e)
         throw e;
       }
     })
@@ -93,6 +97,8 @@ export class ReportMonthComponent implements OnInit {
       movement.categoryName = category.name!
       movement.color = category.color!
       movement.backgroundColor = category.backgroundColor!
+      movement.date = new Date(movement.time)
+      movement.memorandum ? movement.memorandum : movement.categoryName
       const movementCategory = groups.find(x => x.categoryName == movement.categoryName)
       if (movementCategory) {
         movementCategory.movements.push(movement)
