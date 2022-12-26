@@ -14,6 +14,7 @@ import { MovementService } from '../../services/movement.service';
 import { UserService } from '../../services/user.service';
 import { SelectYearMonthComponent } from '../select-year-mount/select-year-month.component';
 import { LanguageType } from '../../enums/language-type.enum';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-report-month',
@@ -46,11 +47,14 @@ export class ReportMonthComponent implements OnInit {
   protected numberType = NumberType.Spanish
   protected language = LanguageType.English
 
-  constructor(private readonly activatedRoute: ActivatedRoute,
-              private readonly movementService: MovementService,
-              protected location: Location,
-              private readonly userService: UserService,
-              private readonly dialog: MatDialog) { }
+  constructor(
+    private readonly activatedRoute: ActivatedRoute,
+    private readonly movementService: MovementService,
+    protected location: Location,
+    private readonly userService: UserService,
+    private readonly dialog: MatDialog,
+    private translateService: TranslateService
+  ) { }
   
   ngOnInit(): void {
     combineLatest([this.activatedRoute.params, this.activatedRoute.queryParams, this.userService.getUserConfiguration$().pipe(take(1))])
@@ -69,7 +73,6 @@ export class ReportMonthComponent implements OnInit {
     this.formGroup.controls['type'].valueChanges.subscribe(this.getMovementsByType)
   }
 
-  
   private getMovementsByType = (type: CategoryType): void => {
     this.loading = true
     this.movementService.getBySelectedMonth(type, this.yearMonth?.month!, this.yearMonth?.year!).pipe(take(1)).subscribe({
@@ -98,7 +101,7 @@ export class ReportMonthComponent implements OnInit {
       movement.color = category.color!
       movement.backgroundColor = category.backgroundColor!
       movement.date = new Date(movement.time)
-      movement.memorandum ? movement.memorandum : movement.categoryName
+      movement.memorandum = movement.memorandum ? movement.memorandum : movement.categoryName
       const movementCategory = groups.find(x => x.categoryName == movement.categoryName)
       if (movementCategory) {
         movementCategory.movements.push(movement)
@@ -117,9 +120,10 @@ export class ReportMonthComponent implements OnInit {
   }
 
   private labelMovements = (x: GroupMovementCategoryModel, amountMovements: number) => {
+    const aux = x.movements.map(x => x.amount).reduce((a, b) => a + b)
     let total = 0
     x.movements.forEach(x => total += x.amount)
-    return `${x.categoryName} ${((total * 100)/amountMovements).toFixed(1)}%`
+    return `${this.translateService.instant(x.categoryName)} ${((total * 100)/amountMovements).toFixed(1)}%`
   }
 
   protected openYearMonth = (): void => {

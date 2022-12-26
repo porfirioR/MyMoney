@@ -13,7 +13,7 @@ constructor() { }
 
   public static categoriesByType = (categories: CategoryModel[], type: CategoryType): CategoryModel[] => {
     categories.sort((a, b) => a.order - b.order)
-    return categories.filter(x => x.type === type)
+    return categories.filter(x => x.type.toLocaleLowerCase() ===  type.toLowerCase())
   }
 
   public static convertStringToMonthType = (value: string): MonthType => Number.parseInt(Object.entries(MonthType).find(([key, val]) => val === value)![0])

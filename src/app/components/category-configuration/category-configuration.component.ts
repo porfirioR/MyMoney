@@ -7,7 +7,6 @@ import { CategoryModel } from '../../models/category.model'
 import { CategoryEvent } from '../../models/category-event.model';
 import { HelperService } from '../../services/helper.service'
 import { UserService } from '../../services/user.service';
-import { TranslateService } from '@ngx-translate/core'
 
 @Component({
   selector: 'app-category-configuration',
@@ -50,11 +49,11 @@ export class CategoryConfigurationComponent implements OnInit {
 
   protected updateCategories = (result: CategoryEvent) => {
     if(result.categoryId) {
-      result.categoryType === CategoryType.income ?
+      result.categoryType.toLowerCase() === CategoryType.income.toLowerCase() ?
       this.incomeCategory = this.incomeCategory.filter(x => x.id !== result.categoryId) :
       this.expenseCategory = this.expenseCategory.filter(x => x.id !== result.categoryId)
     }
-    result.categoryType === CategoryType.income ?
+    result.categoryType.toLowerCase() === CategoryType.income.toLowerCase() ?
       this.incomeCategory = this.orderCategoryByActive(this.incomeCategory) :
       this.expenseCategory = this.orderCategoryByActive(this.expenseCategory)
   }

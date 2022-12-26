@@ -14,8 +14,14 @@
       <mat-icon>{{formGroup.get('icon')?.value}}</mat-icon>
     </button>
     <mat-form-field class="mat-from-field">
-        <mat-label translate>Category name</mat-label>
-        <input matInput formControlName="name" #inputCategoryName>
+      <mat-label translate>Category name</mat-label>
+      <input matInput formControlName="name" #inputCategoryName>
+      <mat-error *ngIf="formGroup.get('name')?.hasError('required')">
+        {{ 'message-error.required-category'| translate }}
+      </mat-error>
+      <mat-error *ngIf="formGroup.get('name')?.hasError('sameName')">
+        {{ 'message-error.repeating-category'| translate }}
+      </mat-error>
     </mat-form-field>
     <button mat-icon-button color="primary" [disabled]="formGroup.invalid" (click)="save()">
       <mat-icon>done</mat-icon>

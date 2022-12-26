@@ -24,6 +24,7 @@
       </mat-form-field>
     </mat-card-content>
     <div class="icon-list">
+      <span *ngIf="currentCategories.length ===0" translate>There are no categories</span>
       <span class="btn-block" *ngFor="let category of currentCategories">
         <button class="btn-icon" mat-fab customColor (click)="selectedIcon(category)"
           [color]="category.icon === formGroup.get('icon')?.value && category.id === formGroup.get('categoryId')?.value ? category.color : defaultColor"
@@ -44,14 +45,14 @@
         <mat-label translate>Memorandum</mat-label>
         <input matInput type="text" formControlName="memorandum" #memorandum>
         <mat-error *ngIf="formGroup.get('memorandum')?.hasError('maxlength')">
-          {{'message-error.exceed'| translate:{ count: 50, type: 'character'} }}
+          {{'message-error.exceed'| translate:{ count: 50, type: inputCharacter} }}
         </mat-error>
       </mat-form-field>
       <mat-form-field appearance="fill" class="w-100">
         <mat-label translate>Amount</mat-label>
         <input matInput type="text" formControlName="amount" [mask]="'separator.0'" thousandSeparator=".">
         <mat-error *ngIf="formGroup.get('amount')?.hasError('maxlength') || formGroup.get('amount')?.hasError('max')">
-          {{'message-error.exceed'| translate:{ count: 12, type: 'digit'} }}
+          {{'message-error.exceed'| translate:{ count: 12, type: inputDigit} }}
         </mat-error>
       </mat-form-field>
       <mat-form-field appearance="fill" class="w-100">

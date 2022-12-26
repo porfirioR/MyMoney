@@ -39,6 +39,7 @@
   "Language": "Idioma",
   "User": "Usuario",
   "Category": "Categoría",
+  "Category:": "Categoría:",
   "Export": "Exportar",
   "Import": "Importar",
   "Exit": "Salir",
@@ -128,7 +129,14 @@
   "Github page": "Página de Github",
   "Parking": "Estacionamiento",
   "Travels": "Viajes",
-  
+  "There are no categories": "No existen categorías",
+  "test": "prueba",
+  "digits": "dígitos",
+  "characters": "caracteres",
+  "Concert": "Concierto",
+  "Repair": "Reparar",
+  "Gas": "Combustible",
+
   "category-messages": {
     "question": "¿Está seguro de que desea eliminar esta categoría?. Todos los movimientos relacionados ({{length}}) con esta categoría serán eliminados",
     "deleted": "La categoría fue borrada",
@@ -139,7 +147,9 @@
     "add": "Agregar categoría de {{type}}"
   },
   "message-error": {
-    "exceed": "Value cannot exceed {{count}} {{type}}."
+    "exceed": "El valor no debe exceder {{count}} {{type}}",
+    "required-category": "La categoría es requerida",
+    "repeating-category": "Ya existe una categoría con el mismo nombre"
   },
   "movement-messages": {
     "title-delete": "Borrar movimiento",

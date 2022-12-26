@@ -35,6 +35,6 @@ export class LoginComponent implements OnInit {
       this.userService.setUser(userData)
       this.router.navigate([''])
     })
-    .catch((x) => console.log(x))
+    .catch((x) => console.error(x))
   };
 }

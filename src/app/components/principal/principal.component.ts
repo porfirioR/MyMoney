@@ -153,7 +153,7 @@ export class PrincipalComponent implements OnInit {
         dateMovement = new GroupDateMovementModel(date, [movement])
         this.groupDateMovementList.push(dateMovement)
       }
-      if (movement.type === CategoryType.income) {
+      if (movement.type.toLowerCase() === CategoryType.income.toLowerCase()) {
         dateMovement.income += movement.amount
         this.income += movement.amount
       } else {
