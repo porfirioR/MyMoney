@@ -5,8 +5,7 @@ export class NavItemModel {
   constructor(
     public icon: string,
     public name: string,
-    public action: ItemAction) {
-    
-  }
+    public action: ItemAction
+  ) { }
   
 }

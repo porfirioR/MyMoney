@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { SafeUrl } from '@angular/platform-browser';
 import { AuthService } from '../../services/auth.service';
@@ -16,10 +16,12 @@ import { NumberType } from '../../enums/number-type.enum';
   styleUrls: ['./side-nav.component.scss'],
 })
 export class SideNavComponent implements OnInit {
+  @Input() year!: number
   protected navItems: NavItemModel[] = [
     new NavItemModel('dashboard', 'Category', ItemAction.category),
     new NavItemModel('launch', 'Export', ItemAction.export),
     new NavItemModel('cloud_upload', 'Import', ItemAction.import),
+    new NavItemModel('description', 'Report', ItemAction.report),
     new NavItemModel('stars', 'About us', ItemAction.aboutUs),
     new NavItemModel('build', 'Configuration', ItemAction.configuration),
   ];

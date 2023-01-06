@@ -4,12 +4,12 @@
       <mat-icon>keyboard_backspace</mat-icon>
     </button>
     <span>{{'Report' | translate}}</span>
-    <button mat-stroked-button (click)="openYearMonth()">
-      {{yearMonth.shortMonth | translate}} {{yearMonth.year}}
+    <button mat-stroked-button (click)="selectYear()">
+      {{year}}
     </button>
   </mat-toolbar>
   <div class="header-height"></div>
-  <mat-card>
+  <!-- <mat-card>
     <mat-form-field class="w-100">
       <mat-select formControlName="type">
         <mat-option [value]="categoryType.expense">
@@ -20,6 +20,33 @@
         </mat-option>
       </mat-select>
     </mat-form-field>
+  </mat-card> -->
+  <mat-card class="mat-card-header" *ngIf="!loading">
+    <span class="amount-header">
+      <span matRipple
+        [matRippleCentered]="true"
+        [matRippleUnbounded]="true">
+        <label>
+          {{'Incomes' | translate}}
+        </label>
+        <p>{{income | number:'' : numberType}}</p>
+      </span>
+      <hr>
+      <span matRipple [matRippleCentered]="true"
+        [matRippleUnbounded]="true">
+        <label>
+          {{'Expenses' | translate}}
+        </label>
+        <p>{{expenses | number:'' : numberType}}</p>
+      </span>
+      <hr>
+      <span>
+        <label>
+          {{'Difference' | translate}}
+        </label>
+        <p>{{balance | number:'' : numberType}}</p>
+      </span>
+    </span>
   </mat-card>
   <ng-container *ngIf="!loading">
     <mat-card>

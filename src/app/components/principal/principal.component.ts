@@ -45,16 +45,17 @@ export class PrincipalComponent implements OnInit {
   protected numberType = NumberType.English
   private userCategories: UserCategoryModel[] = []
 
-  constructor(private readonly dialog: MatDialog,
-              private readonly categoryService: CategoryService,
-              private readonly movementService: MovementService,
-              private readonly userCategoryService: UserCategoryService,
-              private readonly userService: UserService,
-              private readonly configurationService: ConfigurationService,
-              private translate: TranslateService,
-              private readonly router: Router,
-              private dateAdapter: DateAdapter<Date>
-            ) {
+  constructor(
+    private readonly dialog: MatDialog,
+    private readonly categoryService: CategoryService,
+    private readonly movementService: MovementService,
+    private readonly userCategoryService: UserCategoryService,
+    private readonly userService: UserService,
+    private readonly configurationService: ConfigurationService,
+    private translate: TranslateService,
+    private readonly router: Router,
+    private dateAdapter: DateAdapter<Date>
+  ) {
     this.yearMonth = HelperService.getSearchMessage()
     onAuthStateChanged(getAuth(), (user) => {
       if (user) {

@@ -7,7 +7,6 @@ import { CategoryModel } from '../../models/category.model'
 import { CategoryEvent } from '../../models/category-event.model';
 import { HelperService } from '../../services/helper.service'
 import { UserService } from '../../services/user.service';
-import { TranslateService } from '@ngx-translate/core'
 
 @Component({
   selector: 'app-category-configuration',

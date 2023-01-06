@@ -1,27 +1,27 @@
-import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
-import { ChartConfiguration, ChartOptions, ChartType } from 'chart.js';
-import { combineLatest, take } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
+import { LanguageType } from '../../enums/language-type.enum';
 import { NumberType } from '../../enums/number-type.enum';
-import { CategoryType } from '../../enums/category-type.enum';
-import { GroupMovementCategoryModel } from '../../models/group-movement-category.model';
-import { MovementModel } from '../../models/movement.model';
-import { YearMonthModel } from '../../models/year-month-model';
 import { MovementService } from '../../services/movement.service';
 import { UserService } from '../../services/user.service';
+import { Location } from '@angular/common';
+import { FormControl, FormGroup } from '@angular/forms';
+import { CategoryType } from '../../enums/category-type.enum';
+import { ChartConfiguration, ChartOptions, ChartType } from 'chart.js';
+import { YearMonthModel } from '../../models/year-month-model';
+import { GroupMovementCategoryModel } from '../../models/group-movement-category.model';
+import { combineLatest, take } from 'rxjs';
+import { MovementModel } from '../../models/movement.model';
 import { SelectYearMonthComponent } from '../select-year-mount/select-year-month.component';
-import { LanguageType } from '../../enums/language-type.enum';
-import { TranslateService } from '@ngx-translate/core';
 
 @Component({
-  selector: 'app-report-month',
-  templateUrl: './report-month.component.html',
-  styleUrls: ['./report-month.component.scss']
+  selector: 'app-annual-report',
+  templateUrl: './annual-report.component.html',
+  styleUrls: ['./annual-report.component.scss']
 })
-export class ReportMonthComponent implements OnInit {
+export class AnnualReportComponent implements OnInit {
   protected chartData: ChartConfiguration<'doughnut'>['data'] = {
     labels: [],
     datasets: [
@@ -46,6 +46,10 @@ export class ReportMonthComponent implements OnInit {
   })
   protected numberType = NumberType.Spanish
   protected language = LanguageType.English
+  protected income: number = 0
+  protected expenses: number = 0
+  protected balance: number = 0
+  protected year: number = 2023
 
   constructor(
     private readonly activatedRoute: ActivatedRoute,
@@ -137,5 +141,9 @@ export class ReportMonthComponent implements OnInit {
         this.getMovementsByType(this.formGroup.controls['type'].value)
       }
     })
+  }
+
+  protected selectYear = (): void => {
+    
   }
 }

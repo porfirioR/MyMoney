@@ -64,6 +64,7 @@ import { EditCategoryComponent } from './components/edit-category/edit-category.
 import { AboutUsComponent } from './components/about-us/about-us.component';
 import { ConfigurationComponent } from './components/configuration/configuration.component';
 import { EnumArrayLoopPipe } from './directive/enum-array-loop.pipe';
+import { AnnualReportComponent } from './components/anual-report/annual-report.component';
 registerLocaleData(localEs, 'es')
 registerLocaleData(localeEn, 'en')
 
@@ -92,6 +93,7 @@ registerLocaleData(localeEn, 'en')
     ConfigurationComponent,
     CustomColorDirective,
     EnumArrayLoopPipe,
+    AnnualReportComponent
   ],
   imports: [
     BrowserModule,
