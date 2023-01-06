@@ -21,6 +21,7 @@ import { DialogDeleteComponent } from '../dialog-delete/dialog-delete.component'
 export class CategoryRowComponent implements OnInit, OnDestroy {
   @Input() category!: CategoryModel
   @Output() updateCategoryEvent = new EventEmitter<CategoryEvent>()
+  @Output() deletedCategoryEvent = new EventEmitter<CategoryEvent>()
   private ownerSystem = ResourceType.ownerSystem
 
   constructor(
@@ -55,7 +56,7 @@ export class CategoryRowComponent implements OnInit, OnDestroy {
           })).subscribe(result => {
             if (result) {
               if (this.category.owner === this.ownerSystem) {
-                const request = new UserCategoryModel(!active, this.category.id)
+                const request = new UserCategoryModel(!active, this.category.id, this.ownerSystem)
                 this.userCategoryService.upsertCategory(request)
                 .then(() => {
                   const categoryEvent = new CategoryEvent(this.category.type)
@@ -78,17 +79,15 @@ export class CategoryRowComponent implements OnInit, OnDestroy {
           result.unsubscribe()
         }
       })
-    } else {
-      if (this.category.owner === this.ownerSystem) {
-        const request = new UserCategoryModel(!active, this.category.id)
-        this.userCategoryService.upsertCategory(request)
-        .then(() => {
-          this.category.active = request.active
-          this.snackBar.open(this.translate.instant('category-messages.title-restarted'), '', { duration: 3000 })
-          const categoryEvent = new CategoryEvent(this.category.type)
-          this.updateCategoryEvent.emit(categoryEvent)
-        })
-      }
+    } else if (this.category.owner === this.ownerSystem) {
+      const request = new UserCategoryModel(!active, this.category.id, this.ownerSystem)
+      this.userCategoryService.upsertCategory(request)
+      .then(() => {
+        this.category.active = request.active
+        this.snackBar.open(this.translate.instant('category-messages.title-restarted'), '', { duration: 3000 })
+        const categoryEvent = new CategoryEvent(this.category.type)
+        this.updateCategoryEvent.emit(categoryEvent)
+      })
     }
   }
 

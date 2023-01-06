@@ -21,6 +21,9 @@ export class MovementDetailComponent implements OnInit {
   protected movement?: MovementModel
   protected numberType = NumberType.English
   protected language = LanguageType.English
+  protected load = false
+  private defaultColor = '#000000'
+  private defaultBackgroundColor = '#ffffff'
 
   constructor(
     private readonly location: Location,
@@ -39,12 +42,11 @@ export class MovementDetailComponent implements OnInit {
           this.exit()
         }
         const userCategory = userCategories.find(x => x.categoryId === this.movement!.categoryId)
-        if (userCategory) {
-          this.movement!.color = userCategory.color
-          this.movement!.backgroundColor = userCategory.backgroundColor
-        }
+        this.movement!.color = userCategory?.color ?? this.defaultColor
+        this.movement!.backgroundColor = userCategory?.backgroundColor ?? this.defaultBackgroundColor
         this.numberType = config.number
         this.language = config.language
+        this.load = true
       }, error: (e) => {
         console.error(e)
         throw e
@@ -69,9 +71,7 @@ export class MovementDetailComponent implements OnInit {
         this.movementService.delete(this.movement?.id!, this.movement?.type!).then(() => {
           this.snackBar.open(this.translate.instant('movement-messages.deleted'), '', { duration: 3000 })
           this.exit()
-        }).catch((reason: any) => {
-          this.snackBar.open(reason, '', { duration: 3000 })
-        })
+        }).catch((reason: any) => this.snackBar.open(reason, '', { duration: 3000 }))
       }
     })
   }

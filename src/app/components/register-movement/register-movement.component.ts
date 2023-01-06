@@ -13,6 +13,7 @@ import { CategoryModel } from '../../models/category.model';
 import { HelperService } from '../../services/helper.service';
 import { MovementService } from '../../services/movement.service';
 import { UserService } from '../../services/user.service';
+import { InputType } from 'src/app/enums/input-type.enum';
 
 @Component({
   selector: 'app-register-movement',
@@ -26,7 +27,8 @@ export class RegisterMovementComponent implements OnInit {
   protected defaultColor = '#000000'
   protected defaultBackgroundColor = '#ffffff'
   protected minDate = new Date('2015-01-01:00:00:00')
-
+  protected inputCharacter = InputType.Characters
+  protected inputDigit = InputType.Digits
   protected formGroup: FormGroup = new FormGroup({
     id: new FormControl<string | ''>(''),
     type: new FormControl<CategoryType>(this.categoryType.expense),
@@ -45,6 +47,7 @@ export class RegisterMovementComponent implements OnInit {
   protected title: string = 'Register movement'
   private categoryList!: CategoryModel[]
   private updateMovement?: MovementModel
+
   constructor(
     private readonly movementService: MovementService,
     protected location: Location,
@@ -65,18 +68,25 @@ export class RegisterMovementComponent implements OnInit {
           this.patchFormGroup(this.updateMovement)
         } else {
           this.currentCategories = HelperService.categoriesByType(this.categoryList, this.categoryType.expense)
-          const currentCategory = this.currentCategories[0]
-          this.formGroup.controls['icon'].setValue(currentCategory.icon)
-          this.formGroup.controls['categoryId'].setValue(currentCategory.id)
-          this.formGroup.patchValue({ color: currentCategory.color ?? this.defaultColor })
-          this.formGroup.patchValue({ backgroundColor: currentCategory.backgroundColor ?? this.defaultBackgroundColor})
+          if (this.currentCategories.length > 0) {
+            const currentCategory = this.currentCategories[0]
+            this.formGroup.controls['icon'].setValue(currentCategory.icon)
+            this.formGroup.controls['categoryId'].setValue(currentCategory.id)
+            this.formGroup.patchValue({ color: currentCategory.color ?? this.defaultColor })
+            this.formGroup.patchValue({ backgroundColor: currentCategory.backgroundColor ?? this.defaultBackgroundColor})
+          }
         }
 
         this.formGroup.controls['type'].valueChanges.subscribe({
-          next: (value) => {
-            this.currentCategories = HelperService.categoriesByType(this.categoryList, value)
+          next: (type) => {
+            this.currentCategories = HelperService.categoriesByType(this.categoryList, type)
             const currentCategory = this.currentCategories.find(x => x.id === this.formGroup.controls['categoryId'].value)
-            if(!currentCategory) {
+            if(currentCategory || this.currentCategories.length === 0) {
+              this.formGroup.controls['icon'].setValue('')
+              this.formGroup.controls['categoryId'].setValue('')
+              this.formGroup.controls['color'].setValue(this.defaultColor)
+              this.formGroup.controls['backgroundColor'].setValue(this.defaultBackgroundColor)
+            } else {
               this.formGroup.controls['icon'].setValue(this.currentCategories[0].icon)
               this.formGroup.controls['categoryId'].setValue(this.currentCategories[0].id)
               this.formGroup.controls['color'].setValue(this.currentCategories[0].color ?? this.defaultColor)
@@ -103,6 +113,8 @@ export class RegisterMovementComponent implements OnInit {
         throw e
       }
     })
+    this.inputCharacter = this.translate.instant(InputType.Characters)
+    this.inputDigit = this.translate.instant(InputType.Digits)
   }
 
   protected selectedIcon = (category: CategoryModel) => {
@@ -149,7 +161,7 @@ export class RegisterMovementComponent implements OnInit {
       }
       this.snackBar.open(this.translate.instant(`Movement was ${this.movementId ? 'updated' : 'created'}`), '', { duration: 3000 })
       this.location.back()
-    }).catch((error) => console.log(error))
+    }).catch((error) => console.error(error))
   }
 
   private patchFormGroup = (movement: MovementModel) => {

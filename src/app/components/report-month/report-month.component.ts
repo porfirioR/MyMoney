@@ -101,7 +101,7 @@ export class ReportMonthComponent implements OnInit {
       movement.color = category.color!
       movement.backgroundColor = category.backgroundColor!
       movement.date = new Date(movement.time)
-      movement.memorandum ? movement.memorandum : movement.categoryName
+      movement.memorandum = movement.memorandum ? movement.memorandum : movement.categoryName
       const movementCategory = groups.find(x => x.categoryName == movement.categoryName)
       if (movementCategory) {
         movementCategory.movements.push(movement)
@@ -120,6 +120,7 @@ export class ReportMonthComponent implements OnInit {
   }
 
   private labelMovements = (x: GroupMovementCategoryModel, amountMovements: number) => {
+    const aux = x.movements.map(x => x.amount).reduce((a, b) => a + b)
     let total = 0
     x.movements.forEach(x => total += x.amount)
     return `${this.translate.instant(x.categoryName)} ${((total * 100)/amountMovements).toFixed(1)}%`

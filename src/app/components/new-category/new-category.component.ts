@@ -14,6 +14,7 @@ import { UserCategoryModel } from '../../models/user-category.model';
 import { CategoryService } from '../../services/category.service';
 import { UserCategoryService } from '../../services/user-category.service';
 import { UserService } from '../../services/user.service';
+import { combineLatest, debounceTime, filter } from 'rxjs';
 
 @Component({
   selector: 'app-new-category',
@@ -23,34 +24,35 @@ import { UserService } from '../../services/user.service';
 export class NewCategoryComponent implements OnInit {
   @ViewChild("inputCategoryName") inputCategoryName?: ElementRef;
   protected title!: string
+  private categoryNames: string[] = []
   protected currentCategory: NewCategoryModel = new NewCategoryModel(
     CategoryType.income,
     [
       new NewCategoryGroupModel(CategoryGroupIconType.Food, [
         IconType.FastFood, IconType.Cake, IconType.Coffee, IconType.Pizza,
         IconType.Restaurant, IconType.Smoking, IconType.RestaurantMenu, IconType.Bar,
-        IconType.SportsBar, IconType.BakeryDining
+        IconType.SportsBar, IconType.BakeryDining, IconType.RoomService
       ]),
       new NewCategoryGroupModel(CategoryGroupIconType.Transport, [
         IconType.Gas, IconType.Train, IconType.Toys, IconType.Airport,
         IconType.Bike, IconType.Bus, IconType.Bus2, IconType.Car, IconType.Taxi,
-        IconType.Shipping
+        IconType.Shipping, IconType.DirectionsBoat
       ]),
       new NewCategoryGroupModel(CategoryGroupIconType.Shopping, [
         IconType.ShoppingCart, IconType.Mall, IconType.CreditCard, IconType.Offer,
         IconType.Monetization, IconType.Store, IconType.Savings, IconType.Receipt,
         IconType.CurrencyExchange, IconType.Luggage, IconType.Payment, IconType.Loyalty,
-        IconType.Wallet, IconType.BalanceWallet
+        IconType.Wallet, IconType.BalanceWallet, IconType.Key
       ]),
       new NewCategoryGroupModel(CategoryGroupIconType.Entertainment, [
         IconType.Movie, IconType.Casino, IconType.Pool, IconType.Golf, IconType.Fitness,
         IconType.Sports, IconType.Tennis, IconType.Surfing, IconType.Baseball,
-        IconType.Roller
+        IconType.Roller, IconType.Audiotrack, IconType.ColorLens, IconType.HotTub
       ]),
       new NewCategoryGroupModel(CategoryGroupIconType.Maps, [
         IconType.Beach, IconType.Ice, IconType.Mountain, IconType.Place,
         IconType.MyLocation, IconType.Map, IconType.Event, IconType.Parking,
-        IconType.Church, IconType.Flag
+        IconType.Church, IconType.Flag, IconType.Cloud
       ]),
       new NewCategoryGroupModel(CategoryGroupIconType.Medical, [
         IconType.Hospital, IconType.Pharmacy, IconType.Recycling, IconType.Mask
@@ -66,16 +68,19 @@ export class NewCategoryComponent implements OnInit {
         IconType.Camera, IconType.Sync, IconType.Wifi, IconType.Sms,
         IconType.Sd, IconType.Power, IconType.Phone, IconType.Bluetooth,
         IconType.Post, IconType.Phone2, IconType.Encryption, IconType.Security,
-        IconType.Rotate, IconType.Headphones, IconType.PhoneAndroid, IconType.Keyboard
+        IconType.Rotate, IconType.Headphones, IconType.PhoneAndroid, IconType.Keyboard,
+        IconType.Cast, IconType.CastConnected, IconType.Memory
       ]),
       new NewCategoryGroupModel(CategoryGroupIconType.Education, [
         IconType.School, IconType.City, IconType.Library,
         IconType.Book, IconType.Poll, IconType.Business, IconType.Inclusive,
-        IconType.Pdf, IconType.Attach_file, IconType.Calculate
-      ]),
+        IconType.Pdf, IconType.Attach_file, IconType.Calculate,
+        IconType.NewFolder, IconType.Folder
+      ])
     ]
   )
   protected formGroup!: FormGroup
+  protected sameName: boolean = false;
 
   constructor(
     protected location: Location,
@@ -85,11 +90,11 @@ export class NewCategoryComponent implements OnInit {
     private readonly userCategoryService: UserCategoryService,
     private userService: UserService,
     private translateService: TranslateService,
-    ) { }
+  ) { }
 
   ngOnInit() {
-    this.route.params.subscribe({
-      next: (value) => {
+    combineLatest([this.route.params, this.userService.getAllCategories$()]).subscribe({
+      next: ([value, categories]) => {
         const type = value['type']
         this.title = this.translateService.instant('category-messages.add', {type: this.translateService.instant(type)})
         this.currentCategory
@@ -100,6 +105,15 @@ export class NewCategoryComponent implements OnInit {
           active: new FormControl(true),
           owner: new FormControl(this.userService.getUserEmail())
         })
+        this.categoryNames = categories.map(x => x.name.toLowerCase())
+      }
+    })
+    this.formGroup.controls['name'].valueChanges.pipe(debounceTime(2000), filter(x => x.length > 3)).subscribe({
+      next: (name) => {
+        if (this.categoryNames.includes(name.toLowerCase()) || this.categoryNames.includes(`${name.toLowerCase()} ${this.translateService.instant('(user)')}`)) {
+          this.formGroup.controls['name'].setErrors({'sameName': true});
+          this.formGroup.controls['name'].markAsTouched()
+        }
       }
     })
   }
@@ -116,7 +130,7 @@ export class NewCategoryComponent implements OnInit {
   protected save = () => {
     const category: CategoryModel = this.formGroup.getRawValue()
     this.categoryService.create(category).then((result) => {
-      const userCategory = new UserCategoryModel(category.active, result.id)
+      const userCategory = new UserCategoryModel(category.active, result.id, category.owner)
       this.userCategoryService.upsertCategory(userCategory).then((response) => {
         category.id = response!.id
         this.snackBar.open(this.translateService.instant('category-messages.created'), '', { duration: 3000 })

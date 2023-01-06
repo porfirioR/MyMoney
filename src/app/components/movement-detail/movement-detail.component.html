@@ -7,36 +7,38 @@
     <mat-icon>delete</mat-icon>
   </button>
 </mat-toolbar>
-<mat-card *ngIf="movement">
-  <span class="mat-card-header">
-    <button mat-icon-button customColor
-            [color]="movement!.color"
-            [backgroundColor]="movement!.backgroundColor">
-      <mat-icon>{{movement.icon}}</mat-icon>
-    </button>
-    <span>{{movement.categoryName | translate}}</span>
-    <button mat-icon-button (click)="editMovement(movement.id)">
-      <mat-icon>edit</mat-icon>
-    </button>
-  </span>
-</mat-card>
-<mat-card *ngIf="movement">
-  <mat-card-content>
-    <p>
-      <label translate>Memorandum: </label>
-      <span>{{movement.memorandum! | translate}}</span>
-    </p>
-    <p>
-      <label translate>Category: </label>
-      <span translate>{{movement.type}}</span>
-    </p>
-    <p>
-      <label translate>Date: </label>
-      <span>{{movement.date | date: 'dd/MM/YYY E': '': language}}</span>
-    </p>
-    <p>
-      <label translate>Amount: </label>
-      <span>{{movement.amount | number:'' : numberType}}</span>
-    </p>
-  </mat-card-content>
-</mat-card>
+<ng-container *ngIf="load">
+  <mat-card>
+    <span class="mat-card-header">
+      <button mat-icon-button customColor
+              [color]="movement!.color"
+              [backgroundColor]="movement!.backgroundColor">
+        <mat-icon>{{movement!.icon}}</mat-icon>
+      </button>
+      <span>{{movement!.categoryName | translate}}</span>
+      <button mat-icon-button (click)="editMovement(movement!.id)">
+        <mat-icon>edit</mat-icon>
+      </button>
+    </span>
+  </mat-card>
+  <mat-card>
+    <mat-card-content>
+      <p>
+        <label translate>Memorandum: </label>
+        <span>{{movement!.memorandum! | translate}}</span>
+      </p>
+      <p>
+        <label translate>Category: </label>
+        <span translate>{{movement!.type}}</span>
+      </p>
+      <p>
+        <label translate>Date: </label>
+        <span>{{movement!.date | date: 'dd/MM/YYY E': '': language}}</span>
+      </p>
+      <p>
+        <label translate>Amount: </label>
+        <span>{{movement!.amount | number:'' : numberType}}</span>
+      </p>
+    </mat-card-content>
+  </mat-card>
+</ng-container>

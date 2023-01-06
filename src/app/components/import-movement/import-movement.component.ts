@@ -158,7 +158,7 @@ export class ImportMovementComponent implements OnInit {
     } else if(!Number.isInteger(day) || day < 0 || day > 31 || (![1, 3, 5, 7, 8, 10, 12].includes(month) && day > 30)) {
       invalid = true
       errors.push(this.translate.instant('import-movement-messages.invalid-day', {day: day, index: index}))
-    } else if (CategoryType.expense !== importMovement.type && CategoryType.income !== importMovement.type) {
+    } else if (CategoryType.expense.toLowerCase() !== importMovement.type?.toLowerCase() && CategoryType.income.toLowerCase() !== importMovement.type?.toLowerCase()) {
       invalid = true
       errors.push(this.translate.instant('import-movement-messages.invalid-type', {type: importMovement.type, index: index}))
     }

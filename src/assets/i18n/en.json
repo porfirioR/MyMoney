@@ -10,6 +10,11 @@
     "updated": "Category was updated",
     "add": "Add {{type}} category"
   },
+  "message-error": {
+    "exceed": "Value cannot exceed {{count}} {{type}}",
+    "required-category": "The category is required",
+    "repeating-category": "A category with the same name already exists"
+  },
   "movement-messages": {
     "title-delete": "Delete movement",
     "question-delete": "Are you sure you want to remove this move?",
