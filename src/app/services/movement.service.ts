@@ -27,6 +27,18 @@ export class MovementService {
     return collectionData<MovementModel>(ref as Query<MovementModel>, { idField: 'id' })
   }
 
+  public getBySelectedYear = (category: CategoryType, year: number): Observable<MovementModel[]> => {
+    const startDate = new Date(year, 0, 1)
+    startDate.setHours(0, 0, 0)
+    const startTime = startDate.getTime()
+    const endDate = new Date(year, 11, 31)
+    endDate.setHours(23, 59, 59)
+    const endTime = endDate.getTime()
+
+    const ref = query(this.getReference(category), where('time', '>=', startTime), where('time', '<=', endTime), orderBy('time'))
+    return collectionData<MovementModel>(ref as Query<MovementModel>, { idField: 'id' })
+  }
+
   public create = (model: MovementModel): Promise<DocumentReference> => {
     return addDoc(this.getReference(model.type), model)
   }

@@ -136,7 +136,8 @@
   "Concert": "Concierto",
   "Repair": "Reparar",
   "Gas": "Combustible",
-
+  "Annual Report": "Reporte anual",
+  
   "category-messages": {
     "question": "¿Está seguro de que desea eliminar esta categoría?. Todos los movimientos relacionados ({{length}}) con esta categoría serán eliminados",
     "deleted": "La categoría fue borrada",

@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { LanguageType } from '../../enums/language-type.enum';
 import { NumberType } from '../../enums/number-type.enum';
@@ -12,9 +12,10 @@ import { CategoryType } from '../../enums/category-type.enum';
 import { ChartConfiguration, ChartOptions, ChartType } from 'chart.js';
 import { YearMonthModel } from '../../models/year-month-model';
 import { GroupMovementCategoryModel } from '../../models/group-movement-category.model';
-import { combineLatest, take } from 'rxjs';
+import { combineLatest, filter, forkJoin, mergeAll, Observable, switchMap, take } from 'rxjs';
 import { MovementModel } from '../../models/movement.model';
 import { SelectYearMonthComponent } from '../select-year-mount/select-year-month.component';
+import { MonthType } from 'src/app/enums/month-type.enum';
 
 @Component({
   selector: 'app-annual-report',
@@ -22,6 +23,8 @@ import { SelectYearMonthComponent } from '../select-year-mount/select-year-month
   styleUrls: ['./annual-report.component.scss']
 })
 export class AnnualReportComponent implements OnInit {
+  @Input() year: number = new Date().getFullYear()
+  private minValidYear = 2015
   protected chartData: ChartConfiguration<'doughnut'>['data'] = {
     labels: [],
     datasets: [
@@ -37,22 +40,22 @@ export class AnnualReportComponent implements OnInit {
   }
   protected chartLegend = true;
   protected chartType: ChartType = 'doughnut'
-  protected loading: boolean = false
+  protected loading: boolean = true
   protected yearMonth!: YearMonthModel
   protected categoryType = CategoryType
   protected groupMovementCategoryModel!: GroupMovementCategoryModel[]
   protected formGroup: FormGroup = new FormGroup({
     type: new FormControl<CategoryType>(this.categoryType.expense),
+    year: new FormControl<number>(this.year)
   })
   protected numberType = NumberType.Spanish
   protected language = LanguageType.English
   protected income: number = 0
   protected expenses: number = 0
   protected balance: number = 0
-  protected year: number = 2023
+  protected yearRange: number[] = []
 
   constructor(
-    private readonly activatedRoute: ActivatedRoute,
     private readonly movementService: MovementService,
     protected location: Location,
     private readonly userService: UserService,
@@ -61,40 +64,36 @@ export class AnnualReportComponent implements OnInit {
   ) { }
   
   ngOnInit(): void {
-    combineLatest([this.activatedRoute.params, this.activatedRoute.queryParams, this.userService.getUserConfiguration$().pipe(take(1))])
-    .subscribe({
-      next: ([params, queryParams, config]) => {
-        this.yearMonth = queryParams as YearMonthModel
-        const type = params['type']
-        this.formGroup.controls['type'].setValue(type)
-        this.getMovementsByType(type)
-        this.language = config.language
-      }, error: (e) => {
-        console.error(e)
-        throw e;
-      }
-    })
-    this.formGroup.controls['type'].valueChanges.subscribe(this.getMovementsByType)
-  }
-
-  private getMovementsByType = (type: CategoryType): void => {
+    const diffYear = this.year - this.minValidYear
+    const initialYear = this.year === this.minValidYear || diffYear > 8 ? this.minValidYear : this.year - diffYear
+    this.yearRange = [...Array(15).keys()].map(x => initialYear + x)
     this.loading = true
-    this.movementService.getBySelectedMonth(type, this.yearMonth?.month!, this.yearMonth?.year!).pipe(take(1)).subscribe({
-      next: (movements) => {
+    this.userService.getUserConfiguration$().pipe(take(1)).pipe(switchMap(config => {
+      this.language = config.language
+      return combineLatest(this.movementService.getBySelectedYear(CategoryType.expense, this.year), this.movementService.getBySelectedYear(CategoryType.income, this.year))
+    })).pipe(take(1))
+    .subscribe({
+      next: ([expense, income]) => {
+        const movements = [...expense, ...income]
         movements.sort((a, b) => a.categoryId.localeCompare(b.categoryId))
         this.groupMovementCategoryModel = this.groupByCategoryName(movements)
         let amountMovements = 0
         movements.forEach(x => amountMovements += x.amount)
         this.doughnutChartLabels = this.groupMovementCategoryModel.map(x => this.labelMovements(x, amountMovements))
         this.chartData.labels = this.doughnutChartLabels
-        this.chartData.datasets[0].label = type
+        // this.chartData.datasets[0].label = type
         this.chartData.datasets[0].data = this.groupMovementCategoryModel.map(x => x.amount)
         this.loading = false
       }, error: (e) => {
         this.loading = false
-        throw e
+        console.error(e)
+        throw e;
       }
     })
+  }
+
+  protected yearChanges = (selectedYear: number) => {
+    this.formGroup.controls['year'].setValue(selectedYear)
   }
 
   private groupByCategoryName = (movements: MovementModel[]): GroupMovementCategoryModel[] => {
@@ -129,21 +128,4 @@ export class AnnualReportComponent implements OnInit {
     return `${this.translate.instant(x.categoryName)} ${((total * 100)/amountMovements).toFixed(1)}%`
   }
 
-  protected openYearMonth = (): void => {
-    const dialogRef = this.dialog.open(SelectYearMonthComponent, {
-      width: '400px',
-      data: this.yearMonth
-    })
-
-    dialogRef.afterClosed().pipe(take(1)).subscribe((result: YearMonthModel) => {
-      if (result && (this.yearMonth?.month !== result.month || this.yearMonth?.year !== result.year)) {
-        this.yearMonth = result;
-        this.getMovementsByType(this.formGroup.controls['type'].value)
-      }
-    })
-  }
-
-  protected selectYear = (): void => {
-    
-  }
 }

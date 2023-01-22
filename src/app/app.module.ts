@@ -64,7 +64,7 @@ import { EditCategoryComponent } from './components/edit-category/edit-category.
 import { AboutUsComponent } from './components/about-us/about-us.component';
 import { ConfigurationComponent } from './components/configuration/configuration.component';
 import { EnumArrayLoopPipe } from './directive/enum-array-loop.pipe';
-import { AnnualReportComponent } from './components/anual-report/annual-report.component';
+import { AnnualReportComponent } from './components/annual-report/annual-report.component';
 registerLocaleData(localEs, 'es')
 registerLocaleData(localeEn, 'en')
 

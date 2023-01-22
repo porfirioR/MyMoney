@@ -10,9 +10,9 @@
 <mat-divider></mat-divider>
 <div class="months">
   <button class="btn-month" mat-mini-fab
-      (click)="changeMonth(month)"
-      *ngFor="let month of months | enumArrayLoop"
-      [color]="month === formGroup.get('month')?.value && formGroup.get('year')?.value === formGroup.get('selectedYear')?.value? 'primary': ''">
+    (click)="changeMonth(month)"
+    *ngFor="let month of months | enumArrayLoop"
+    [color]="month === formGroup.get('month')?.value && formGroup.get('year')?.value === formGroup.get('selectedYear')?.value? 'primary': ''">
     {{month | translate}}
   </button>
 </div>

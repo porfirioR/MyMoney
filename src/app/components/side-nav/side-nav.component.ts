@@ -21,7 +21,7 @@ export class SideNavComponent implements OnInit {
     new NavItemModel('dashboard', 'Category', ItemAction.category),
     new NavItemModel('launch', 'Export', ItemAction.export),
     new NavItemModel('cloud_upload', 'Import', ItemAction.import),
-    new NavItemModel('description', 'Report', ItemAction.report),
+    new NavItemModel('assignment', 'Annual Report', ItemAction.annualReport),
     new NavItemModel('stars', 'About us', ItemAction.aboutUs),
     new NavItemModel('build', 'Configuration', ItemAction.configuration),
   ];

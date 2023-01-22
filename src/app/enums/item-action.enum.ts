@@ -2,7 +2,7 @@ export enum ItemAction {
   category = 'category',
   export = 'export',
   import = 'import',
-  report = 'Report',
+  annualReport = 'annual-report',
   aboutUs = 'about-us',
   configuration = 'configuration'
 }
