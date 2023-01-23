@@ -1,10 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { Location } from '@angular/common';
 import { LanguageType } from '../../enums/language-type.enum';
 import { NumberType } from '../../enums/number-type.enum';
 import { MovementService } from '../../services/movement.service';
 import { UserService } from '../../services/user.service';
-import { Location } from '@angular/common';
 import { FormControl, FormGroup } from '@angular/forms';
 import { CategoryType } from '../../enums/category-type.enum';
 import { ChartConfiguration } from 'chart.js';
@@ -12,7 +12,7 @@ import { GroupMovementCategoryModel } from '../../models/group-movement-category
 import { combineLatest, switchMap, take } from 'rxjs';
 import { MovementModel } from '../../models/movement.model';
 import { ChartModel } from '../../models/chart.model';
-import { MonthType } from 'src/app/enums/month-type.enum';
+import { MonthType } from '../../enums/month-type.enum';
 
 @Component({
   selector: 'app-annual-report',
@@ -49,13 +49,13 @@ export class AnnualReportComponent implements OnInit {
     datasets: [{
       type: 'bar',
       label: this.translate.instant(CategoryType.expense),
-      data: [80, 120, 15, 40, 170, 100, 40, 145, 150, 170, 100, 95],
+      data: [],
       borderColor: this.redColor,
       backgroundColor: 'rgba(255, 99, 132, 0.2)'
     }, {
       type: 'bar',
       label: this.translate.instant(CategoryType.income),
-      data: [120, 150, 170, 100, 40, 145, 180, 30, 125, 75, 95, 45],
+      data: [],
       borderColor: this.greenColor,
       backgroundColor: 'rgba(75, 192, 192, 0.2)',
       hoverBackgroundColor: this.greenColor,
@@ -172,7 +172,7 @@ export class AnnualReportComponent implements OnInit {
   private subscribeMovements = (expense: MovementModel[], income: MovementModel[]) => {
     this.prepareChartDataForExpenseCategory(expense)
     this.prepareChartDataForIncomeCategory(income)
-
+    this.prepareMonthsChartData(expense, income)
     this.globalChartData.labels = [this.translate.instant(CategoryType.income), this.translate.instant(CategoryType.expense)]
     this.globalChartData.datasets[0].label = this.translate.instant('General Balance')
     this.globalChartData.datasets[0].data = [this.incomeAmount, this.expenseAmount]
@@ -200,6 +200,22 @@ export class AnnualReportComponent implements OnInit {
     this.expenseChartData.labels = this.expenseChart.labels
     this.expenseChartData.datasets[0].label = CategoryType.expense
     this.expenseChartData.datasets[0].data = this.expenseGroupMovementCategoryModel.map(x => x.amount)
+  }
+
+  private prepareMonthsChartData = (expense: MovementModel[], income: MovementModel[]) => {
+    Object.values(MonthType).filter((v) => !isNaN(Number(v))).map((x)  => {
+      const month = +x
+      const startDate = new Date(this.formGroup.controls['year'].value, month, 1)
+      startDate.setHours(0, 0, 0)
+      const startTime = startDate.getTime()
+      const endDate = new Date(this.formGroup.controls['year'].value, month + 1, 0)
+      endDate.setHours(23, 59, 59)
+      const endTime = endDate.getTime()
+      const incomeByMonth = income.filter(x => x.time >= startTime && x.time <= endTime)
+      const expensesByMonth = expense.filter(x => x.time >= startTime && x.time <= endTime)
+      this.monthsChartData.datasets[0].data[month] = expensesByMonth.reduce((a, b) => a + b.amount, 0)
+      this.monthsChartData.datasets[1].data[month] = incomeByMonth.reduce((a, b) => a + b.amount, 0)
+    })
   }
 
   protected yearChanges = (selectedYear: number) => {
