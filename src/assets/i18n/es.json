@@ -137,7 +137,9 @@
   "Repair": "Reparar",
   "Gas": "Combustible",
   "Annual Report": "Reporte anual",
-  
+  "General Balance": "Balance general",
+  "Expense details": "Detalles de gastos",
+  "Income details": "Detalles de ingresos",
   "category-messages": {
     "question": "¿Está seguro de que desea eliminar esta categoría?. Todos los movimientos relacionados ({{length}}) con esta categoría serán eliminados",
     "deleted": "La categoría fue borrada",

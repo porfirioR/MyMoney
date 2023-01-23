@@ -1,0 +1,46 @@
+.mat-card-header {
+  display: flex;
+  flex-direction: column;
+  margin: 1rem;
+}
+
+.mat-card, .mat-accordion { 
+  margin: 1rem;
+}
+
+.no-margins {
+  margin: 0 !important
+}
+
+.mat-expansion-panel {
+  margin: 0 1rem;
+}
+
+ul {
+  padding-inline-start: 10px;
+}
+
+li {
+  margin-bottom: 0.3rem;
+}
+
+.icon-rotate-270 {
+  -webkit-transform: rotate(270deg);
+  -moz-transform: rotate(270deg);
+  -ms-transform: rotate(270deg);
+  -o-transform: rotate(270deg);
+  transform: rotate(270deg);
+}
+
+.flex-center {
+  display: flex;
+  align-items: center;
+}
+
+.mat-mini-fab {
+  box-shadow: unset;
+}
+
+canvas {
+  padding-bottom: 1rem;
+}
