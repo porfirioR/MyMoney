@@ -151,10 +151,10 @@ export class AnnualReportComponent implements OnInit {
   ) { }
   
   ngOnInit(): void {
+    this.loading = true
     const diffYear = this.year - this.minValidYear
     const initialYear = this.year === this.minValidYear || diffYear > 8 ? this.minValidYear : this.year - diffYear
     this.yearRange = [...Array(15).keys()].map(x => initialYear + x)
-    this.loading = true
     this.userService.getUserConfiguration$().pipe(take(1)).pipe(switchMap(config => {
       this.language = config.language
       return this.getMovementForCategoriesByYear(this.year)
@@ -203,8 +203,16 @@ export class AnnualReportComponent implements OnInit {
   }
 
   protected yearChanges = (selectedYear: number) => {
+    this.loading = true
     this.formGroup.controls['year'].setValue(selectedYear)
-    this.getMovementForCategoriesByYear(selectedYear).subscribe()
+    this.getMovementForCategoriesByYear(selectedYear).subscribe({
+      next: ([expense, income]) => this.subscribeMovements(expense, income),
+      error: (e) => {
+        this.loading = false
+        console.error(e)
+        throw e;
+      }
+    })
   }
 
   private groupByCategoryName = (movements: MovementModel[]): GroupMovementCategoryModel[] => {
