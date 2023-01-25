@@ -47,7 +47,8 @@ export class SideNavComponent implements OnInit {
   }
 
   protected performItemAction = (action: ItemAction) => {
-    this.router.navigate([action])
+    const url = action === ItemAction.annualReport ? `${action}/${this.year}` : action
+    this.router.navigate([url])
   }
 
   protected logout = () => {

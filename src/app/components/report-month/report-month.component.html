@@ -46,8 +46,9 @@
           <li *ngFor="let movement of group.movements" class="row">
             <span>
               <strong>
-                - {{movement.date | date: 'dd/MM': '': language}} {{movement.memorandum! | translate}}
+                - {{movement.date | date: 'dd/MM': '': language}}
               </strong>
+              {{movement.memorandum! | translate}}
             </span>
             <span>
               {{movement.amount | number:'' : numberType}}

@@ -1,11 +1,11 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 import { Location } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import { LanguageType } from '../../enums/language-type.enum';
 import { NumberType } from '../../enums/number-type.enum';
 import { MovementService } from '../../services/movement.service';
 import { UserService } from '../../services/user.service';
-import { FormControl, FormGroup } from '@angular/forms';
 import { CategoryType } from '../../enums/category-type.enum';
 import { ChartConfiguration } from 'chart.js';
 import { GroupMovementCategoryModel } from '../../models/group-movement-category.model';
@@ -20,8 +20,8 @@ import { MonthType } from '../../enums/month-type.enum';
   styleUrls: ['./annual-report.component.scss']
 })
 export class AnnualReportComponent implements OnInit {
-  @Input() year: number = new Date().getFullYear()
   private minValidYear = 2015
+  protected year: number = new Date().getFullYear()
   protected redColor = 'rgb(255, 99, 132)'
   protected greenColor = 'rgb(75, 192, 192)'
   protected incomeChartData: ChartConfiguration<'doughnut'>['data'] = {
@@ -33,7 +33,6 @@ export class AnnualReportComponent implements OnInit {
       }
     ]
   }
-
   protected expenseChartData: ChartConfiguration<'doughnut'>['data'] = {
     labels: [],
     datasets: [
@@ -43,7 +42,6 @@ export class AnnualReportComponent implements OnInit {
       }
     ]
   }
-
   protected monthsChartData: ChartConfiguration['data'] = {
     labels: Object.keys(MonthType).filter((v) => isNaN(Number(v))).map(x => this.translate.instant(x)),
     datasets: [{
@@ -62,7 +60,6 @@ export class AnnualReportComponent implements OnInit {
       hoverBorderColor: this.greenColor
     }]
   }
-
   protected globalChartData: ChartConfiguration<'bar'>['data'] = {
     labels: [],
     datasets: [
@@ -108,7 +105,6 @@ export class AnnualReportComponent implements OnInit {
       }
     ]
   }
-
   protected globalChart = new ChartModel('bar', [], {
     responsive: true,
     scales: {
@@ -117,7 +113,6 @@ export class AnnualReportComponent implements OnInit {
       }
     }
   }, true)
-
   protected monthsChart = new ChartModel('scatter', [], {
     responsive: true,
     scales: {
@@ -125,17 +120,22 @@ export class AnnualReportComponent implements OnInit {
         beginAtZero: false
       },
     },
-    indexAxis: 'y'
+    indexAxis: 'y',
+    plugins: {
+      legend: {
+        position: 'top',
+      },
+      title: {
+        display: true,
+        text: this.translate.instant('Chart separated by months')
+      }
+    }
   }, true)
   protected incomeChart = new ChartModel('doughnut', [], { responsive: true }, true)
   protected expenseChart = new ChartModel('doughnut', [], { responsive: true }, true)
   protected loading: boolean = true
   protected incomeGroupMovementCategoryModel!: GroupMovementCategoryModel[]
   protected expenseGroupMovementCategoryModel!: GroupMovementCategoryModel[]
-  protected formGroup: FormGroup = new FormGroup({
-    type: new FormControl<CategoryType>(CategoryType.expense),
-    year: new FormControl<number>(this.year)
-  })
   protected numberType = NumberType.Spanish
   protected language = LanguageType.English
   protected incomeAmount: number = 0
@@ -147,10 +147,12 @@ export class AnnualReportComponent implements OnInit {
     private readonly movementService: MovementService,
     protected location: Location,
     private readonly userService: UserService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private route: ActivatedRoute
   ) { }
   
   ngOnInit(): void {
+    this.year = +this.route.snapshot.params['year']
     this.loading = true
     const diffYear = this.year - this.minValidYear
     const initialYear = this.year === this.minValidYear || diffYear > 8 ? this.minValidYear : this.year - diffYear
@@ -170,6 +172,9 @@ export class AnnualReportComponent implements OnInit {
   }
 
   private subscribeMovements = (expense: MovementModel[], income: MovementModel[]) => {
+    this.expenseAmount = 0
+    this.incomeAmount = 0
+    this.balance = 0
     this.prepareChartDataForExpenseCategory(expense)
     this.prepareChartDataForIncomeCategory(income)
     this.prepareMonthsChartData(expense, income)
@@ -205,10 +210,10 @@ export class AnnualReportComponent implements OnInit {
   private prepareMonthsChartData = (expense: MovementModel[], income: MovementModel[]) => {
     Object.values(MonthType).filter((v) => !isNaN(Number(v))).map((x)  => {
       const month = +x
-      const startDate = new Date(this.formGroup.controls['year'].value, month, 1)
+      const startDate = new Date(this.year, month, 1)
       startDate.setHours(0, 0, 0)
       const startTime = startDate.getTime()
-      const endDate = new Date(this.formGroup.controls['year'].value, month + 1, 0)
+      const endDate = new Date(this.year, month + 1, 0)
       endDate.setHours(23, 59, 59)
       const endTime = endDate.getTime()
       const incomeByMonth = income.filter(x => x.time >= startTime && x.time <= endTime)
@@ -220,8 +225,8 @@ export class AnnualReportComponent implements OnInit {
 
   protected yearChanges = (selectedYear: number) => {
     this.loading = true
-    this.formGroup.controls['year'].setValue(selectedYear)
-    this.getMovementForCategoriesByYear(selectedYear).subscribe({
+    this.year = selectedYear
+    this.getMovementForCategoriesByYear(selectedYear).pipe(take(1)).subscribe({
       next: ([expense, income]) => this.subscribeMovements(expense, income),
       error: (e) => {
         this.loading = false

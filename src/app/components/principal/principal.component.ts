@@ -133,7 +133,7 @@ export class PrincipalComponent implements OnInit {
     this.loading = true
     const expenseList$ = this.movementService.getBySelectedMonth(CategoryType.expense, this.yearMonth?.month!, this.yearMonth?.year!)
     const incomeList$ = this.movementService.getBySelectedMonth(CategoryType.income, this.yearMonth?.month!, this.yearMonth?.year!)
-    return combineLatest([expenseList$, incomeList$])
+    return combineLatest(expenseList$, incomeList$).pipe(take(1))
   }
 
   private prepareMovementListToView = (movements: [MovementModel[], MovementModel[]]) => {

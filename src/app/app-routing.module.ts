@@ -92,7 +92,7 @@ const routes: Routes = [
     title: 'Configuration'
   },
   {
-    path: 'annual-report',
+    path: 'annual-report/:year',
     canActivate: [UserGuard],
     component: AnnualReportComponent,
     title: 'Annual Report'
