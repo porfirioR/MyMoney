@@ -132,8 +132,6 @@ export class RegisterMovementComponent implements OnInit {
 
   protected save = () => {
     const request: MovementModel = this.formGroup.getRawValue()
-    // request.date?.setHours(0, 0, 0, 0)
-    // request.time = request.date?.getTime()!
     delete request.date
     this.saving = true
     let request$: Promise<void> | Promise<DocumentReference<DocumentData>> | Promise<[DocumentReference<DocumentData>, void]>
