@@ -244,7 +244,7 @@ export class AnnualReportComponent implements OnInit {
       movement.color = category.color!
       movement.backgroundColor = category.backgroundColor!
       movement.date = new Date(movement.time)
-      movement.memorandum ? movement.memorandum : movement.categoryName
+      movement.memorandum = movement.memorandum ? movement.memorandum : movement.categoryName
       const movementCategory = groups.find(x => x.categoryName == movement.categoryName)
       if (movementCategory) {
         movementCategory.movements.push(movement)

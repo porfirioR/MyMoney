@@ -141,6 +141,7 @@
   "Expense details": "Detalles de gastos",
   "Income details": "Detalles de ingresos",
   "Chart separated by months": "Gráfico separado por meses",
+  "Accounts": "Cuentas",
   "category-messages": {
     "question": "¿Está seguro de que desea eliminar esta categoría?. Todos los movimientos relacionados ({{length}}) con esta categoría serán eliminados",
     "deleted": "La categoría fue borrada",

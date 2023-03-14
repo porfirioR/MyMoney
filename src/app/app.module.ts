@@ -65,6 +65,8 @@ import { AboutUsComponent } from './components/about-us/about-us.component';
 import { ConfigurationComponent } from './components/configuration/configuration.component';
 import { EnumArrayLoopPipe } from './directive/enum-array-loop.pipe';
 import { AnnualReportComponent } from './components/annual-report/annual-report.component';
+import { StoreModule } from '@ngrx/store';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 registerLocaleData(localEs, 'es')
 registerLocaleData(localeEn, 'en')
 
@@ -139,7 +141,9 @@ registerLocaleData(localeEn, 'en')
     NgxMaskModule.forRoot(),
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => getAuth()),
-    provideFirestore(() => getFirestore())
+    provideFirestore(() => getFirestore()),
+    StoreModule.forRoot({}, {}),
+    StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !environment.production })
   ],
   providers: [
     { provide: LOCALE_ID, useValue: 'es' },

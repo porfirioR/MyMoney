@@ -36,7 +36,7 @@ export class CategoryRowComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     const user = this.translate.instant('(user)')
     if (this.category && this.category.owner !== this.ownerSystem && !this.category.name.endsWith(user)) {
-      this.category.name += ` ${user}`
+      this.category.name = `${this.translate.instant(this.category.name)} ${user}`
     }
   }
 
