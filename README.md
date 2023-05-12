@@ -31,3 +31,7 @@ To deploy in Firebase
   - First Delete the folder /dist
   - Open console npm run build
   - firebase deploy
+
+Check package and update
+  - npm outdated
+  - npm update
