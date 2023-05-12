@@ -18,14 +18,14 @@ import { ConfigurationModel } from '../../models/configuration.model';
 })
 export class ConfigurationComponent implements OnInit {
   protected numberType = NumberType
-  protected language = LanguageType
+  protected languages = LanguageType
   protected amount = 1000000000
   protected loading = true
   protected date = new Date()
   protected formGroup: FormGroup = new FormGroup({
     id: new FormControl(),
     number: new FormControl(this.numberType.English),
-    language: new FormControl(this.language.English),
+    language: new FormControl(this.languages.English),
   })
   constructor(
     private readonly location: Location,

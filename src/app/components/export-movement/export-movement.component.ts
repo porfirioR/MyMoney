@@ -15,7 +15,7 @@ import { environment } from '../../../environments/environment';
   styleUrls: ['./export-movement.component.scss']
 })
 export class ExportMovementComponent implements OnInit {
-  protected minDate = new Date('2015-01-01:00:00:00')
+  protected minDate = new Date('2018-01-01:00:00:00')
   protected loading = false
   protected formGroup: FormGroup = new FormGroup({
     startDate: new FormControl('', [Validators.required]),
