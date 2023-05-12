@@ -20,7 +20,7 @@ import { MonthType } from '../../enums/month-type.enum';
   styleUrls: ['./annual-report.component.scss']
 })
 export class AnnualReportComponent implements OnInit {
-  private minValidYear = 2015
+  private minValidYear = 2018
   protected year: number = new Date().getFullYear()
   protected redColor = 'rgb(255, 99, 132)'
   protected greenColor = 'rgb(75, 192, 192)'

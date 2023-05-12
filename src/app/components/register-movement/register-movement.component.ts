@@ -26,7 +26,7 @@ export class RegisterMovementComponent implements OnInit {
   private movementId!: string
   protected defaultColor = '#000000'
   protected defaultBackgroundColor = '#ffffff'
-  protected minDate = new Date('2015-01-01:00:00:00')
+  protected minDate = new Date('2018-01-01:00:00:00')
   protected inputCharacter = InputType.Characters
   protected inputDigit = InputType.Digits
   protected formGroup: FormGroup = new FormGroup({
