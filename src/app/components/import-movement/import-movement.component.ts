@@ -149,7 +149,7 @@ export class ImportMovementComponent implements OnInit {
     const year = Number((dateArray!).shift())
     const month = Number((dateArray!).shift())
     const day = Number((dateArray!).shift())
-    if (!Number.isInteger(year) || year < 8) {
+    if (!Number.isInteger(year) || year < 2018) {
       invalid = true
       errors.push(this.translate.instant('import-movement-messages.invalid-year', {year: year, index: index}))
     } else if(!Number.isInteger(month) || month < 1 || month > 12) {
