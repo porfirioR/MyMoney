@@ -30,9 +30,9 @@ export class CategoryService {
     return deleteDoc(ref)
   }
 
-  public create = (model: CategoryModel): Promise<DocumentReference> => {
+  public create = async (model: CategoryModel): Promise<DocumentReference> => {
     model.owner = this.email
-    return addDoc(this.getReference(), model)
+    return await addDoc(this.getReference(), model)
   }
 
   public update = (model: CategoryModel): Promise<void> => {

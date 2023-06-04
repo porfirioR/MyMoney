@@ -17,7 +17,7 @@ export class UserCategoryService {
     private readonly userService: UserService
   ) { }
 
-  public upsertCategory = (userCategory: UserCategoryModel): Promise<void> | Promise<DocumentReference<DocumentData>> => {
+  public upsertCategory = async (userCategory: UserCategoryModel): Promise<void | DocumentReference<DocumentData>> => {
     const request: UserCategoryRequest = {
       active: userCategory.active,
       email: userCategory.email!,
@@ -30,9 +30,9 @@ export class UserCategoryService {
     const model = this.userService.getUserCategories().find(x => x.categoryId == userCategory.categoryId)
     if (model) {
       const ref = doc(this.firestore, `${this.userCategoryType}/${model.id}`)
-      return setDoc(ref, request)
+      return await setDoc(ref, request)
     } else {
-      return addDoc(this.getReference(), Object.assign({}, request))
+      return await addDoc(this.getReference(), {...request})
     }
   }
 
@@ -44,4 +44,6 @@ export class UserCategoryService {
   private getReference = (): CollectionReference => {
     return collection(this.firestore, this.userCategoryType)
   }
+
+  public getUserCategoryReferenceById = (id: string): DocumentReference<DocumentData> => doc(this.firestore, `${this.userCategoryType}/${id}`)
 }

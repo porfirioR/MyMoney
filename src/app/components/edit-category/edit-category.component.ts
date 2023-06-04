@@ -34,7 +34,11 @@ export class EditCategoryComponent implements OnInit {
     private snackBar: MatSnackBar,
     private translate: TranslateService,
   ) {
-    combineLatest([this.activatedRoute.params, this.userService.getAllCategories$().pipe(take(1)), this.userService.getUserCategories$().pipe(take(1))]).subscribe({
+    combineLatest([
+      this.activatedRoute.params,
+      this.userService.getAllCategories$().pipe(take(1)),
+      this.userService.getUserCategories$().pipe(take(1))
+    ]).subscribe({
       next: ([params, categories, userCategories]) => {
         this.category = categories.find(x => x.id === params['id'])
         if (!this.category) { this.exit() }
@@ -65,13 +69,13 @@ export class EditCategoryComponent implements OnInit {
       this.formGroup.get('backgroundColor')!.value,
       this.formGroup.get('order')!.value
     )
-    this.userCategory.upsertCategory(request).then((response) => {
+    this.userCategory.upsertCategory(request).then((docReference) => {
       this.snackBar.open(this.translate.instant('category-messages.updated'), '', { duration: 3000 })
       this.category!.color = request.color
       this.category!.backgroundColor = request.backgroundColor
       this.category!.order = request.order
-      if (response) {
-        request.id = (response as DocumentReference<DocumentData>).id
+      if (!!docReference) {
+        request.id = docReference.id
       }
       this.userService.setUserCategory(request)
       this.location.back()

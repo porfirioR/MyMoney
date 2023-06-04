@@ -14,9 +14,9 @@ import { ReportMonthComponent } from './components/report-month/report-month.com
 import { EditCategoryComponent } from './components/edit-category/edit-category.component';
 import { AboutUsComponent } from './components/about-us/about-us.component';
 import { ConfigurationComponent } from './components/configuration/configuration.component';
+import { AnnualReportComponent } from './components/annual-report/annual-report.component';
 import { UserGuard } from './guards/user.guard';
 import { environment } from '../environments/environment';
-import { AnnualReportComponent } from './components/annual-report/annual-report.component';
 
 const routes: Routes = [
   {

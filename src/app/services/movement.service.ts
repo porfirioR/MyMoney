@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { addDoc, collection, collectionData, CollectionReference, deleteDoc, doc, DocumentReference, Firestore, orderBy, Query, query, setDoc, where, WriteBatch, writeBatch } from '@angular/fire/firestore';
+import { addDoc, collection, collectionData, CollectionReference, deleteDoc, doc, DocumentData, DocumentReference, Firestore, orderBy, Query, query, setDoc, where, WriteBatch, writeBatch } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { CategoryType } from '../enums/category-type.enum';
 import { CollectionType } from '../enums/collection-type.enum';
@@ -19,7 +19,7 @@ export class MovementService {
     const startDate = new Date(year, month, 1)
     startDate.setHours(0, 0, 0)
     const startTime = startDate.getTime()
-    const endDate = new Date(year, month + 1, 0)
+    const endDate = new Date(+year, +month + 1, 0)
     endDate.setHours(23, 59, 59)
     const endTime = endDate.getTime()
 
@@ -28,10 +28,10 @@ export class MovementService {
   }
 
   public getBySelectedYear = (category: CategoryType, year: number): Observable<MovementModel[]> => {
-    const startDate = new Date(year, 0, 1)
+    const startDate = new Date(+year, 0, 1)
     startDate.setHours(0, 0, 0)
     const startTime = startDate.getTime()
-    const endDate = new Date(year, 11, 31)
+    const endDate = new Date(+year, 11, 31)
     endDate.setHours(23, 59, 59)
     const endTime = endDate.getTime()
 
@@ -88,5 +88,6 @@ export class MovementService {
     return collectionData<MovementModel>(ref as Query<MovementModel>, { idField: 'id' })
   }
 
-  public getMovementDocumentReferenceById = (type: CategoryType, id: string) => doc(this.firestore, `${this.collections}/${this.userService.getUserEmail()}/${type.toLowerCase()}/${id}`)
+  public getMovementDocumentReferenceById = (type: CategoryType, id: string): DocumentReference<DocumentData> => 
+    doc(this.firestore, `${this.collections}/${this.userService.getUserEmail()}/${type.toLowerCase()}/${id}`)
 }

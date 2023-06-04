@@ -6,6 +6,7 @@ import { catchError, take } from 'rxjs'
 import { CategoryService } from '../../services/category.service'
 import { UserCategoryService } from '../../services/user-category.service'
 import { MovementService } from '../../services/movement.service'
+import { UserService } from '../../services/user.service'
 import { CategoryModel } from '../../models/category.model'
 import { UserCategoryModel } from '../../models/user-category.model'
 import { CategoryEvent } from '../../models/category-event.model'
@@ -31,6 +32,7 @@ export class CategoryRowComponent implements OnInit, OnDestroy {
     private readonly userCategoryService: UserCategoryService,
     private readonly movementService: MovementService,
     private translate: TranslateService,
+    private readonly user: UserService
   ) { }
 
   ngOnInit(): void {
@@ -66,8 +68,7 @@ export class CategoryRowComponent implements OnInit, OnDestroy {
                 })
                 .catch((reason) => this.snackBar.open(reason, '', { duration: 3000 }))
               } else {
-                this.categoryService.delete(this.category.id)
-                .then(() => {
+                this.categoryService.delete(this.category.id).then(() => {
                   this.snackBar.open(this.translate.instant('category-messages.deleted'), '', { duration: 3000 })
                   const categoryEvent = new CategoryEvent(this.category.type, this.category.id)
                   this.deleteAllMovementReferences(categoryEvent, deleteMovementList)
@@ -81,8 +82,7 @@ export class CategoryRowComponent implements OnInit, OnDestroy {
       })
     } else if (this.category.owner === this.ownerSystem) {
       const request = new UserCategoryModel(!active, this.category.id, this.ownerSystem)
-      this.userCategoryService.upsertCategory(request)
-      .then(() => {
+      this.userCategoryService.upsertCategory(request).then(() => {
         this.category.active = request.active
         this.snackBar.open(this.translate.instant('category-messages.title-restarted'), '', { duration: 3000 })
         const categoryEvent = new CategoryEvent(this.category.type)
@@ -92,8 +92,16 @@ export class CategoryRowComponent implements OnInit, OnDestroy {
   }
 
   private deleteAllMovementReferences = (categoryEvent: CategoryEvent, movements: MovementModel[]) => {
+    const userCategory = this.user.getUserCategories().find(x => x.categoryId === this.category.id)
     let batch = this.movementService.openBatch()
     let commits: Promise<void>[] = []
+    if (!!userCategory) {
+      const userCategoryDocReference = this.userCategoryService.getUserCategoryReferenceById(userCategory.id!)
+      batch.delete(userCategoryDocReference)
+      if (movements.length === 0) {
+        commits.push(batch.commit())
+      }
+    }
     movements.forEach((request, i) => {
       const docReference = this.movementService.getMovementDocumentReferenceById(this.category.type, request.id!)
       batch.delete(docReference)

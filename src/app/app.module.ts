@@ -1,7 +1,7 @@
 import { LOCALE_ID, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
-import { AppRoutingModule } from './app-routing.module';
+import { AppRoutingModule } from './app.routing';
 import { AppComponent } from './app.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
@@ -116,7 +116,6 @@ registerLocaleData(localeEn, 'en')
     FormsModule,
     ReactiveFormsModule,
     NgChartsModule,
-
     MatToolbarModule,
     MatIconModule,
     MatTabsModule,
@@ -137,7 +136,6 @@ registerLocaleData(localeEn, 'en')
     MatListModule,
     MatSnackBarModule,
     MatExpansionModule,
-
     NgxMaskModule.forRoot(),
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => getAuth()),

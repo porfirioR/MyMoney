@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
+import { combineLatest, debounceTime, filter } from 'rxjs';
 import { CategoryType } from '../../enums/category-type.enum';
 import { CategoryGroupIconType } from '../../enums/category-group-icon-type.enum';
 import { IconType } from '../../enums/icon-type.enum';
@@ -14,7 +15,6 @@ import { UserCategoryModel } from '../../models/user-category.model';
 import { CategoryService } from '../../services/category.service';
 import { UserCategoryService } from '../../services/user-category.service';
 import { UserService } from '../../services/user.service';
-import { combineLatest, debounceTime, filter } from 'rxjs';
 
 @Component({
   selector: 'app-new-category',
@@ -22,7 +22,7 @@ import { combineLatest, debounceTime, filter } from 'rxjs';
   styleUrls: ['./new-category.component.scss'],
 })
 export class NewCategoryComponent implements OnInit {
-  @ViewChild("inputCategoryName") inputCategoryName?: ElementRef;
+  @ViewChild("inputCategoryName") inputCategoryName?: ElementRef
   protected title!: string
   private categoryNames: string[] = []
   protected currentCategory: NewCategoryModel = new NewCategoryModel(
@@ -80,7 +80,7 @@ export class NewCategoryComponent implements OnInit {
     ]
   )
   protected formGroup!: FormGroup
-  protected sameName: boolean = false;
+  protected sameName: boolean = false
 
   constructor(
     protected location: Location,
@@ -108,10 +108,10 @@ export class NewCategoryComponent implements OnInit {
         this.categoryNames = categories.map(x => x.name.toLowerCase())
       }
     })
-    this.formGroup.controls['name'].valueChanges.pipe(debounceTime(2000), filter(x => x.length > 3)).subscribe({
+    this.formGroup.controls['name'].valueChanges.pipe(debounceTime(500), filter(x => x.length > 3)).subscribe({
       next: (name) => {
-        if (this.categoryNames.includes(name.toLowerCase()) || this.categoryNames.includes(`${name.toLowerCase()} ${this.translateService.instant('(user)')}`)) {
-          this.formGroup.controls['name'].setErrors({'sameName': true});
+        if (this.categoryNames.includes(name.toLowerCase()) || this.categoryNames.includes(`${this.translateService.instant(name.toLowerCase())} ${this.translateService.instant('(user)')}`)) {
+          this.formGroup.controls['name'].setErrors({'sameName': true})
           this.formGroup.controls['name'].markAsTouched()
         }
       }
@@ -129,12 +129,14 @@ export class NewCategoryComponent implements OnInit {
 
   protected save = () => {
     const category: CategoryModel = this.formGroup.getRawValue()
-    this.categoryService.create(category).then((result) => {
-      const userCategory = new UserCategoryModel(category.active, result.id, category.owner)
-      this.userCategoryService.upsertCategory(userCategory).then((response) => {
-        category.id = response!.id
+    this.categoryService.create(category).then((categoryReference) => {
+      const userCategoryModel = new UserCategoryModel(category.active, categoryReference.id, category.owner)
+      this.userCategoryService.upsertCategory(userCategoryModel).then((userCategoryReference) => {
+        category.id = categoryReference!.id
+        userCategoryModel.id = userCategoryReference?.id
         this.snackBar.open(this.translateService.instant('category-messages.created'), '', { duration: 3000 })
         this.userService.setCategory(category)
+        this.userService.setUserCategory(userCategoryModel)
         this.location.back()
       })
     })

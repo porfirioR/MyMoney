@@ -4,9 +4,9 @@ import { MatTabChangeEvent } from '@angular/material/tabs'
 import { catchError } from 'rxjs'
 import { CategoryType } from '../../enums/category-type.enum'
 import { CategoryModel } from '../../models/category.model'
-import { CategoryEvent } from '../../models/category-event.model';
+import { CategoryEvent } from '../../models/category-event.model'
 import { HelperService } from '../../services/helper.service'
-import { UserService } from '../../services/user.service';
+import { UserService } from '../../services/user.service'
 
 @Component({
   selector: 'app-category-configuration',
@@ -28,7 +28,7 @@ export class CategoryConfigurationComponent implements OnInit {
   ngOnInit() {
     this.userService.getAllCategories$().pipe(catchError((e) => {
       this.loading = false
-      throw e;
+      throw e
     })).subscribe({
       next: (categories) => {
         this.expenseCategory = this.orderCategoryByActive(HelperService.categoriesByType(categories, CategoryType.expense))
@@ -44,7 +44,7 @@ export class CategoryConfigurationComponent implements OnInit {
   }
 
   protected tabChanged = (tabChangeEvent: MatTabChangeEvent): void => {
-    this.currentTap = Object.keys(this.categoryType)[tabChangeEvent.index];
+    this.currentTap = Object.keys(this.categoryType)[tabChangeEvent.index]
   }
 
   protected updateCategories = (result: CategoryEvent) => {
