@@ -1,6 +1,8 @@
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { TranslateService } from '@ngx-translate/core';
 import { combineLatest } from 'rxjs';
 import { CategoryType } from '../../enums/category-type.enum';
 import { ExportRequestModel } from '../../models/export-request.model';
@@ -22,13 +24,15 @@ export class ExportMovementComponent implements OnInit {
     endDate: new FormControl('', [Validators.required]),
     categories: new FormControl('', [Validators.required])
   })
-  private movementListResponse:MovementModel[] = []
+  private movementListResponse: MovementModel[] = []
   protected categories = CategoryType
   private request!: ExportRequestModel
   constructor(
     private readonly location: Location,
     private readonly userService: UserService,
-    private readonly movementService: MovementService
+    private readonly movementService: MovementService,
+    private readonly snackBar: MatSnackBar,
+    private translate: TranslateService
   ) { }
 
   ngOnInit() {
@@ -54,14 +58,17 @@ export class ExportMovementComponent implements OnInit {
     })
     
     setTimeout(() => {
-      const unique = this.movementListResponse.filter((x, i, self) => i !== self.indexOf(x))
-      this.returnExport(unique)
+      const unique = new Set(this.movementListResponse)
+      this.returnExport([...unique])
     }, 10000);
   }
 
   private convertDate = (x: Date) => `${x.getFullYear()}-${(x.getMonth() + 1)}-${x.getDate()}`;
 
   private returnExport = (movementList: MovementModel[]) => {
+    if (movementList.length === 0) {
+      this.snackBar.open(this.translate.instant(`There are no movements in the loaded date range`), '', { duration: 5000 })
+    }
     const csvHeader = environment.header
     let movementsToExport = movementList.sort((a, b) => a.time - b.time).map(x =>
       [

@@ -2,17 +2,17 @@ import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
+import { combineLatest, switchMap, take } from 'rxjs';
+import { ChartConfiguration } from 'chart.js';
 import { LanguageType } from '../../enums/language-type.enum';
 import { NumberType } from '../../enums/number-type.enum';
+import { CategoryType } from '../../enums/category-type.enum';
+import { MonthType } from '../../enums/month-type.enum';
 import { MovementService } from '../../services/movement.service';
 import { UserService } from '../../services/user.service';
-import { CategoryType } from '../../enums/category-type.enum';
-import { ChartConfiguration } from 'chart.js';
 import { GroupMovementCategoryModel } from '../../models/group-movement-category.model';
-import { combineLatest, switchMap, take } from 'rxjs';
 import { MovementModel } from '../../models/movement.model';
 import { ChartModel } from '../../models/chart.model';
-import { MonthType } from '../../enums/month-type.enum';
 
 @Component({
   selector: 'app-annual-report',

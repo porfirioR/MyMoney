@@ -8,12 +8,12 @@ import { TranslateService } from '@ngx-translate/core';
 import { combineLatest, take } from 'rxjs';
 import { IconType } from '../../enums/icon-type.enum';
 import { CategoryType } from '../../enums/category-type.enum';
+import { InputType } from '../../enums/input-type.enum';
 import { MovementModel } from '../../models/movement.model';
 import { CategoryModel } from '../../models/category.model';
 import { HelperService } from '../../services/helper.service';
 import { MovementService } from '../../services/movement.service';
 import { UserService } from '../../services/user.service';
-import { InputType } from 'src/app/enums/input-type.enum';
 
 @Component({
   selector: 'app-register-movement',
@@ -21,7 +21,7 @@ import { InputType } from 'src/app/enums/input-type.enum';
   styleUrls: ['./register-movement.component.scss']
 })
 export class RegisterMovementComponent implements OnInit {
-  @ViewChild("memorandum") inputMemorandum?: ElementRef;
+  @ViewChild("memorandum") inputMemorandum?: ElementRef
   protected categoryType = CategoryType
   private movementId!: string
   protected defaultColor = '#000000'

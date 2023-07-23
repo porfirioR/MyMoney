@@ -3,7 +3,6 @@ import { Location } from '@angular/common'
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { DocumentData, DocumentReference } from '@angular/fire/firestore';
 import { TranslateService } from '@ngx-translate/core';
 import { combineLatest, take } from 'rxjs';
 import { UserCategoryService } from '../../services/user-category.service';

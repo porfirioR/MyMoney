@@ -3,18 +3,18 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import { ChartConfiguration, ChartOptions, ChartType } from 'chart.js';
 import { combineLatest, take } from 'rxjs';
 import { NumberType } from '../../enums/number-type.enum';
 import { CategoryType } from '../../enums/category-type.enum';
+import { LanguageType } from '../../enums/language-type.enum';
 import { GroupMovementCategoryModel } from '../../models/group-movement-category.model';
 import { MovementModel } from '../../models/movement.model';
 import { YearMonthModel } from '../../models/year-month-model';
 import { MovementService } from '../../services/movement.service';
 import { UserService } from '../../services/user.service';
 import { SelectYearMonthComponent } from '../select-year-mount/select-year-month.component';
-import { LanguageType } from '../../enums/language-type.enum';
-import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-report-month',

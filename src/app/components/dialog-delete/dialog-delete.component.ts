@@ -8,8 +8,10 @@ import { DialogData } from '../../models/dialog-data';
   styleUrls: ['./dialog-delete.component.scss']
 })
 export class DialogDeleteComponent implements OnInit {
-  constructor(private readonly dialogRef: MatDialogRef<DialogDeleteComponent>,
-              @Inject(MAT_DIALOG_DATA) protected data: DialogData) { }
+  constructor(
+    private readonly dialogRef: MatDialogRef<DialogDeleteComponent>,
+    @Inject(MAT_DIALOG_DATA) protected data: DialogData
+  ) { }
 
   ngOnInit() { }
 
