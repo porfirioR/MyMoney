@@ -15,7 +15,7 @@
     </button>
     <mat-form-field class="mat-from-field">
       <mat-label translate>Category name</mat-label>
-      <input matInput formControlName="name" #inputCategoryName>
+      <input matInput formControlName="name" #inputCategoryName id="name">
       <mat-error *ngIf="formGroup.get('name')?.hasError('required')">
         {{ 'message-error.required-category'| translate }}
       </mat-error>

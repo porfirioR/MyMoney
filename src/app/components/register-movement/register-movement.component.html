@@ -43,21 +43,21 @@
           </button>
         </span>
         <mat-label translate>Memorandum</mat-label>
-        <input matInput type="text" formControlName="memorandum" #memorandum name="memorandum">
+        <input matInput type="text" formControlName="memorandum" #memorandum name="memorandum" id="memorandum">
         <mat-error *ngIf="formGroup.get('memorandum')?.hasError('maxlength')">
           {{'message-error.exceed'| translate:{ count: 50, type: inputCharacter} }}
         </mat-error>
       </mat-form-field>
       <mat-form-field appearance="fill" class="w-100">
         <mat-label translate>Amount</mat-label>
-        <input matInput type="text" formControlName="amount" [mask]="'separator.0'" thousandSeparator="." name="amount" autocomplete="off">
+        <input matInput type="text" formControlName="amount" [mask]="'separator.0'" thousandSeparator="." name="amount" autocomplete="off" id="amount">
         <mat-error *ngIf="formGroup.get('amount')?.hasError('maxlength') || formGroup.get('amount')?.hasError('max')">
           {{'message-error.exceed'| translate:{ count: 12, type: inputDigit} }}
         </mat-error>
       </mat-form-field>
       <mat-form-field appearance="fill" class="w-100">
         <mat-label translate>Date</mat-label>
-        <input matInput [matDatepicker]="picker" formControlName="date" [min]="minDate">
+        <input matInput [matDatepicker]="picker" formControlName="date" [min]="minDate" id="date">
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker disabled="false"></mat-datepicker>
       </mat-form-field>
