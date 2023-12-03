@@ -1,2 +1,30 @@
-<mat-progress-bar mode="indeterminate"></mat-progress-bar>
+<mat-progress-bar mode="indeterminate" *ngIf="!isLocal"></mat-progress-bar>
 
+<section *ngIf="isLocal" [formGroup]="formGroup">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>User</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <mat-form-field appearance="fill" class="w-100">
+        <mat-label translate>
+          Email
+        </mat-label>
+        <input matInput type="email" formControlName="email" id="email">
+      </mat-form-field>
+      <mat-card-content>
+        <mat-form-field appearance="fill" class="w-100">
+          <mat-label translate>
+            Password
+          </mat-label>
+          <input matInput type="password" formControlName="password" id="password">
+        </mat-form-field>
+      </mat-card-content>
+      <mat-card-footer>
+        <button mat-stroked-button color="primary" (click)="loginUser()" [disabled]="formGroup.invalid">
+          Login User
+        </button>
+      </mat-card-footer>
+    </mat-card-content>
+  </mat-card>
+</section>

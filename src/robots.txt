@@ -1,3 +1,3 @@
 User-agent: *
 Disallow: 
-Sitemap: https://mymoney-993366.web.app/sitemap.xml
+Sitemap: https://my-money.lat/sitemap.xml
