@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { UserCredential } from '@angular/fire/auth';
 import { Router } from '@angular/router';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { UserService } from '../../services/user.service';
 import { AuthService } from '../../services/auth.service';
 import { UserDataModel } from '../../models/user-data.model';
 import { ConfigurationModel } from '../../models/configuration.model';
 import { LanguageType } from '../../enums/language-type.enum';
 import { NumberType } from '../../enums/number-type.enum';
-import { environment } from 'src/environments/environment';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-login',
