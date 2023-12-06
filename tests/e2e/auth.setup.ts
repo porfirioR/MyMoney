@@ -1,7 +1,8 @@
-import { test, expect } from '@playwright/test';
+import { test as setup } from '@playwright/test'
+const authFile = '../../playwright/.auth/user.json';
+require('dotenv').config()
 
-test('Page Login', async ({ page }) => {
-  await page.goto('http://localhost:4200/');
+setup('Login', async ({ page }) => {
   await page.goto('http://localhost:4200/logout');
   await page.getByRole('button', { name: 'Login' }).click();
   await page.locator('div').filter({ hasText: 'Email *' }).nth(3).click();
@@ -9,8 +10,7 @@ test('Page Login', async ({ page }) => {
   await page.getByLabel('Email  *').press('Tab');
   await page.getByLabel('Password  *').fill(process.env['PASSWORD']!);
   await page.getByRole('button', { name: 'Login User' }).click();
-  await page.locator('button').filter({ hasText: 'menu' }).click();
-  await page.getByText('exit_to_app').click();
-  await expect(page).toHaveTitle(/Logout/);
-  await page.close()
-});
+  await page.waitForURL('http://localhost:4200/');
+
+  await page.context().storageState({ path: authFile})
+})
