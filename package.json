@@ -34,7 +34,7 @@
     "firebaseui": "^6.1.0",
     "loader-utils": "^3.2.1",
     "ng2-charts": "^4.1.1",
-    "ngx-mask": "^14.3.2",
+    "ngx-mask": "^14.3.3",
     "rxjs": "~7.5.0",
     "tslib": "^2.6.2",
     "zone.js": "~0.11.4"
@@ -44,7 +44,7 @@
     "@angular/cli": "~14.0.0",
     "@angular/compiler-cli": "^14.0.0",
     "@ngrx/schematics": "^14.3.3",
-    "@playwright/test": "^1.40.0",
+    "@playwright/test": "^1.40.1",
     "@types/jasmine": "~4.0.0",
     "@types/node": "^20.10.3",
     "http-server": "^14.1.1",
