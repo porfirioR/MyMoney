@@ -3,7 +3,6 @@ import { CategoryType } from '../enums/category-type.enum';
 import { MonthType } from '../enums/month-type.enum';
 import { CategoryModel } from '../models/category.model';
 import { YearMonthModel } from '../models/year-month-model';
-import { LanguageType } from '../enums/language-type.enum';
 import { ConfigurationModel } from '../models/configuration.model';
 import { NumberType } from '../enums/number-type.enum';
 

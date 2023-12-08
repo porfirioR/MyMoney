@@ -61,11 +61,11 @@ export class UserService extends ItemObservable<UserDataModel> {
     return activeCategories
   }
 
-  public setConfiguration = (configuration: ConfigurationModel) => {
+  public setConfiguration = (configuration: ConfigurationModel): void => {
     this.item!.userConfiguration = configuration
   }
 
-  public setUserCategory = (userCategory: UserCategoryModel) => {
+  public setUserCategory = (userCategory: UserCategoryModel): void => {
     const index = this.item!.userCategories.findIndex(x => x.id === userCategory.id)
     if (index === -1) {
       this.item!.userCategories = [...this.item!.userCategories, userCategory]
@@ -76,7 +76,7 @@ export class UserService extends ItemObservable<UserDataModel> {
     }
   }
 
-  public getActiveCategories = () => {
+  public getActiveCategories = (): CategoryModel[] => {
     return this.item!.activeCategories
   }
 

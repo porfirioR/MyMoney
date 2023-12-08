@@ -25,7 +25,7 @@ export class CategoryConfigurationComponent implements OnInit {
     private readonly userService: UserService
   ) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.userService.getAllCategories$().pipe(catchError((e) => {
       this.loading = false
       throw e
@@ -39,7 +39,7 @@ export class CategoryConfigurationComponent implements OnInit {
     this.currentTap = this.categoryType.income.toLocaleLowerCase()
   }
 
-  protected exit = () => {
+  protected exit = (): void => {
     this.location.back()
   }
 
@@ -47,7 +47,7 @@ export class CategoryConfigurationComponent implements OnInit {
     this.currentTap = Object.keys(this.categoryType)[tabChangeEvent.index]
   }
 
-  protected updateCategories = (result: CategoryEvent) => {
+  protected updateCategories = (result: CategoryEvent): void => {
     if(result.categoryId) {
       result.categoryType.toLowerCase() === CategoryType.income.toLowerCase() ?
       this.incomeCategory = this.incomeCategory.filter(x => x.id !== result.categoryId) :
@@ -58,7 +58,7 @@ export class CategoryConfigurationComponent implements OnInit {
       this.expenseCategory = this.orderCategoryByActive(this.expenseCategory)
   }
 
-  private orderCategoryByActive = (categories: CategoryModel[]) => categories.sort((a, b) => {
+  private orderCategoryByActive = (categories: CategoryModel[]): CategoryModel[] => categories.sort((a, b) => {
     const compareActive = a.active === b.active ? 0 : a.active ? -1 : 1
     const compareOrder = a.order - b.order
     return compareActive || compareOrder

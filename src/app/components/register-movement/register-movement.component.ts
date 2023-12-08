@@ -14,7 +14,7 @@ import { CategoryModel } from '../../models/category.model';
 import { HelperService } from '../../services/helper.service';
 import { MovementService } from '../../services/movement.service';
 import { UserService } from '../../services/user.service';
-import { ConfigurationService } from 'src/app/services/configuration.service';
+import { ConfigurationService } from '../../services/configuration.service';
 
 @Component({
   selector: 'app-register-movement',
@@ -46,10 +46,10 @@ export class RegisterMovementComponent implements OnInit {
   protected loading = true
   protected saving = false
   protected title: string = 'Register movement'
-  private categoryList!: CategoryModel[]
-  private updateMovement?: MovementModel
   protected mask = 'separator.0'
   protected thousandSeparator = '.'
+  private categoryList!: CategoryModel[]
+  private updateMovement?: MovementModel
 
   constructor(
     private readonly movementService: MovementService,
@@ -135,11 +135,11 @@ export class RegisterMovementComponent implements OnInit {
     this.formGroup.markAllAsTouched()
   }
 
-  protected exit = () => {
+  protected exit = (): void => {
     this.location.back()
   }
 
-  protected save = () => {
+  protected save = (): void => {
     const request: MovementModel = this.formGroup.getRawValue()
     delete request.date
     this.saving = true
@@ -171,17 +171,19 @@ export class RegisterMovementComponent implements OnInit {
     }).catch((error) => console.error(error))
   }
 
-  private patchFormGroup = (movement: MovementModel) => {
+  private patchFormGroup = (movement: MovementModel): void => {
     this.currentCategories = HelperService.categoriesByType(this.categoryList, movement.type)
     const currentCategory = this.currentCategories.find(x => x.id === movement.categoryId)
-    this.formGroup.patchValue({ type: movement.type})
-    this.formGroup.patchValue({ icon: movement.icon})
-    this.formGroup.patchValue({ categoryId: movement.categoryId})
-    this.formGroup.patchValue({ memorandum: movement.memorandum})
-    this.formGroup.patchValue({ date: movement.date})
-    this.formGroup.patchValue({ time: movement.date?.getTime()})
-    this.formGroup.patchValue({ amount: Math.abs(movement.amount)})
-    this.formGroup.patchValue({ color: currentCategory && currentCategory.color ? currentCategory.color : this.defaultColor})
-    this.formGroup.patchValue({ backgroundColor: currentCategory && currentCategory.backgroundColor ? currentCategory.backgroundColor : this.defaultBackgroundColor})
+    this.formGroup.patchValue({
+      type: movement.type,
+      icon: movement.icon,
+      categoryId: movement.categoryId,
+      memorandum: movement.memorandum,
+      date: movement.date,
+      time: movement.date?.getTime(),
+      amount: Math.abs(movement.amount),
+      color: currentCategory && currentCategory.color ? currentCategory.color : this.defaultColor,
+      backgroundColor: currentCategory && currentCategory.backgroundColor ? currentCategory.backgroundColor : this.defaultBackgroundColor
+    })
   }
 }

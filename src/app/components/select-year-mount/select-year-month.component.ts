@@ -28,14 +28,14 @@ export class SelectYearMonthComponent implements OnInit {
     })
   }
 
-  ngOnInit() { }
+  ngOnInit(): void { }
 
-  protected previousYear = () => {
+  protected previousYear = (): void => {
     const year = this.formGroup.get('selectedYear') as FormControl
     year.setValue(year.value - 1)
   }
 
-  protected  nextYear = () => {
+  protected  nextYear = (): void => {
     const year = this.formGroup.get('selectedYear') as FormControl
     year.setValue(year.value + 1)
   }

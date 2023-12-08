@@ -25,13 +25,13 @@ export class LoginComponent implements OnInit {
 
   constructor(private authService: AuthService, private router: Router, private readonly userService: UserService) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     if(!this.isLocal) {
       this.login()
     }
   }
 
-  private login = () => {
+  private login = (): void => {
     this.authService.loginWithGoogle()
     .then((x: UserCredential) => {
       const userData: UserDataModel = {
@@ -49,7 +49,7 @@ export class LoginComponent implements OnInit {
     .catch((x) => console.error(x))
   };
 
-  protected loginUser = () => {
+  protected loginUser = (): void => {
     this.authService.signInUser(this.formGroup.value.email!, this.formGroup.value.password!)
     .then((x: UserCredential) => {
       const userData: UserDataModel = {

@@ -36,7 +36,7 @@ export class ConfigurationComponent implements OnInit {
     private dateAdapter: DateAdapter<Date>,
     ) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.userService.getUserConfiguration$().pipe(take(1),catchError((e) => {
       console.error(e)
         this.loading = false

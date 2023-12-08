@@ -7,10 +7,10 @@ import { TranslateService } from '@ngx-translate/core';
 import { combineLatest, take } from 'rxjs';
 import { UserCategoryService } from '../../services/user-category.service';
 import { UserService } from '../../services/user.service';
+import { HelperService } from '../../services/helper.service';
+import { ConfigurationService } from '../../services/configuration.service';
 import { CategoryModel } from '../../models/category.model';
 import { UserCategoryModel } from '../../models/user-category.model';
-import { HelperService } from 'src/app/services/helper.service';
-import { ConfigurationService } from 'src/app/services/configuration.service';
 
 @Component({
   selector: 'app-edit-category',
@@ -58,13 +58,13 @@ export class EditCategoryComponent implements OnInit {
     })
   }
 
-  ngOnInit() { }
+  ngOnInit(): void { }
 
-  protected exit = () => {
+  protected exit = (): void => {
     this.location.back()
   }
 
-  protected save = () => {
+  protected save = (): void => {
     const request = new UserCategoryModel(
       this.category!.active,
       this.category!.id,

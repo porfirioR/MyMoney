@@ -12,7 +12,7 @@ export class CustomColorDirective implements AfterViewInit, OnChanges {
   ngAfterViewInit(): void {
     this.updateColor()
     this.updateBackgroundColor()
- }
+  }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['color']) {
@@ -23,11 +23,11 @@ export class CustomColorDirective implements AfterViewInit, OnChanges {
     }
   }
 
-  private updateColor = () => {
+  private updateColor = (): void => {
     this.element.nativeElement.style.color = this.color
   }
 
-  private updateBackgroundColor = () => {
+  private updateBackgroundColor = (): void => {
     this.element.nativeElement.style.backgroundColor = this.backgroundColor
   }
 

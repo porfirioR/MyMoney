@@ -75,7 +75,7 @@ export class PrincipalComponent implements OnInit {
     })
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     const requestMovement$ = this.getMovements().pipe(debounceTime(1), take(1))
     const categories$ = this.categoryService.getAll().pipe(take(1))
     const userCategories$ = this.userCategoryService.getUserCategories().pipe(take(1))
@@ -136,7 +136,7 @@ export class PrincipalComponent implements OnInit {
     return combineLatest(expenseList$, incomeList$).pipe(take(1))
   }
 
-  private prepareMovementListToView = (movements: [MovementModel[], MovementModel[]]) => {
+  private prepareMovementListToView = (movements: [MovementModel[], MovementModel[]]): void => {
     this.movements = movements[0].concat(movements[1])
     this.movements.forEach(x => x.date = new Date(x.time))
     this.movements = this.movements.sort((a, b) => b.time - a.time)

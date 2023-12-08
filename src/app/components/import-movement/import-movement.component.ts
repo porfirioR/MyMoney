@@ -33,13 +33,13 @@ export class ImportMovementComponent implements OnInit {
     private translate: TranslateService
   ) { }
   
-  ngOnInit() { }
+  ngOnInit(): void { }
 
-  protected exit = () => {
+  protected exit = (): void => {
     this.location.back()
   }
 
-  protected onFileSelected = (event: Event) => {
+  protected onFileSelected = (event: Event): void => {
     const input = (event.target) as HTMLInputElement
     const file = input.files?.item(0)
     if (file) {
@@ -58,7 +58,7 @@ export class ImportMovementComponent implements OnInit {
     }
   }
 
-  protected processFile = () => {
+  protected processFile = (): void => {
     const reader = new FileReader();
     reader.addEventListener('load', (event: ProgressEvent<FileReader>) => {
       this.errorMessageList = []
@@ -107,7 +107,7 @@ export class ImportMovementComponent implements OnInit {
     reader.readAsText(this.file as File);
   }
 
-  protected openDialog = () => {
+  protected openDialog = (): void => {
     const dialogRef = this.dialog.open(DialogUploadMovementComponent, {
       width: '400px',
       data: this.importRequest

@@ -115,12 +115,11 @@ export class ReportMonthComponent implements OnInit {
     return groups
   }
 
-  protected exit = () => {
+  protected exit = (): void => {
     this.location.back()
   }
 
-  private labelMovements = (x: GroupMovementCategoryModel, amountMovements: number) => {
-    const aux = x.movements.map(x => x.amount).reduce((a, b) => a + b)
+  private labelMovements = (x: GroupMovementCategoryModel, amountMovements: number): string => {
     let total = 0
     x.movements.forEach(x => total += x.amount)
     return `${this.translate.instant(x.categoryName)} ${((total * 100)/amountMovements).toFixed(1)}%`
