@@ -14,6 +14,7 @@ import { CategoryModel } from '../../models/category.model';
 import { HelperService } from '../../services/helper.service';
 import { MovementService } from '../../services/movement.service';
 import { UserService } from '../../services/user.service';
+import { ConfigurationService } from 'src/app/services/configuration.service';
 
 @Component({
   selector: 'app-register-movement',
@@ -47,6 +48,8 @@ export class RegisterMovementComponent implements OnInit {
   protected title: string = 'Register movement'
   private categoryList!: CategoryModel[]
   private updateMovement?: MovementModel
+  protected mask = 'separator.0'
+  protected thousandSeparator = '.'
 
   constructor(
     private readonly movementService: MovementService,
@@ -54,12 +57,18 @@ export class RegisterMovementComponent implements OnInit {
     private readonly snackBar: MatSnackBar,
     private readonly activatedRoute: ActivatedRoute,
     private readonly userService: UserService,
-    private translate: TranslateService
-  ) { }
+    private translate: TranslateService,
+    private configurationService: ConfigurationService
+  ) {
+  }
 
-  ngOnInit() {
-    combineLatest([this.activatedRoute.params, this.userService.getActiveCategories$().pipe(take(1))]).subscribe({
-      next: ([params, categories]) => {
+  ngOnInit(): void {
+    combineLatest([
+      this.activatedRoute.params, this.userService.getActiveCategories$().pipe(take(1)),
+      this.configurationService.getConfiguration().pipe(take(1))
+    ]).subscribe({
+      next: ([params, categories, configuration]) => {
+        [this.mask, this.thousandSeparator] = HelperService.getMarkValues(configuration)
         this.movementId = params['id']
         this.categoryList = categories
         this.updateMovement = this.movementService.getMovementById(this.movementId)
@@ -117,7 +126,7 @@ export class RegisterMovementComponent implements OnInit {
     this.inputDigit = this.translate.instant(InputType.Digits)
   }
 
-  protected selectedIcon = (category: CategoryModel) => {
+  protected selectedIcon = (category: CategoryModel): void => {
     this.formGroup.controls['icon'].setValue(category.icon)
     this.formGroup.controls['categoryId'].setValue(category.id)
     this.formGroup.controls['color'].setValue(category.color ?? this.defaultColor)

@@ -1,8 +1,8 @@
 <mat-list>
   <div mat-subheader>{{'User' | translate}}</div>
   <div class="user-block">
-    <img *ngIf="photo" [src]="photo" />
-    <p>
+    <img *ngIf="photo" [src]="photo" alt="user-image" title="user-image"/>
+    <p *ngIf="displayName">
       {{displayName}}
     </p>
   </div>

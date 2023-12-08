@@ -13,7 +13,9 @@
   "message-error": {
     "exceed": "Value cannot exceed {{count}} {{type}}",
     "required-category": "The category is required",
-    "repeating-category": "A category with the same name already exists"
+    "repeating-category": "A category with the same name already exists",
+    "required-email": "Email is required",
+    "required-password": "Password is required"
   },
   "movement-messages": {
     "title-delete": "Delete movement",

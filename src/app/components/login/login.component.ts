@@ -21,6 +21,7 @@ export class LoginComponent implements OnInit {
     email: new FormControl('', Validators.required),
     password: new FormControl('', Validators.required)
   })
+  protected title = environment.title
 
   constructor(private authService: AuthService, private router: Router, private readonly userService: UserService) {}
 

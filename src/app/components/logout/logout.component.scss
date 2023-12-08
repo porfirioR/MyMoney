@@ -12,14 +12,14 @@ div {
 
 .mat-card {
   margin: 1rem;
-   & .mat-card-header {
+  & .mat-card-header {
     display: flex;
     justify-content: center;
     & .mat-card-title {
       display: flex;
       justify-content: center;
     }
-   }
+  }
 }
 
 img {

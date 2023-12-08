@@ -50,7 +50,7 @@
       </mat-form-field>
       <mat-form-field appearance="fill" class="w-100">
         <mat-label translate>Amount</mat-label>
-        <input matInput type="text" formControlName="amount" [mask]="'separator.0'" thousandSeparator="." name="amount" autocomplete="off" id="amount">
+        <input matInput type="text" formControlName="amount" [mask]="mask" [thousandSeparator]="thousandSeparator" name="amount" autocomplete="off" id="amount">
         <mat-error *ngIf="formGroup.get('amount')?.hasError('maxlength') || formGroup.get('amount')?.hasError('max')">
           {{'message-error.exceed'| translate:{ count: 12, type: inputDigit} }}
         </mat-error>

@@ -61,11 +61,11 @@ export class ConfigurationComponent implements OnInit {
     })
   }
 
-  protected exit = () => {
+  protected exit = (): void => {
     this.location.back()
   }
 
-  protected save = () => {
+  protected save = (): void => {
     const request: ConfigurationModel = this.formGroup.getRawValue()
     this.configurationService.upsert(request).then(() => {
       this.snackBar.open(this.translate.instant(`User configuration was ${request.id ? 'updated' : 'created'}`), '', { duration: 3000 })

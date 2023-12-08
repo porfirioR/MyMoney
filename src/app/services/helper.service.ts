@@ -1,8 +1,11 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { CategoryType } from '../enums/category-type.enum';
 import { MonthType } from '../enums/month-type.enum';
 import { CategoryModel } from '../models/category.model';
 import { YearMonthModel } from '../models/year-month-model';
+import { LanguageType } from '../enums/language-type.enum';
+import { ConfigurationModel } from '../models/configuration.model';
+import { NumberType } from '../enums/number-type.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -21,5 +24,11 @@ constructor() { }
   public static getSearchMessage = (): YearMonthModel => {
     const date = new Date();
     return new YearMonthModel(date.getFullYear(), date.getMonth())
+  }
+
+  public static getMarkValues = (configuration: ConfigurationModel | undefined): [string, string] => {
+    const englishMarkConfiguration: [string, string] = ['separator.0', ',']
+    const spanishMarkConfiguration: [string, string] = ['separator,0', '.']
+    return configuration && configuration.number === NumberType.Spanish ? spanishMarkConfiguration : englishMarkConfiguration
   }
 }
