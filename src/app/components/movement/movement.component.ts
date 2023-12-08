@@ -22,7 +22,7 @@ export class MovementComponent implements OnInit {
 
   constructor(private userService: UserService) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.userService.getUserConfiguration$().pipe(take(1)).subscribe({
       next: (config) => {
         this.language = config.language

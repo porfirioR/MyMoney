@@ -148,6 +148,14 @@
   "Games": "Juegos",
   "Game": "Juego",
   "There are no movements in the loaded date range": "No hay movimientos en el rango de fechas cargado",
+  "Manual Login": "Autenticación Manual",
+  "Email": "Correo electrónico",
+  "Password": "Contraseña",
+  "Life insurance": "Seguro de vida",
+  "Cloud": "Nube",
+  "food": "comida",
+  "refund": "reembolso",
+  "Project image": "Imagen del proyecto",
   "category-messages": {
     "question": "¿Está seguro de que desea eliminar esta categoría?. Todos los movimientos relacionados ({{length}}) con esta categoría serán eliminados",
     "deleted": "La categoría fue borrada",
@@ -160,6 +168,8 @@
   "message-error": {
     "exceed": "El valor no debe exceder {{count}} {{type}}",
     "required-category": "La categoría es requerida",
+    "required-email": "Correo electrónico es requerida",
+    "required-password": "Contraseña es requerida",
     "repeating-category": "Ya existe una categoría con el mismo nombre"
   },
   "movement-messages": {

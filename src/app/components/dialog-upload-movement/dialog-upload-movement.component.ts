@@ -19,9 +19,9 @@ export class DialogUploadMovementComponent implements OnInit {
       dialogRef.disableClose = true;
     }
 
-  ngOnInit() { }
+  ngOnInit(): void { }
 
-  protected upload = () => {
+  protected upload = (): void => {
     this.loading = true
     let batch = this.movementService.openBatch()
     let commits: Promise<void>[] = []

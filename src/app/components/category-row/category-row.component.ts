@@ -91,7 +91,7 @@ export class CategoryRowComponent implements OnInit, OnDestroy {
     }
   }
 
-  private deleteAllMovementReferences = (categoryEvent: CategoryEvent, movements: MovementModel[]) => {
+  private deleteAllMovementReferences = (categoryEvent: CategoryEvent, movements: MovementModel[]): void => {
     const userCategory = this.user.getUserCategories().find(x => x.categoryId === this.category.id)
     let batch = this.movementService.openBatch()
     let commits: Promise<void>[] = []

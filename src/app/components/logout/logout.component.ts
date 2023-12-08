@@ -11,9 +11,9 @@ export class LogoutComponent implements OnInit {
   protected title = environment.title
   constructor(private readonly router: Router) { }
 
-  ngOnInit() { }
+  ngOnInit(): void { }
 
-  protected goToLogin = () => {
+  protected goToLogin = (): void => {
     this.router.navigate(['login'])
   }
 }

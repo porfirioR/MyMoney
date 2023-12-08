@@ -7,6 +7,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { combineLatest, take } from 'rxjs';
 import { UserCategoryService } from '../../services/user-category.service';
 import { UserService } from '../../services/user.service';
+import { HelperService } from '../../services/helper.service';
+import { ConfigurationService } from '../../services/configuration.service';
 import { CategoryModel } from '../../models/category.model';
 import { UserCategoryModel } from '../../models/user-category.model';
 
@@ -24,6 +26,8 @@ export class EditCategoryComponent implements OnInit {
     backgroundColor: new FormControl(this.defaultBackgroundColor, Validators.required),
     order: new FormControl(0, Validators.min(0))
   })
+  protected mask = 'separator.0'
+  protected thousandSeparator = '.'
 
   constructor(
     private readonly location: Location,
@@ -32,13 +36,16 @@ export class EditCategoryComponent implements OnInit {
     private readonly userCategory: UserCategoryService,
     private snackBar: MatSnackBar,
     private translate: TranslateService,
+    private configurationService: ConfigurationService
   ) {
     combineLatest([
       this.activatedRoute.params,
       this.userService.getAllCategories$().pipe(take(1)),
-      this.userService.getUserCategories$().pipe(take(1))
+      this.userService.getUserCategories$().pipe(take(1)),
+      this.configurationService.getConfiguration().pipe(take(1))
     ]).subscribe({
-      next: ([params, categories, userCategories]) => {
+      next: ([params, categories, userCategories, configuration]) => {
+        [this.mask, this.thousandSeparator] = HelperService.getMarkValues(configuration)
         this.category = categories.find(x => x.id === params['id'])
         if (!this.category) { this.exit() }
         const userCategory = userCategories.find(x => x.categoryId === this.category!.id)
@@ -51,13 +58,13 @@ export class EditCategoryComponent implements OnInit {
     })
   }
 
-  ngOnInit() { }
+  ngOnInit(): void { }
 
-  protected exit = () => {
+  protected exit = (): void => {
     this.location.back()
   }
 
-  protected save = () => {
+  protected save = (): void => {
     const request = new UserCategoryModel(
       this.category!.active,
       this.category!.id,

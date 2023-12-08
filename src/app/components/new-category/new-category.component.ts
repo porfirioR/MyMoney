@@ -92,7 +92,7 @@ export class NewCategoryComponent implements OnInit {
     private translateService: TranslateService,
   ) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
     combineLatest([this.route.params, this.userService.getAllCategories$()]).subscribe({
       next: ([value, categories]) => {
         const type = value['type']
@@ -118,16 +118,16 @@ export class NewCategoryComponent implements OnInit {
     })
   }
 
-  protected exit = () => {
+  protected exit = (): void => {
     this.location.back()
   }
 
-  protected updateIcon = (icon: IconType) => {
+  protected updateIcon = (icon: IconType): void => {
     this.formGroup.get('icon')?.setValue(icon)
     this.inputCategoryName?.nativeElement.focus()
   }
 
-  protected save = () => {
+  protected save = (): void => {
     const category: CategoryModel = this.formGroup.getRawValue()
     this.categoryService.create(category).then((categoryReference) => {
       const userCategoryModel = new UserCategoryModel(category.active, categoryReference.id, category.owner)

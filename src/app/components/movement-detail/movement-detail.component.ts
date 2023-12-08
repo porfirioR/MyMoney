@@ -54,13 +54,13 @@ export class MovementDetailComponent implements OnInit {
     })
   }
 
-  ngOnInit() { }
+  ngOnInit(): void { }
 
   protected exit = () => {
     this.location.back()
   }
 
-  protected deleteMovement = () => {
+  protected deleteMovement = (): void => {
     const dialogRef = this.dialog.open(DialogDeleteComponent, {
       width: '350px',
       data: { title: this.translate.instant('movement-messages.title-delete'), message: this.translate.instant('movement-messages.question-delete') }
@@ -76,7 +76,7 @@ export class MovementDetailComponent implements OnInit {
     })
   }
 
-  protected editMovement = (id?: string) => {
+  protected editMovement = (id?: string): void => {
     this.router.navigateByUrl(`/movement-update/${id}`)
   }
 }

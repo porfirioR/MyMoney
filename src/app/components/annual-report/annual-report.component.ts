@@ -171,7 +171,7 @@ export class AnnualReportComponent implements OnInit {
     })
   }
 
-  private subscribeMovements = (expense: MovementModel[], income: MovementModel[]) => {
+  private subscribeMovements = (expense: MovementModel[], income: MovementModel[]): void => {
     this.expenseAmount = 0
     this.incomeAmount = 0
     this.balance = 0
@@ -185,7 +185,7 @@ export class AnnualReportComponent implements OnInit {
     this.loading = false
   }
 
-  private prepareChartDataForIncomeCategory = (income: MovementModel[]) => {
+  private prepareChartDataForIncomeCategory = (income: MovementModel[]): void => {
     income.sort((a, b) => a.categoryId.localeCompare(b.categoryId))
     this.incomeGroupMovementCategoryModel = this.groupByCategoryName(income)
     this.incomeAmount = income.reduce((a, b) => a + b.amount, 0)
@@ -196,7 +196,7 @@ export class AnnualReportComponent implements OnInit {
     this.incomeChartData.datasets[0].data = this.incomeGroupMovementCategoryModel.map(x => x.amount)
   }
 
-  private prepareChartDataForExpenseCategory = (expense: MovementModel[]) => {
+  private prepareChartDataForExpenseCategory = (expense: MovementModel[]): void => {
     expense.sort((a, b) => a.categoryId.localeCompare(b.categoryId))
     this.expenseGroupMovementCategoryModel = this.groupByCategoryName(expense)
     this.expenseAmount = expense.reduce((a, b) => a + b.amount, 0)
@@ -207,7 +207,7 @@ export class AnnualReportComponent implements OnInit {
     this.expenseChartData.datasets[0].data = this.expenseGroupMovementCategoryModel.map(x => x.amount)
   }
 
-  private prepareMonthsChartData = (expense: MovementModel[], income: MovementModel[]) => {
+  private prepareMonthsChartData = (expense: MovementModel[], income: MovementModel[]): void => {
     Object.values(MonthType).filter((v) => !isNaN(Number(v))).map((x)  => {
       const month = +x
       const startDate = new Date(this.year, month, 1)
@@ -223,7 +223,7 @@ export class AnnualReportComponent implements OnInit {
     })
   }
 
-  protected yearChanges = (selectedYear: number) => {
+  protected yearChanges = (selectedYear: number): void => {
     this.loading = true
     this.year = selectedYear
     this.getMovementForCategoriesByYear(selectedYear).pipe(take(1)).subscribe({
@@ -258,17 +258,19 @@ export class AnnualReportComponent implements OnInit {
     return groups
   }
 
-  protected exit = () => {
+  protected exit = (): void => {
     this.location.back()
   }
 
-  private labelMovements = (x: GroupMovementCategoryModel, amountMovements: number) => {
+  private labelMovements = (x: GroupMovementCategoryModel, amountMovements: number): string => {
     let total = 0
     x.movements.forEach(x => total += x.amount)
     return `${this.translate.instant(x.categoryName)} ${((total * 100)/amountMovements).toFixed(1)}%`
   }
 
-  private getMovementForCategoriesByYear = (year: number) => {
-    return combineLatest(this.movementService.getBySelectedYear(CategoryType.expense, year), this.movementService.getBySelectedYear(CategoryType.income, year))
-  }
+  private getMovementForCategoriesByYear = (year: number) => combineLatest([
+    this.movementService.getBySelectedYear(CategoryType.expense, year),
+    this.movementService.getBySelectedYear(CategoryType.income, year)
+  ])
+  
 }

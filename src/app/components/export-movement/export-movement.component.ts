@@ -35,14 +35,14 @@ export class ExportMovementComponent implements OnInit {
     private translate: TranslateService
   ) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
   }
 
-  protected exit = () => {
+  protected exit = (): void => {
     this.location.back()
   }
 
-  protected export = () => {
+  protected export = (): void => {
     this.movementListResponse = []
     this.loading = true
     this.request = this.formGroup.getRawValue()
@@ -63,9 +63,9 @@ export class ExportMovementComponent implements OnInit {
     }, 10000);
   }
 
-  private convertDate = (x: Date) => `${x.getFullYear()}-${(x.getMonth() + 1)}-${x.getDate()}`;
+  private convertDate = (x: Date): string => `${x.getFullYear()}-${(x.getMonth() + 1)}-${x.getDate()}`;
 
-  private returnExport = (movementList: MovementModel[]) => {
+  private returnExport = (movementList: MovementModel[]): void => {
     if (movementList.length === 0) {
       this.snackBar.open(this.translate.instant(`There are no movements in the loaded date range`), '', { duration: 5000 })
     }

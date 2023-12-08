@@ -13,7 +13,7 @@ export class DialogDeleteComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) protected data: DialogData
   ) { }
 
-  ngOnInit() { }
+  ngOnInit(): void { }
 
   protected cancelDelete = (): void => this.dialogRef.close()
 

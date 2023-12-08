@@ -8,7 +8,7 @@ export class AuthService {
 
 constructor(private auth: Auth) { }
 
-  public logOut = () => {
+  public logOut = (): Promise<void> => {
     return signOut(this.auth)
   }
 

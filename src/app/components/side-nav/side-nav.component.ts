@@ -34,7 +34,7 @@ export class SideNavComponent implements OnInit {
     private readonly userService: UserService
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.userService.getItemObservable$.subscribe({
       next: (user) => {
         this.photo = user.photo!,

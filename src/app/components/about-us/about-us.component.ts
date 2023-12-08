@@ -11,10 +11,10 @@ export class AboutUsComponent implements OnInit {
   protected title = environment.title
   constructor(private readonly location: Location) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
   }
 
-  protected exit = () => {
+  protected exit = (): void => {
     this.location.back()
   }
 }

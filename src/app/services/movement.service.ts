@@ -57,7 +57,7 @@ export class MovementService {
     return this.movementList.find(x => x.id === id)
   }
 
-  public setMovementList = (movementList: MovementModel[]) => {
+  public setMovementList = (movementList: MovementModel[]): void => {
     this.movementList = movementList
   }
 
@@ -73,7 +73,7 @@ export class MovementService {
     return collection(this.firestore, `${this.collections}/${this.userService.getUserEmail()}/${category.toLowerCase()}`)
   }
 
-  public getMovementToExport = (category: CategoryType, startDate: Date, endDate: Date) => {
+  public getMovementToExport = (category: CategoryType, startDate: Date, endDate: Date): Observable<MovementModel[]> => {
     startDate.setHours(0, 0, 0)
     const startTime = startDate.getTime()
     endDate.setHours(23, 59, 59)
