@@ -35,7 +35,7 @@
     "loader-utils": "^3.2.1",
     "ng2-charts": "^4.1.1",
     "ngx-mask": "^14.3.3",
-    "rxjs": "~7.5.0",
+    "rxjs": "^7.8.1",
     "tslib": "^2.6.2",
     "zone.js": "~0.13.3"
   },
@@ -45,15 +45,15 @@
     "@angular/compiler-cli": "^16.2.12",
     "@ngrx/schematics": "^16.3.0",
     "@playwright/test": "^1.40.1",
-    "@types/jasmine": "~4.0.0",
+    "@types/jasmine": "^5.1.4",
     "@types/node": "^20.10.4",
     "http-server": "^14.1.1",
-    "jasmine-core": "~4.1.0",
-    "karma": "~6.3.0",
-    "karma-chrome-launcher": "~3.1.0",
+    "jasmine-core": "^5.1.1",
+    "karma": "^6.4.2",
+    "karma-chrome-launcher": "^3.2.0",
     "karma-coverage": "^2.2.1",
-    "karma-jasmine": "~5.0.0",
-    "karma-jasmine-html-reporter": "~1.7.0",
+    "karma-jasmine": "^5.1.0",
+    "karma-jasmine-html-reporter": "^2.1.0",
     "typescript": "~4.9.5"
   }
 }
