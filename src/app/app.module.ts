@@ -50,7 +50,6 @@ import { DialogDeleteComponent } from './components/dialog-delete/dialog-delete.
 import { ImportMovementComponent } from './components/import-movement/import-movement.component';
 import { DialogUploadMovementComponent } from './components/dialog-upload-movement/dialog-upload-movement.component';
 import { LogoutComponent } from './components/logout/logout.component';
-import { NgxMaskModule } from 'ngx-mask';
 import { ExportMovementComponent } from './components/export-movement/export-movement.component';
 import { UserGuard } from './guards/user.guard';
 import { UserService } from './services/user.service';
@@ -67,6 +66,7 @@ import { EnumArrayLoopPipe } from './directive/enum-array-loop.pipe';
 import { AnnualReportComponent } from './components/annual-report/annual-report.component';
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { NgxMaskDirective, NgxMaskPipe, provideEnvironmentNgxMask } from 'ngx-mask';
 registerLocaleData(localEs, 'es')
 registerLocaleData(localeEn, 'en')
 
@@ -136,7 +136,8 @@ registerLocaleData(localeEn, 'en')
     MatListModule,
     MatSnackBarModule,
     MatExpansionModule,
-    NgxMaskModule.forRoot(),
+    NgxMaskDirective,
+    NgxMaskPipe,
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => getAuth()),
     provideFirestore(() => getFirestore()),
@@ -148,6 +149,7 @@ registerLocaleData(localeEn, 'en')
     { provide: LOCALE_ID, useValue: 'en' },
     UserService,
     UserGuard,
+    provideEnvironmentNgxMask()
   ],
   bootstrap: [AppComponent],
   exports: []
