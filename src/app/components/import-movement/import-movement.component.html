@@ -1,5 +1,5 @@
 <mat-toolbar color="primary">
-  <button mat-icon-button (click)="exit()">
+  <button mat-icon-button (click)="exit()" [name]="'exit-button' | translate">
     <mat-icon>keyboard_backspace</mat-icon>
   </button>
   <span translate>Import movements</span>
@@ -21,17 +21,17 @@
   </mat-card-content>
   <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
   <mat-card-actions>
-    <button mat-stroked-button (click)="fileUpload.click()" [disabled]="loading">
+    <button mat-stroked-button (click)="fileUpload.click()" [disabled]="loading" [name]="'file-input-button' | translate">
       <input type="file" class="file-input" accept=".csv" (change)="onFileSelected($event)" #fileUpload id="file-input">
       <div class="file-upload">
         {{file?.name || "No file uploaded yet." | translate}}
         <mat-icon color="primary">attach_file</mat-icon>
       </div>
     </button>
-    <button mat-icon-button color="primary" *ngIf="file" (click)="processFile()" [disabled]="loading">
+    <button mat-icon-button color="primary" *ngIf="file" (click)="processFile()" [disabled]="loading" [name]="'process-file-button' | translate">
       <mat-icon>history</mat-icon>
     </button>
-    <button mat-icon-button color="primary" *ngIf="!loading && openPopUp" (click)="openDialog()">
+    <button mat-icon-button color="primary" *ngIf="!loading && openPopUp" (click)="openDialog()" [name]="'upload-file-button' | translate">
       <mat-icon>cloud_upload</mat-icon>
     </button>
   </mat-card-actions>

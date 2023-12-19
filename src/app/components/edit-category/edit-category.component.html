@@ -1,10 +1,10 @@
 <form [formGroup]="formGroup">
   <mat-toolbar color="primary">
-    <button mat-icon-button (click)="exit()">
+    <button mat-icon-button (click)="exit()" [name]="'exit-button' | translate">
       <mat-icon>keyboard_backspace</mat-icon>
     </button>
     <span translate>Edit category</span>
-    <button mat-icon-button routerLink="/">
+    <button mat-icon-button routerLink="/" [name]="'home-button' | translate">
       <mat-icon>home</mat-icon>
     </button>
   </mat-toolbar>
@@ -18,7 +18,9 @@
       <div class="icon-button">
         <button mat-fab customColor
           [color]="formGroup.get('color')!.value"
-          [backgroundColor]="formGroup.get('backgroundColor')!.value">
+          [backgroundColor]="formGroup.get('backgroundColor')!.value"
+          [name]="'icon-button' | translate"
+        >
           <mat-icon>{{category.icon}}</mat-icon>
         </button>
       </div>
@@ -37,9 +39,12 @@
       </mat-form-field>
     </mat-card-content>
     <mat-card-footer>
-      <button mat-stroked-button color="primary" (click)="exit()">{{'Cancel' | translate}}</button>
-      <button mat-stroked-button color="primary" type="submit" [disabled]="formGroup.invalid"
-        (click)="save()">{{'Save' | translate}}</button>
+      <button mat-stroked-button color="primary" (click)="exit()" [name]="'cancel-button' | translate">
+        {{'Cancel' | translate}}
+      </button>
+      <button mat-stroked-button color="primary" type="submit" [disabled]="formGroup.invalid" [name]="'save-button' | translate"
+        (click)="save()">{{'Save' | translate}}
+      </button>
     </mat-card-footer>
   </mat-card>
 </form>

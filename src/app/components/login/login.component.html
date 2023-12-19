@@ -30,7 +30,11 @@
         </mat-form-field>
       </mat-card-content>
       <mat-card-footer>
-        <button mat-stroked-button color="primary" (click)="loginUser()" [disabled]="formGroup.invalid">
+        <button mat-stroked-button color="primary"
+          [disabled]="formGroup.invalid"
+          [name]="'login-button' | translate"
+          (click)="loginUser()"
+        >
           {{'Login' | translate}}
         </button>
       </mat-card-footer>

@@ -4,6 +4,10 @@
   <span>Movements to save: {{data.length}}</span>
 </div>
 <div mat-dialog-actions>
-  <button mat-stroked-button [mat-dialog-close]="false" color="warn" cdkFocusInitial [disabled]="loading">{{'Cancel' | translate}}</button>
-  <button mat-stroked-button  (click)="upload()" color="primary" [disabled]="loading">{{'Upload' | translate}}</button>
+  <button mat-stroked-button [mat-dialog-close]="false" color="warn" cdkFocusInitial [disabled]="loading" [name]="'cancel-button' | translate">
+    {{'Cancel' | translate}}
+  </button>
+  <button mat-stroked-button (click)="upload()" color="primary" [disabled]="loading" [name]="'upload-button' | translate">
+    {{'Upload' | translate}}
+  </button>
 </div>

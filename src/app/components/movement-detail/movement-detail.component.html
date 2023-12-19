@@ -1,9 +1,9 @@
 <mat-toolbar color="primary">
-  <button mat-icon-button (click)="exit()">
+  <button mat-icon-button (click)="exit()" [name]="'exit-button' | translate">
     <mat-icon>keyboard_backspace</mat-icon>
   </button>
   <span translate>Details</span>
-  <button mat-icon-button (click)="deleteMovement()">
+  <button mat-icon-button (click)="deleteMovement()" [name]="'delete-button' | translate">
     <mat-icon>delete</mat-icon>
   </button>
 </mat-toolbar>
@@ -11,12 +11,13 @@
   <mat-card>
     <span class="mat-card-header">
       <button mat-icon-button customColor
-              [color]="movement!.color"
-              [backgroundColor]="movement!.backgroundColor">
+        [color]="movement!.color"
+        [backgroundColor]="movement!.backgroundColor"
+      >
         <mat-icon>{{movement!.icon}}</mat-icon>
       </button>
       <span>{{movement!.categoryName | translate}}</span>
-      <button mat-icon-button (click)="editMovement(movement!.id)">
+      <button mat-icon-button [name]="'edit-button' | translate" (click)="editMovement(movement!.id)">
         <mat-icon>edit</mat-icon>
       </button>
     </span>

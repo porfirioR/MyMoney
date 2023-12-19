@@ -1,16 +1,16 @@
 <mat-toolbar color="primary">
-  <button mat-icon-button (click)="exit()">
+  <button mat-icon-button (click)="exit()" [name]="'exit-button' | translate">
     <mat-icon>keyboard_backspace</mat-icon>
   </button>
   <span>{{title | translate}}</span>
-  <button mat-icon-button routerLink="/">
+  <button mat-icon-button routerLink="/" [name]="'home-button' | translate">
     <mat-icon>home</mat-icon>
   </button>
 </mat-toolbar>
 <div class="mat-toolbar-block"></div>
 <mat-card>
   <div [formGroup]="formGroup" class="form-input">
-    <button mat-icon-button color="primary">
+    <button mat-icon-button color="primary" [name]="'icon-button' | translate">
       <mat-icon>{{formGroup.get('icon')?.value}}</mat-icon>
     </button>
     <mat-form-field class="mat-from-field">
@@ -23,7 +23,7 @@
         {{ 'message-error.repeating-category'| translate }}
       </mat-error>
     </mat-form-field>
-    <button mat-icon-button color="primary" [disabled]="formGroup.invalid" (click)="save()">
+    <button mat-icon-button color="primary" [disabled]="formGroup.invalid" [name]="'save-button' | translate" (click)="save()">
       <mat-icon>done</mat-icon>
     </button>
   </div>
@@ -31,9 +31,12 @@
     <span *ngFor="let group of currentCategory.groups">
       <mat-card-subtitle translate>{{group.groupName}}</mat-card-subtitle>
       <div class="icon-list">
-        <button class="btn-icon" mat-mini-fab (click)="updateIcon(icon)"
-            *ngFor="let icon of group.icons"
-            [color]="icon === formGroup.get('icon')?.value ? 'primary': ''">
+        <button class="btn-icon" mat-mini-fab
+          *ngFor="let icon of group.icons"
+          [color]="icon === formGroup.get('icon')?.value ? 'primary': ''"
+          [name]="'update-icon-button' | translate"
+          (click)="updateIcon(icon)"
+        >
           <i class="material-icons-outlined notranslate">{{icon}}</i>
         </button>
       </div>
