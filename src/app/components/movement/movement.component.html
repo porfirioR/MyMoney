@@ -17,8 +17,10 @@
     <span class="movement-row" [routerLink]="['details', movement.id]">
       <span class="icon-memorandum">
         <button mat-mini-fab customColor
-            [color]="movement!.color"
-            [backgroundColor]="movement!.backgroundColor">
+          [color]="movement!.color"
+          [backgroundColor]="movement!.backgroundColor"
+          [name]="'movement-icon-button' | translate"
+        >
           <i class="material-icons-outlined notranslate">{{movement.icon}}</i>
         </button>
         <span>{{movement.memorandum! | translate}}</span>

@@ -4,11 +4,11 @@
   </mat-sidenav>
   <mat-sidenav-content>
     <mat-toolbar color="primary">
-      <button mat-icon-button (click)="sidenav.toggle()">
+      <button mat-icon-button [name]="'menu-button' | translate" (click)="sidenav.toggle()">
         <mat-icon>menu</mat-icon>
       </button>
       <span>{{title | translate}}</span>
-      <button mat-stroked-button (click)="openYearMonth()">
+      <button mat-stroked-button [name]="'year-month-button' | translate" (click)="openYearMonth()">
         {{yearMonth.shortMonth | translate}} {{yearMonth.year}}
       </button>
     </mat-toolbar>
@@ -49,7 +49,7 @@
       <app-movement [groupDateMovement]="groupDateMovement" [categories]="categories" [numberType]="numberType"></app-movement>
     </mat-card>
     <mat-card-footer>
-      <button mat-fab color="primary" class="btn-add" routerLink="/register-movement" [disabled]="loading">
+      <button mat-fab color="primary" class="btn-add" routerLink="/register-movement" [disabled]="loading" [name]="'add-movement-button' | translate">
         <mat-icon>add</mat-icon>
       </button>
     </mat-card-footer>

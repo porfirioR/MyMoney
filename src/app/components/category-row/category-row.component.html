@@ -1,17 +1,20 @@
 <span class="row-category">
-  <button mat-icon-button color="warn" (click)="deactivateReactivateCategory(category.active)" *ngIf="category.active">
+  <!-- <button mat-icon-button color="warn" (click)="deactivateReactivateCategory(category.active)" *ngIf="category.active">
     <mat-icon>highlight_off</mat-icon>
   </button>
   <button mat-icon-button (click)="deactivateReactivateCategory(category.active)" *ngIf="!category.active">
     <mat-icon class="icon-color-green">add_circle_outline</mat-icon>
+  </button> -->
+
+  <button mat-icon-button [ngClass]="{'warn': category.active}" [name]="'active-category-button' | translate" (click)="deactivateReactivateCategory(category.active)">
+    <mat-icon *ngIf="category.active">highlight_off</mat-icon>
+    <mat-icon *ngIf="!category.active" class="icon-color-green">add_circle_outline</mat-icon>
   </button>
-  <button mat-mini-fab customColor
-          [color]="category.color"
-          [backgroundColor]="category.backgroundColor">
+  <button mat-mini-fab customColor [color]="category.color" [backgroundColor]="category.backgroundColor" [name]="'icon-category-button' | translate">
     <i class="material-icons-outlined notranslate">{{category.icon}}</i>
   </button>
   <span class="category-name">{{category.name | translate}}</span>
-  <button mat-icon-button [routerLink]="['edit-category', category.id]">
+  <button mat-icon-button [routerLink]="['edit-category', category.id]" [name]="'edit-category-button' | translate">
     <mat-icon>edit</mat-icon>
   </button>
 </span>
