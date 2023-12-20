@@ -6,7 +6,6 @@ import { ActivatedRoute } from '@angular/router';
 import { DocumentData, DocumentReference } from '@angular/fire/firestore';
 import { TranslateService } from '@ngx-translate/core';
 import { combineLatest, take } from 'rxjs';
-import { IconType } from '../../enums/icon-type.enum';
 import { CategoryType } from '../../enums/category-type.enum';
 import { InputType } from '../../enums/input-type.enum';
 import { MovementModel } from '../../models/movement.model';
@@ -15,6 +14,7 @@ import { HelperService } from '../../services/helper.service';
 import { MovementService } from '../../services/movement.service';
 import { UserService } from '../../services/user.service';
 import { ConfigurationService } from '../../services/configuration.service';
+import { MovementForm } from '../../forms/movement.form';
 
 @Component({
   selector: 'app-register-movement',
@@ -30,17 +30,17 @@ export class RegisterMovementComponent implements OnInit {
   protected minDate = new Date('2018-01-01:00:00:00')
   protected inputCharacter = InputType.Characters
   protected inputDigit = InputType.Digits
-  protected formGroup: FormGroup = new FormGroup({
-    id: new FormControl<string | ''>(''),
-    type: new FormControl<CategoryType>(this.categoryType.expense),
-    icon: new FormControl<IconType | ''>('', Validators.required),
-    categoryId: new FormControl<string>('', Validators.required),
-    memorandum: new FormControl<string>('', Validators.maxLength(50)),
-    date: new FormControl({value: null, disabled: true}),
-    amount: new FormControl('', [Validators.required, Validators.min(0), Validators.minLength(1), Validators.max(999999999999)]),
+  protected formGroup: FormGroup<MovementForm> = new FormGroup<MovementForm>({
+    id: new FormControl(''),
+    type: new FormControl(this.categoryType.expense),
+    icon: new FormControl(null, Validators.required),
+    categoryId: new FormControl(null, Validators.required),
+    memorandum: new FormControl('', Validators.maxLength(50)),
+    date: new FormControl({ value: null, disabled: true }),
+    amount: new FormControl(null, [Validators.required, Validators.min(0), Validators.minLength(1), Validators.max(999999999999)]),
     color: new FormControl(this.defaultColor),
     backgroundColor: new FormControl(this.defaultBackgroundColor),
-    time: new FormControl('', Validators.required)
+    time: new FormControl(null, Validators.required)
   })
   protected currentCategories!: CategoryModel[]
   protected loading = true
@@ -79,41 +79,41 @@ export class RegisterMovementComponent implements OnInit {
           this.currentCategories = HelperService.categoriesByType(this.categoryList, this.categoryType.expense)
           if (this.currentCategories.length > 0) {
             const currentCategory = this.currentCategories[0]
-            this.formGroup.controls['icon'].setValue(currentCategory.icon)
-            this.formGroup.controls['categoryId'].setValue(currentCategory.id)
+            this.formGroup.controls.icon.setValue(currentCategory.icon)
+            this.formGroup.controls.categoryId.setValue(currentCategory.id)
             this.formGroup.patchValue({ color: currentCategory.color ?? this.defaultColor })
             this.formGroup.patchValue({ backgroundColor: currentCategory.backgroundColor ?? this.defaultBackgroundColor})
           }
         }
 
-        this.formGroup.controls['type'].valueChanges.subscribe({
+        this.formGroup.controls.type.valueChanges.subscribe({
           next: (type) => {
-            this.currentCategories = HelperService.categoriesByType(this.categoryList, type)
-            const currentCategory = this.currentCategories.find(x => x.id === this.formGroup.controls['categoryId'].value)
+            this.currentCategories = HelperService.categoriesByType(this.categoryList, type!)
+            const currentCategory = this.currentCategories.find(x => x.id === this.formGroup.controls.categoryId.value)
             if(currentCategory || this.currentCategories.length === 0) {
-              this.formGroup.controls['icon'].setValue('')
-              this.formGroup.controls['categoryId'].setValue('')
-              this.formGroup.controls['color'].setValue(this.defaultColor)
-              this.formGroup.controls['backgroundColor'].setValue(this.defaultBackgroundColor)
+              this.formGroup.controls.icon.setValue(null)
+              this.formGroup.controls.categoryId.setValue('')
+              this.formGroup.controls.color.setValue(this.defaultColor)
+              this.formGroup.controls.backgroundColor.setValue(this.defaultBackgroundColor)
             } else {
-              this.formGroup.controls['icon'].setValue(this.currentCategories[0].icon)
-              this.formGroup.controls['categoryId'].setValue(this.currentCategories[0].id)
-              this.formGroup.controls['color'].setValue(this.currentCategories[0].color ?? this.defaultColor)
-              this.formGroup.controls['backgroundColor'].setValue(this.currentCategories[0].backgroundColor ?? this.defaultBackgroundColor)
+              this.formGroup.controls.icon.setValue(this.currentCategories[0].icon)
+              this.formGroup.controls.categoryId.setValue(this.currentCategories[0].id)
+              this.formGroup.controls.color.setValue(this.currentCategories[0].color ?? this.defaultColor)
+              this.formGroup.controls.backgroundColor.setValue(this.currentCategories[0].backgroundColor ?? this.defaultBackgroundColor)
             }
           }
         })
-        this.formGroup.controls['memorandum'].valueChanges.subscribe({
-          next: (value: string) => {
-            const newValue = value.replace(/,/g, '')
-            this.formGroup.controls['memorandum'].patchValue(newValue, { emitEvent: false })
+        this.formGroup.controls.memorandum.valueChanges.subscribe({
+          next: (value: string | null) => {
+            const newValue = value?.replace(/,/g, '')
+            this.formGroup.controls.memorandum.patchValue(newValue!, { emitEvent: false })
           }
         })
-        this.formGroup.controls['date'].valueChanges.subscribe({
-          next: (date: Date) => {
-            const dateCopy = new Date(date.getTime())
+        this.formGroup.controls.date.valueChanges.subscribe({
+          next: (date) => {
+            const dateCopy = new Date(date!.getTime())
             dateCopy.setHours(0, 0, 0, 0)
-            this.formGroup.controls['time'].setValue(dateCopy.getTime()!)
+            this.formGroup.controls.time.setValue(dateCopy.getTime()!)
           }
         })
         this.loading = false
@@ -127,10 +127,10 @@ export class RegisterMovementComponent implements OnInit {
   }
 
   protected selectedIcon = (category: CategoryModel): void => {
-    this.formGroup.controls['icon'].setValue(category.icon)
-    this.formGroup.controls['categoryId'].setValue(category.id)
-    this.formGroup.controls['color'].setValue(category.color ?? this.defaultColor)
-    this.formGroup.controls['backgroundColor'].setValue(category.backgroundColor ?? this.defaultBackgroundColor)
+    this.formGroup.controls.icon.setValue(category.icon)
+    this.formGroup.controls.categoryId.setValue(category.id)
+    this.formGroup.controls.color.setValue(category.color ?? this.defaultColor)
+    this.formGroup.controls.backgroundColor.setValue(category.backgroundColor ?? this.defaultBackgroundColor)
     this.inputMemorandum?.nativeElement.focus()
     this.formGroup.markAllAsTouched()
   }
@@ -140,7 +140,7 @@ export class RegisterMovementComponent implements OnInit {
   }
 
   protected save = (): void => {
-    const request: MovementModel = this.formGroup.getRawValue()
+    const request: MovementModel = this.formGroup.getRawValue() as MovementModel
     delete request.date
     this.saving = true
     let request$: Promise<void> | Promise<DocumentReference<DocumentData>> | Promise<[DocumentReference<DocumentData>, void]>

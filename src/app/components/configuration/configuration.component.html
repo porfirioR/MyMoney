@@ -22,9 +22,9 @@
           </mat-option>
         </mat-select>
         <mat-hint align="start">
-          {{'Example' | translate}}: {{amount | number:'' : formGroup.get('number')!.value}}
+          {{'Example' | translate}}: {{amount | number: '' : formGroup.controls.number.value!}}
             - 
-          {{'Date' | translate}}: {{date | date:'shortDate' : '': formGroup.get('language')!.value}}
+          {{'Date' | translate}}: {{date | date: 'shortDate' : '': formGroup.controls.language.value!}}
         </mat-hint>
       </mat-form-field>
       <mat-form-field class="w-100">

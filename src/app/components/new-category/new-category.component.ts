@@ -15,6 +15,7 @@ import { UserCategoryModel } from '../../models/user-category.model';
 import { CategoryService } from '../../services/category.service';
 import { UserCategoryService } from '../../services/user-category.service';
 import { UserService } from '../../services/user.service';
+import { CategoryForm } from '../../forms/category.form';
 
 @Component({
   selector: 'app-new-category',
@@ -79,7 +80,7 @@ export class NewCategoryComponent implements OnInit {
       ])
     ]
   )
-  protected formGroup!: FormGroup
+  protected formGroup!: FormGroup<CategoryForm>
   protected sameName: boolean = false
 
   constructor(
@@ -108,11 +109,11 @@ export class NewCategoryComponent implements OnInit {
         this.categoryNames = categories.map(x => x.name.toLowerCase())
       }
     })
-    this.formGroup.controls['name'].valueChanges.pipe(debounceTime(500), filter(x => x.length > 3)).subscribe({
+    this.formGroup.controls.name.valueChanges.pipe(debounceTime(500), filter(x => x!.length > 3)).subscribe({
       next: (name) => {
-        if (this.categoryNames.includes(name.toLowerCase()) || this.categoryNames.includes(`${this.translateService.instant(name.toLowerCase())} ${this.translateService.instant('(user)')}`)) {
-          this.formGroup.controls['name'].setErrors({'sameName': true})
-          this.formGroup.controls['name'].markAsTouched()
+        if (this.categoryNames.includes(name!.toLowerCase()) || this.categoryNames.includes(`${this.translateService.instant(name!.toLowerCase())} ${this.translateService.instant('(user)')}`)) {
+          this.formGroup.controls.name.setErrors({'sameName': true})
+          this.formGroup.controls.name.markAsTouched()
         }
       }
     })
@@ -123,12 +124,12 @@ export class NewCategoryComponent implements OnInit {
   }
 
   protected updateIcon = (icon: IconType): void => {
-    this.formGroup.get('icon')?.setValue(icon)
+    this.formGroup.controls.icon.setValue(icon)
     this.inputCategoryName?.nativeElement.focus()
   }
 
   protected save = (): void => {
-    const category: CategoryModel = this.formGroup.getRawValue()
+    const category: CategoryModel = this.formGroup.getRawValue() as CategoryModel
     this.categoryService.create(category).then((categoryReference) => {
       const userCategoryModel = new UserCategoryModel(category.active, categoryReference.id, category.owner)
       this.userCategoryService.upsertCategory(userCategoryModel).then((userCategoryReference) => {

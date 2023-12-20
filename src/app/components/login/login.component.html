@@ -14,7 +14,7 @@
           Email
         </mat-label>
         <input matInput type="email" formControlName="email" id="email">
-        <mat-error *ngIf="formGroup.get('email')?.hasError('required')">
+        <mat-error *ngIf="formGroup.controls.email.hasError('required')">
           {{ 'message-error.required-email'| translate }}
         </mat-error>
       </mat-form-field>
@@ -24,7 +24,7 @@
             Password
           </mat-label>
           <input matInput type="password" formControlName="password" id="password">
-          <mat-error *ngIf="formGroup.get('password')?.hasError('required')">
+          <mat-error *ngIf="formGroup.controls.password.hasError('required')">
             {{ 'message-error.required-password'| translate }}
           </mat-error>
         </mat-form-field>

@@ -17,8 +17,8 @@
     <mat-card-content>
       <div class="icon-button">
         <button mat-fab customColor
-          [color]="formGroup.get('color')!.value"
-          [backgroundColor]="formGroup.get('backgroundColor')!.value"
+          [color]="formGroup.controls.color.value ?? undefined"
+          [backgroundColor]="formGroup.controls.backgroundColor.value ?? undefined"
           [name]="'icon-button' | translate"
         >
           <mat-icon>{{category.icon}}</mat-icon>
@@ -35,7 +35,7 @@
       <mat-form-field appearance="fill" class="w-100">
         <mat-label translate>Order</mat-label>
         <input matInput type="text" formControlName="order" [mask]="mask" [thousandSeparator]="thousandSeparator" id="order">
-        <mat-error *ngIf="formGroup.get('order')?.hasError('min') || formGroup.get('order')?.hasError('min')" translate>Value cannot less than zero.</mat-error>
+        <mat-error *ngIf="formGroup.controls.order.hasError('min') || formGroup.controls.order.hasError('min')" translate>Value cannot less than zero.</mat-error>
       </mat-form-field>
     </mat-card-content>
     <mat-card-footer>
