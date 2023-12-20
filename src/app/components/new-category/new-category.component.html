@@ -1,29 +1,29 @@
 <mat-toolbar color="primary">
-  <button mat-icon-button (click)="exit()" [name]="'exit-button' | translate">
+  <button mat-icon-button (click)="exit()" [title]="'exit-button' | translate">
     <mat-icon>keyboard_backspace</mat-icon>
   </button>
   <span>{{title | translate}}</span>
-  <button mat-icon-button routerLink="/" [name]="'home-button' | translate">
+  <button mat-icon-button routerLink="/" [title]="'home-button' | translate">
     <mat-icon>home</mat-icon>
   </button>
 </mat-toolbar>
 <div class="mat-toolbar-block"></div>
 <mat-card>
   <div [formGroup]="formGroup" class="form-input">
-    <button mat-icon-button color="primary" [name]="'icon-button' | translate">
-      <mat-icon>{{formGroup.get('icon')?.value}}</mat-icon>
+    <button mat-icon-button color="primary" [title]="'icon-button' | translate">
+      <mat-icon>{{formGroup.controls.icon.value}}</mat-icon>
     </button>
     <mat-form-field class="mat-from-field">
       <mat-label translate>Category name</mat-label>
       <input matInput formControlName="name" #inputCategoryName id="name">
-      <mat-error *ngIf="formGroup.get('name')?.hasError('required')">
+      <mat-error *ngIf="formGroup.controls.name.hasError('required')">
         {{ 'message-error.required-category'| translate }}
       </mat-error>
-      <mat-error *ngIf="formGroup.get('name')?.hasError('sameName')">
+      <mat-error *ngIf="formGroup.controls.name.hasError('sameName')">
         {{ 'message-error.repeating-category'| translate }}
       </mat-error>
     </mat-form-field>
-    <button mat-icon-button color="primary" [disabled]="formGroup.invalid" [name]="'save-button' | translate" (click)="save()">
+    <button mat-icon-button color="primary" [disabled]="formGroup.invalid" [title]="'save-button' | translate" (click)="save()">
       <mat-icon>done</mat-icon>
     </button>
   </div>
@@ -33,8 +33,8 @@
       <div class="icon-list">
         <button class="btn-icon" mat-mini-fab
           *ngFor="let icon of group.icons"
-          [color]="icon === formGroup.get('icon')?.value ? 'primary': ''"
-          [name]="'update-icon-button' | translate"
+          [color]="icon === formGroup.controls.icon.value ? 'primary': ''"
+          [title]="'update-icon-button' | translate"
           (click)="updateIcon(icon)"
         >
           <i class="material-icons-outlined notranslate">{{icon}}</i>

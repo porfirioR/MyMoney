@@ -11,6 +11,7 @@ import { HelperService } from '../../services/helper.service';
 import { ConfigurationService } from '../../services/configuration.service';
 import { CategoryModel } from '../../models/category.model';
 import { UserCategoryModel } from '../../models/user-category.model';
+import { ColorForm } from '../../forms/color.form';
 
 @Component({
   selector: 'app-edit-category',
@@ -21,7 +22,7 @@ export class EditCategoryComponent implements OnInit {
   protected category?: CategoryModel
   protected defaultColor = '#000000'
   protected defaultBackgroundColor = '#ffffff'
-  protected formGroup: FormGroup = new FormGroup({
+  protected formGroup: FormGroup<ColorForm> = new FormGroup<ColorForm>({
     color: new FormControl(this.defaultColor, Validators.required),
     backgroundColor: new FormControl(this.defaultBackgroundColor, Validators.required),
     order: new FormControl(0, Validators.min(0))
@@ -50,9 +51,9 @@ export class EditCategoryComponent implements OnInit {
         if (!this.category) { this.exit() }
         const userCategory = userCategories.find(x => x.categoryId === this.category!.id)
         if (userCategory) {
-          this.formGroup.controls['color'].setValue(userCategory.color)
-          this.formGroup.controls['backgroundColor'].setValue(userCategory.backgroundColor)
-          this.formGroup.controls['order'].setValue(userCategory.order)
+          this.formGroup.controls.color.setValue(userCategory.color)
+          this.formGroup.controls.backgroundColor.setValue(userCategory.backgroundColor)
+          this.formGroup.controls.order.setValue(userCategory.order)
         }
       }
     })
@@ -71,9 +72,9 @@ export class EditCategoryComponent implements OnInit {
       this.userService.getUserEmail(),
       this.userService.getUserCategories().find(x => x.categoryId === this.category?.id)?.id,
       undefined,
-      this.formGroup.get('color')!.value,
-      this.formGroup.get('backgroundColor')!.value,
-      this.formGroup.get('order')!.value
+      this.formGroup.controls.color.value ?? undefined,
+      this.formGroup.controls.backgroundColor.value ?? undefined,
+      this.formGroup.controls.order.value ?? undefined
     )
     this.userCategory.upsertCategory(request).then((docReference) => {
       this.snackBar.open(this.translate.instant('category-messages.updated'), '', { duration: 3000 })

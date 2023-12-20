@@ -1,10 +1,10 @@
 <form [formGroup]="formGroup">
   <mat-toolbar color="primary">
-    <button mat-icon-button (click)="exit()" [name]="'exit-button' | translate">
+    <button mat-icon-button (click)="exit()" [title]="'exit-button' | translate">
       <mat-icon>keyboard_backspace</mat-icon>
     </button>
     <span translate>Edit category</span>
-    <button mat-icon-button routerLink="/" [name]="'home-button' | translate">
+    <button mat-icon-button routerLink="/" [title]="'home-button' | translate">
       <mat-icon>home</mat-icon>
     </button>
   </mat-toolbar>
@@ -17,9 +17,9 @@
     <mat-card-content>
       <div class="icon-button">
         <button mat-fab customColor
-          [color]="formGroup.get('color')!.value"
-          [backgroundColor]="formGroup.get('backgroundColor')!.value"
-          [name]="'icon-button' | translate"
+          [color]="formGroup.controls.color.value ?? undefined"
+          [backgroundColor]="formGroup.controls.backgroundColor.value ?? undefined"
+          [title]="'icon-button' | translate"
         >
           <mat-icon>{{category.icon}}</mat-icon>
         </button>
@@ -35,14 +35,14 @@
       <mat-form-field appearance="fill" class="w-100">
         <mat-label translate>Order</mat-label>
         <input matInput type="text" formControlName="order" [mask]="mask" [thousandSeparator]="thousandSeparator" id="order">
-        <mat-error *ngIf="formGroup.get('order')?.hasError('min') || formGroup.get('order')?.hasError('min')" translate>Value cannot less than zero.</mat-error>
+        <mat-error *ngIf="formGroup.controls.order.hasError('min') || formGroup.controls.order.hasError('min')" translate>Value cannot less than zero.</mat-error>
       </mat-form-field>
     </mat-card-content>
     <mat-card-footer>
-      <button mat-stroked-button color="primary" (click)="exit()" [name]="'cancel-button' | translate">
+      <button mat-stroked-button color="primary" (click)="exit()" [title]="'cancel-button' | translate">
         {{'Cancel' | translate}}
       </button>
-      <button mat-stroked-button color="primary" type="submit" [disabled]="formGroup.invalid" [name]="'save-button' | translate"
+      <button mat-stroked-button color="primary" type="submit" [disabled]="formGroup.invalid" [title]="'save-button' | translate"
         (click)="save()">{{'Save' | translate}}
       </button>
     </mat-card-footer>

@@ -4,6 +4,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { HelperService } from '../../services/helper.service';
 import { MonthType } from '../../enums/month-type.enum';
 import { YearMonthModel } from '../../models/year-month-model';
+import { SelectYearMonthForm } from '../../forms/select-year-month.form';
 
 @Component({
   selector: 'app-select-year-month',
@@ -12,7 +13,7 @@ import { YearMonthModel } from '../../models/year-month-model';
 })
 export class SelectYearMonthComponent implements OnInit {
   protected months = MonthType
-  protected formGroup: FormGroup = new FormGroup({})
+  protected formGroup: FormGroup<SelectYearMonthForm>
 
   constructor(
     private dialogRef: MatDialogRef<SelectYearMonthComponent>,
@@ -20,7 +21,7 @@ export class SelectYearMonthComponent implements OnInit {
   ) {
     const currentYear = this.yearMonth.year
     const currentMonth = this.months[this.yearMonth.month]
-    this.formGroup = new FormGroup( {
+    this.formGroup = new FormGroup<SelectYearMonthForm>({
       year: new FormControl(currentYear),
       month: new FormControl(currentMonth),
       selectedYear: new FormControl(currentYear),
@@ -31,17 +32,17 @@ export class SelectYearMonthComponent implements OnInit {
   ngOnInit(): void { }
 
   protected previousYear = (): void => {
-    const year = this.formGroup.get('selectedYear') as FormControl
-    year.setValue(year.value - 1)
+    const year = this.formGroup.controls.selectedYear
+    year.setValue(this.formGroup.value.selectedYear! - 1)
   }
 
   protected  nextYear = (): void => {
-    const year = this.formGroup.get('selectedYear') as FormControl
-    year.setValue(year.value + 1)
+    const year = this.formGroup.controls.selectedYear
+    year.setValue(this.formGroup.value.selectedYear! + 1)
   }
 
   protected changeMonth = (value: string): void => {
-    const newYearMonth = new YearMonthModel(this.formGroup.get('selectedYear')?.value, HelperService.convertStringToMonthType(value))
+    const newYearMonth = new YearMonthModel(this.formGroup.controls.selectedYear.value!, HelperService.convertStringToMonthType(value))
     this.dialogRef.close(newYearMonth)
   }
 

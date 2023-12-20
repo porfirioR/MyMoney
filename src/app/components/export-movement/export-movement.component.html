@@ -1,6 +1,6 @@
 <form [formGroup]="formGroup">
   <mat-toolbar color="primary">
-    <button mat-icon-button (click)="exit()" [name]="'exit-button' | translate">
+    <button mat-icon-button (click)="exit()" [title]="'exit-button' | translate">
       <mat-icon>keyboard_backspace</mat-icon>
     </button>
     <span translate>Export Movements</span>
@@ -10,13 +10,13 @@
     <mat-card-content>
       <mat-form-field appearance="fill" class="w-100">
         <mat-label translate>Start date</mat-label>
-        <input matInput [matDatepicker]="startDatePicker" formControlName="startDate" [min]="minDate" [max]="formGroup.get('endDate')?.value" id="start-date">
+        <input matInput [matDatepicker]="startDatePicker" formControlName="startDate" [min]="minDate" [max]="formGroup.controls.endDate.value" id="start-date">
         <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
         <mat-datepicker #startDatePicker></mat-datepicker>
       </mat-form-field>
       <mat-form-field appearance="fill" class="w-100">
         <mat-label translate>End date</mat-label>
-        <input matInput [matDatepicker]="endDatePicker" formControlName="endDate" [min]="formGroup.get('startDate')?.value" id="end-date">
+        <input matInput [matDatepicker]="endDatePicker" formControlName="endDate" [min]="formGroup.controls.startDate.value" id="end-date">
         <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
         <mat-datepicker #endDatePicker></mat-datepicker>
       </mat-form-field>
@@ -28,7 +28,7 @@
       </mat-form-field>
     </mat-card-content>
     <mat-card-actions>
-      <button mat-stroked-button color="primary" (click)="export()" [disabled]="formGroup.invalid || loading" [name]="'export-button' | translate">
+      <button mat-stroked-button color="primary" (click)="export()" [disabled]="formGroup.invalid || loading" [title]="'export-button' | translate">
         {{"Export" | translate}}
       </button>
     </mat-card-actions>

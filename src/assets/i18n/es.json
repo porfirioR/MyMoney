@@ -184,6 +184,7 @@
   "back-button": "botón-atras",
   "next-year-button": "botón-siguiente-año",
   "change-month-button": "botón-cambiar-mes",
+  "new expense": "nuevo gasto",
   "category-messages": {
     "question": "¿Está seguro de que desea eliminar esta categoría?. Todos los movimientos relacionados ({{length}}) con esta categoría serán eliminados",
     "deleted": "La categoría fue borrada",
