@@ -142,7 +142,11 @@ registerLocaleData(localeEn, 'en')
     provideAuth(() => getAuth()),
     provideFirestore(() => getFirestore()),
     StoreModule.forRoot({}, {}),
-    StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !environment.production })
+    StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !environment.production }),
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      enabled: environment.production,
+      registrationStrategy: 'registerWhenStable:30000'
+    })
   ],
   providers: [
     { provide: LOCALE_ID, useValue: 'es' },
