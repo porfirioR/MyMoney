@@ -1,10 +1,10 @@
 <form [formGroup]="formGroup">
   <mat-toolbar color="primary">
-    <button mat-icon-button (click)="exit()" [name]="'exit-button' | translate">
+    <button mat-icon-button (click)="exit()" [title]="'exit-button' | translate">
       <mat-icon>keyboard_backspace</mat-icon>
     </button>
     <span translate>{{title}}</span>
-    <button mat-icon-button routerLink="/" [name]="'home-button' | translate">
+    <button mat-icon-button routerLink="/" [title]="'home-button' | translate">
       <mat-icon>home</mat-icon>
     </button>
   </mat-toolbar>
@@ -29,7 +29,7 @@
         <button class="btn-icon" mat-fab customColor
           [color]="category.icon === formGroup.controls.icon.value && category.id === formGroup.controls.categoryId.value ? category.color : defaultColor"
           [backgroundColor]="category.icon === formGroup.controls.icon.value && category.id === formGroup.controls.categoryId.value ? category.backgroundColor : defaultBackgroundColor"
-          [name]="'category-icon-button' | translate"
+          [title]="'category-icon-button' | translate"
           (click)="selectedIcon(category)"
         >
           <i class="material-icons-outlined notranslate">{{category.icon}}</i>
@@ -43,7 +43,7 @@
           <button mat-icon-button customColor class="button-mat-prefix"
             [color]="formGroup.controls.color.value ?? undefined"
             [backgroundColor]="formGroup.controls.backgroundColor.value ?? undefined"
-            [name]="'icon-button' | translate"
+            [title]="'icon-button' | translate"
           >
             <mat-icon>{{formGroup.controls.icon.value}}</mat-icon>
           </button>
@@ -69,12 +69,12 @@
       </mat-form-field>
     </mat-card-content>
     <mat-card-footer>
-      <button mat-stroked-button color="primary" [name]="'cancel-button' | translate" (click)="exit()">
+      <button mat-stroked-button color="primary" [title]="'cancel-button' | translate" (click)="exit()">
         {{'Cancel' | translate}}
       </button>
       <button mat-stroked-button color="primary" type="submit"
         [disabled]="formGroup.invalid || saving"
-        [name]="'save-button' | translate"
+        [title]="'save-button' | translate"
         (click)="save()"
       >
         {{'Save' | translate}}

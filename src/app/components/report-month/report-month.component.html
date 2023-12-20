@@ -1,10 +1,10 @@
 <form [formGroup]="formGroup">
   <mat-toolbar color="primary">
-    <button mat-icon-button [name]="'exit-button' | translate" (click)="exit()">
+    <button mat-icon-button [title]="'exit-button' | translate" (click)="exit()">
       <mat-icon>keyboard_backspace</mat-icon>
     </button>
     <span>{{'Report' | translate}}</span>
-    <button mat-stroked-button [name]="'year-month-button' | translate" (click)="openYearMonth()">
+    <button mat-stroked-button [title]="'year-month-button' | translate" (click)="openYearMonth()">
       {{yearMonth.shortMonth | translate}} {{yearMonth.year}}
     </button>
   </mat-toolbar>
@@ -34,7 +34,7 @@
             <button mat-mini-fab customColor
               [color]="group!.color"
               [backgroundColor]="group!.backgroundColor"
-              [name]="'category-name-button' | translate"
+              [title]="'category-name-button' | translate"
             >
               <i class="material-icons-outlined notranslate">{{group.icon}}</i>
             </button>

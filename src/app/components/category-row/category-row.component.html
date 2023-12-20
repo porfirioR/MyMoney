@@ -1,14 +1,14 @@
 <span class="row-category">
-  <button mat-icon-button [ngClass]="{ 'mat-warn': category.active }" [name]="'active-category-button' | translate" (click)="deactivateReactivateCategory(category.active)">
+  <button mat-icon-button [ngClass]="{ 'mat-warn': category.active }" [title]="'active-category-button' | translate" (click)="deactivateReactivateCategory(category.active)">
     <mat-icon [ngClass]="{ 'icon-color-green': !category.active }">
       {{ category.active ? 'highlight_off' : 'add_circle_outline' }}
     </mat-icon>
   </button>
-  <button mat-mini-fab customColor [color]="category.color" [backgroundColor]="category.backgroundColor" [name]="'icon-category-button' | translate">
+  <button mat-mini-fab customColor [color]="category.color" [backgroundColor]="category.backgroundColor" [title]="'icon-category-button' | translate">
     <i class="material-icons-outlined notranslate">{{category.icon}}</i>
   </button>
   <span class="category-name">{{category.name | translate}}</span>
-  <button mat-icon-button [routerLink]="['edit-category', category.id]" [name]="'edit-category-button' | translate">
+  <button mat-icon-button [routerLink]="['edit-category', category.id]" [title]="'edit-category-button' | translate">
     <mat-icon>edit</mat-icon>
   </button>
 </span>

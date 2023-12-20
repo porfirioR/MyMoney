@@ -72,7 +72,7 @@
     },
     {
       "collectionGroup": "expense_time",
-      "queryScope": "COLLECTIONGROUP",
+      "queryScope": "COLLECTION_GROUP",
       "fields": [
         {
           "fieldPath": "time",

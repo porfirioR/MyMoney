@@ -1,6 +1,6 @@
 <form [formGroup]="formGroup">
   <mat-toolbar color="primary">
-    <button mat-icon-button (click)="exit()" [name]="'exit-button' | translate">
+    <button mat-icon-button (click)="exit()" [title]="'exit-button' | translate">
       <mat-icon>keyboard_backspace</mat-icon>
     </button>
     <span translate>Export Movements</span>
@@ -28,7 +28,7 @@
       </mat-form-field>
     </mat-card-content>
     <mat-card-actions>
-      <button mat-stroked-button color="primary" (click)="export()" [disabled]="formGroup.invalid || loading" [name]="'export-button' | translate">
+      <button mat-stroked-button color="primary" (click)="export()" [disabled]="formGroup.invalid || loading" [title]="'export-button' | translate">
         {{"Export" | translate}}
       </button>
     </mat-card-actions>
