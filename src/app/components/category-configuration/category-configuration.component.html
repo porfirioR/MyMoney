@@ -1,9 +1,9 @@
 <mat-toolbar color="primary">
-  <button mat-icon-button (click)="exit()">
+  <button mat-icon-button (click)="exit()" [title]="'exit-button' | translate">
     <mat-icon>keyboard_backspace</mat-icon>
   </button>
   <span translate>Category configuration</span>
-  <button mat-icon-button [routerLink]="['new-category', currentTap]" [title]="'Add category' | translate">
+  <button mat-icon-button [routerLink]="['new-category', currentTap]" [title]="'Add category' | translate" [title]="'add-configuration-button' | translate">
     <mat-icon>add</mat-icon>
   </button>
 </mat-toolbar>

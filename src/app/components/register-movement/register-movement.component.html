@@ -1,10 +1,10 @@
 <form [formGroup]="formGroup">
   <mat-toolbar color="primary">
-    <button mat-icon-button (click)="exit()">
+    <button mat-icon-button (click)="exit()" [title]="'exit-button' | translate">
       <mat-icon>keyboard_backspace</mat-icon>
     </button>
     <span translate>{{title}}</span>
-    <button mat-icon-button routerLink="/">
+    <button mat-icon-button routerLink="/" [title]="'home-button' | translate">
       <mat-icon>home</mat-icon>
     </button>
   </mat-toolbar>
@@ -26,9 +26,12 @@
     <div class="icon-list">
       <span *ngIf="currentCategories.length ===0" translate>There are no categories</span>
       <span class="btn-block" *ngFor="let category of currentCategories">
-        <button class="btn-icon" mat-fab customColor (click)="selectedIcon(category)"
-          [color]="category.icon === formGroup.get('icon')?.value && category.id === formGroup.get('categoryId')?.value ? category.color : defaultColor"
-          [backgroundColor]="category.icon === formGroup.get('icon')?.value && category.id === formGroup.get('categoryId')?.value ? category.backgroundColor : defaultBackgroundColor">
+        <button class="btn-icon" mat-fab customColor
+          [color]="category.icon === formGroup.controls.icon.value && category.id === formGroup.controls.categoryId.value ? category.color : defaultColor"
+          [backgroundColor]="category.icon === formGroup.controls.icon.value && category.id === formGroup.controls.categoryId.value ? category.backgroundColor : defaultBackgroundColor"
+          [title]="'category-icon-button' | translate"
+          (click)="selectedIcon(category)"
+        >
           <i class="material-icons-outlined notranslate">{{category.icon}}</i>
         </button>
         <label translate>{{category.name}}</label>
@@ -37,22 +40,25 @@
     <mat-card-content>
       <mat-form-field appearance="fill" class="w-100">
         <span matPrefix>
-          <button mat-icon-button customColor class="button-mat-prefix" [color]="formGroup.get('color')?.value"
-            [backgroundColor]="formGroup.get('backgroundColor')?.value">
-            <mat-icon>{{formGroup.get('icon')?.value}}</mat-icon>
+          <button mat-icon-button customColor class="button-mat-prefix"
+            [color]="formGroup.controls.color.value ?? undefined"
+            [backgroundColor]="formGroup.controls.backgroundColor.value ?? undefined"
+            [title]="'icon-button' | translate"
+          >
+            <mat-icon>{{formGroup.controls.icon.value}}</mat-icon>
           </button>
         </span>
         <mat-label translate>Memorandum</mat-label>
         <input matInput type="text" formControlName="memorandum" #memorandum name="memorandum" id="memorandum">
-        <mat-error *ngIf="formGroup.get('memorandum')?.hasError('maxlength')">
-          {{'message-error.exceed'| translate:{ count: 50, type: inputCharacter} }}
+        <mat-error *ngIf="formGroup.controls.memorandum.hasError('maxlength')">
+          {{'message-error.exceed' | translate: { count: 50, type: inputCharacter } }}
         </mat-error>
       </mat-form-field>
       <mat-form-field appearance="fill" class="w-100">
         <mat-label translate>Amount</mat-label>
         <input matInput type="text" formControlName="amount" [mask]="mask" [thousandSeparator]="thousandSeparator" name="amount" autocomplete="off" id="amount">
-        <mat-error *ngIf="formGroup.get('amount')?.hasError('maxlength') || formGroup.get('amount')?.hasError('max')">
-          {{'message-error.exceed'| translate:{ count: 12, type: inputDigit} }}
+        <mat-error *ngIf="formGroup.controls.amount.hasError('maxlength') || formGroup.controls.amount.hasError('max')">
+          {{'message-error.exceed' | translate: { count: 12, type: inputDigit } }}
         </mat-error>
       </mat-form-field>
       <mat-form-field appearance="fill" class="w-100">
@@ -63,8 +69,14 @@
       </mat-form-field>
     </mat-card-content>
     <mat-card-footer>
-      <button mat-stroked-button color="primary" (click)="exit()">{{'Cancel' | translate}}</button>
-      <button mat-stroked-button color="primary" type="submit" [disabled]="formGroup.invalid || saving" (click)="save()">
+      <button mat-stroked-button color="primary" [title]="'cancel-button' | translate" (click)="exit()">
+        {{'Cancel' | translate}}
+      </button>
+      <button mat-stroked-button color="primary" type="submit"
+        [disabled]="formGroup.invalid || saving"
+        [title]="'save-button' | translate"
+        (click)="save()"
+      >
         {{'Save' | translate}}
       </button>
     </mat-card-footer>

@@ -1,13 +1,15 @@
 <mat-toolbar color="primary">
-  <button mat-icon-button (click)="exit()">
+  <button mat-icon-button (click)="exit()" [title]="'exit-button' | translate">
     <mat-icon>keyboard_backspace</mat-icon>
   </button>
   <span>{{'Annual Report' | translate}}</span>
-  <button mat-button mat-stroked-button [matMenuTriggerFor]="yearList">
+  <button mat-button mat-stroked-button [matMenuTriggerFor]="yearList" [title]="'year-button' | translate">
     {{year}}
   </button>
   <mat-menu #yearList="matMenu">
-    <button mat-menu-item *ngFor="let year of yearRange" (click)="yearChanges(year)">{{year}}</button>
+    <button mat-menu-item *ngFor="let year of yearRange" (click)="yearChanges(year)" [title]="'year-range-buttons' | translate: { year: year }">
+      {{year}}
+    </button>
   </mat-menu>
 </mat-toolbar>
 <div class="header-height"></div>
@@ -117,7 +119,7 @@
   <mat-expansion-panel hideToggle *ngFor="let group of groups" class="no-margins">
     <mat-expansion-panel-header>
       <mat-panel-title>
-        <button mat-mini-fab customColor [color]="group!.color" [backgroundColor]="group!.backgroundColor">
+        <button mat-mini-fab customColor [color]="group!.color" [backgroundColor]="group!.backgroundColor" [title]="'icon-group-button' | translate">
           <i class="material-icons-outlined notranslate">{{group.icon}}</i>
         </button>
         <span>

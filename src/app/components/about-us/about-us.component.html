@@ -1,9 +1,9 @@
 <mat-toolbar color="primary">
-  <button mat-icon-button (click)="exit()">
+  <button mat-icon-button (click)="exit()" [title]="'exit-button' | translate">
     <mat-icon>keyboard_backspace</mat-icon>
   </button>
   <span>{{'About us' | translate}}</span>
-  <button mat-icon-button (click)="exit()">
+  <button mat-icon-button (click)="exit()" [title]="'home-button' | translate">
     <mat-icon>home</mat-icon>
   </button>
 </mat-toolbar>
@@ -12,9 +12,9 @@
     <mat-list>
       <mat-list-item>{{'Project name' | translate}}: {{title}}</mat-list-item>
       <mat-list-item>
-        Github: 
-        <a href="https://github.com/porfirioR/MyMoney" target="_blank">{{'Github page' |
-          translate}}</a>
+        Github:
+        <a href="https://github.com/porfirioR/MyMoney" target="_blank">{{'Github page' | translate}}
+        </a>
       </mat-list-item>
       <mat-list-item>{{'Author' | translate}}: Porfirio Perez</mat-list-item>
     </mat-list>

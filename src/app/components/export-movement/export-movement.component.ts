@@ -10,6 +10,7 @@ import { MovementModel } from '../../models/movement.model';
 import { MovementService } from '../../services/movement.service';
 import { UserService } from '../../services/user.service';
 import { environment } from '../../../environments/environment';
+import { ExportMovementForm } from '../../forms/export-movement.form';
 
 @Component({
   selector: 'app-export-movement',
@@ -19,10 +20,10 @@ import { environment } from '../../../environments/environment';
 export class ExportMovementComponent implements OnInit {
   protected minDate = new Date('2018-01-01:00:00:00')
   protected loading = false
-  protected formGroup: FormGroup = new FormGroup({
-    startDate: new FormControl('', [Validators.required]),
-    endDate: new FormControl('', [Validators.required]),
-    categories: new FormControl('', [Validators.required])
+  protected formGroup: FormGroup<ExportMovementForm> = new FormGroup<ExportMovementForm>({
+    startDate: new FormControl(null, [Validators.required]),
+    endDate: new FormControl(null, [Validators.required]),
+    categories: new FormControl(null, [Validators.required])
   })
   private movementListResponse: MovementModel[] = []
   protected categories = CategoryType
@@ -45,7 +46,7 @@ export class ExportMovementComponent implements OnInit {
   protected export = (): void => {
     this.movementListResponse = []
     this.loading = true
-    this.request = this.formGroup.getRawValue()
+    this.request = this.formGroup.getRawValue() as ExportRequestModel
     const movements$ = this.request.categories.map(x => this.movementService.getMovementToExport(x, this.request.startDate, this.request.endDate))
     combineLatest(movements$).subscribe({
       next: (response: MovementModel[][] | MovementModel[]) => {
@@ -56,7 +57,7 @@ export class ExportMovementComponent implements OnInit {
         throw e;
       }
     })
-    
+
     setTimeout(() => {
       const unique = new Set(this.movementListResponse)
       this.returnExport([...unique])
