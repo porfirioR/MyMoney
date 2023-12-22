@@ -1,6 +1,6 @@
 {
-  "name": "MyMoney",
-  "short_name": "MyMoney",
+  "name": "My Money",
+  "short_name": "My Money",
   "theme_color": "#82b366",
   "background_color": "#d1e9ca",
   "display": "standalone",
@@ -9,49 +9,49 @@
   "icons": [
     {
       "src": "assets/icons/icon-72x72.png",
-      "sizes": "75x72",
+      "sizes": "72x72",
       "type": "image/png",
       "purpose": "maskable any"
     },
     {
       "src": "assets/icons/icon-96x96.png",
-      "sizes": "100x96",
+      "sizes": "96x96",
       "type": "image/png",
       "purpose": "maskable any"
     },
     {
       "src": "assets/icons/icon-128x128.png",
-      "sizes": "128x123",
+      "sizes": "128x128",
       "type": "image/png",
       "purpose": "maskable any"
     },
     {
       "src": "assets/icons/icon-144x144.png",
-      "sizes": "149x144",
+      "sizes": "144x144",
       "type": "image/png",
       "purpose": "maskable any"
     },
     {
       "src": "assets/icons/icon-152x152.png",
-      "sizes": "158x152",
+      "sizes": "152x152",
       "type": "image/png",
       "purpose": "maskable any"
     },
     {
       "src": "assets/icons/icon-192x192.png",
-      "sizes": "199x192",
+      "sizes": "192x192",
       "type": "image/png",
       "purpose": "maskable any"
     },
     {
       "src": "assets/icons/icon-384x384.png",
-      "sizes": "399x384",
+      "sizes": "384x384",
       "type": "image/png",
       "purpose": "maskable any"
     },
     {
       "src": "assets/icons/icon-512x512.png",
-      "sizes": "532x512",
+      "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable any"
     }
