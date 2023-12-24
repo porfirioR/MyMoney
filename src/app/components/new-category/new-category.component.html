@@ -9,7 +9,7 @@
 </mat-toolbar>
 <div class="mat-toolbar-block"></div>
 <mat-card>
-  <div [formGroup]="formGroup" class="form-input">
+  <main [formGroup]="formGroup" class="form-input">
     <button mat-icon-button color="primary" [title]="'icon-button' | translate">
       <mat-icon>{{formGroup.controls.icon.value}}</mat-icon>
     </button>
@@ -26,11 +26,11 @@
     <button mat-icon-button color="primary" [disabled]="formGroup.invalid" [title]="'save-button' | translate" (click)="save()">
       <mat-icon>done</mat-icon>
     </button>
-  </div>
+  </main>
   <mat-card-content class="category-group">
-    <span *ngFor="let group of currentCategory.groups">
+    <ng-container *ngFor="let group of currentCategory.groups">
       <mat-card-subtitle translate>{{group.groupName}}</mat-card-subtitle>
-      <div class="icon-list">
+      <span class="icon-list">
         <button class="btn-icon" mat-mini-fab
           *ngFor="let icon of group.icons"
           [color]="icon === formGroup.controls.icon.value ? 'primary': ''"
@@ -39,7 +39,7 @@
         >
           <i class="material-icons-outlined notranslate">{{icon}}</i>
         </button>
-      </div>
-    </span>
+      </span>
+    </ng-container>
   </mat-card-content>
 </mat-card>
