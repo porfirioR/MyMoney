@@ -11,9 +11,9 @@
 <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
 <mat-tab-group mat-stretch-tabs mat-align-tabs="center" *ngIf="!loading" (selectedTabChange)="tabChanged($event)">
   <mat-tab [label]="categoryType.income | translate">
-    <span *ngFor="let item of incomeCategory">
+    <ng-container *ngFor="let item of incomeCategory">
       <app-category-row [category]="item" (updateCategoryEvent)="updateCategories($event)"></app-category-row>
-    </span>
+    </ng-container>
   </mat-tab>
   <mat-tab [label]="categoryType.expense | translate">
     <ng-container *ngFor="let item of expenseCategory">

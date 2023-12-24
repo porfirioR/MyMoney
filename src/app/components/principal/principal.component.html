@@ -15,35 +15,30 @@
     <div class="header-height"></div>
     <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
     <mat-card class="mat-card-header" *ngIf="!loading">
-      <span class="amount-header">
-        <span matRipple
+      <header class="amount-header">
+        <article matRipple id="incomes"
           [matRippleCentered]="true"
           [matRippleUnbounded]="true"
           [routerLink]="['report-month', categoryType.income]"
           [queryParams]="yearMonth">
-          <label>
-            {{'Incomes' | translate}}
-          </label>
+          {{'Incomes' | translate}}
           <p>{{income | number:'' : numberType}}</p>
-        </span>
+        </article>
         <hr>
-        <span matRipple [matRippleCentered]="true"
+        <article matRipple id="expenses"
+          [matRippleCentered]="true"
           [matRippleUnbounded]="true"
           [routerLink]="['report-month', categoryType.expense]"
           [queryParams]="yearMonth">
-          <label>
-            {{'Expenses' | translate}}
-          </label>
+          {{'Expenses' | translate}}
           <p>{{expenses | number:'' : numberType}}</p>
-        </span>
+        </article>
         <hr>
-        <span>
-          <label>
-            {{'Difference' | translate}}
-          </label>
+        <article matRipple id="difference-balance">
+          {{'Difference' | translate}}
           <p>{{balance | number:'' : numberType}}</p>
-        </span>
-      </span>
+        </article>
+      </header>
     </mat-card>
     <mat-card *ngFor="let groupDateMovement of groupDateMovementList" class="mat-card-movement">
       <app-movement [groupDateMovement]="groupDateMovement" [categories]="categories" [numberType]="numberType"></app-movement>

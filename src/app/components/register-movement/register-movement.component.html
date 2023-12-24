@@ -3,7 +3,7 @@
     <button mat-icon-button (click)="exit()" [title]="'exit-button' | translate">
       <mat-icon>keyboard_backspace</mat-icon>
     </button>
-    <span translate>{{title}}</span>
+    <span>{{title | translate}}</span>
     <button mat-icon-button routerLink="/" [title]="'home-button' | translate">
       <mat-icon>home</mat-icon>
     </button>

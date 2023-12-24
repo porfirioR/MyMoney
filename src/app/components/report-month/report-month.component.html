@@ -23,8 +23,12 @@
   </mat-card>
   <ng-container *ngIf="!loading">
     <mat-card>
-      <canvas baseChart width="200" height="150" [data]="chartData" [labels]="doughnutChartLabels"
-        [options]="chartOptions" [legend]="chartLegend" [type]="chartType">
+      <canvas baseChart width="200" height="150"
+        [data]="chartData"
+        [labels]="doughnutChartLabels"
+        [options]="chartOptions"
+        [legend]="chartLegend"
+        [type]="chartType">
       </canvas>
     </mat-card>
     <mat-accordion>

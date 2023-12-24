@@ -24,19 +24,19 @@
   </mat-card>
   <mat-card>
     <mat-card-content>
-      <p>
+      <p id="memorandum">
         <label translate>Memorandum: </label>
         <span>{{movement!.memorandum! | translate}}</span>
       </p>
-      <p>
+      <p id="category">
         <label translate>Category: </label>
         <span translate>{{movement!.type}}</span>
       </p>
-      <p>
+      <p id="date">
         <label translate>Date: </label>
         <span>{{movement!.date | date: 'dd/MM/YYY E': '': language}}</span>
       </p>
-      <p>
+      <p id="amount">
         <label translate>Amount: </label>
         <span>{{movement!.amount | number:'' : numberType}}</span>
       </p>

@@ -2,7 +2,9 @@
   <button mat-icon-button (click)="exit()" [title]="'exit-button' | translate">
     <mat-icon>keyboard_backspace</mat-icon>
   </button>
-  <span>{{'Annual Report' | translate}}</span>
+  <span>
+    {{'Annual Report' | translate}}
+  </span>
   <button mat-button mat-stroked-button [matMenuTriggerFor]="yearList" [title]="'year-button' | translate">
     {{year}}
   </button>
@@ -25,8 +27,8 @@
     </canvas>
   </mat-card>
   <mat-card class="mat-card-header">
-    <span class="amount-header">
-      <span>
+    <main class="amount-header">
+      <article>
         <strong>
           {{'Incomes' | translate}}
         </strong>
@@ -38,9 +40,9 @@
             <i class="material-icons-outlined notranslate">call_made</i>
           </span>
         </p>
-      </span>
+      </article>
       <hr>
-      <span>
+      <article>
         <strong>
           {{'Expenses' | translate}}
         </strong>
@@ -52,9 +54,9 @@
             <i class="material-icons-outlined notranslate icon-rotate-270">call_received</i>
           </span>
         </p>
-      </span>
+      </article>
       <hr>
-      <span>
+      <article>
         <strong>
           {{'Difference' | translate}}
         </strong>
@@ -66,8 +68,8 @@
             <i class="material-icons-outlined notranslate icon-rotate-270">import_export</i>
           </span>
         </p>
-      </span>
-    </span>
+      </article>
+    </main>
   </mat-card>
   <mat-card>
     <canvas baseChart width="150" height="150"
@@ -96,7 +98,6 @@
       </mat-accordion>
     </mat-expansion-panel>
     <mat-expansion-panel [hideToggle]="false">
-
     <mat-expansion-panel-header class="flex-center">
       {{'Expense details' | translate}}
     </mat-expansion-panel-header>

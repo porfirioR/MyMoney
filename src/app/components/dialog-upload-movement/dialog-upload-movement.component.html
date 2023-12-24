@@ -1,13 +1,13 @@
-<h1 mat-dialog-title>Upload Movement</h1>
+<h1 matDialogTitle>Upload Movement</h1>
 <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
-<div mat-dialog-content>
-  <span>Movements to save: {{data.length}}</span>
-</div>
-<div mat-dialog-actions>
+<mat-dialog-content>
+  Movements to save: {{data.length}}
+</mat-dialog-content>
+<mat-dialog-actions align="end">
   <button mat-stroked-button [mat-dialog-close]="false" color="warn" cdkFocusInitial [disabled]="loading" [title]="'cancel-button' | translate">
     {{'Cancel' | translate}}
   </button>
   <button mat-stroked-button (click)="upload()" color="primary" [disabled]="loading" [title]="'upload-button' | translate">
     {{'Upload' | translate}}
   </button>
-</div>
+</mat-dialog-actions>
