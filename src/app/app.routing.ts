@@ -17,6 +17,7 @@ import { ConfigurationComponent } from './components/configuration/configuration
 import { AnnualReportComponent } from './components/annual-report/annual-report.component';
 import { UserGuard } from './guards/user.guard';
 import { environment } from '../environments/environment';
+import { RelatedMovementsComponent } from './components/related-movements/related-movements.component';
 
 const routes: Routes = [
   {
@@ -96,6 +97,12 @@ const routes: Routes = [
     canActivate: [UserGuard],
     component: AnnualReportComponent,
     title: 'Annual Report'
+  },
+  {
+    path: 'related-movements',
+    canActivate: [UserGuard],
+    component: RelatedMovementsComponent,
+    title: 'Related Mov.'
   },
   {
     path: 'login',

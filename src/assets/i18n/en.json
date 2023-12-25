@@ -23,6 +23,11 @@
     "deleted": "Movement was deleted",
     "required-row": "Required first row: {{csvHeader}}"
   },
+  "related-movement-messages": {
+    "title-delete": "Delete related movement",
+    "question-delete": "¿Are you sure you want to remove this related movement?",
+    "deleted": "Related movement was deleted"
+  },
   "import-movement-messages": {
     "empty-file": "Empty file",
     "invalid-row": "Primera fila inválida",

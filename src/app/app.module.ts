@@ -67,6 +67,7 @@ import { AnnualReportComponent } from './components/annual-report/annual-report.
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { NgxMaskDirective, NgxMaskPipe, provideEnvironmentNgxMask } from 'ngx-mask';
+import { RelatedMovementsComponent } from './components/related-movements/related-movements.component';
 registerLocaleData(localEs, 'es')
 registerLocaleData(localeEn, 'en')
 
@@ -95,7 +96,8 @@ registerLocaleData(localeEn, 'en')
     ConfigurationComponent,
     CustomColorDirective,
     EnumArrayLoopPipe,
-    AnnualReportComponent
+    AnnualReportComponent,
+    RelatedMovementsComponent
   ],
   imports: [
     BrowserModule,

@@ -185,6 +185,7 @@
   "next-year-button": "botón-siguiente-año",
   "change-month-button": "botón-cambiar-mes",
   "new expense": "nuevo gasto",
+  "Related Mov.": "Mov. Relacionados",
   "category-messages": {
     "question": "¿Está seguro de que desea eliminar esta categoría?. Todos los movimientos relacionados ({{length}}) con esta categoría serán eliminados",
     "deleted": "La categoría fue borrada",
@@ -206,6 +207,11 @@
     "question-delete": "¿Estás seguro que quieres eliminar este movimiento?",
     "deleted": "El movimiento fue borrado",
     "required-row": "La primera fila es requerida: {{csvHeader}}"
+  },
+  "related-movement-messages": {
+    "title-delete": "Borrar movimiento relacionado",
+    "question-delete": "¿Estás seguro que quieres eliminar esta relación?",
+    "deleted": "La relación fue borrada"
   },
   "import-movement-messages": {
     "empty-file": "Archivo vacío",

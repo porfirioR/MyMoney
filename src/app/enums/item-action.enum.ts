@@ -4,5 +4,6 @@ export enum ItemAction {
   import = 'import',
   annualReport = 'annual-report',
   aboutUs = 'about-us',
-  configuration = 'configuration'
+  configuration = 'configuration',
+  relatedMovements = 'related-movements'
 }

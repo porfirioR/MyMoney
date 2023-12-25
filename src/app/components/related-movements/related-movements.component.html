@@ -1,0 +1,35 @@
+<mat-toolbar color="primary">
+  <button mat-icon-button (click)="exit()" [title]="'exit-button' | translate">
+    <mat-icon>keyboard_backspace</mat-icon>
+  </button>
+  <span>{{'Related Mov.' | translate}}</span>
+  <button mat-icon-button (click)="exit()" [title]="'home-button' | translate">
+    <mat-icon>add</mat-icon>
+  </button>
+</mat-toolbar>
+<div class="header-height"></div>
+<mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+<mat-accordion displayMode="default" [multi]="true" [hideToggle]="true">
+  <ng-container *ngFor="let related of relatedMovements">
+    <mat-expansion-panel [hideToggle]="true">
+      <mat-expansion-panel-header>{{related.description}}</mat-expansion-panel-header>
+        Panel body
+      <mat-action-row>
+        <button mat-button color="warn" (click)="deleteRelatedMovement()" [title]="'delete-button' | translate" translate>
+          Delete
+        </button>
+        <button mat-button [routerLink]="['update', related.id]" [title]="'edit-button' | translate" translate>
+          Edit
+        </button>
+      </mat-action-row>
+    </mat-expansion-panel>
+  </ng-container>
+</mat-accordion>
+<!-- <mat-card>
+  <mat-card-content>
+  </mat-card-content>
+  <mat-card-actions align="end">
+    <button mat-button (click)="deleteRelatedMovement()" [title]="'delete-button' | translate" translate>Delete</button>
+    <button mat-button [routerLink]="['update', related.id]" [title]="'edit-button' | translate" translate>Edit</button>
+  </mat-card-actions>
+</mat-card> -->
