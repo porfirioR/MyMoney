@@ -68,6 +68,7 @@ import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { NgxMaskDirective, NgxMaskPipe, provideEnvironmentNgxMask } from 'ngx-mask';
 import { RelatedMovementsComponent } from './components/related-movements/related-movements.component';
+import { UpsertRelatedMovementComponent } from './components/upsert-related-movement/upsert-related-movement.component';
 registerLocaleData(localEs, 'es')
 registerLocaleData(localeEn, 'en')
 
@@ -97,7 +98,8 @@ registerLocaleData(localeEn, 'en')
     CustomColorDirective,
     EnumArrayLoopPipe,
     AnnualReportComponent,
-    RelatedMovementsComponent
+    RelatedMovementsComponent,
+    UpsertRelatedMovementComponent
   ],
   imports: [
     BrowserModule,

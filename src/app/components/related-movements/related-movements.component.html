@@ -18,6 +18,9 @@
         <button mat-button color="warn" (click)="deleteRelatedMovement()" [title]="'delete-button' | translate" translate>
           Delete
         </button>
+        <button mat-button (click)="displayMovements(related.id)" translate>
+          Details
+        </button>
         <button mat-button [routerLink]="['update', related.id]" [title]="'edit-button' | translate" translate>
           Edit
         </button>

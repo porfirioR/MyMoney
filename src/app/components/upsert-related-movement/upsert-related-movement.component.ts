@@ -5,7 +5,7 @@ import { RelatedMovementsService } from 'src/app/services/related-movements.serv
 @Component({
   selector: 'app-upsert-related-movement',
   templateUrl: './upsert-related-movement.component.html',
-  styleUrls: ['./upsert-related-movement.component.css']
+  styleUrls: ['./upsert-related-movement.component.scss']
 })
 export class UpsertRelatedMovementComponent implements OnInit {
 

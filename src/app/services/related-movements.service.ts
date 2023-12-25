@@ -3,7 +3,7 @@ import { CollectionType } from '../enums/collection-type.enum';
 import { CollectionReference, Firestore, Query, collection, collectionData, documentId, orderBy, query, where } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
 import { UserService } from './user.service';
-import { Observable, take, tap } from 'rxjs';
+import { Observable, map, switchMap, take, tap } from 'rxjs';
 import { RelatedMovementModel } from '../models/related-movement-model';
 
 @Injectable({
@@ -27,9 +27,9 @@ export class RelatedMovementsService {
     return collectionData<RelatedMovementModel>(ref as Query<RelatedMovementModel>, { idField: 'id' })
   }
 
-  public getById = (id: string): Observable<(RelatedMovementModel | (RelatedMovementModel & {}))[]> => {
+  public getById = (id: string): Observable<RelatedMovementModel> => {
     const ref = query(this.getReference(), where('owner', '==', this.email), where(documentId(), '==', id), orderBy('owner'))
-    return collectionData<RelatedMovementModel>(ref as Query<RelatedMovementModel>, { idField: 'id' })
+    return collectionData<RelatedMovementModel>(ref as Query<RelatedMovementModel>, { idField: 'id' }).pipe(map(x => Array.isArray(x) ? x.at(0)! : x!))
   }
 
   private getReference = (): CollectionReference => {

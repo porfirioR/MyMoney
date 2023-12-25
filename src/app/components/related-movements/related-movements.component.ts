@@ -7,8 +7,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogDeleteComponent } from '../dialog-delete/dialog-delete.component';
 import { TranslateService } from '@ngx-translate/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { combineLatest, switchMap } from 'rxjs';
+import { combineLatest, map, of, switchMap } from 'rxjs';
 import { MovementService } from 'src/app/services/movement.service';
+import { CategoryType } from 'src/app/enums/category-type.enum';
 
 @Component({
   selector: 'app-related-movements',
@@ -25,6 +26,7 @@ export class RelatedMovementsComponent implements OnInit {
     private readonly dialog: MatDialog,
     private translate: TranslateService,
     private readonly snackBar: MatSnackBar,
+    private readonly movementService: MovementService
   ) { }
 
   ngOnInit() {
@@ -59,6 +61,23 @@ export class RelatedMovementsComponent implements OnInit {
         //   this.snackBar.open(this.translate.instant('movement-messages.deleted'), '', { duration: 3000 })
         //   this.exit()
         // }).catch((reason: any) => this.snackBar.open(reason, '', { duration: 3000 }))
+      }
+    })
+  }
+
+  protected displayMovements = (id: string) => {
+    this.relatedMovementsService.getById(id).pipe(switchMap((relatedMovement) => {
+        const category = CategoryType
+        const expense$ = this.movementService.getMovementsByIds(category.expense, relatedMovement.related.filter(x => x.type === category.expense).map(x => x.id))
+        const income$ = this.movementService.getMovementsByIds(category.income, relatedMovement.related.filter(x => x.type === category.income).map(x => x.id))
+        return combineLatest([expense$, income$])
+    })).subscribe({
+      next: ([expense, income]) => {
+        console.log(expense)
+        console.log(income)
+      }, error: (e) => {
+        
+        throw e
       }
     })
   }
