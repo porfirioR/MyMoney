@@ -4,7 +4,7 @@ import { CollectionReference, Firestore, Query, collection, collectionData, docu
 import { Router } from '@angular/router';
 import { UserService } from './user.service';
 import { Observable, map, switchMap, take, tap } from 'rxjs';
-import { RelatedMovementModel } from '../models/related-movement-model';
+import { RelatedMovementModel } from '../models/related-movement.model';
 
 @Injectable({
   providedIn: 'root'

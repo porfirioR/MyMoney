@@ -92,7 +92,7 @@ export class MovementService {
     doc(this.firestore, `${this.collections}/${this.userService.getUserEmail()}/${type.toLowerCase()}/${id}`)
 
   public getMovementsByIds = (category: CategoryType, movementIds: string[]): Observable<MovementModel[]> => {
-    const ref = query(this.getReference(category), where(documentId(), 'in', movementIds), orderBy('time'))
+    const ref = query(this.getReference(category), where(documentId(), 'in', movementIds), orderBy('time', 'desc'))
     return collectionData<MovementModel>(ref as Query<MovementModel>, { idField: 'id' })
   }
 }

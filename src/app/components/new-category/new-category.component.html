@@ -17,10 +17,10 @@
       <mat-label translate>Category name</mat-label>
       <input matInput formControlName="name" #inputCategoryName id="name">
       <mat-error *ngIf="formGroup.controls.name.hasError('required')">
-        {{ 'message-error.required-category'| translate }}
+        {{ 'message-error.required-category' | translate }}
       </mat-error>
       <mat-error *ngIf="formGroup.controls.name.hasError('sameName')">
-        {{ 'message-error.repeating-category'| translate }}
+        {{ 'message-error.repeating-category' | translate }}
       </mat-error>
     </mat-form-field>
     <button mat-icon-button color="primary" [disabled]="formGroup.invalid" [title]="'save-button' | translate" (click)="save()">

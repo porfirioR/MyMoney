@@ -1,15 +1,15 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
-import { FormGroup } from '@angular/forms';
-import { RelatedMovementsService } from 'src/app/services/related-movements.service';
-import { RelatedMovementModel } from 'src/app/models/related-movement-model';
 import { MatDialog } from '@angular/material/dialog';
-import { DialogDeleteComponent } from '../dialog-delete/dialog-delete.component';
-import { TranslateService } from '@ngx-translate/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { combineLatest, map, of, switchMap } from 'rxjs';
-import { MovementService } from 'src/app/services/movement.service';
-import { CategoryType } from 'src/app/enums/category-type.enum';
+import { TranslateService } from '@ngx-translate/core';
+import { combineLatest, switchMap } from 'rxjs';
+import { RelatedMovementModel } from '../../models/related-movement.model';
+import { RelatedMovementGroupModel } from '../../models/related-movement-group.model';
+import { RelatedMovementsService } from '../../services/related-movements.service';
+import { MovementService } from '../../services/movement.service';
+import { CategoryType } from '../../enums/category-type.enum';
+import { DialogDeleteComponent } from '../dialog-delete/dialog-delete.component';
 
 @Component({
   selector: 'app-related-movements',
@@ -19,6 +19,7 @@ import { CategoryType } from 'src/app/enums/category-type.enum';
 export class RelatedMovementsComponent implements OnInit {
   protected loading = true
   protected relatedMovements: RelatedMovementModel[] = []
+  protected movements: RelatedMovementGroupModel[] = []
 
   constructor(
     private readonly location: Location,
@@ -66,17 +67,20 @@ export class RelatedMovementsComponent implements OnInit {
   }
 
   protected displayMovements = (id: string) => {
+    if (this.movements.find(x => x.id === id)) {
+      return
+    }
     this.relatedMovementsService.getById(id).pipe(switchMap((relatedMovement) => {
-        const category = CategoryType
-        const expense$ = this.movementService.getMovementsByIds(category.expense, relatedMovement.related.filter(x => x.type === category.expense).map(x => x.id))
-        const income$ = this.movementService.getMovementsByIds(category.income, relatedMovement.related.filter(x => x.type === category.income).map(x => x.id))
-        return combineLatest([expense$, income$])
+      const category = CategoryType
+      const expense$ = this.movementService.getMovementsByIds(category.expense, relatedMovement.related.filter(x => x.type === category.expense).map(x => x.id))
+      const income$ = this.movementService.getMovementsByIds(category.income, relatedMovement.related.filter(x => x.type === category.income).map(x => x.id))
+      return combineLatest([expense$, income$])
     })).subscribe({
-      next: ([expense, income]) => {
-        console.log(expense)
-        console.log(income)
+      next: ([expenses, incomes]) => {
+        this.movements.push(new RelatedMovementGroupModel(id, expenses, incomes))
+        console.log(expenses)
+        console.log(incomes)
       }, error: (e) => {
-        
         throw e
       }
     })
