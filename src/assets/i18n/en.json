@@ -26,7 +26,8 @@
   "related-movement-messages": {
     "title-delete": "Delete related movement",
     "question-delete": "¿Are you sure you want to remove this related movement?",
-    "deleted": "Related movement was deleted"
+    "deleted": "Related movement was deleted",
+    "required-description": "Description is required"
   },
   "import-movement-messages": {
     "empty-file": "Empty file",

@@ -3,53 +3,47 @@
     <mat-icon>keyboard_backspace</mat-icon>
   </button>
   <span translate>Category configuration</span>
-  <button mat-icon-button [routerLink]="['new-category', currentTap]" [title]="'Add category' | translate" [title]="'add-configuration-button' | translate">
+  <button mat-icon-button (click)="addMovement()" [title]="'Add Movement' | translate">
     <mat-icon>add</mat-icon>
   </button>
 </mat-toolbar>
 <div class="mat-toolbar-block"></div>
 <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
 <form [formGroup]="formGroup" *ngIf="!loading">
-  <mat-form-field class="mat-from-field">
-    <mat-label translate>Description</mat-label>
-    <input matInput formControlName="description" id="description">
-    <mat-error *ngIf="formGroup.controls.description.hasError('required')">
-      {{ 'message-error.required-category' | translate }}
-    </mat-error>
-  </mat-form-field>
-  <mat-form-field class="mat-from-field">
-    <mat-label translate>Expense Amount</mat-label>
-    <input matInput formControlName="expenseAmount" id="expenseAmount">
-    <mat-error *ngIf="formGroup.controls.expenseAmount.hasError('required')">
-      {{ 'message-error.required-category' | translate }}
-    </mat-error>
-  </mat-form-field>
-  <mat-form-field class="mat-from-field">
-    <mat-label translate>Income Amount</mat-label>
-    <input matInput formControlName="incomeAmount" id="incomeAmount">
-    <mat-error *ngIf="formGroup.controls.incomeAmount.hasError('required')">
-      {{ 'message-error.required-category' | translate }}
-    </mat-error>
-  </mat-form-field>
-  <mat-form-field class="mat-from-field">
-    <mat-label translate>Total Amount</mat-label>
-    <input matInput formControlName="totalAmount" id="totalAmount">
-    <mat-error *ngIf="formGroup.controls.totalAmount.hasError('required')">
-      {{ 'message-error.required-category' | translate }}
-    </mat-error>
-  </mat-form-field>
-  <mat-divider></mat-divider>
-  <mat-tab-group mat-stretch-tabs mat-align-tabs="center" (selectedTabChange)="tabChanged($event)">
-    <mat-tab [label]="categoryType.income | translate">
-      <ng-container *ngFor="let item of incomes">
-        {{item.memorandum}}
-      </ng-container>
-    </mat-tab>
-    <mat-tab [label]="categoryType.expense | translate">
-      <ng-container *ngFor="let item of expenses">
-        {{item.memorandum}}
-      </ng-container>
-    </mat-tab>
-  </mat-tab-group>
-
+  <mat-card>
+    <mat-card-content>
+      <mat-form-field class="w-100">
+        <mat-label translate>Description</mat-label>
+        <input matInput formControlName="description" id="description">
+        <mat-error *ngIf="formGroup.controls.description.hasError('required')">
+          {{ 'related-movement-messages.required-description' | translate }}
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field class="w-100">
+        <mat-label translate>Expense Amount</mat-label>
+        <input matInput formControlName="expenseAmount" id="expenseAmount">
+      </mat-form-field>
+      <mat-form-field class="w-100">
+        <mat-label translate>Income Amount</mat-label>
+        <input matInput formControlName="incomeAmount" id="incomeAmount">
+      </mat-form-field>
+      <mat-form-field class="w-100">
+        <mat-label translate>Total Amount</mat-label>
+        <input matInput formControlName="totalAmount" id="totalAmount">
+      </mat-form-field>
+    </mat-card-content>
+    <mat-divider></mat-divider>
+    <mat-tab-group mat-stretch-tabs mat-align-tabs="center" (selectedTabChange)="tabChanged($event)">
+      <mat-tab [label]="categoryType.income | translate">
+        <ng-container *ngFor="let item of incomes">
+          {{item.memorandum}}
+        </ng-container>
+      </mat-tab>
+      <mat-tab [label]="categoryType.expense | translate">
+        <ng-container *ngFor="let item of expenses">
+          {{item.memorandum}}
+        </ng-container>
+      </mat-tab>
+    </mat-tab-group>
+  </mat-card>
 </form>

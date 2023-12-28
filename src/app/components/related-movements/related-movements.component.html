@@ -3,31 +3,42 @@
     <mat-icon>keyboard_backspace</mat-icon>
   </button>
   <span>{{'Related Mov.' | translate}}</span>
-  <button mat-icon-button (click)="exit()" [title]="'home-button' | translate">
+  <button mat-icon-button [routerLink]="'add'" [title]="'Add Related Movement' | translate">
     <mat-icon>add</mat-icon>
   </button>
 </mat-toolbar>
 <div class="header-height"></div>
 <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
-<mat-accordion displayMode="default" [multi]="true" [hideToggle]="true">
-  <ng-container *ngFor="let related of relatedMovements">
-    <mat-expansion-panel [hideToggle]="true">
-      <mat-expansion-panel-header>{{related.description}}</mat-expansion-panel-header>
-        Panel body
-      <mat-action-row>
-        <button mat-button color="warn" (click)="deleteRelatedMovement()" [title]="'delete-button' | translate" translate>
-          Delete
-        </button>
-        <button mat-button (click)="displayMovements(related.id)" translate>
-          Details
-        </button>
-        <button mat-button [routerLink]="['update', related.id]" [title]="'edit-button' | translate" translate>
-          Edit
-        </button>
-      </mat-action-row>
-    </mat-expansion-panel>
-  </ng-container>
-</mat-accordion>
+<mat-card *ngIf="!loading">
+  <mat-card-content>
+    <mat-accordion displayMode="default" [multi]="true" [hideToggle]="true" *ngIf="relatedMovements.length > 0">
+      <ng-container *ngFor="let related of relatedMovements">
+        <mat-expansion-panel [hideToggle]="true">
+          <mat-expansion-panel-header>{{related.description}}</mat-expansion-panel-header>
+          Panel body
+          <mat-action-row>
+            <button mat-button color="warn" (click)="deleteRelatedMovement()" [title]="'delete-button' | translate"
+              translate>
+              Delete
+            </button>
+            <button mat-button (click)="displayMovements(related.id)" translate>
+              Details
+            </button>
+            <button mat-button [routerLink]="['update', related.id]" [title]="'edit-button' | translate" translate>
+              Edit
+            </button>
+          </mat-action-row>
+        </mat-expansion-panel>
+      </ng-container>
+    </mat-accordion>
+    <section *ngIf="relatedMovements.length === 0" align="center">
+      <button mat-button [routerLink]="'add'" [title]="'Add Related Movements' | translate" translate>
+        <mat-icon>add</mat-icon>
+        Add Related Movement
+      </button>
+    </section>
+  </mat-card-content>
+</mat-card>
 <!-- <mat-card>
   <mat-card-content>
   </mat-card-content>

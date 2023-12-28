@@ -23,8 +23,8 @@ export class UpsertRelatedMovementComponent implements OnInit {
   protected formGroup = new FormGroup<RelatedMovementForm>({
     id: new FormControl(null),
     description: new FormControl(null, Validators.required),
-    expenseAmount: new FormControl(null, Validators.required),
-    incomeAmount: new FormControl(null, Validators.required),
+    expenseAmount: new FormControl({value: null, disabled: true}, Validators.required),
+    incomeAmount: new FormControl({value: null, disabled: true}, Validators.required),
     relatedIds: new FormControl(null, Validators.required),
     totalAmount: new FormControl(null, Validators.required)
   })
@@ -74,5 +74,9 @@ export class UpsertRelatedMovementComponent implements OnInit {
 
   protected exit = (): void => {
     this.location.back()
+  }
+
+  protected addMovement = () => {
+    
   }
 }
