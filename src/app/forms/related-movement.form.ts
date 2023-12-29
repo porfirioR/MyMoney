@@ -7,4 +7,5 @@ export interface RelatedMovementForm {
   totalAmount: FormControl<number | null>
   incomeAmount: FormControl<number | null>
   expenseAmount: FormControl<number | null>
+  showInUpsertMovement: FormControl<boolean | null>
 }

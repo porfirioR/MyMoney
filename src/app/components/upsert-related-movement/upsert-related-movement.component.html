@@ -16,7 +16,7 @@
         <mat-label translate>Description</mat-label>
         <input matInput formControlName="description" id="description">
         <mat-error *ngIf="formGroup.controls.description.hasError('required')">
-          {{ 'related-movement-messages.required-description' | translate }}
+          {{'related-movement-messages.required-description' | translate}}
         </mat-error>
       </mat-form-field>
       <mat-form-field class="w-100">
@@ -31,7 +31,20 @@
         <mat-label translate>Total Amount</mat-label>
         <input matInput formControlName="totalAmount" id="totalAmount">
       </mat-form-field>
+      <mat-form-field class="w-100">
+        <mat-checkbox formControlName="showInUpsertMovement" id="showInUpsertMovement">
+          Show in Movement
+        </mat-checkbox>
+      </mat-form-field>
     </mat-card-content>
+    <mat-card-footer>
+      <button mat-stroked-button color="primary" (click)="exit()" [title]="'cancel-button' | translate">
+        {{'Cancel' | translate}}
+      </button>
+      <button mat-stroked-button color="primary" type="submit" [disabled]="formGroup.invalid" [title]="'save-button' | translate" (click)="save()">
+        {{'Save' | translate}}
+      </button>
+    </mat-card-footer>
     <mat-divider></mat-divider>
     <mat-tab-group mat-stretch-tabs mat-align-tabs="center" (selectedTabChange)="tabChanged($event)">
       <mat-tab [label]="categoryType.income | translate">

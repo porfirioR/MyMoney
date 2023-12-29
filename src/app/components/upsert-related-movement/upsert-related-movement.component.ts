@@ -26,7 +26,8 @@ export class UpsertRelatedMovementComponent implements OnInit {
     expenseAmount: new FormControl({value: null, disabled: true}, Validators.required),
     incomeAmount: new FormControl({value: null, disabled: true}, Validators.required),
     relatedIds: new FormControl(null, Validators.required),
-    totalAmount: new FormControl(null, Validators.required)
+    totalAmount: new FormControl(null, Validators.required),
+    showInUpsertMovement: new FormControl(false)
   })
   protected currentTap!: string
   protected categoryType = CategoryType
@@ -78,5 +79,13 @@ export class UpsertRelatedMovementComponent implements OnInit {
 
   protected addMovement = () => {
     
+  }
+
+  protected save = (): void => {
+    // const request: ConfigurationModel = this.formGroup.getRawValue()! as ConfigurationModel
+    // this.configurationService.upsert(request).then(() => {
+    //   this.snackBar.open(this.translate.instant(`User configuration was ${request.id ? 'updated' : 'created'}`), '', { duration: 3000 })
+    //   this.location.back()
+    // }).catch(e => console.error(e))
   }
 }

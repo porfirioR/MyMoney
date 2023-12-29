@@ -28,6 +28,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatListModule } from '@angular/material/list';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 import { SelectYearMonthComponent } from './components/select-year-mount/select-year-month.component';
 import { SideNavComponent } from './components/side-nav/side-nav.component';
@@ -140,6 +141,7 @@ registerLocaleData(localeEn, 'en')
     MatListModule,
     MatSnackBarModule,
     MatExpansionModule,
+    MatCheckboxModule,
     NgxMaskDirective,
     NgxMaskPipe,
     provideFirebaseApp(() => initializeApp(environment.firebase)),
