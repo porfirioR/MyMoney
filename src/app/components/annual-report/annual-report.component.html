@@ -92,32 +92,34 @@
         [legend]="incomeChart.legend"
         [type]="incomeChart.type">
       </canvas>
-      <mat-accordion class="no-margins">
-        <ng-container *ngTemplateOutlet="movementDetails context: { groups: incomeGroupMovementCategoryModel }">
+      <mat-accordion class="m-0">
+        <ng-container *ngTemplateOutlet="matExpansionPanelContent
+          context: { groups: incomeGroupMovementCategoryModel }"
+        >
         </ng-container>
       </mat-accordion>
     </mat-expansion-panel>
     <mat-expansion-panel [hideToggle]="false">
-    <mat-expansion-panel-header class="flex-center">
-      {{'Expense details' | translate}}
-    </mat-expansion-panel-header>
-    <canvas baseChart width="250" height="250"
-      [data]="expenseChartData"
-      [labels]="expenseChart.labels"
-      [options]="expenseChart.chartOptions"
-      [legend]="expenseChart.legend"
-      [type]="expenseChart.type">
-    </canvas>
-    <mat-accordion class="no-margins">
-      <ng-container *ngTemplateOutlet="movementDetails context: { groups: expenseGroupMovementCategoryModel }">
-      </ng-container>
-    </mat-accordion>
+      <mat-expansion-panel-header class="flex-center">
+        {{'Expense details' | translate}}
+      </mat-expansion-panel-header>
+      <canvas baseChart width="250" height="250"
+        [data]="expenseChartData"
+        [labels]="expenseChart.labels"
+        [options]="expenseChart.chartOptions"
+        [legend]="expenseChart.legend"
+        [type]="expenseChart.type">
+      </canvas>
+      <mat-accordion class="m-0">
+        <ng-container *ngTemplateOutlet="matExpansionPanelContent context: { groups: expenseGroupMovementCategoryModel }">
+        </ng-container>
+      </mat-accordion>
     </mat-expansion-panel>
   </mat-accordion>
 </ng-container>
 
-<ng-template #movementDetails let-groups="groups">
-  <mat-expansion-panel hideToggle *ngFor="let group of groups" class="no-margins">
+<ng-template #matExpansionPanelContent let-groups="groups">
+  <mat-expansion-panel hideToggle *ngFor="let group of groups" class="m-0">
     <mat-expansion-panel-header>
       <mat-panel-title>
         <button mat-mini-fab customColor [color]="group!.color" [backgroundColor]="group!.backgroundColor" [title]="'icon-group-button' | translate">

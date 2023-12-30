@@ -4,7 +4,7 @@
   </button>
   <span translate>Category configuration</span>
   <button mat-icon-button (click)="addMovement()" [title]="'Add Movement' | translate">
-    <mat-icon>add</mat-icon>
+    <mat-icon>save</mat-icon>
   </button>
 </mat-toolbar>
 <div class="mat-toolbar-block"></div>
@@ -31,11 +31,9 @@
         <mat-label translate>Total Amount</mat-label>
         <input matInput formControlName="totalAmount" id="totalAmount">
       </mat-form-field>
-      <mat-form-field class="w-100">
-        <mat-checkbox formControlName="showInUpsertMovement" id="showInUpsertMovement">
-          Show in Movement
-        </mat-checkbox>
-      </mat-form-field>
+      <mat-checkbox color="primary" formControlName="showInUpsertMovement" id="showInUpsertMovement">
+        Show in Movement
+      </mat-checkbox>
     </mat-card-content>
     <mat-card-footer>
       <button mat-stroked-button color="primary" (click)="exit()" [title]="'cancel-button' | translate">
@@ -46,17 +44,35 @@
       </button>
     </mat-card-footer>
     <mat-divider></mat-divider>
-    <mat-tab-group mat-stretch-tabs mat-align-tabs="center" (selectedTabChange)="tabChanged($event)">
-      <mat-tab [label]="categoryType.income | translate">
-        <ng-container *ngFor="let item of incomes">
-          {{item.memorandum}}
+    <label for="movements" align="center" translate>Movements</label>
+    <mat-accordion displayMode="default" [multi]="true" [hideToggle]="false">
+      <mat-expansion-panel [hideToggle]="false">
+        <mat-expansion-panel-header>
+          {{categoryType.income | translate}}
+        </mat-expansion-panel-header>
+        <ng-container *ngTemplateOutlet="matExpansionPanelContent
+          context: { movements: incomes }">
         </ng-container>
-      </mat-tab>
-      <mat-tab [label]="categoryType.expense | translate">
-        <ng-container *ngFor="let item of expenses">
-          {{item.memorandum}}
+        <mat-action-row>
+          <button mat-button>Add Movements</button>
+        </mat-action-row>
+      </mat-expansion-panel>
+      <mat-expansion-panel [hideToggle]="false">
+        <mat-expansion-panel-header>
+          {{categoryType.expense | translate}}
+        </mat-expansion-panel-header>
+        <ng-container *ngTemplateOutlet="matExpansionPanelContent
+          context: { groups: incomes }">
         </ng-container>
-      </mat-tab>
-    </mat-tab-group>
+        <mat-action-row>
+          <button mat-button>Add Movements</button>
+        </mat-action-row>
+      </mat-expansion-panel>
+    </mat-accordion>
   </mat-card>
 </form>
+<ng-template #matExpansionPanelContent let-movements="movements">
+  <ng-container *ngFor="let item of movements">
+    {{item.memorandum}}
+  </ng-container>
+</ng-template>
