@@ -56,3 +56,14 @@ body {
   justify-content: space-between;
   align-items: center;
 }
+
+.flex-center {
+  display: flex;
+  align-items: center;
+}
+
+.flex-justify-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

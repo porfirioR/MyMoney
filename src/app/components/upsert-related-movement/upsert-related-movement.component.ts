@@ -16,7 +16,6 @@ import { RelatedMovementsService } from '../../services/related-movements.servic
   styleUrls: ['./upsert-related-movement.component.scss']
 })
 export class UpsertRelatedMovementComponent implements OnInit {
-  private id: string = ''
   protected loading = true
   protected expenses: MovementModel[] = []
   protected incomes: MovementModel[] = []
@@ -26,11 +25,13 @@ export class UpsertRelatedMovementComponent implements OnInit {
     expenseAmount: new FormControl({value: null, disabled: true}, Validators.required),
     incomeAmount: new FormControl({value: null, disabled: true}, Validators.required),
     relatedIds: new FormControl(null, Validators.required),
-    totalAmount: new FormControl(null, Validators.required),
+    totalAmount: new FormControl(null),
     showInUpsertMovement: new FormControl(false)
   })
   protected currentTap!: string
   protected categoryType = CategoryType
+  protected title = 'Create Related Movement'
+  private id = ''
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -63,6 +64,7 @@ export class UpsertRelatedMovementComponent implements OnInit {
       next: ([expenses, incomes]) => {
         [this.expenses, this.incomes] = [expenses, incomes]
         this.loading = false
+        this.title = 'Update Related Movement'
     }, error: (e) => {
         throw e
       }

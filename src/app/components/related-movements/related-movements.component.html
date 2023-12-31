@@ -32,9 +32,9 @@
       </ng-container>
     </mat-accordion>
     <section *ngIf="relatedMovements.length === 0" align="center">
-      <button mat-button [routerLink]="'add'" [title]="'Add Related Movements' | translate" translate>
+      <button mat-stroked-button color="primary" [routerLink]="'add'" [title]="'Add Related Movement' | translate">
         <mat-icon>add</mat-icon>
-        Add Related Movement
+        {{'Add Related Movement' | translate}}
       </button>
     </section>
   </mat-card-content>

@@ -31,48 +31,49 @@
         <mat-label translate>Total Amount</mat-label>
         <input matInput formControlName="totalAmount" id="totalAmount">
       </mat-form-field>
-      <mat-checkbox color="primary" formControlName="showInUpsertMovement" id="showInUpsertMovement">
+      <mat-checkbox color="primary" formControlName="showInUpsertMovement" id="showInUpsertMovement" translate>
         Show in Movement
       </mat-checkbox>
+      <label for="movements" class="flex-justify-center" translate>Movements</label>
+      <mat-accordion displayMode="default" [multi]="true" [hideToggle]="false">
+        <mat-expansion-panel [hideToggle]="false">
+          <mat-expansion-panel-header>
+            {{categoryType.income | translate}}
+          </mat-expansion-panel-header>
+          <ng-container *ngTemplateOutlet="matExpansionPanelContent
+          context: { movements: incomes }">
+          </ng-container>
+        </mat-expansion-panel>
+        <mat-expansion-panel [hideToggle]="false">
+          <mat-expansion-panel-header>
+            {{categoryType.expense | translate}}
+          </mat-expansion-panel-header>
+          <ng-container *ngTemplateOutlet="matExpansionPanelContent
+          context: { groups: incomes }">
+          </ng-container>
+        </mat-expansion-panel>
+        <mat-action-row>
+          <button mat-stroked-button color="primary">Add Movements</button>
+        </mat-action-row>
+      </mat-accordion>
     </mat-card-content>
     <mat-card-footer>
       <button mat-stroked-button color="primary" (click)="exit()" [title]="'cancel-button' | translate">
         {{'Cancel' | translate}}
       </button>
-      <button mat-stroked-button color="primary" type="submit" [disabled]="formGroup.invalid" [title]="'save-button' | translate" (click)="save()">
+      <button mat-stroked-button color="primary" type="submit" [disabled]="formGroup.invalid"
+        [title]="'save-button' | translate" (click)="save()">
         {{'Save' | translate}}
       </button>
     </mat-card-footer>
-    <mat-divider></mat-divider>
-    <label for="movements" align="center" translate>Movements</label>
-    <mat-accordion displayMode="default" [multi]="true" [hideToggle]="false">
-      <mat-expansion-panel [hideToggle]="false">
-        <mat-expansion-panel-header>
-          {{categoryType.income | translate}}
-        </mat-expansion-panel-header>
-        <ng-container *ngTemplateOutlet="matExpansionPanelContent
-          context: { movements: incomes }">
-        </ng-container>
-        <mat-action-row>
-          <button mat-button>Add Movements</button>
-        </mat-action-row>
-      </mat-expansion-panel>
-      <mat-expansion-panel [hideToggle]="false">
-        <mat-expansion-panel-header>
-          {{categoryType.expense | translate}}
-        </mat-expansion-panel-header>
-        <ng-container *ngTemplateOutlet="matExpansionPanelContent
-          context: { groups: incomes }">
-        </ng-container>
-        <mat-action-row>
-          <button mat-button>Add Movements</button>
-        </mat-action-row>
-      </mat-expansion-panel>
-    </mat-accordion>
   </mat-card>
 </form>
+
 <ng-template #matExpansionPanelContent let-movements="movements">
   <ng-container *ngFor="let item of movements">
     {{item.memorandum}}
   </ng-container>
+  <span class="flex-justify-center" *ngIf="!movements || movements.length === 0" translate>
+    Without movements to show.
+  </span>
 </ng-template>
