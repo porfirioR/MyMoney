@@ -199,6 +199,10 @@
   "Income Amount": "Monto de los ingresos",
   "Description": "Descripción",
   "Total Amount": "Monto Total",
+  "Name": "Nombre",
+  "Save Related Movement": "Guardar Movimiento Relacionado",
+  "Related Movement was updated": "Movimiento relacionado fue actualizado",
+  "Related Movement was created": "Movimiento relacionado fue creado",
   "category-messages": {
     "question": "¿Está seguro de que desea eliminar esta categoría?. Todos los movimientos relacionados ({{length}}) con esta categoría serán eliminados",
     "deleted": "La categoría fue borrada",
@@ -225,7 +229,7 @@
     "title-delete": "Borrar movimiento relacionado",
     "question-delete": "¿Estás seguro que quieres eliminar esta relación?",
     "deleted": "La relación fue borrada",
-    "required-description": "La descripción es requerida"
+    "required-name": "El nombre es requerido"
   },
   "import-movement-messages": {
     "empty-file": "Archivo vacío",

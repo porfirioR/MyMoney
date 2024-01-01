@@ -14,7 +14,7 @@
     <mat-accordion displayMode="default" [multi]="true" [hideToggle]="true" *ngIf="relatedMovements.length > 0">
       <ng-container *ngFor="let related of relatedMovements">
         <mat-expansion-panel [hideToggle]="true">
-          <mat-expansion-panel-header>{{related.description}}</mat-expansion-panel-header>
+          <mat-expansion-panel-header>{{related.name}}</mat-expansion-panel-header>
           Panel body
           <mat-action-row>
             <button mat-button color="warn" (click)="deleteRelatedMovement()" [title]="'delete-button' | translate"
