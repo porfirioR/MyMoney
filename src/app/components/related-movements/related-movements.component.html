@@ -15,14 +15,36 @@
       <ng-container *ngFor="let related of relatedMovements">
         <mat-expansion-panel [hideToggle]="true">
           <mat-expansion-panel-header>{{related.name}}</mat-expansion-panel-header>
-          Panel body
+          <mat-panel-description>
+            <p for="incomeAmount">
+              <b translate>Income Amount:</b> {{related.incomeAmount}}
+            </p>
+            <p for="expenseAmount">
+              <b translate>Expense Amount:</b> {{related.incomeAmount}}
+            </p>
+            <p for="movements">
+              <b translate>Movements:</b>
+            </p>
+            <ng-container *ngIf="movements.get(related.id!) as incomeExpenseMovement; else noMovements">
+              <ng-container *ngFor="let expense of incomeExpenseMovement.expenses">
+                {{expense.memorandum}}
+              </ng-container>
+              <ng-container *ngFor="let income of incomeExpenseMovement.incomes">
+                {{income.memorandum}}
+              </ng-container>
+            </ng-container>
+            <ng-template #noMovements>
+              <span translate>Without movements</span>
+            </ng-template>
+            
+          </mat-panel-description>
           <mat-action-row>
             <button mat-button color="warn" (click)="deleteRelatedMovement()" [title]="'delete-button' | translate"
               translate>
               Delete
             </button>
-            <button mat-button (click)="displayMovements(related.id)" translate>
-              Details
+            <button mat-button (click)="displayMovements(related.id!)" translate>
+              Show Movements
             </button>
             <button mat-button [routerLink]="['update', related.id]" [title]="'edit-button' | translate" translate>
               Edit

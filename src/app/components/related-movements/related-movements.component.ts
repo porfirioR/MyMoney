@@ -3,7 +3,7 @@ import { Location } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
-import { combineLatest, switchMap } from 'rxjs';
+import { combineLatest, of, switchMap } from 'rxjs';
 import { RelatedMovementModel } from '../../models/related-movement.model';
 import { RelatedMovementGroupModel } from '../../models/related-movement-group.model';
 import { RelatedMovementsService } from '../../services/related-movements.service';
@@ -19,7 +19,7 @@ import { DialogDeleteComponent } from '../dialog-delete/dialog-delete.component'
 export class RelatedMovementsComponent implements OnInit {
   protected loading = true
   protected relatedMovements: RelatedMovementModel[] = []
-  protected movements: RelatedMovementGroupModel[] = []
+  protected movements: Map<string, RelatedMovementGroupModel> = new Map<string, RelatedMovementGroupModel>()
 
   constructor(
     private readonly location: Location,
@@ -67,19 +67,23 @@ export class RelatedMovementsComponent implements OnInit {
   }
 
   protected displayMovements = (id: string) => {
-    if (this.movements.find(x => x.id === id)) {
+    if (this.movements.get(id)) {
       return
     }
     this.relatedMovementsService.getById(id).pipe(switchMap((relatedMovement) => {
       const category = CategoryType
-      const expense$ = this.movementService.getMovementsByIds(category.expense, relatedMovement.related.filter(x => x.type === category.expense).map(x => x.id))
-      const income$ = this.movementService.getMovementsByIds(category.income, relatedMovement.related.filter(x => x.type === category.income).map(x => x.id))
+      const expenseIds = relatedMovement.related.filter(x => x.type === category.expense)
+      const incomeIds = relatedMovement.related.filter(x => x.type === category.income)
+      const expense$ = expenseIds.length > 0 ? this.movementService.getMovementsByIds(category.expense, expenseIds.map(x => x.id)) : of([])
+      const income$ = incomeIds.length > 0 ? this.movementService.getMovementsByIds(category.income, incomeIds.map(x => x.id)) : of([])
       return combineLatest([expense$, income$])
     })).subscribe({
       next: ([expenses, incomes]) => {
-        this.movements.push(new RelatedMovementGroupModel(id, expenses, incomes))
-        console.log(expenses)
-        console.log(incomes)
+        const movement: RelatedMovementGroupModel = {
+          expenses,
+          incomes
+        }
+        this.movements.set(id, movement)
       }, error: (e) => {
         throw e
       }

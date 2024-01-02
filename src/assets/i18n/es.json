@@ -203,6 +203,10 @@
   "Save Related Movement": "Guardar Movimiento Relacionado",
   "Related Movement was updated": "Movimiento relacionado fue actualizado",
   "Related Movement was created": "Movimiento relacionado fue creado",
+  "Without movements": "Sin movimientos",
+  "Movements:": "Movimientos",
+  "Expense Amount:": "Monto Gastos:",
+  "Income Amount:": "Monto Ingresos:",
   "category-messages": {
     "question": "¿Está seguro de que desea eliminar esta categoría?. Todos los movimientos relacionados ({{length}}) con esta categoría serán eliminados",
     "deleted": "La categoría fue borrada",

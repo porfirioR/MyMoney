@@ -1,9 +1,6 @@
 import { MovementModel } from "./movement.model";
 
-export class RelatedMovementGroupModel {
-  constructor(
-    public id: string,
-    public expenses: MovementModel[],
-    public incomes: MovementModel[]
-  ) { }
+export interface RelatedMovementGroupModel {
+  expenses: MovementModel[],
+  incomes: MovementModel[]
 }

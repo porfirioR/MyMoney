@@ -64,7 +64,7 @@
       <button mat-stroked-button color="primary" (click)="exit()" [title]="'cancel-button' | translate">
         {{'Cancel' | translate}}
       </button>
-      <button mat-stroked-button color="primary" type="submit" [disabled]="formGroup.invalid"
+      <button mat-stroked-button color="primary" type="submit" [disabled]="formGroup.invalid || saving"
         [title]="'save-button' | translate" (click)="save()">
         {{'Save' | translate}}
       </button>

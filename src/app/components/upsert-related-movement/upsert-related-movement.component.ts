@@ -28,9 +28,9 @@ export class UpsertRelatedMovementComponent implements OnInit {
   protected formGroup = new FormGroup<RelatedMovementForm>({
     id: new FormControl(null),
     name: new FormControl(null, Validators.required),
-    expenseAmount: new FormControl({value: null, disabled: true}, Validators.required),
-    incomeAmount: new FormControl({value: null, disabled: true}, Validators.required),
-    relatedIds: new FormControl(null, Validators.required),
+    expenseAmount: new FormControl({value: null, disabled: true}),
+    incomeAmount: new FormControl({value: null, disabled: true}),
+    relatedIds: new FormControl(null),
     totalAmount: new FormControl(null),
     showInUpsertMovement: new FormControl(false)
   })
@@ -38,6 +38,7 @@ export class UpsertRelatedMovementComponent implements OnInit {
   protected categoryType = CategoryType
   protected title = 'Create Related Movement'
   protected numberType = NumberType.English
+  protected saving = false
   private id = ''
 
   constructor(
@@ -95,14 +96,25 @@ export class UpsertRelatedMovementComponent implements OnInit {
   }
 
   protected save = (): void => {
-    const request: RelatedMovementModel = this.formGroup.getRawValue()! as unknown as RelatedMovementModel
-    request.id = this.id
-    request.related = [...this.incomes.map(x => new RelatedMapModel(x.id!, x.type)), ...this.expenses.map(x => new RelatedMapModel(x.id!, x.type))]
+    this.saving = true
+    const request: RelatedMovementModel = {
+      id: this.id ?? null,
+      expenseAmount: this.formGroup.controls.expenseAmount.value ?? 0,
+      incomeAmount: this.formGroup.controls.incomeAmount.value ?? 0,
+      name: this.formGroup.controls.name.value!,
+      related: [...this.incomes.map(x => new RelatedMapModel(x.id!, x.type)), ...this.expenses.map(x => new RelatedMapModel(x.id!, x.type))],
+      owner: '',
+      totalAmount: this.formGroup.controls.totalAmount.value!,
+      showInUpsertMovement: this.formGroup.controls.showInUpsertMovement.value!
+    }
     const request$ = this.id ? this.relatedMovementsService.update(request) : this.relatedMovementsService.create(request)
     request$.then(() => {
       this.snackBar.open(this.translateService.instant(`Related Movement was ${request.id ? 'updated' : 'created'}`), '', { duration: 3000 })
-      this.location.back()
-    }).catch(e => console.error(e))
+      this.exit()
+    }).catch(e => {
+      this.saving = false
+      console.error(e)
+    })
   }
 
   protected deleteMovement = (id: string) => {

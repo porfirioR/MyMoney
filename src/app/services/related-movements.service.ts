@@ -23,7 +23,7 @@ export class RelatedMovementsService {
     if (!this.email) {
       this.router.navigate([''])
     }
-    const ref = query(this.getReference(), where('owner', 'in', [ this.email ]), orderBy('type'))
+    const ref = query(this.getReference(), where('owner', '==', this.email))
     return collectionData<RelatedMovementModel>(ref as Query<RelatedMovementModel>, { idField: 'id' })
   }
 
@@ -33,6 +33,7 @@ export class RelatedMovementsService {
   }
   
   public create = (model: RelatedMovementModel): Promise<DocumentReference> => {
+    delete model.id
     model.owner = this.userService.getUserEmail()
     return addDoc(this.getReference(), model)
   }
