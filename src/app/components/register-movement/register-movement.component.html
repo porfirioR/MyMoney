@@ -69,10 +69,7 @@
       </mat-form-field>
       <mat-form-field appearance="fill" class="w-100">
         <mat-label translate>Related Movements</mat-label>
-        <mat-select formControlName="relatedMovements">
-          <mat-option [value]="''" disabled>
-            Select Related Movement
-          </mat-option>
+        <mat-select formControlName="relatedMovements" multiple>
           <mat-option *ngFor="let relatedMovement of relatedMovements" [value]="relatedMovement.id">
             {{relatedMovement.name | translate}}
           </mat-option>

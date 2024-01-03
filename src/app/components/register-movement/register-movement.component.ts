@@ -17,6 +17,7 @@ import { UserService } from '../../services/user.service';
 import { ConfigurationService } from '../../services/configuration.service';
 import { RelatedMovementsService } from '../../services/related-movements.service';
 import { MovementForm } from '../../forms/movement.form';
+import { RelatedMapModel } from 'src/app/models/related-map-model';
 
 @Component({
   selector: 'app-register-movement',
@@ -42,7 +43,7 @@ export class RegisterMovementComponent implements OnInit {
     color: new FormControl(this.defaultColor),
     backgroundColor: new FormControl(this.defaultBackgroundColor),
     time: new FormControl(null, Validators.required),
-    relatedMovements: new FormControl(''),
+    relatedMovements: new FormControl(null),
   })
   protected currentCategories!: CategoryModel[]
   protected loading = true
@@ -147,7 +148,6 @@ export class RegisterMovementComponent implements OnInit {
 
   protected save = (): void => {
     const request: MovementModel = {
-      id: this.formGroup.controls.id.value!,
       type: this.formGroup.controls.type.value!,
       icon: this.formGroup.controls.icon.value!,
       categoryId: this.formGroup.controls.categoryId.value!,
@@ -155,9 +155,8 @@ export class RegisterMovementComponent implements OnInit {
       amount: this.formGroup.controls.amount.value!,
       color: this.formGroup.controls.color.value!,
       backgroundColor: this.formGroup.controls.backgroundColor.value!,
-      time: this.formGroup.controls.time.value!
+      time: this.formGroup.controls.time.value!,
     }
-    const relatedMovements = this.formGroup.controls.relatedMovements
     this.saving = true
     let request$: Promise<void> | Promise<DocumentReference<DocumentData>> | Promise<[DocumentReference<DocumentData>, void]>
     if (this.movementId && request.type !== this.updateMovement?.type) {
@@ -168,7 +167,7 @@ export class RegisterMovementComponent implements OnInit {
     } else {
       request$ = this.movementService.create(request)
     }
-    request$.then(() => {
+    request$.then((x) => {
       this.saving = false
       const movementUpdated = this.movementService.getMovementById(this.movementId)!
       if (request.id) {
@@ -179,8 +178,12 @@ export class RegisterMovementComponent implements OnInit {
         movementUpdated.amount = request.amount
         movementUpdated.id = request.id
         movementUpdated.time = request.time
+        this.setRelatedMovements(request.id)
       } else {
         this.movementService.deleteMovementForList(this.movementId)
+      }
+      if (typeof DocumentReference<DocumentData, DocumentData> === typeof x) {
+        this.setRelatedMovements((x as DocumentReference<DocumentData, DocumentData>).id)
       }
       this.snackBar.open(this.translate.instant(`Movement was ${this.movementId ? 'updated' : 'created'}`), '', { duration: 3000 })
       this.location.back()
@@ -201,5 +204,15 @@ export class RegisterMovementComponent implements OnInit {
       color: currentCategory && currentCategory.color ? currentCategory.color : this.defaultColor,
       backgroundColor: currentCategory && currentCategory.backgroundColor ? currentCategory.backgroundColor : this.defaultBackgroundColor
     })
+  }
+
+  private setRelatedMovements = (id: string) => {
+    const relatedMovements = this.formGroup.controls.relatedMovements.value
+    if (relatedMovements) {
+      const selectedRelatedMovements = this.relatedMovements?.filter(x => relatedMovements.find(y => y === x.id))
+      selectedRelatedMovements
+      .forEach(x => x.related = [...new Set([...x.related, new RelatedMapModel(id, this.formGroup.controls.type.value!)])])
+      console.log(relatedMovements)
+    }
   }
 }
