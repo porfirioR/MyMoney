@@ -10,10 +10,12 @@ import { CategoryType } from '../../enums/category-type.enum';
 import { InputType } from '../../enums/input-type.enum';
 import { MovementModel } from '../../models/movement.model';
 import { CategoryModel } from '../../models/category.model';
+import { RelatedMovementModel } from '../../models/related-movement.model';
 import { HelperService } from '../../services/helper.service';
 import { MovementService } from '../../services/movement.service';
 import { UserService } from '../../services/user.service';
 import { ConfigurationService } from '../../services/configuration.service';
+import { RelatedMovementsService } from '../../services/related-movements.service';
 import { MovementForm } from '../../forms/movement.form';
 
 @Component({
@@ -24,7 +26,6 @@ import { MovementForm } from '../../forms/movement.form';
 export class RegisterMovementComponent implements OnInit {
   @ViewChild("memorandum") inputMemorandum?: ElementRef
   protected categoryType = CategoryType
-  private movementId!: string
   protected defaultColor = '#000000'
   protected defaultBackgroundColor = '#ffffff'
   protected minDate = new Date('2018-01-01:00:00:00')
@@ -40,7 +41,8 @@ export class RegisterMovementComponent implements OnInit {
     amount: new FormControl(null, [Validators.required, Validators.min(0), Validators.minLength(1), Validators.max(999999999999)]),
     color: new FormControl(this.defaultColor),
     backgroundColor: new FormControl(this.defaultBackgroundColor),
-    time: new FormControl(null, Validators.required)
+    time: new FormControl(null, Validators.required),
+    relatedMovements: new FormControl(''),
   })
   protected currentCategories!: CategoryModel[]
   protected loading = true
@@ -48,8 +50,10 @@ export class RegisterMovementComponent implements OnInit {
   protected title: string = 'Register movement'
   protected mask = 'separator.0'
   protected thousandSeparator = '.'
+  protected relatedMovements: RelatedMovementModel[] = []
   private categoryList!: CategoryModel[]
   private updateMovement?: MovementModel
+  private movementId!: string
 
   constructor(
     private readonly movementService: MovementService,
@@ -58,17 +62,19 @@ export class RegisterMovementComponent implements OnInit {
     private readonly activatedRoute: ActivatedRoute,
     private readonly userService: UserService,
     private translate: TranslateService,
-    private configurationService: ConfigurationService
-  ) {
-  }
+    private configurationService: ConfigurationService,
+    private relateMovementsService: RelatedMovementsService
+  ) { }
 
   ngOnInit(): void {
     combineLatest([
       this.activatedRoute.params, this.userService.getActiveCategories$().pipe(take(1)),
-      this.configurationService.getConfiguration().pipe(take(1))
+      this.configurationService.getConfiguration().pipe(take(1)),
+      this.relateMovementsService.getRelatedMovementsShowingInMovements().pipe(take(1))
     ]).subscribe({
-      next: ([params, categories, configuration]) => {
+      next: ([params, categories, configuration, relatedMovements]) => {
         [this.mask, this.thousandSeparator] = HelperService.getMarkValues(configuration)
+        this.relatedMovements = relatedMovements
         this.movementId = params['id']
         this.categoryList = categories
         this.updateMovement = this.movementService.getMovementById(this.movementId)
@@ -140,8 +146,18 @@ export class RegisterMovementComponent implements OnInit {
   }
 
   protected save = (): void => {
-    const request: MovementModel = this.formGroup.getRawValue() as MovementModel
-    delete request.date
+    const request: MovementModel = {
+      id: this.formGroup.controls.id.value!,
+      type: this.formGroup.controls.type.value!,
+      icon: this.formGroup.controls.icon.value!,
+      categoryId: this.formGroup.controls.categoryId.value!,
+      memorandum: this.formGroup.controls.memorandum.value!,
+      amount: this.formGroup.controls.amount.value!,
+      color: this.formGroup.controls.color.value!,
+      backgroundColor: this.formGroup.controls.backgroundColor.value!,
+      time: this.formGroup.controls.time.value!
+    }
+    const relatedMovements = this.formGroup.controls.relatedMovements
     this.saving = true
     let request$: Promise<void> | Promise<DocumentReference<DocumentData>> | Promise<[DocumentReference<DocumentData>, void]>
     if (this.movementId && request.type !== this.updateMovement?.type) {

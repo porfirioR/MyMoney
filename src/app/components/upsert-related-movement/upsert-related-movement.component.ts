@@ -5,16 +5,15 @@ import { Location } from '@angular/common'
 import { MatTabChangeEvent } from '@angular/material/tabs'
 import { MatSnackBar } from '@angular/material/snack-bar'
 import { TranslateService } from '@ngx-translate/core'
-import { combineLatest, switchMap, take } from 'rxjs'
+import { combineLatest, of, switchMap, take } from 'rxjs'
 import { CategoryType } from '../../enums/category-type.enum'
 import { RelatedMovementForm } from '../../forms/related-movement.form'
 import { MovementModel } from '../../models/movement.model'
 import { MovementService } from '../../services/movement.service'
 import { RelatedMovementsService } from '../../services/related-movements.service'
 import { RelatedMovementModel } from '../../models/related-movement.model'
-import { RelatedMapModel } from 'src/app/models/related-map-model'
-import { NumberType } from 'src/app/enums/number-type.enum'
-import { UserService } from 'src/app/services/user.service'
+import { RelatedMapModel } from '../../models/related-map-model'
+import { NumberType } from '../../enums/number-type.enum'
 
 @Component({
   selector: 'app-upsert-related-movement',
@@ -68,8 +67,10 @@ export class UpsertRelatedMovementComponent implements OnInit {
           totalAmount: relatedMovement.totalAmount
         })
         const category = CategoryType
-        const expense$ = this.movementService.getMovementsByIds(category.expense, relatedMovement.related.filter(x => x.type === category.expense).map(x => x.id))
-        const income$ = this.movementService.getMovementsByIds(category.income, relatedMovement.related.filter(x => x.type === category.income).map(x => x.id))
+        const expenses = relatedMovement.related.filter(x => x.type === category.expense)
+        const incomes = relatedMovement.related.filter(x => x.type === category.expense)
+        const expense$ = expenses.length > 0 ? this.movementService.getMovementsByIds(category.expense, expenses.map(x => x.id)) : of([])
+        const income$ = incomes.length > 0 ? this.movementService.getMovementsByIds(category.income, incomes.map(x => x.id)) : of([])
         return combineLatest([expense$, income$])
       })).subscribe({
         next: ([expenses, incomes]) => {

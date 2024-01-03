@@ -6,7 +6,7 @@ export interface MovementModel {
   type: CategoryType
   icon: IconType
   categoryId: string
-  categoryName: string
+  categoryName?: string
   memorandum?: string
   date?: Date
   time: number

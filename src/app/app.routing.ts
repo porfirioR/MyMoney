@@ -121,7 +121,7 @@ const routes: Routes = [
     component: UpsertRelatedMovementComponent,
     title: 'Update Related Mov.',
     resolve: {
-      hero: ConfigResolver
+      config: ConfigResolver
     }
   },
   {

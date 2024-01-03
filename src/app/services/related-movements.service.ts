@@ -27,11 +27,20 @@ export class RelatedMovementsService {
     return collectionData<RelatedMovementModel>(ref as Query<RelatedMovementModel>, { idField: 'id' })
   }
 
+  public getRelatedMovementsShowingInMovements = (): Observable<RelatedMovementModel[]> => {
+    this.email = this.userService.getUserEmail()
+    if (!this.email) {
+      this.router.navigate([''])
+    }
+    const ref = query(this.getReference(), where('owner', '==', this.email), where('showInUpsertMovement', '==', true))
+    return collectionData<RelatedMovementModel>(ref as Query<RelatedMovementModel>, { idField: 'id' })
+  }
+
   public getById = (id: string): Observable<RelatedMovementModel> => {
     const ref = query(this.getReference(), where('owner', '==', this.email), where(documentId(), '==', id), orderBy('owner'))
     return collectionData<RelatedMovementModel>(ref as Query<RelatedMovementModel>, { idField: 'id' }).pipe(map(x => Array.isArray(x) ? (x as RelatedMovementModel[])[0]! : x!))
   }
-  
+
   public create = (model: RelatedMovementModel): Promise<DocumentReference> => {
     delete model.id
     model.owner = this.userService.getUserEmail()

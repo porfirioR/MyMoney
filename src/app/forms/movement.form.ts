@@ -13,4 +13,5 @@ export interface MovementForm {
   color: FormControl<string | null>
   backgroundColor: FormControl<string | null>
   time: FormControl<number | null>
+  relatedMovements: FormControl<string | null>
 }

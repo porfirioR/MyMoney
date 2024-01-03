@@ -16,15 +16,15 @@
         <mat-expansion-panel [hideToggle]="true">
           <mat-expansion-panel-header>{{related.name}}</mat-expansion-panel-header>
           <mat-panel-description>
-            <p for="incomeAmount">
+            <article for="incomeAmount" class="w-100">
               <b translate>Income Amount:</b> {{related.incomeAmount}}
-            </p>
-            <p for="expenseAmount">
+            </article>
+            <article for="expenseAmount" class="w-100">
               <b translate>Expense Amount:</b> {{related.incomeAmount}}
-            </p>
-            <p for="movements">
+            </article>
+            <article for="movements" class="w-100">
               <b translate>Movements:</b>
-            </p>
+            </article>
             <ng-container *ngIf="movements.get(related.id!) as incomeExpenseMovement; else noMovements">
               <ng-container *ngFor="let expense of incomeExpenseMovement.expenses">
                 {{expense.memorandum}}
