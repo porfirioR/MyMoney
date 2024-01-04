@@ -178,13 +178,11 @@ export class RegisterMovementComponent implements OnInit {
         movementUpdated.amount = request.amount
         movementUpdated.id = request.id
         movementUpdated.time = request.time
-        this.setRelatedMovements(request.id)
       } else {
         this.movementService.deleteMovementForList(this.movementId)
       }
-      if (typeof DocumentReference<DocumentData, DocumentData> === typeof x) {
-        this.setRelatedMovements((x as DocumentReference<DocumentData, DocumentData>).id)
-      }
+      this.setRelatedMovements(x)
+
       this.snackBar.open(this.translate.instant(`Movement was ${this.movementId ? 'updated' : 'created'}`), '', { duration: 3000 })
       this.location.back()
     }).catch((error) => console.error(error))
@@ -206,7 +204,16 @@ export class RegisterMovementComponent implements OnInit {
     })
   }
 
-  private setRelatedMovements = (id: string) => {
+  private setRelatedMovements = (x: void | DocumentReference<DocumentData, DocumentData> | [DocumentReference<DocumentData, DocumentData>, void]) => {
+    let id = this.movementId
+    let deletedId: string | undefined
+    if(typeof DocumentReference<DocumentData, DocumentData> === typeof x) {
+      id = (x as DocumentReference<DocumentData, DocumentData>).id
+    } else if (typeof Array === typeof x) {
+      id = (x as [DocumentReference<DocumentData, DocumentData>, void])[0].id
+      deletedId = this.movementId
+    }
+
     const relatedMovements = this.formGroup.controls.relatedMovements.value
     if (relatedMovements) {
       const selectedRelatedMovements = this.relatedMovements?.filter(x => relatedMovements.find(y => y === x.id))
