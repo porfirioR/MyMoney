@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CollectionType } from '../enums/collection-type.enum';
-import { CollectionReference, DocumentReference, Firestore, Query, addDoc, collection, collectionData, doc, documentId, orderBy, query, setDoc, where } from '@angular/fire/firestore';
+import { CollectionReference, DocumentData, DocumentReference, Firestore, Query, WriteBatch, addDoc, collection, collectionData, doc, documentId, orderBy, query, setDoc, where, writeBatch } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
 import { UserService } from './user.service';
 import { Observable, map } from 'rxjs';
@@ -9,7 +9,7 @@ import { RelatedMovementModel } from '../models/related-movement.model';
 @Injectable({
   providedIn: 'root'
 })
-export class RelatedMovementsService {
+export class RelatedMovementService {
   private collectionType: CollectionType = CollectionType.RelatedMovements
   private email!: string
 
@@ -52,6 +52,13 @@ export class RelatedMovementsService {
     const ref = doc(this.firestore, `${this.collectionType}/${model.id}`)
     return setDoc(ref, model)
   }
+
+  public openBatch = (): WriteBatch => {
+    return writeBatch(this.firestore)
+  }
+
+  public getReferenceById = (id: string): DocumentReference<DocumentData> => doc(this.firestore, `${this.collectionType}/${id}`)
+
 
   private getReference = (): CollectionReference => {
     return collection(this.firestore, this.collectionType)

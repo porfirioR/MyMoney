@@ -10,7 +10,7 @@ import { CategoryType } from '../../enums/category-type.enum'
 import { RelatedMovementForm } from '../../forms/related-movement.form'
 import { MovementModel } from '../../models/movement.model'
 import { MovementService } from '../../services/movement.service'
-import { RelatedMovementsService } from '../../services/related-movements.service'
+import { RelatedMovementService } from '../../services/related-movement.service'
 import { RelatedMovementModel } from '../../models/related-movement.model'
 import { RelatedMapModel } from '../../models/related-map-model'
 import { NumberType } from '../../enums/number-type.enum'
@@ -42,7 +42,7 @@ export class UpsertRelatedMovementComponent implements OnInit {
 
   constructor(
     private readonly activatedRoute: ActivatedRoute,
-    private readonly relatedMovementsService: RelatedMovementsService,
+    private readonly relatedMovementsService: RelatedMovementService,
     private readonly movementService: MovementService,
     private readonly location: Location,
     private readonly translateService: TranslateService,

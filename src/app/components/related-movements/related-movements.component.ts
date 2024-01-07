@@ -6,7 +6,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { combineLatest, of, switchMap } from 'rxjs';
 import { RelatedMovementModel } from '../../models/related-movement.model';
 import { RelatedMovementGroupModel } from '../../models/related-movement-group.model';
-import { RelatedMovementsService } from '../../services/related-movements.service';
+import { RelatedMovementService } from '../../services/related-movement.service';
 import { MovementService } from '../../services/movement.service';
 import { CategoryType } from '../../enums/category-type.enum';
 import { DialogDeleteComponent } from '../dialog-delete/dialog-delete.component';
@@ -23,7 +23,7 @@ export class RelatedMovementsComponent implements OnInit {
 
   constructor(
     private readonly location: Location,
-    private readonly relatedMovementsService: RelatedMovementsService,
+    private readonly relatedMovementsService: RelatedMovementService,
     private readonly dialog: MatDialog,
     private translate: TranslateService,
     private readonly snackBar: MatSnackBar,
