@@ -3,6 +3,9 @@ import { LanguageType } from '../../enums/language-type.enum';
 import { NumberType } from '../../enums/number-type.enum';
 import { RelatedMovementDetailModel } from '../../models/related-movement-detail.model';
 import { ConfigurationModel } from '../../models/configuration.model';
+import { DialogDeleteComponent } from '../dialog-delete/dialog-delete.component';
+import { MatDialog } from '@angular/material/dialog';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-related-movement-detail',
@@ -15,7 +18,10 @@ export class RelatedMovementDetailComponent implements OnInit {
   protected language = LanguageType.English
   protected numberType = NumberType.English
 
-  constructor() { }
+  constructor(
+    private translateService: TranslateService,
+    private readonly dialog: MatDialog,
+  ) { }
 
   ngOnInit() {
     this.language = this.configuration.language
@@ -24,6 +30,22 @@ export class RelatedMovementDetailComponent implements OnInit {
 
 
   protected deletedMovement = (id: string) => {
+    const dialogRef = this.dialog.open(DialogDeleteComponent, {
+      width: '350px',
+      data: {
+        title: this.translateService.instant('related-movement-messages.title-delete-movement'),
+        message: this.translateService.instant('related-movement-messages.question-delete')
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        // this.movementService.delete(this.movement?.id!, this.movement?.type!).then(() => {
+        //   this.snackBar.open(this.translateService.instant('related-movement-messages.deleted'), '', { duration: 3000 })
+        //   this.exit()
+        // }).catch((reason: any) => this.snackBar.open(reason, '', { duration: 3000 }))
+      }
+    })
 
   }
 }

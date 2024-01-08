@@ -33,7 +33,7 @@ export class MovementDetailComponent implements OnInit {
     private readonly dialog: MatDialog,
     private readonly snackBar: MatSnackBar,
     private readonly userService: UserService,
-    private translate: TranslateService,
+    private translateService: TranslateService,
   ) {
     combineLatest([this.activatedRoute.params, this.userService.getUserCategories$().pipe(take(1)), this.userService.getUserConfiguration$().pipe(take(1))]).subscribe({
       next: ([params, userCategories, config]) => {
@@ -64,15 +64,15 @@ export class MovementDetailComponent implements OnInit {
     const dialogRef = this.dialog.open(DialogDeleteComponent, {
       width: '350px',
       data: {
-        title: this.translate.instant('movement-messages.title-delete'),
-        message: this.translate.instant('movement-messages.question-delete')
+        title: this.translateService.instant('movement-messages.title-delete'),
+        message: this.translateService.instant('movement-messages.question-delete')
       }
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.movementService.delete(this.movement?.id!, this.movement?.type!).then(() => {
-          this.snackBar.open(this.translate.instant('movement-messages.deleted'), '', { duration: 3000 })
+          this.snackBar.open(this.translateService.instant('movement-messages.deleted'), '', { duration: 3000 })
           this.exit()
         }).catch((reason: any) => this.snackBar.open(reason, '', { duration: 3000 }))
       }
