@@ -43,16 +43,16 @@ export class AnnualReportComponent implements OnInit {
     ]
   }
   protected monthsChartData: ChartConfiguration['data'] = {
-    labels: Object.keys(MonthType).filter((v) => isNaN(Number(v))).map(x => this.translate.instant(x)),
+    labels: Object.keys(MonthType).filter((v) => isNaN(Number(v))).map(x => this.translateService.instant(x)),
     datasets: [{
       type: 'bar',
-      label: this.translate.instant(CategoryType.expense),
+      label: this.translateService.instant(CategoryType.expense),
       data: [],
       borderColor: this.redColor,
       backgroundColor: 'rgba(255, 99, 132, 0.2)'
     }, {
       type: 'bar',
-      label: this.translate.instant(CategoryType.income),
+      label: this.translateService.instant(CategoryType.income),
       data: [],
       borderColor: this.greenColor,
       backgroundColor: 'rgba(75, 192, 192, 0.2)',
@@ -127,7 +127,7 @@ export class AnnualReportComponent implements OnInit {
       },
       title: {
         display: true,
-        text: this.translate.instant('Chart separated by months')
+        text: this.translateService.instant('Chart separated by months')
       }
     }
   }, true)
@@ -147,7 +147,7 @@ export class AnnualReportComponent implements OnInit {
     private readonly movementService: MovementService,
     protected location: Location,
     private readonly userService: UserService,
-    private translate: TranslateService,
+    private translateService: TranslateService,
     private route: ActivatedRoute
   ) { }
   
@@ -178,8 +178,8 @@ export class AnnualReportComponent implements OnInit {
     this.prepareChartDataForExpenseCategory(expense)
     this.prepareChartDataForIncomeCategory(income)
     this.prepareMonthsChartData(expense, income)
-    this.globalChartData.labels = [this.translate.instant(CategoryType.income), this.translate.instant(CategoryType.expense)]
-    this.globalChartData.datasets[0].label = this.translate.instant('General Balance')
+    this.globalChartData.labels = [this.translateService.instant(CategoryType.income), this.translateService.instant(CategoryType.expense)]
+    this.globalChartData.datasets[0].label = this.translateService.instant('General Balance')
     this.globalChartData.datasets[0].data = [this.incomeAmount, this.expenseAmount]
     this.balance = this.incomeAmount - this.expenseAmount
     this.loading = false
@@ -192,7 +192,7 @@ export class AnnualReportComponent implements OnInit {
 
     this.incomeChart.labels = this.incomeGroupMovementCategoryModel.map(x => this.labelMovements(x, this.incomeAmount))
     this.incomeChartData.labels = this.incomeChart.labels
-    this.incomeChartData.datasets[0].label = this.translate.instant(CategoryType.income)
+    this.incomeChartData.datasets[0].label = this.translateService.instant(CategoryType.income)
     this.incomeChartData.datasets[0].data = this.incomeGroupMovementCategoryModel.map(x => x.amount)
   }
 
@@ -265,7 +265,7 @@ export class AnnualReportComponent implements OnInit {
   private labelMovements = (x: GroupMovementCategoryModel, amountMovements: number): string => {
     let total = 0
     x.movements.forEach(x => total += x.amount)
-    return `${this.translate.instant(x.categoryName)} ${((total * 100)/amountMovements).toFixed(1)}%`
+    return `${this.translateService.instant(x.categoryName)} ${((total * 100)/amountMovements).toFixed(1)}%`
   }
 
   private getMovementForCategoriesByYear = (year: number) => combineLatest([

@@ -71,16 +71,16 @@
       ]
     },
     {
-      "collectionGroup": "expense_time",
-      "queryScope": "COLLECTION_GROUP",
+      "collectionGroup": "related_movements",
+      "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "time",
-          "order": "DESCENDING"
+          "fieldPath": "owner",
+          "order": "ASCENDING"
         },
         {
-          "fieldPath": "type",
-          "order": "DESCENDING"
+          "fieldPath": "showInUpsertMovement ",
+          "order": "ASCENDING"
         }
       ]
     }

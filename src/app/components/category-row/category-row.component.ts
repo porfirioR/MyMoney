@@ -94,12 +94,12 @@ export class CategoryRowComponent implements OnInit, OnDestroy {
   private deleteAllMovementReferences = (categoryEvent: CategoryEvent, movements: MovementModel[]): void => {
     const userCategory = this.user.getUserCategories().find(x => x.categoryId === this.category.id)
     let batch = this.movementService.openBatch()
-    let commits: Promise<void>[] = []
+    let request$: Promise<void>[] = []
     if (!!userCategory) {
       const userCategoryDocReference = this.userCategoryService.getUserCategoryReferenceById(userCategory.id!)
       batch.delete(userCategoryDocReference)
       if (movements.length === 0) {
-        commits.push(batch.commit())
+        request$.push(batch.commit())
       }
     }
     movements.forEach((request, i) => {
@@ -107,13 +107,13 @@ export class CategoryRowComponent implements OnInit, OnDestroy {
       batch.delete(docReference)
       let index = i + 1
       if (index % 500 === 0 || index === movements.length) {
-        commits.push(batch.commit())
+        request$.push(batch.commit())
         if (index % 500 === 0) {
           batch = this.movementService.openBatch()
         }
       }
     })
-    Promise.all(commits)
+    Promise.all(request$)
     .then(() => this.updateCategoryEvent.emit(categoryEvent))
     .catch((e) => console.error(e))
   }

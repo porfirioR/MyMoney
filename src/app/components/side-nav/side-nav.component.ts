@@ -24,6 +24,7 @@ export class SideNavComponent implements OnInit {
     new NavItemModel('assignment', 'Annual Report', ItemAction.annualReport),
     new NavItemModel('stars', 'About us', ItemAction.aboutUs),
     new NavItemModel('build', 'Configuration', ItemAction.configuration),
+    new NavItemModel('group_work', 'Related Mov.', ItemAction.relatedMovements),
   ];
   protected displayName: string = ''
   protected photo!: SafeUrl

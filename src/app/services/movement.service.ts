@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { addDoc, collection, collectionData, CollectionReference, deleteDoc, doc, DocumentData, DocumentReference, Firestore, orderBy, Query, query, setDoc, where, WriteBatch, writeBatch } from '@angular/fire/firestore';
+import { addDoc, collection, collectionData, CollectionReference, deleteDoc, doc, DocumentData, documentId, DocumentReference, Firestore, orderBy, Query, query, setDoc, where, WriteBatch, writeBatch } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { CategoryType } from '../enums/category-type.enum';
 import { CollectionType } from '../enums/collection-type.enum';
@@ -88,6 +88,11 @@ export class MovementService {
     return collectionData<MovementModel>(ref as Query<MovementModel>, { idField: 'id' })
   }
 
-  public getMovementDocumentReferenceById = (type: CategoryType, id: string): DocumentReference<DocumentData> => 
+  public getMovementDocumentReferenceById = (type: CategoryType, id: string): DocumentReference<DocumentData> =>
     doc(this.firestore, `${this.collections}/${this.userService.getUserEmail()}/${type.toLowerCase()}/${id}`)
+
+  public getMovementsByIds = (category: CategoryType, movementIds: string[]): Observable<MovementModel[]> => {
+    const ref = query(this.getReference(category), where(documentId(), 'in', movementIds))
+    return collectionData<MovementModel>(ref as Query<MovementModel>, { idField: 'id' })
+  }
 }

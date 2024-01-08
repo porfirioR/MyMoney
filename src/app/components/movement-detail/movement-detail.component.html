@@ -16,7 +16,7 @@
       >
         <mat-icon>{{movement!.icon}}</mat-icon>
       </button>
-      <span>{{movement!.categoryName | translate}}</span>
+      <span>{{movement?.categoryName ?? '' | translate}}</span>
       <button mat-icon-button [title]="'edit-button' | translate" (click)="editMovement(movement!.id)">
         <mat-icon>edit</mat-icon>
       </button>

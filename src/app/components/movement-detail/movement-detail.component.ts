@@ -63,7 +63,10 @@ export class MovementDetailComponent implements OnInit {
   protected deleteMovement = (): void => {
     const dialogRef = this.dialog.open(DialogDeleteComponent, {
       width: '350px',
-      data: { title: this.translate.instant('movement-messages.title-delete'), message: this.translate.instant('movement-messages.question-delete') }
+      data: {
+        title: this.translate.instant('movement-messages.title-delete'),
+        message: this.translate.instant('movement-messages.question-delete')
+      }
     });
 
     dialogRef.afterClosed().subscribe(result => {

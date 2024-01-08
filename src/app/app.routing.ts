@@ -17,6 +17,9 @@ import { ConfigurationComponent } from './components/configuration/configuration
 import { AnnualReportComponent } from './components/annual-report/annual-report.component';
 import { UserGuard } from './guards/user.guard';
 import { environment } from '../environments/environment';
+import { RelatedMovementsComponent } from './components/related-movements/related-movements.component';
+import { UpsertRelatedMovementComponent } from './components/upsert-related-movement/upsert-related-movement.component';
+import { ConfigResolver } from './resolvers/config.resolver';
 
 const routes: Routes = [
   {
@@ -96,6 +99,30 @@ const routes: Routes = [
     canActivate: [UserGuard],
     component: AnnualReportComponent,
     title: 'Annual Report'
+  },
+  {
+    path: 'related-movements',
+    canActivate: [UserGuard],
+    component: RelatedMovementsComponent,
+    title: 'Related Mov.'
+  },
+  {
+    path: 'related-movements/add',
+    canActivate: [UserGuard],
+    component: UpsertRelatedMovementComponent,
+    title: 'Add Related Mov.',
+    resolve: {
+      config: ConfigResolver
+    }
+  },
+  {
+    path: 'related-movements/update/:id',
+    canActivate: [UserGuard],
+    component: UpsertRelatedMovementComponent,
+    title: 'Update Related Mov.',
+    resolve: {
+      config: ConfigResolver
+    }
   },
   {
     path: 'login',

@@ -1,0 +1,96 @@
+<mat-toolbar color="primary">
+  <button mat-icon-button (click)="exit()" [title]="'exit-button' | translate">
+    <mat-icon>keyboard_backspace</mat-icon>
+  </button>
+  <span translate>{{title}}</span>
+  <button mat-icon-button (click)="save()" [title]="'Save Related Movement' | translate">
+    <mat-icon>save</mat-icon>
+  </button>
+</mat-toolbar>
+<div class="mat-toolbar-block"></div>
+<mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+<form [formGroup]="formGroup" *ngIf="!loading">
+  <mat-card>
+    <mat-card-content>
+      <mat-form-field class="w-100">
+        <mat-label translate>Name</mat-label>
+        <input matInput formControlName="name" id="name">
+        <mat-error *ngIf="formGroup.controls.name.hasError('required')">
+          {{'related-movement-messages.required-name' | translate}}
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field class="w-100">
+        <mat-label translate>Expense Amount</mat-label>
+        <input matInput formControlName="expenseAmount" id="expenseAmount">
+      </mat-form-field>
+      <mat-form-field class="w-100">
+        <mat-label translate>Income Amount</mat-label>
+        <input matInput formControlName="incomeAmount" id="incomeAmount">
+      </mat-form-field>
+      <mat-form-field class="w-100">
+        <mat-label translate>Total Amount</mat-label>
+        <input matInput formControlName="totalAmount" id="totalAmount">
+      </mat-form-field>
+      <mat-checkbox color="primary" formControlName="showInUpsertMovement" id="showInUpsertMovement" translate>
+        Show in Movement
+      </mat-checkbox>
+      <label for="movements" class="flex-justify-center" translate>Movements</label>
+      <mat-accordion displayMode="default" [multi]="true" [hideToggle]="false">
+        <mat-expansion-panel [hideToggle]="false">
+          <mat-expansion-panel-header>
+            {{categoryType.income | translate}}
+          </mat-expansion-panel-header>
+          <ng-container *ngTemplateOutlet="matExpansionPanelContent
+          context: { movements: incomes }">
+          </ng-container>
+        </mat-expansion-panel>
+        <mat-expansion-panel [hideToggle]="false">
+          <mat-expansion-panel-header>
+            {{categoryType.expense | translate}}
+          </mat-expansion-panel-header>
+          <ng-container *ngTemplateOutlet="matExpansionPanelContent
+          context: { groups: incomes }">
+          </ng-container>
+        </mat-expansion-panel>
+        <mat-action-row>
+          <button mat-stroked-button color="primary" (click)="addMovement()">
+            <mat-icon>add</mat-icon>
+            Add Movements
+          </button>
+        </mat-action-row>
+      </mat-accordion>
+    </mat-card-content>
+    <mat-card-footer>
+      <button mat-stroked-button color="primary" (click)="exit()" [title]="'cancel-button' | translate">
+        {{'Cancel' | translate}}
+      </button>
+      <button mat-stroked-button color="primary" type="submit" [disabled]="formGroup.invalid || saving"
+        [title]="'save-button' | translate" (click)="save()">
+        {{'Save' | translate}}
+      </button>
+    </mat-card-footer>
+  </mat-card>
+</form>
+
+<ng-template #matExpansionPanelContent let-movements="movements">
+  <ng-container *ngFor="let movement of movements; let i = index">
+    <mat-icon class="mat-18">ligature</mat-icon>
+    <button mat-icon-button color="warn" (click)="deleteMovement(movement.id)">
+      <mat-icon>add_circle_outline</mat-icon>
+    </button>
+    <button mat-mini-fab customColor
+      [color]="movement!.color"
+      [backgroundColor]="movement!.backgroundColor"
+      [title]="'movement-icon-button' | translate"
+    >
+      <i [id]="'icon-' + i" class="material-icons-outlined notranslate">{{movement.icon}}</i>
+    </button>
+    <span [id]="'memorandum-' + i">{{movement.memorandum! | translate}}</span>
+    <article [id]="'amount-' + i">
+      {{movement.amount | number:'' : numberType}}
+    </article>
+  </ng-container>
+  <span class="flex-justify-center" *ngIf="!movements || movements.length === 0" translate>
+    Without movements to show.
+  </span>
+</ng-template>
