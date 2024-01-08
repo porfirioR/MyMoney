@@ -208,7 +208,7 @@ export class RegisterMovementComponent implements OnInit {
 
   private setRelatedMovements = (x: void | DocumentReference<DocumentData, DocumentData> | [DocumentReference<DocumentData, DocumentData>, void]) => {
     let id = this.movementId
-    if(this.movementRegistrationType === MovementRegistrationType.update) {
+    if(this.movementRegistrationType === MovementRegistrationType.create) {
       id = (x as DocumentReference<DocumentData, DocumentData>).id
     } else if (this.movementRegistrationType === MovementRegistrationType.complexUpdate) {
       id = (x as [DocumentReference<DocumentData, DocumentData>, void])[0].id
@@ -243,7 +243,12 @@ export class RegisterMovementComponent implements OnInit {
     }
     selectedRelatedMovements.forEach(x => {
       const relatedMovementDocReference = this.relateMovementService.getReferenceById(x.id!)
-      batch.update(relatedMovementDocReference, {'related': x.related})
+      batch.update(relatedMovementDocReference, {'related': x.related.map(y => {
+        const relatedValue: Record<string, string> = {}
+        relatedValue['id'] = y.id,
+        relatedValue['type'] = y.type
+        return relatedValue
+      })})
       request$.push(batch.commit())
     })
     if (request$.length >= 0) {

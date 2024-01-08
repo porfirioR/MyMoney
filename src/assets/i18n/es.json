@@ -207,6 +207,7 @@
   "Movements:": "Movimientos",
   "Expense Amount:": "Monto Gastos:",
   "Income Amount:": "Monto Ingresos:",
+  "Name:": "Nombre:",
   "category-messages": {
     "question": "¿Está seguro de que desea eliminar esta categoría?. Todos los movimientos relacionados ({{length}}) con esta categoría serán eliminados",
     "deleted": "La categoría fue borrada",
@@ -230,9 +231,10 @@
     "required-row": "La primera fila es requerida: {{csvHeader}}"
   },
   "related-movement-messages": {
+    "title-delete-movement": "Borrar movimiento de la relación",
     "title-delete": "Borrar movimiento relacionado",
     "question-delete": "¿Estás seguro que quieres eliminar esta relación?",
-    "deleted": "La relación fue borrada",
+    "deleted": "Movimiento relacionado fue borrada",
     "required-name": "El nombre es requerido"
   },
   "import-movement-messages": {

@@ -18,6 +18,7 @@
     "required-password": "Password is required"
   },
   "movement-messages": {
+    "title-delete-movement": "Delete movement's relation",
     "title-delete": "Delete movement",
     "question-delete": "Are you sure you want to remove this move?",
     "deleted": "Movement was deleted",

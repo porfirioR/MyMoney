@@ -1,0 +1,19 @@
+<ng-container *ngIf="movements.length; else noMovements">
+  <header class="flex-space-between">
+    <b>Action</b>
+    <b translate>Memorandum</b>
+    <b>Amount</b>
+  </header>
+  <main class="flex-space-between" *ngFor="let movement of movements">
+    <button mat-icon-button color="warn" [title]="'title-delete-movement' | translate" (click)="deletedMovement(movement.id!)">
+      <mat-icon>
+        highlight_off
+      </mat-icon>
+    </button>
+    <article>{{movement.memorandum}}</article>
+    <article>{{movement.isExpense ? '-' : ''}} {{movement.amount}}</article>
+  </main>
+</ng-container>
+<ng-template #noMovements>
+  <span translate>Without movements</span>
+</ng-template>

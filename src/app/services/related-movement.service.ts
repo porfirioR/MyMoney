@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CollectionType } from '../enums/collection-type.enum';
-import { CollectionReference, DocumentData, DocumentReference, Firestore, Query, WriteBatch, addDoc, collection, collectionData, doc, documentId, orderBy, query, setDoc, where, writeBatch } from '@angular/fire/firestore';
+import { CollectionReference, DocumentData, DocumentReference, Firestore, Query, WriteBatch, addDoc, collection, collectionData, deleteDoc, doc, documentId, orderBy, query, setDoc, where, writeBatch } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
 import { UserService } from './user.service';
 import { Observable, map } from 'rxjs';
@@ -32,7 +32,7 @@ export class RelatedMovementService {
     if (!this.email) {
       this.router.navigate([''])
     }
-    const ref = query(this.getReference(), where('owner', '==', this.email), where('showInUpsertMovement', '==', true))
+    const ref = query(this.getReference(), where('owner', '==', this.email), where('showInUpsertMovement', '==', true), orderBy('owner'))
     return collectionData<RelatedMovementModel>(ref as Query<RelatedMovementModel>, { idField: 'id' })
   }
 
@@ -62,5 +62,10 @@ export class RelatedMovementService {
 
   private getReference = (): CollectionReference => {
     return collection(this.firestore, this.collectionType)
+  }
+
+  public delete = (id: string): Promise<void> => {
+    const ref = doc(this.firestore, `${this.collectionType}/${id}`)
+    return deleteDoc(ref)
   }
 }

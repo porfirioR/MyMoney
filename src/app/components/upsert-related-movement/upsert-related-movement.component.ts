@@ -57,14 +57,15 @@ export class UpsertRelatedMovementComponent implements OnInit {
     if (!this.id) {
       this.loading = false
     } else {
-      this.relatedMovementsService.getById(this.id).pipe(switchMap((relatedMovement) => {
+      this.relatedMovementsService.getById(this.id).pipe(take(1), switchMap((relatedMovement) => {
         this.formGroup.patchValue({
           id: relatedMovement.id,
           name: relatedMovement.name,
           expenseAmount: relatedMovement.expenseAmount,
           incomeAmount: relatedMovement.incomeAmount,
           relatedIds: relatedMovement.related.map(y => y.id),
-          totalAmount: relatedMovement.totalAmount
+          totalAmount: relatedMovement.totalAmount,
+          showInUpsertMovement: relatedMovement.showInUpsertMovement
         })
         const category = CategoryType
         const expenses = relatedMovement.related.filter(x => x.type === category.expense)

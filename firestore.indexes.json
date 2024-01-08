@@ -69,20 +69,6 @@
           "order": "ASCENDING"
         }
       ]
-    },
-    {
-      "collectionGroup": "expense_time",
-      "queryScope": "COLLECTION_GROUP",
-      "fields": [
-        {
-          "fieldPath": "time",
-          "order": "DESCENDING"
-        },
-        {
-          "fieldPath": "type",
-          "order": "DESCENDING"
-        }
-      ]
     }
   ],
   "fieldOverrides": []

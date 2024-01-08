@@ -67,3 +67,13 @@ body {
   align-items: center;
   justify-content: center;
 }
+
+.flex-space-between {
+  display: flex;
+  justify-content: space-between;
+}
+
+.p-15 {
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
