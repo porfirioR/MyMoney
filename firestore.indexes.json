@@ -69,6 +69,20 @@
           "order": "ASCENDING"
         }
       ]
+    },
+    {
+      "collectionGroup": "related_movements",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "owner",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "showInUpsertMovement ",
+          "order": "ASCENDING"
+        }
+      ]
     }
   ],
   "fieldOverrides": []

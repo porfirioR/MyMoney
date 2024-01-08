@@ -7,12 +7,13 @@ import { combineLatest, of, switchMap, take } from 'rxjs';
 import { RelatedMovementModel } from '../../models/related-movement.model';
 import { RelatedMovementDetailModel } from '../../models/related-movement-detail.model';
 import { CategoryModel } from '../../models/category.model';
+import { ConfigurationModel } from '../../models/configuration.model';
 import { RelatedMovementService } from '../../services/related-movement.service';
 import { MovementService } from '../../services/movement.service';
+import { UserService } from '../../services/user.service';
 import { CategoryType } from '../../enums/category-type.enum';
+import { NumberType } from '../../enums/number-type.enum';
 import { DialogDeleteComponent } from '../dialog-delete/dialog-delete.component';
-import { CategoryService } from 'src/app/services/category.service';
-import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-related-movements',
@@ -24,6 +25,8 @@ export class RelatedMovementsComponent implements OnInit {
   protected relatedMovements: RelatedMovementModel[] = []
   protected movements: Map<string, RelatedMovementDetailModel[]> = new Map<string, RelatedMovementDetailModel[]>()
   protected categories: CategoryModel[] = []
+  protected configuration!: ConfigurationModel
+  protected numberType = NumberType.English
 
   constructor(
     private readonly location: Location,
@@ -35,11 +38,16 @@ export class RelatedMovementsComponent implements OnInit {
     private readonly userService: UserService,
   ) { }
 
-  ngOnInit() {
-    this.relatedMovementsService.getAll().subscribe({
-      next: (relatedMovements) => {
+  ngOnInit(): void {
+    combineLatest([
+      this.userService.getUserConfiguration$().pipe(take(1)),
+      this.relatedMovementsService.getAll().pipe(take(1))
+    ]).subscribe({
+      next: ([configuration, relatedMovements]) => {
+        this.configuration = configuration
         this.relatedMovements = relatedMovements
         this.loading = false
+        this.numberType = this.configuration.number
       }, error: (e) => {
         this.loading = false
         throw e
@@ -83,8 +91,15 @@ export class RelatedMovementsComponent implements OnInit {
       return combineLatest([expense$, income$])
     })).subscribe({
       next: ([expenses, incomes]) => {
+        let expenseAmount = 0
+        let incomeAmount = 0
         const movements: RelatedMovementDetailModel[] = [...expenses, ...incomes].sort((a, b) => a.time - b.time).map(x => {
           const category = this.userService.getActiveCategories().find(y => y.id === x.categoryId)!
+          if (x.type === CategoryType.expense) {
+            expenseAmount += x.amount
+          } else {
+            incomeAmount += x.amount
+          }
           return new RelatedMovementDetailModel(
             x.id!,
             new Date(x.time),
@@ -93,6 +108,9 @@ export class RelatedMovementsComponent implements OnInit {
             x.type === CategoryType.expense
           )
         })
+        const currentRelatedMovement = this.relatedMovements.find(x => x.id === id)!
+        currentRelatedMovement.incomeAmount = incomeAmount
+        currentRelatedMovement.expenseAmount = expenseAmount
         this.movements.set(id, movements)
       }, error: (e) => {
         throw e

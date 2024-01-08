@@ -46,7 +46,7 @@ export class RegisterMovementComponent implements OnInit {
     time: new FormControl(null, Validators.required),
     relatedMovements: new FormControl(null),
   })
-  protected currentCategories!: CategoryModel[]
+  protected currentCategories: CategoryModel[] = []
   protected loading = true
   protected saving = false
   protected title: string = 'Register movement'

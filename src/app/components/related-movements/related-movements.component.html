@@ -13,30 +13,31 @@
   <mat-card-content>
     <mat-accordion displayMode="default" [multi]="true" [hideToggle]="true" *ngIf="relatedMovements.length > 0">
       <ng-container *ngFor="let related of relatedMovements">
-        <mat-expansion-panel [hideToggle]="true">
+        <mat-expansion-panel [hideToggle]="true" (click)="displayMovements(related.id!)">
           <mat-expansion-panel-header>
-            {{'Name:' | translate}} {{related.name}}
+            <article class="w-50">{{'Name:' | translate}} {{related.name}}</article>
+            <article class="w-50" align="end">{{'Total:' | translate}} {{related.totalAmount || 0}}</article>
           </mat-expansion-panel-header>
           <article for="incomeAmount" class="w-100">
-            <b translate>Income Amount:</b> {{related.incomeAmount}}
+            <b translate>Income Amount:</b> {{related.incomeAmount | number:'' : numberType}}
           </article>
           <article for="expenseAmount" class="w-100">
-            <b translate>Expense Amount:</b> {{related.incomeAmount}}
+            <b translate>Expense Amount:</b> {{related.expenseAmount | number:'' : numberType}}
           </article>
           <mat-divider></mat-divider>
           <article class="w-100 p-15" align="center">
             <b translate>Movements</b>
           </article>
-          <app-related-movement-detail *ngIf="movements.get(related.id!)" [movements]="movements.get(related.id!)!"></app-related-movement-detail>
+          <app-related-movement-detail *ngIf="movements.get(related.id!)"
+            [movements]="movements.get(related.id!)!"
+            [configuration]="configuration"
+          ></app-related-movement-detail>
           <mat-action-row>
-            <button mat-button color="warn" (click)="deleteRelatedMovement(related.id!)"
+            <button mat-stroked-button color="warn" (click)="deleteRelatedMovement(related.id!)"
               [title]="'delete-button' | translate" translate>
               Delete
             </button>
-            <button mat-button (click)="displayMovements(related.id!)" translate>
-              Show Movements
-            </button>
-            <button mat-button [routerLink]="['update', related.id]" [title]="'edit-button' | translate" translate>
+            <button mat-stroked-button color="primary" [routerLink]="['update', related.id]" [title]="'edit-button' | translate" translate>
               Edit
             </button>
           </mat-action-row>

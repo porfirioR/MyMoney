@@ -208,6 +208,7 @@
   "Expense Amount:": "Monto Gastos:",
   "Income Amount:": "Monto Ingresos:",
   "Name:": "Nombre:",
+  "Action": "Acción",
   "category-messages": {
     "question": "¿Está seguro de que desea eliminar esta categoría?. Todos los movimientos relacionados ({{length}}) con esta categoría serán eliminados",
     "deleted": "La categoría fue borrada",

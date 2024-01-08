@@ -37,7 +37,7 @@ export class RelatedMovementService {
   }
 
   public getById = (id: string): Observable<RelatedMovementModel> => {
-    const ref = query(this.getReference(), where('owner', '==', this.email), where(documentId(), '==', id), orderBy('owner'))
+    const ref = query(this.getReference(), where('owner', '==', this.email), where(documentId(), '==', id))
     return collectionData<RelatedMovementModel>(ref as Query<RelatedMovementModel>, { idField: 'id' }).pipe(map(x => Array.isArray(x) ? (x as RelatedMovementModel[])[0]! : x!))
   }
 
