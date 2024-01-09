@@ -16,7 +16,7 @@
         <mat-expansion-panel [hideToggle]="true" (click)="displayMovements(related.id!)">
           <mat-expansion-panel-header>
             <article class="w-50">{{'Name:' | translate}} {{related.name}}</article>
-            <article class="w-50" align="end">{{'Total:' | translate}} {{related.totalAmount || 0}}</article>
+            <article class="w-50" align="end">{{'Total:' | translate}} {{related.totalAmount | number:'' : numberType || 0}}</article>
           </mat-expansion-panel-header>
           <article for="incomeAmount" class="w-100">
             <b translate>Income Amount:</b> {{related.incomeAmount | number:'' : numberType}}
@@ -28,10 +28,15 @@
           <article class="w-100 p-15" align="center">
             <b translate>Movements</b>
           </article>
-          <app-related-movement-detail *ngIf="movements.get(related.id!)"
+          <app-related-movement-detail *ngIf="movements.get(related.id!) && movements.get(related.id!)!.length > 0; else noMovements"
             [movements]="movements.get(related.id!)!"
             [configuration]="configuration"
+            [relatedMovement]="related"
+            (deletedMovementEvent)="deletedMovement($event, related.id!)"
           ></app-related-movement-detail>
+          <ng-template #noMovements>
+            <span class="flex-justify-center" translate>Without movements</span>
+          </ng-template>
           <mat-action-row>
             <button mat-stroked-button color="warn" (click)="deleteRelatedMovement(related.id!)"
               [title]="'delete-button' | translate" translate>

@@ -11,6 +11,7 @@ import { UserService } from '../../services/user.service';
 import { MovementModel } from '../../models/movement.model';
 import { NumberType } from '../../enums/number-type.enum';
 import { LanguageType } from '../../enums/language-type.enum';
+import { RelatedMovementService } from 'src/app/services/related-movement.service';
 
 @Component({
   selector: 'app-movement-detail',
@@ -21,6 +22,7 @@ export class MovementDetailComponent implements OnInit {
   protected movement?: MovementModel
   protected numberType = NumberType.English
   protected language = LanguageType.English
+  protected relatedMovements: string[] = []
   protected load = false
   private defaultColor = '#000000'
   private defaultBackgroundColor = '#ffffff'
@@ -34,9 +36,15 @@ export class MovementDetailComponent implements OnInit {
     private readonly snackBar: MatSnackBar,
     private readonly userService: UserService,
     private translateService: TranslateService,
+    private relateMovementService: RelatedMovementService,
   ) {
-    combineLatest([this.activatedRoute.params, this.userService.getUserCategories$().pipe(take(1)), this.userService.getUserConfiguration$().pipe(take(1))]).subscribe({
-      next: ([params, userCategories, config]) => {
+    combineLatest([
+      this.activatedRoute.params,
+      this.userService.getUserCategories$().pipe(take(1)),
+      this.userService.getUserConfiguration$().pipe(take(1)),
+      this.relateMovementService.getRelatedMovementsShowingInMovements().pipe(take(1))
+    ]).subscribe({
+      next: ([params, userCategories, config, relatedMovements]) => {
         this.movement = this.movementService.getMovementById(params['id'])
         if (!this.movement) {
           this.exit()
@@ -47,6 +55,7 @@ export class MovementDetailComponent implements OnInit {
         this.numberType = config.number
         this.language = config.language
         this.load = true
+        this.relatedMovements = relatedMovements.filter(x => x.related.map(y => y.id).includes(this.movement!.id!)).map(x => x.name!)
       }, error: (e) => {
         console.error(e)
         throw e

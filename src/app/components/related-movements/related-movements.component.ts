@@ -117,4 +117,14 @@ export class RelatedMovementsComponent implements OnInit {
       }
     })
   }
+
+  protected deletedMovement = (movementId: string, relatedId: string) => {
+    let movement = this.movements.get(relatedId)
+    movement = movement?.filter(x => x.id !== movementId)
+    if (!movement || movement?.length === 0) {
+      this.movements.delete(relatedId)
+    } else {
+      this.movements.set(relatedId, movement)
+    }
+  }
 }

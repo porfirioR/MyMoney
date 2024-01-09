@@ -40,6 +40,10 @@
         <label translate>Amount: </label>
         <span>{{movement!.amount | number:'' : numberType}}</span>
       </p>
+      <dl id="related-movement" *ngIf="relatedMovements.length > 0">
+        <dt translate>Related Movements:</dt>
+        <dd *ngFor="let relatedMovement of relatedMovements">-{{relatedMovement}}</dd>
+      </dl>
     </mat-card-content>
   </mat-card>
 </ng-container>

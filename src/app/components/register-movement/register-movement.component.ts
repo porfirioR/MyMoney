@@ -3,7 +3,7 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
-import { DocumentData, DocumentReference } from '@angular/fire/firestore';
+import { DocumentData, DocumentReference, WriteBatch } from '@angular/fire/firestore';
 import { TranslateService } from '@ngx-translate/core';
 import { combineLatest, take } from 'rxjs';
 import { CategoryType } from '../../enums/category-type.enum';
@@ -193,6 +193,7 @@ export class RegisterMovementComponent implements OnInit {
   private patchFormGroup = (movement: MovementModel): void => {
     this.currentCategories = HelperService.categoriesByType(this.categoryList, movement.type)
     const currentCategory = this.currentCategories.find(x => x.id === movement.categoryId)
+    const relatedMovementIds = this.relatedMovements.filter(x => x.related.map(y => y.id).includes(movement.id!)).map(x => x.id!)
     this.formGroup.patchValue({
       type: movement.type,
       icon: movement.icon,
@@ -202,7 +203,8 @@ export class RegisterMovementComponent implements OnInit {
       time: movement.date?.getTime(),
       amount: Math.abs(movement.amount),
       color: currentCategory && currentCategory.color ? currentCategory.color : this.defaultColor,
-      backgroundColor: currentCategory && currentCategory.backgroundColor ? currentCategory.backgroundColor : this.defaultBackgroundColor
+      backgroundColor: currentCategory && currentCategory.backgroundColor ? currentCategory.backgroundColor : this.defaultBackgroundColor,
+      relatedMovements: relatedMovementIds
     })
   }
 
@@ -219,18 +221,21 @@ export class RegisterMovementComponent implements OnInit {
     const formRelatedMovementValues = this.formGroup.controls.relatedMovements.value
     let selectedRelatedMovements: RelatedMovementModel[] = []
     if (formRelatedMovementValues) {
-      selectedRelatedMovements = this.relatedMovements?.filter(x => formRelatedMovementValues.find(y => y === x.id))
+      selectedRelatedMovements = JSON.parse(JSON.stringify(this.relatedMovements?.filter(x => formRelatedMovementValues.find(y => y === x.id))))
       selectedRelatedMovements
       .forEach(x => x.related = [...new Set([...x.related, new RelatedMapModel(id, this.formGroup.controls.type.value!)])])
 
       if (this.movementRegistrationType === MovementRegistrationType.update && this.relatedMovements.length >= 0) {
         const allSavedRelatedMovements = this.relatedMovements.filter(x => x.related.some(y => y.id === this.movementId))
         const deletedRelatedMovements = allSavedRelatedMovements.filter(x => formRelatedMovementValues.some(y => y !== x.id!))
-        deletedRelatedMovements.forEach(x => {
-          const relatedMovementDocReference = this.relateMovementService.getReferenceById(x.id!)
-          batch.delete(relatedMovementDocReference)
+        if (deletedRelatedMovements.length > 0) {
+          deletedRelatedMovements.forEach(x => {
+            x.related = x.related.filter(y => y.id !== this.movementId)
+          })
+          this.updateRelatedMovement(deletedRelatedMovements, batch)
           request$.push(batch.commit())
-        })
+          batch = this.relateMovementService.openBatch()
+        }
       }
     }
     // delete related movement
@@ -241,16 +246,17 @@ export class RegisterMovementComponent implements OnInit {
       deletedRelatedMovements.forEach(x => x.related = x.related.filter(y => y.id !==  this.movementId))
       selectedRelatedMovements = [...selectedRelatedMovements, ...deletedRelatedMovements]
     }
-    selectedRelatedMovements.forEach(x => {
-      const relatedMovementDocReference = this.relateMovementService.getReferenceById(x.id!)
-      batch.update(relatedMovementDocReference, {'related': x.related.map(y => {
-        const relatedValue: Record<string, string> = {}
-        relatedValue['id'] = y.id,
-        relatedValue['type'] = y.type
-        return relatedValue
-      })})
-      request$.push(batch.commit())
-    })
+    this.updateRelatedMovement(selectedRelatedMovements, batch)
+    // selectedRelatedMovements.forEach(x => {
+    //   const relatedMovementDocReference = this.relateMovementService.getReferenceById(x.id!)
+    //   batch.update(relatedMovementDocReference, {'related': x.related.map(y => {
+    //     const relatedValue: Record<string, string> = {}
+    //     relatedValue['id'] = y.id,
+    //     relatedValue['type'] = y.type
+    //     return relatedValue
+    //   })})
+    // })
+    request$.push(batch.commit())
     if (request$.length >= 0) {
       Promise.all(request$)
       .then(() => this.updateSuccess())
@@ -263,5 +269,17 @@ export class RegisterMovementComponent implements OnInit {
   private updateSuccess = () => {
     this.snackBar.open(this.translate.instant(`Movement was ${this.movementId ? 'updated' : 'created'}`), '', { duration: 3000 })
     this.location.back()
+  }
+
+  private updateRelatedMovement = (relatedMovement: RelatedMovementModel[], batch: WriteBatch) => {
+    relatedMovement.forEach(x => {
+      const relatedMovementDocReference = this.relateMovementService.getReferenceById(x.id!)
+      batch.update(relatedMovementDocReference, {'related': x.related.map(y => {
+        const relatedValue: Record<string, string> = {}
+        relatedValue['id'] = y.id,
+        relatedValue['type'] = y.type
+        return relatedValue
+      })})
+    })
   }
 }

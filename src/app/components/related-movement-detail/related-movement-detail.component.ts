@@ -1,11 +1,14 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { TranslateService } from '@ngx-translate/core';
 import { LanguageType } from '../../enums/language-type.enum';
 import { NumberType } from '../../enums/number-type.enum';
 import { RelatedMovementDetailModel } from '../../models/related-movement-detail.model';
 import { ConfigurationModel } from '../../models/configuration.model';
+import { RelatedMovementModel } from '../../models/related-movement.model';
 import { DialogDeleteComponent } from '../dialog-delete/dialog-delete.component';
-import { MatDialog } from '@angular/material/dialog';
-import { TranslateService } from '@ngx-translate/core';
+import { RelatedMovementService } from '../../services/related-movement.service';
 
 @Component({
   selector: 'app-related-movement-detail',
@@ -15,11 +18,16 @@ import { TranslateService } from '@ngx-translate/core';
 export class RelatedMovementDetailComponent implements OnInit {
   @Input() movements: RelatedMovementDetailModel[] = []
   @Input() configuration!: ConfigurationModel
+  @Input() relatedMovement!: RelatedMovementModel
+  @Output() deletedMovementEvent = new EventEmitter<string>()
+
   protected language = LanguageType.English
   protected numberType = NumberType.English
 
   constructor(
     private translateService: TranslateService,
+    private readonly snackBar: MatSnackBar,
+    private readonly relatedMovementsService: RelatedMovementService,
     private readonly dialog: MatDialog,
   ) { }
 
@@ -40,10 +48,12 @@ export class RelatedMovementDetailComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        // this.movementService.delete(this.movement?.id!, this.movement?.type!).then(() => {
-        //   this.snackBar.open(this.translateService.instant('related-movement-messages.deleted'), '', { duration: 3000 })
-        //   this.exit()
-        // }).catch((reason: any) => this.snackBar.open(reason, '', { duration: 3000 }))
+        const updated = { ...this.relatedMovement } as RelatedMovementModel
+        updated.related = this.relatedMovement.related.filter(x => x.id !== id) 
+        this.relatedMovementsService.update(updated).then(() => {
+          this.snackBar.open(this.translateService.instant('related-movement-messages.deleted'), '', { duration: 3000 })
+          this.deletedMovementEvent.emit(id)
+        }).catch((reason: any) => this.snackBar.open(reason, '', { duration: 3000 }))
       }
     })
 
