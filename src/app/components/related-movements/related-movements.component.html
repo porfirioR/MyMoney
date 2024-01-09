@@ -16,7 +16,7 @@
         <mat-expansion-panel [hideToggle]="true" (click)="displayMovements(related.id!)">
           <mat-expansion-panel-header>
             <article class="w-50">{{'Name:' | translate}} {{related.name}}</article>
-            <article class="w-50" align="end">{{'Total:' | translate}} {{related.totalAmount | number:'' : numberType || 0}}</article>
+            <article class="w-50" align="end">{{'Total:' | translate}} {{related.totalAmount || 0 | number: '' : numberType}}</article>
           </mat-expansion-panel-header>
           <article for="incomeAmount" class="w-100">
             <b translate>Income Amount:</b> {{related.incomeAmount | number:'' : numberType}}

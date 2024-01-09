@@ -229,9 +229,7 @@ export class RegisterMovementComponent implements OnInit {
         const allSavedRelatedMovements = this.relatedMovements.filter(x => x.related.some(y => y.id === this.movementId))
         const deletedRelatedMovements = allSavedRelatedMovements.filter(x => formRelatedMovementValues.some(y => y !== x.id!))
         if (deletedRelatedMovements.length > 0) {
-          deletedRelatedMovements.forEach(x => {
-            x.related = x.related.filter(y => y.id !== this.movementId)
-          })
+          deletedRelatedMovements.forEach(x => x.related = x.related.filter(y => y.id !== this.movementId))
           this.updateRelatedMovement(deletedRelatedMovements, batch)
           request$.push(batch.commit())
           batch = this.relateMovementService.openBatch()
@@ -243,19 +241,10 @@ export class RegisterMovementComponent implements OnInit {
       (this.movementRegistrationType === MovementRegistrationType.update && formRelatedMovementValues?.length === 0)
     ) {
       const deletedRelatedMovements = this.relatedMovements?.filter(x => x.related.some(y => y.id ===  this.movementId))
-      deletedRelatedMovements.forEach(x => x.related = x.related.filter(y => y.id !==  this.movementId))
+      deletedRelatedMovements.forEach(x => x.related = x.related.filter(y => y.id !== this.movementId))
       selectedRelatedMovements = [...selectedRelatedMovements, ...deletedRelatedMovements]
     }
     this.updateRelatedMovement(selectedRelatedMovements, batch)
-    // selectedRelatedMovements.forEach(x => {
-    //   const relatedMovementDocReference = this.relateMovementService.getReferenceById(x.id!)
-    //   batch.update(relatedMovementDocReference, {'related': x.related.map(y => {
-    //     const relatedValue: Record<string, string> = {}
-    //     relatedValue['id'] = y.id,
-    //     relatedValue['type'] = y.type
-    //     return relatedValue
-    //   })})
-    // })
     request$.push(batch.commit())
     if (request$.length >= 0) {
       Promise.all(request$)
