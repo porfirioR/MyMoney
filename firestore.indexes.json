@@ -79,7 +79,7 @@
           "order": "ASCENDING"
         },
         {
-          "fieldPath": "showInUpsertMovement ",
+          "fieldPath": "showInUpsertMovement",
           "order": "ASCENDING"
         }
       ]
