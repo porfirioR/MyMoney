@@ -209,6 +209,7 @@
   "Income Amount:": "Monto Ingresos:",
   "Name:": "Nombre:",
   "Action": "Acción",
+  "Related Movements:": "Movimientos Relacionados:",
   "category-messages": {
     "question": "¿Está seguro de que desea eliminar esta categoría?. Todos los movimientos relacionados ({{length}}) con esta categoría serán eliminados",
     "deleted": "La categoría fue borrada",
@@ -233,6 +234,7 @@
   },
   "related-movement-messages": {
     "title-delete-movement": "Borrar movimiento de la relación",
+    "question-delete-movement": "¿Estás seguro que quieres eliminar el movimento de esta relación?",
     "title-delete": "Borrar movimiento relacionado",
     "question-delete": "¿Estás seguro que quieres eliminar esta relación?",
     "deleted": "Movimiento relacionado fue borrada",
