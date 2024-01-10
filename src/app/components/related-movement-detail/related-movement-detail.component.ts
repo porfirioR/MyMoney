@@ -31,13 +31,12 @@ export class RelatedMovementDetailComponent implements OnInit {
     private readonly dialog: MatDialog,
   ) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.language = this.configuration.language
     this.numberType = this.configuration.number
   }
 
-
-  protected deletedMovement = (id: string) => {
+  protected deletedMovement = (id: string): void => {
     const dialogRef = this.dialog.open(DialogDeleteComponent, {
       width: '350px',
       data: {

@@ -4,3 +4,16 @@ article {
   justify-content: space-between;
   margin: 0 0.3rem 0 0.3rem;
 }
+
+.mat-mini-fab {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: unset !important;
+  width: 24px;
+  height: 24px;
+}
+
+.material-icons-outlined {
+  font-size: 16px !important;
+}

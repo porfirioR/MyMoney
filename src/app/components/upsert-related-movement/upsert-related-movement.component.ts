@@ -14,6 +14,8 @@ import { RelatedMovementService } from '../../services/related-movement.service'
 import { RelatedMovementModel } from '../../models/related-movement.model'
 import { RelatedMapModel } from '../../models/related-map-model'
 import { NumberType } from '../../enums/number-type.enum'
+import { MatDialog } from '@angular/material/dialog'
+import { AddMovementDialogComponent } from '../add-movement-dialog/add-movement-dialog.component'
 
 @Component({
   selector: 'app-upsert-related-movement',
@@ -47,9 +49,11 @@ export class UpsertRelatedMovementComponent implements OnInit {
     private readonly location: Location,
     private readonly translateService: TranslateService,
     private readonly snackBar: MatSnackBar,
+    private readonly dialog: MatDialog,
+
   ) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.currentTap = this.categoryType.income.toLocaleLowerCase()
     const config = this.activatedRoute.snapshot.data['config']
     this.numberType = config.number
@@ -93,8 +97,11 @@ export class UpsertRelatedMovementComponent implements OnInit {
     this.location.back()
   }
 
-  protected addMovement = () => {
-    
+  protected addMovement = (): void => {
+    const dialogRef = this.dialog.open(AddMovementDialogComponent, {
+      width: '500px',
+      height: '800px',
+    })
   }
 
   protected save = (): void => {
@@ -119,7 +126,7 @@ export class UpsertRelatedMovementComponent implements OnInit {
     })
   }
 
-  protected deleteMovement = (id: string) => {
+  protected deleteMovement = (id: string): void => {
 
   }
 }

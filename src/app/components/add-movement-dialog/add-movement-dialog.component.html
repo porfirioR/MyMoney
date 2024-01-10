@@ -1,0 +1,57 @@
+<form [formGroup]="formGroup">
+  <mat-card>
+    <mat-card-header translate>
+      <mat-card-title>{{'Filters' | translate}}</mat-card-title>
+    </mat-card-header>
+    <mat-divider></mat-divider>
+    <mat-card-content>
+      <mat-form-field class="w-33">
+        <mat-label>{{'Categories' | translate}}</mat-label>
+        <mat-select formControlName="category">
+          <mat-option [value]="category.id" *ngFor="let category of categories">
+            {{category.name| translate}}
+          </mat-option>
+        </mat-select>
+        <mat-hint align="start">
+          {{'Select a category' | translate}}
+        </mat-hint>
+      </mat-form-field>
+      <mat-form-field class="w-33">
+        <mat-label>{{'Month' | translate}}</mat-label>
+        <mat-select formControlName="month">
+          <mat-option [value]="month" *ngFor="let month of months | enumArrayLoop">
+            {{month | translate}}
+          </mat-option>
+        </mat-select>
+        <mat-hint align="start">
+          {{'Select a month' | translate}}
+        </mat-hint>
+      </mat-form-field>
+      <mat-form-field class="w-33">
+        <mat-label>{{'Year' | translate}}</mat-label>
+        <mat-select formControlName="year">
+          <mat-option [value]="year" *ngFor="let year of yearRange | enumArrayLoop">
+            {{year}}
+          </mat-option>
+        </mat-select>
+        <mat-hint align="start">
+          {{'Select a year' | translate}}
+        </mat-hint>
+      </mat-form-field>
+    </mat-card-content>
+    <mat-card-actions align="end">
+      <button mat-stroked-button color="primary" (click)="search()" [disabled]="formGroup.invalid || searching" [title]="'export-button' | translate">
+        {{"Search" | translate}}
+      </button>
+    </mat-card-actions>
+  </mat-card>
+  <mat-card class="m-t-10">
+    <mat-card-header>
+      <mat-card-title>{{'Movements' | translate}}</mat-card-title>
+    </mat-card-header>
+    <mat-divider></mat-divider>
+    <mat-card-content>
+      Movements
+    </mat-card-content>
+  </mat-card>
+</form>

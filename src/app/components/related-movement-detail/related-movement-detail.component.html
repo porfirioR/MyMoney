@@ -1,23 +1,39 @@
 <ng-container *ngIf="movements.length">
   <header class="flex-space-between">
     <b align="start" translate>Action</b>
-    <b class="w-20" align="start" translate>Date</b>
-    <b class="w-40" align="start" translate>Memorandum</b>
+    <b class="w-10" align="start" translate>Date</b>
+    <b class="w-10" align="start" translate>Icon</b>
+    <b class="w-30" align="start" translate>Memorandum</b>
     <b class="w-20" align="end" translate>Amount</b>
   </header>
   <main>
-    <article *ngFor="let movement of movements">
-      <button mat-icon-button color="warn"
-        [title]="'title-delete-movement' | translate"
-        (click)="deletedMovement(movement.id!)"
-      >
+    <article *ngFor="let movement of movements; let i = index">
+      <button mat-icon-button color="warn" [title]="'title-delete-movement' | translate"
+        (click)="deletedMovement(movement.id!)">
         <mat-icon>
           highlight_off
         </mat-icon>
       </button>
-      <span class="w-20" >{{movement.date | date: 'dd/MM': '': language}}</span>
-      <span class="w-40">{{movement.memorandum}}</span>
-      <span class="w-20" align="end">{{movement.isExpense ? '-' : ''}}{{movement.amount | number:'' : numberType}}</span>
+      <span class="w-10">
+        {{movement.date | date: 'dd/MM': '': language}}
+      </span>
+      <span class="w-10">
+        <button mat-mini-fab customColor
+          [color]="movement!.color"
+          [backgroundColor]="movement!.backgroundColor"
+          [title]="'movement-icon-button' | translate"
+        >
+          <i [id]="'icon-' + i" class="material-icons-outlined notranslate">
+            {{movement.icon}}
+          </i>
+        </button>
+      </span>
+      <span class="w-30">
+        {{movement.memorandum}}
+      </span>
+      <span class="w-20" align="end">
+        {{movement.isExpense ? '-' : ''}}{{movement.amount | number:'' : numberType}}
+      </span>
     </article>
   </main>
 </ng-container>

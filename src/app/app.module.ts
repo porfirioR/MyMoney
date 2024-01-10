@@ -71,6 +71,7 @@ import { NgxMaskDirective, NgxMaskPipe, provideEnvironmentNgxMask } from 'ngx-ma
 import { RelatedMovementsComponent } from './components/related-movements/related-movements.component';
 import { UpsertRelatedMovementComponent } from './components/upsert-related-movement/upsert-related-movement.component';
 import { RelatedMovementDetailComponent } from './components/related-movement-detail/related-movement-detail.component';
+import { AddMovementDialogComponent } from './components/add-movement-dialog/add-movement-dialog.component';
 registerLocaleData(localEs, 'es')
 registerLocaleData(localeEn, 'en')
 
@@ -102,7 +103,8 @@ registerLocaleData(localeEn, 'en')
     AnnualReportComponent,
     RelatedMovementsComponent,
     UpsertRelatedMovementComponent,
-    RelatedMovementDetailComponent
+    RelatedMovementDetailComponent,
+    AddMovementDialogComponent
   ],
   imports: [
     BrowserModule,
