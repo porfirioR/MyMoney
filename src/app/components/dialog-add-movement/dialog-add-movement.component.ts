@@ -8,11 +8,11 @@ import { CategoryModel } from '../../models/category.model';
 import { FormControl, FormGroup } from '@angular/forms';
 
 @Component({
-  selector: 'app-add-movement-dialog',
-  templateUrl: './add-movement-dialog.component.html',
-  styleUrls: ['./add-movement-dialog.component.scss']
+  selector: 'app-dialog-add-movement',
+  templateUrl: './dialog-add-movement.component.html',
+  styleUrls: ['./dialog-add-movement.component.scss']
 })
-export class AddMovementDialogComponent implements OnInit {
+export class DialogAddMovementComponent implements OnInit {
   protected year: number = new Date().getFullYear()
   protected yearRange: number[]
   protected categoryType!: CategoryType
@@ -27,7 +27,7 @@ export class AddMovementDialogComponent implements OnInit {
   private minValidYear = 2018
 
   constructor(
-    private readonly dialogRef: MatDialogRef<AddMovementDialogComponent>,
+    private readonly dialogRef: MatDialogRef<DialogAddMovementComponent>,
     private readonly movementService: MovementService,
     private readonly userService: UserService
 
@@ -38,7 +38,7 @@ export class AddMovementDialogComponent implements OnInit {
 
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.categories = this.userService.getActiveCategories()
   }
 
@@ -46,5 +46,9 @@ export class AddMovementDialogComponent implements OnInit {
 
   protected search = () => {
 
+  }
+
+  protected save = () => {
+    
   }
 }

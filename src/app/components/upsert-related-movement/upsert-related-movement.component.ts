@@ -15,7 +15,7 @@ import { RelatedMovementModel } from '../../models/related-movement.model'
 import { RelatedMapModel } from '../../models/related-map-model'
 import { NumberType } from '../../enums/number-type.enum'
 import { MatDialog } from '@angular/material/dialog'
-import { AddMovementDialogComponent } from '../add-movement-dialog/add-movement-dialog.component'
+import { DialogAddMovementComponent } from '../dialog-add-movement/dialog-add-movement.component'
 
 @Component({
   selector: 'app-upsert-related-movement',
@@ -98,7 +98,7 @@ export class UpsertRelatedMovementComponent implements OnInit {
   }
 
   protected addMovement = (): void => {
-    const dialogRef = this.dialog.open(AddMovementDialogComponent, {
+    const dialogRef = this.dialog.open(DialogAddMovementComponent, {
       width: '500px',
       height: '800px',
     })
