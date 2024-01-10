@@ -5,44 +5,38 @@
     </mat-card-header>
     <mat-divider></mat-divider>
     <mat-card-content>
-      <mat-form-field class="w-33">
+      <mat-form-field class="w-30">
         <mat-label>{{'Categories' | translate}}</mat-label>
         <mat-select formControlName="category">
           <mat-option [value]="category.id" *ngFor="let category of categories">
             {{category.name| translate}}
           </mat-option>
         </mat-select>
-        <mat-hint align="start">
-          {{'Select a category' | translate}}
-        </mat-hint>
       </mat-form-field>
-      <mat-form-field class="w-33">
+      <mat-form-field class="w-20">
         <mat-label>{{'Month' | translate}}</mat-label>
         <mat-select formControlName="month">
           <mat-option [value]="month" *ngFor="let month of months | enumArrayLoop">
             {{month | translate}}
           </mat-option>
         </mat-select>
-        <mat-hint align="start">
-          {{'Select a month' | translate}}
-        </mat-hint>
       </mat-form-field>
-      <mat-form-field class="w-33">
+      <mat-form-field class="w-20">
         <mat-label>{{'Year' | translate}}</mat-label>
         <mat-select formControlName="year">
-          <mat-option [value]="year" *ngFor="let year of yearRange | enumArrayLoop">
+          <mat-option [value]="year" *ngFor="let year of yearRange">
             {{year}}
           </mat-option>
         </mat-select>
-        <mat-hint align="start">
-          {{'Select a year' | translate}}
-        </mat-hint>
       </mat-form-field>
-    </mat-card-content>
-    <mat-card-actions align="end">
-      <button mat-stroked-button color="primary" (click)="search()" [disabled]="formGroup.invalid || searching" [title]="'export-button' | translate">
+      <button mat-stroked-button color="primary"
+        [disabled]="formGroup.invalid || searching" [title]="'save-button' | translate"
+        (click)="search()"
+      >
         {{"Search" | translate}}
       </button>
+    </mat-card-content>
+    <mat-card-actions align="end">
     </mat-card-actions>
   </mat-card>
   <mat-card class="m-t-10">
@@ -53,5 +47,15 @@
     <mat-card-content>
       Movements
     </mat-card-content>
+  </mat-card>
+  <mat-card class="m-t-10">
+    <mat-card-footer id="footer">
+      <button mat-stroked-button color="primary" (click)="cancelAddition()" [title]="'cancel-button' | translate">
+        {{'Cancel' | translate}}
+      </button>
+      <button mat-stroked-button color="primary" type="submit" [disabled]="formGroup.invalid" [title]="'save-button' | translate"
+        (click)="save()">{{'Save' | translate}}
+      </button>
+    </mat-card-footer>
   </mat-card>
 </form>
