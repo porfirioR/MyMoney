@@ -8,10 +8,10 @@ import { combineLatest, take } from 'rxjs';
 import { DialogDeleteComponent } from '../dialog-delete/dialog-delete.component';
 import { MovementService } from '../../services/movement.service';
 import { UserService } from '../../services/user.service';
+import { RelatedMovementService } from '../../services/related-movement.service';
 import { MovementModel } from '../../models/movement.model';
 import { NumberType } from '../../enums/number-type.enum';
 import { LanguageType } from '../../enums/language-type.enum';
-import { RelatedMovementService } from 'src/app/services/related-movement.service';
 
 @Component({
   selector: 'app-movement-detail',
