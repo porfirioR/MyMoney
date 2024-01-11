@@ -6,12 +6,15 @@
     <mat-divider></mat-divider>
     <mat-card-content>
       <mat-form-field class="w-30">
-        <mat-label>{{'Categories' | translate}}</mat-label>
+        <mat-label>{{'Category' | translate}}</mat-label>
         <mat-select formControlName="category">
           <mat-option [value]="category.id" *ngFor="let category of categories">
             {{category.name| translate}}
           </mat-option>
         </mat-select>
+        <mat-error *ngIf="formGroup.controls.month.hasError('required')" translate>
+          Filter categories is required.
+        </mat-error>
       </mat-form-field>
       <mat-form-field class="w-20">
         <mat-label>{{'Month' | translate}}</mat-label>
@@ -20,6 +23,9 @@
             {{month | translate}}
           </mat-option>
         </mat-select>
+        <mat-error *ngIf="formGroup.controls.month.hasError('required')" translate>
+          Filter month is required.
+        </mat-error>
       </mat-form-field>
       <mat-form-field class="w-20">
         <mat-label>{{'Year' | translate}}</mat-label>
@@ -28,6 +34,9 @@
             {{year}}
           </mat-option>
         </mat-select>
+        <mat-error *ngIf="formGroup.controls.month.hasError('required')" translate>
+          Filter year is required.
+        </mat-error>
       </mat-form-field>
       <button mat-stroked-button color="primary"
         [disabled]="formGroup.invalid || searching" [title]="'save-button' | translate"

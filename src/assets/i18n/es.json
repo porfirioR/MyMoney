@@ -218,6 +218,9 @@
   "Select a year": "Seleccione un año",
   "Filters": "Filtros",
   "Add Movements": "Agregar Movimientos",
+  "Filter month is required.": "Mes es obligatorio.",
+  "Filter year is required.": "Año es obligatorio.",
+  "Filter category is required.": "Categoría es obligatorio.",
   "category-messages": {
     "question": "¿Está seguro de que desea eliminar esta categoría?. Todos los movimientos relacionados ({{length}}) con esta categoría serán eliminados",
     "deleted": "La categoría fue borrada",
