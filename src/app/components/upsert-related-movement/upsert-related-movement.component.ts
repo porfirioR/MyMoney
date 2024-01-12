@@ -100,7 +100,7 @@ export class UpsertRelatedMovementComponent implements OnInit {
   protected addMovement = (): void => {
     const dialogRef = this.dialog.open(DialogAddMovementComponent, {
       width: '500px',
-      height: '800px',
+      height: '80%',
     })
   }
 
