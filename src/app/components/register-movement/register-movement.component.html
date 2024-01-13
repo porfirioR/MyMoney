@@ -63,7 +63,7 @@
       </mat-form-field>
       <mat-form-field appearance="fill" class="w-100">
         <mat-label translate>Date</mat-label>
-        <input matInput [matDatepicker]="picker" formControlName="date" [min]="minDate" id="date">
+        <input matInput type="date" [matDatepicker]="picker" date formControlName="date" [min]="minDate" id="date">
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker disabled="false"></mat-datepicker>
       </mat-form-field>
