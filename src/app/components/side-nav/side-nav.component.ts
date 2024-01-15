@@ -3,13 +3,13 @@ import { Router } from '@angular/router';
 import { SafeUrl } from '@angular/platform-browser';
 import { AuthService } from '../../services/auth.service';
 import { UserService } from '../../services/user.service';
+import { HelperService } from '../../services/helper.service';
 import { NavItemModel } from '../../models/nav-item.model';
 import { UserDataModel } from '../../models/user-data.model';
 import { ConfigurationModel } from '../../models/configuration.model';
 import { ItemAction } from '../../enums/item-action.enum';
 import { LanguageType } from '../../enums/language-type.enum';
 import { NumberType } from '../../enums/number-type.enum';
-import { HelperService } from 'src/app/services/helper.service';
 
 @Component({
   selector: 'app-side-nav',
