@@ -93,7 +93,7 @@
   "Check if all columns are correct": "Comprobar si todas las columnas son correctas",
   "If everything is ok, a popup window will appear saying the number of records and if everything is correct save the records": "Si todo está bien, aparecerá una ventana emergente diciendo la cantidad de registros y si esta todo correcto guardar los registros",
   "Errors": "Errores",
-  "No file uploaded yet.": "Aún no se ha subido ningún archivo.",
+  "No file uploaded.": "Sin archivo cargado.",
   "Tax": "Impuesto",
   "Dentist": "Dentista",
   "Refunds": "Reembolsos",

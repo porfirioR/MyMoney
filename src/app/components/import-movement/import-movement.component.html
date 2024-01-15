@@ -42,7 +42,7 @@
         >
           <input type="file" class="file-input" accept=".csv" (change)="onFileSelected($event)" #fileUpload id="file-input">
           <div class="file-upload">
-            {{file?.name || "No file uploaded yet." | translate}}
+            {{file?.name || "No file uploaded." | translate}}
             <mat-icon color="primary">attach_file</mat-icon>
           </div>
         </button>

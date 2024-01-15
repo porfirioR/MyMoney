@@ -38,3 +38,7 @@ dd {
   z-index: unset;
   top: unset;
 }
+
+#main {
+  height: calc(93vh - 24px);
+}

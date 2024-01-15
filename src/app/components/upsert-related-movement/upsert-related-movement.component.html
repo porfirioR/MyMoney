@@ -9,7 +9,7 @@
 </mat-toolbar>
 <div class="mat-toolbar-block"></div>
 <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
-<form [formGroup]="formGroup" *ngIf="!loading">
+<form id="main" [formGroup]="formGroup" *ngIf="!loading">
   <mat-card>
     <mat-card-content>
       <mat-form-field class="w-100">

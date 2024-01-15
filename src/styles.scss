@@ -90,3 +90,8 @@ $end: 100;
     width: #{$percentage} !important;
   }
 }
+
+#main {
+  height: calc(93vh - 16px);
+  overflow-y: auto;
+}
