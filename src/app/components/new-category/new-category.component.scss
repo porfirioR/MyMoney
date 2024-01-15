@@ -29,3 +29,12 @@
 .btn-icon {
   margin: 0.5rem;
 }
+
+#main {
+  height: calc(93vh - 16px);
+  overflow-y: auto;
+}
+
+.mat-card {
+  margin: 1rem;
+}

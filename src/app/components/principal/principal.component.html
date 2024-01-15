@@ -3,16 +3,22 @@
     <app-side-nav [year]="yearMonth.year"></app-side-nav>
   </mat-sidenav>
   <mat-sidenav-content>
-    <mat-toolbar color="primary">
-      <button mat-icon-button [title]="'menu-button' | translate" (click)="sidenav.toggle()">
-        <mat-icon>menu</mat-icon>
-      </button>
-      <span>{{title | translate}}</span>
-      <button mat-stroked-button [title]="'year-month-button' | translate" (click)="openYearMonth()">
-        {{yearMonth.shortMonth | translate}} {{yearMonth.year}}
-      </button>
-    </mat-toolbar>
-    <div class="header-height"></div>
+    <ng-container *ngTemplateOutlet="principalPage"></ng-container>
+  </mat-sidenav-content>
+</mat-sidenav-container>
+
+<ng-template #principalPage>
+  <mat-toolbar color="primary">
+    <button mat-icon-button [title]="'menu-button' | translate" (click)="sidenav.toggle()">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <span>{{title | translate}}</span>
+    <button mat-stroked-button [title]="'year-month-button' | translate" (click)="openYearMonth()">
+      {{yearMonth.shortMonth | translate}} {{yearMonth.year}}
+    </button>
+  </mat-toolbar>
+  <div class="header-height"></div>
+  <main>
     <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
     <mat-card class="mat-card-header" *ngIf="!loading">
       <header class="amount-header">
@@ -40,15 +46,13 @@
         </article>
       </header>
     </mat-card>
-    <main>
-      <mat-card *ngFor="let groupDateMovement of groupDateMovementList" class="mat-card-movement">
-        <app-movement [groupDateMovement]="groupDateMovement" [categories]="categories" [numberType]="numberType"></app-movement>
-      </mat-card>
-    </main>
-    <mat-card-footer>
-      <button mat-fab color="primary" class="btn-add" routerLink="/register-movement" [disabled]="loading" [title]="'add-movement-button' | translate">
-        <mat-icon>add</mat-icon>
-      </button>
-    </mat-card-footer>
-  </mat-sidenav-content>
-</mat-sidenav-container>
+    <mat-card *ngFor="let groupDateMovement of groupDateMovementList" class="mat-card-movement">
+      <app-movement [groupDateMovement]="groupDateMovement" [categories]="categories" [numberType]="numberType"></app-movement>
+    </mat-card>
+  </main>
+  <mat-card-footer>
+    <button mat-fab color="primary" class="btn-add" routerLink="/register-movement" [disabled]="loading" [title]="'add-movement-button' | translate">
+      <mat-icon>add</mat-icon>
+    </button>
+  </mat-card-footer>
+</ng-template>

@@ -1,4 +1,5 @@
 export enum ItemAction {
+  home = 'home',
   category = 'category',
   export = 'export',
   import = 'import',

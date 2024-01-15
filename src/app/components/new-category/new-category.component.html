@@ -8,38 +8,40 @@
   </button>
 </mat-toolbar>
 <div class="mat-toolbar-block"></div>
-<mat-card>
-  <main [formGroup]="formGroup" class="form-input">
-    <button mat-icon-button color="primary" [title]="'icon-button' | translate">
-      <mat-icon>{{formGroup.controls.icon.value}}</mat-icon>
-    </button>
-    <mat-form-field class="mat-from-field">
-      <mat-label translate>Category name</mat-label>
-      <input matInput formControlName="name" #inputCategoryName id="name">
-      <mat-error *ngIf="formGroup.controls.name.hasError('required')">
-        {{ 'message-error.required-category' | translate }}
-      </mat-error>
-      <mat-error *ngIf="formGroup.controls.name.hasError('sameName')">
-        {{ 'message-error.repeating-category' | translate }}
-      </mat-error>
-    </mat-form-field>
-    <button mat-icon-button color="primary" [disabled]="formGroup.invalid" [title]="'save-button' | translate" (click)="save()">
-      <mat-icon>done</mat-icon>
-    </button>
-  </main>
-  <mat-card-content class="category-group">
-    <ng-container *ngFor="let group of currentCategory.groups">
-      <mat-card-subtitle translate>{{group.groupName}}</mat-card-subtitle>
-      <span class="icon-list">
-        <button class="btn-icon" mat-mini-fab
-          *ngFor="let icon of group.icons"
-          [color]="icon === formGroup.controls.icon.value ? 'primary': ''"
-          [title]="'update-icon-button' | translate"
-          (click)="updateIcon(icon)"
-        >
-          <i class="material-icons-outlined notranslate">{{icon}}</i>
-        </button>
-      </span>
-    </ng-container>
-  </mat-card-content>
-</mat-card>
+<main id="main">
+  <mat-card>
+    <form [formGroup]="formGroup" class="form-input">
+      <button mat-icon-button color="primary" [title]="'icon-button' | translate">
+        <mat-icon>{{formGroup.controls.icon.value}}</mat-icon>
+      </button>
+      <mat-form-field class="mat-from-field">
+        <mat-label translate>Category name</mat-label>
+        <input matInput formControlName="name" #inputCategoryName id="name">
+        <mat-error *ngIf="formGroup.controls.name.hasError('required')">
+          {{ 'message-error.required-category' | translate }}
+        </mat-error>
+        <mat-error *ngIf="formGroup.controls.name.hasError('sameName')">
+          {{ 'message-error.repeating-category' | translate }}
+        </mat-error>
+      </mat-form-field>
+      <button mat-icon-button color="primary" [disabled]="formGroup.invalid" [title]="'save-button' | translate" (click)="save()">
+        <mat-icon>done</mat-icon>
+      </button>
+    </form>
+    <mat-card-content class="category-group">
+      <ng-container *ngFor="let group of currentCategory.groups">
+        <mat-card-subtitle translate>{{group.groupName}}</mat-card-subtitle>
+        <span class="icon-list">
+          <button class="btn-icon" mat-mini-fab
+            *ngFor="let icon of group.icons"
+            [color]="icon === formGroup.controls.icon.value ? 'primary': ''"
+            [title]="'update-icon-button' | translate"
+            (click)="updateIcon(icon)"
+          >
+            <i class="material-icons-outlined notranslate">{{icon}}</i>
+          </button>
+        </span>
+      </ng-container>
+    </mat-card-content>
+  </mat-card>
+</main>

@@ -9,6 +9,7 @@ import { ConfigurationModel } from '../../models/configuration.model';
 import { ItemAction } from '../../enums/item-action.enum';
 import { LanguageType } from '../../enums/language-type.enum';
 import { NumberType } from '../../enums/number-type.enum';
+import { HelperService } from 'src/app/services/helper.service';
 
 @Component({
   selector: 'app-side-nav',
@@ -16,8 +17,10 @@ import { NumberType } from '../../enums/number-type.enum';
   styleUrls: ['./side-nav.component.scss'],
 })
 export class SideNavComponent implements OnInit {
-  @Input() year!: number
+  @Input() year?: number
+
   protected navItems: NavItemModel[] = [
+    new NavItemModel('home', 'Home', ItemAction.home),
     new NavItemModel('dashboard', 'Category', ItemAction.category),
     new NavItemModel('launch', 'Export', ItemAction.export),
     new NavItemModel('cloud_upload', 'Import', ItemAction.import),
@@ -33,7 +36,12 @@ export class SideNavComponent implements OnInit {
     private auth: AuthService,
     protected router: Router,
     private readonly userService: UserService
-  ) {}
+  ) {
+    if (!this.year) {
+      const yearMonth = HelperService.getSearchMessage()
+      this.year = yearMonth.year
+    }
+  }
 
   ngOnInit(): void {
     this.userService.getItemObservable$.subscribe({

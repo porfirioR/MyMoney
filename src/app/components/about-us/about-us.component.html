@@ -1,23 +1,36 @@
-<mat-toolbar color="primary">
-  <button mat-icon-button (click)="exit()" [title]="'exit-button' | translate">
-    <mat-icon>keyboard_backspace</mat-icon>
-  </button>
-  <span>{{'About us' | translate}}</span>
-  <button mat-icon-button (click)="exit()" [title]="'home-button' | translate">
-    <mat-icon>home</mat-icon>
-  </button>
-</mat-toolbar>
-<mat-card>
-  <mat-card-content>
-    <mat-list>
-      <mat-list-item>{{'Project name' | translate}}: {{title}}</mat-list-item>
-      <mat-list-item>
-        Github:
-        <a href="https://github.com/porfirioR/MyMoney" target="_blank">
-          {{'Github page' | translate}}
-        </a>
-      </mat-list-item>
-      <mat-list-item>{{'Author' | translate}}: Porfirio Perez</mat-list-item>
-    </mat-list>
-  </mat-card-content>
-</mat-card>
+<mat-sidenav-container [hasBackdrop]="true">
+  <mat-sidenav #sidenav mode="over" [fixedInViewport]="true">
+    <app-side-nav></app-side-nav>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <ng-container *ngTemplateOutlet="aboutUs"></ng-container>
+  </mat-sidenav-content>
+</mat-sidenav-container>
+
+<ng-template #aboutUs>
+  <main id="main">
+    <mat-toolbar color="primary">
+      <button mat-icon-button [title]="'menu-button' | translate" (click)="sidenav.toggle()">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <span>{{'About us' | translate}}</span>
+      <button mat-icon-button (click)="exit()" [title]="'home-button' | translate">
+        <mat-icon>home</mat-icon>
+      </button>
+    </mat-toolbar>
+    <mat-card>
+      <mat-card-content>
+        <mat-list>
+          <mat-list-item>{{'Project name' | translate}}: {{title}}</mat-list-item>
+          <mat-list-item>
+            Github:
+            <a href="https://github.com/porfirioR/MyMoney" target="_blank">
+              {{'Github page' | translate}}
+            </a>
+          </mat-list-item>
+          <mat-list-item>{{'Author' | translate}}: Porfirio Perez</mat-list-item>
+        </mat-list>
+      </mat-card-content>
+    </mat-card>
+  </main>
+</ng-template>
