@@ -133,6 +133,10 @@ const routes: Routes = [
     path: 'logout',
     component: LogoutComponent,
     title: 'Logout'
+  },
+  {
+    path: 'home',
+    redirectTo: ''
   }
 ];
 

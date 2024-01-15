@@ -93,7 +93,7 @@ export class RelatedMovementsComponent implements OnInit {
       next: ([expenses, incomes]) => {
         let expenseAmount = 0
         let incomeAmount = 0
-        const movements: RelatedMovementDetailModel[] = [...expenses, ...incomes].sort((a, b) => a.time - b.time).map(x => {
+        const movements: RelatedMovementDetailModel[] = [...expenses, ...incomes].sort((a, b) => b.time - a.time).map(x => {
           const category = this.userService.getActiveCategories().find(y => y.id === x.categoryId)!
           if (x.type === CategoryType.expense) {
             expenseAmount += x.amount
@@ -105,7 +105,10 @@ export class RelatedMovementsComponent implements OnInit {
             new Date(x.time),
             x.memorandum! ? x.memorandum : category.name,
             x.amount,
-            x.type === CategoryType.expense
+            x.type === CategoryType.expense,
+            x.icon,
+            x.color,
+            x.backgroundColor
           )
         })
         const currentRelatedMovement = this.relatedMovements.find(x => x.id === id)!

@@ -4,16 +4,18 @@ import { ActivatedRoute } from '@angular/router'
 import { Location } from '@angular/common'
 import { MatTabChangeEvent } from '@angular/material/tabs'
 import { MatSnackBar } from '@angular/material/snack-bar'
+import { MatDialog } from '@angular/material/dialog'
 import { TranslateService } from '@ngx-translate/core'
 import { combineLatest, of, switchMap, take } from 'rxjs'
 import { CategoryType } from '../../enums/category-type.enum'
+import { NumberType } from '../../enums/number-type.enum'
 import { RelatedMovementForm } from '../../forms/related-movement.form'
 import { MovementModel } from '../../models/movement.model'
-import { MovementService } from '../../services/movement.service'
-import { RelatedMovementService } from '../../services/related-movement.service'
 import { RelatedMovementModel } from '../../models/related-movement.model'
 import { RelatedMapModel } from '../../models/related-map-model'
-import { NumberType } from '../../enums/number-type.enum'
+import { MovementService } from '../../services/movement.service'
+import { RelatedMovementService } from '../../services/related-movement.service'
+import { DialogAddMovementComponent } from '../dialog-add-movement/dialog-add-movement.component'
 
 @Component({
   selector: 'app-upsert-related-movement',
@@ -47,9 +49,11 @@ export class UpsertRelatedMovementComponent implements OnInit {
     private readonly location: Location,
     private readonly translateService: TranslateService,
     private readonly snackBar: MatSnackBar,
+    private readonly dialog: MatDialog,
+
   ) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.currentTap = this.categoryType.income.toLocaleLowerCase()
     const config = this.activatedRoute.snapshot.data['config']
     this.numberType = config.number
@@ -93,8 +97,11 @@ export class UpsertRelatedMovementComponent implements OnInit {
     this.location.back()
   }
 
-  protected addMovement = () => {
-    
+  protected addMovement = (): void => {
+    const dialogRef = this.dialog.open(DialogAddMovementComponent, {
+      width: '500px',
+      height: '80%',
+    })
   }
 
   protected save = (): void => {
@@ -119,7 +126,7 @@ export class UpsertRelatedMovementComponent implements OnInit {
     })
   }
 
-  protected deleteMovement = (id: string) => {
+  protected deleteMovement = (id: string): void => {
 
   }
 }

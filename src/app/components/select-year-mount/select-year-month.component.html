@@ -1,4 +1,4 @@
-<div class="year">
+<header class="year">
   <button mat-mini-fab color="" [title]="'back-button' | translate" (click)="previousYear()">
     <mat-icon>keyboard_arrow_left</mat-icon>
   </button>
@@ -6,9 +6,9 @@
   <button mat-mini-fab color="" [title]="'next-year-button' | translate" (click)="nextYear()">
     <mat-icon>keyboard_arrow_right</mat-icon>
   </button>
-</div>
+</header>
 <mat-divider></mat-divider>
-<div class="months">
+<main class="months">
   <button class="btn-month" mat-mini-fab
     *ngFor="let month of months | enumArrayLoop"
     [color]="month === formGroup.controls.month.value && formGroup.controls.year.value === formGroup.controls.selectedYear.value ? 'primary': ''"
@@ -17,4 +17,4 @@
   >
     {{month | translate}}
   </button>
-</div>
+</main>

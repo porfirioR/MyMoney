@@ -1,48 +1,68 @@
-<mat-toolbar color="primary">
-  <button mat-icon-button (click)="exit()" [title]="'exit-button' | translate">
-    <mat-icon>keyboard_backspace</mat-icon>
-  </button>
-  <span translate>Import movements</span>
-</mat-toolbar>
-<mat-card>
-  <mat-card-header>
-    <mat-card-title translate>Instructions</mat-card-title>
-  </mat-card-header>
-  <mat-card-content>
-    <mat-list dense>
-      <span class="mat-list-item-content" translate>Expensive procedure(it may take a few minutes)</span>
-      <span class="mat-list-item-content" translate>File format .csv</span>
-      <span class="mat-list-item-content" [translate]="'movement-messages.required-row'" [translateParams]="{csvHeader:csvHeader}">- </span>
-      <span class="mat-list-item-content" translate>All categories need to exist</span>
-      <span class="mat-list-item-content" translate>After the load file will be shown one button to check the file</span>
-      <span class="mat-list-item-content" translate>Check if all columns are correct</span>
-      <span class="mat-list-item-content" translate>If everything is ok, a popup window will appear saying the number of records and if everything is correct save the records</span>
-    </mat-list>
-  </mat-card-content>
-  <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
-  <mat-card-actions>
-    <button mat-stroked-button (click)="fileUpload.click()" [disabled]="loading" [title]="'file-input-button' | translate">
-      <input type="file" class="file-input" accept=".csv" (change)="onFileSelected($event)" #fileUpload id="file-input">
-      <div class="file-upload">
-        {{file?.name || "No file uploaded yet." | translate}}
-        <mat-icon color="primary">attach_file</mat-icon>
-      </div>
-    </button>
-    <button mat-icon-button color="primary" *ngIf="file" (click)="processFile()" [disabled]="loading" [title]="'process-file-button' | translate">
-      <mat-icon>history</mat-icon>
-    </button>
-    <button mat-icon-button color="primary" *ngIf="!loading && openPopUp" (click)="openDialog()" [title]="'upload-file-button' | translate">
-      <mat-icon>cloud_upload</mat-icon>
-    </button>
-  </mat-card-actions>
-</mat-card>
-<mat-card class="file-error" *ngIf="errorMessageList && errorMessageList.length > 0">
-  <mat-card-header>
-    <mat-card-title translate>Errors</mat-card-title>
-  </mat-card-header>
-  <mat-card-content>
-    <mat-list>
-      <mat-list-item *ngFor="let message of errorMessageList">- {{message}}</mat-list-item>
-    </mat-list>
-  </mat-card-content>
-</mat-card>
+<mat-sidenav-container [hasBackdrop]="true">
+  <mat-sidenav #sidenav mode="over" [fixedInViewport]="true">
+    <app-side-nav></app-side-nav>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <ng-container *ngTemplateOutlet="importMovement"></ng-container>
+  </mat-sidenav-content>
+</mat-sidenav-container>
+
+<ng-template #importMovement>
+  <main id="main">
+    <mat-toolbar color="primary">
+      <button mat-icon-button [title]="'menu-button' | translate" (click)="sidenav.toggle()">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <span translate>Import movements</span>
+    </mat-toolbar>
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title translate>Instructions</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <mat-list dense>
+          <span class="mat-list-item-content" translate>Expensive procedure(it may take a few minutes)</span>
+          <span class="mat-list-item-content" translate>File format .csv</span>
+          <span class="mat-list-item-content" [translate]="'movement-messages.required-row'" [translateParams]="{csvHeader:csvHeader}">- </span>
+          <span class="mat-list-item-content" translate>All categories need to exist</span>
+          <span class="mat-list-item-content" translate>After the load file will be shown one button to check the file</span>
+          <span class="mat-list-item-content" translate>Check if all columns are correct</span>
+          <span class="mat-list-item-content" translate>If everything is ok, a popup window will appear saying the number of records and if everything is correct save the records</span>
+        </mat-list>
+      </mat-card-content>
+      <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+      <mat-card-footer>
+        <button mat-stroked-button color="primary" (click)="exit()" [title]="'cancel-button' | translate">
+          {{'Cancel' | translate}}
+        </button>
+        <button mat-stroked-button color="primary"
+          (click)="fileUpload.click()"
+          [disabled]="loading"
+          [title]="'file-input-button' | translate"
+        >
+          <input type="file" class="file-input" accept=".csv" (change)="onFileSelected($event)" #fileUpload id="file-input">
+          <div class="file-upload">
+            {{file?.name || "No file uploaded." | translate}}
+            <mat-icon color="primary">attach_file</mat-icon>
+          </div>
+        </button>
+        <button mat-icon-button color="primary" *ngIf="file" (click)="processFile()" [disabled]="loading" [title]="'process-file-button' | translate">
+          <mat-icon>history</mat-icon>
+        </button>
+        <button mat-icon-button color="primary" *ngIf="!loading && openPopUp" (click)="openDialog()" [title]="'upload-file-button' | translate">
+          <mat-icon>cloud_upload</mat-icon>
+        </button>
+      </mat-card-footer>
+    </mat-card>
+    <mat-card class="file-error" *ngIf="errorMessageList && errorMessageList.length > 0">
+      <mat-card-header>
+        <mat-card-title translate>Errors</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <mat-list>
+          <mat-list-item *ngFor="let message of errorMessageList">- {{message}}</mat-list-item>
+        </mat-list>
+      </mat-card-content>
+    </mat-card>
+  </main>
+</ng-template>

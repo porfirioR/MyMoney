@@ -39,3 +39,8 @@ label ~ p {
 .movement-row:hover {
   cursor: pointer;
 }
+
+.header-height ~ main {
+  overflow-y: auto;
+  height: calc(92vh - 16px);
+}

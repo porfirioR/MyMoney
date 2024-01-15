@@ -2,8 +2,7 @@
 @import 'assets/scss/media-file.scss';
 @import 'assets/scss/update-primary-color.scss';
 
-html,
-body {
+html {
   height: 100%;
 }
 
@@ -90,4 +89,9 @@ $end: 100;
   .w-#{$i} {
     width: #{$percentage} !important;
   }
+}
+
+#main {
+  height: calc(93vh - 16px);
+  overflow-y: auto;
 }

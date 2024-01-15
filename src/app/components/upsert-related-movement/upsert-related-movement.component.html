@@ -2,14 +2,14 @@
   <button mat-icon-button (click)="exit()" [title]="'exit-button' | translate">
     <mat-icon>keyboard_backspace</mat-icon>
   </button>
-  <span translate>{{title}}</span>
+  <span>{{title | translate}}</span>
   <button mat-icon-button (click)="save()" [title]="'Save Related Movement' | translate">
     <mat-icon>save</mat-icon>
   </button>
 </mat-toolbar>
 <div class="mat-toolbar-block"></div>
 <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
-<form [formGroup]="formGroup" *ngIf="!loading">
+<form id="main" [formGroup]="formGroup" *ngIf="!loading">
   <mat-card>
     <mat-card-content>
       <mat-form-field class="w-100">
@@ -40,22 +40,20 @@
           <mat-expansion-panel-header>
             {{categoryType.income | translate}}
           </mat-expansion-panel-header>
-          <ng-container *ngTemplateOutlet="matExpansionPanelContent
-          context: { movements: incomes }">
+          <ng-container *ngTemplateOutlet="matExpansionPanelContent context: { movements: incomes }">
           </ng-container>
         </mat-expansion-panel>
         <mat-expansion-panel [hideToggle]="false">
           <mat-expansion-panel-header>
             {{categoryType.expense | translate}}
           </mat-expansion-panel-header>
-          <ng-container *ngTemplateOutlet="matExpansionPanelContent
-          context: { groups: incomes }">
+          <ng-container *ngTemplateOutlet="matExpansionPanelContent context: { groups: incomes }">
           </ng-container>
         </mat-expansion-panel>
         <mat-action-row>
           <button mat-stroked-button color="primary" (click)="addMovement()">
             <mat-icon>add</mat-icon>
-            Add Movements
+            {{'Add Movements' | translate}}
           </button>
         </mat-action-row>
       </mat-accordion>

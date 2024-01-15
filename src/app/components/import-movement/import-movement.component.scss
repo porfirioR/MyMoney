@@ -10,13 +10,6 @@
   display: none;
 }
 
-.mat-card-actions {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 0 !important;
-  min-width: 170px;
-}
-
 .file-upload {
   display: flex;
   align-items: center;
@@ -55,6 +48,10 @@ span.mat-list-item-content {
     font-size: medium;
     font-weight: bold;
   }
+}
+
+#main {
+  height: calc(100vh - 16px);
 }
 
 // span.mat-list-item-content::before {
