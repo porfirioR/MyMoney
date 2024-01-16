@@ -1,5 +1,5 @@
 #main {
-  height: calc(100vh - 16px);
+  height: 100vh !important;
   overflow-y: auto;
 }
 
@@ -10,4 +10,11 @@
 .mat-card-actions {
   display: flex;
   justify-content: center;
+}
+
+@media (max-width: 599px) {
+  #main {
+    height: 100vh !important;
+    overflow-y: auto !important;
+  }
 }

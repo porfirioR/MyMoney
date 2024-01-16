@@ -39,3 +39,8 @@ li {
 canvas {
   padding-bottom: 1rem;
 }
+
+#main {
+  height: 93vh !important;
+  overflow-y: auto !important;
+}

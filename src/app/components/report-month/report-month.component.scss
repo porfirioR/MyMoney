@@ -18,3 +18,8 @@ form {
 .mat-mini-fab {
   box-shadow: unset;
 }
+
+#main {
+  height: calc(93vh - 2px);
+  overflow-y: auto !important;
+}

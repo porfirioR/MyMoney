@@ -51,7 +51,8 @@ span.mat-list-item-content {
 }
 
 #main {
-  height: calc(100vh - 16px);
+  height: 100vh;
+  overflow-y: auto !important;
 }
 
 // span.mat-list-item-content::before {

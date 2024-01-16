@@ -40,7 +40,7 @@ label ~ p {
   cursor: pointer;
 }
 
-.header-height ~ main {
+#main {
+  height: calc(93vh - 6px);
   overflow-y: auto;
-  height: calc(92vh - 16px);
 }
