@@ -40,5 +40,6 @@ dd {
 }
 
 #main {
-  height: calc(93vh - 24px);
+  height: 93vh !important;
+  overflow-y: auto !important;
 }
