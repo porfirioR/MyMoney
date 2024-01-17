@@ -21,3 +21,20 @@
 .mat-card-content {
   padding-top: 2rem;
 }
+
+.mat-mini-fab {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: unset !important;
+  width: 24px;
+  height: 24px;
+}
+
+.icon-select {
+  display: flex;
+  align-items: center;
+  & > span {
+    padding-left: 6px;
+  }
+}

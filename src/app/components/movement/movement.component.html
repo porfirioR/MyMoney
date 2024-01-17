@@ -13,7 +13,7 @@
 </header>
 <mat-divider></mat-divider>
 <mat-card-content>
-  <main mat-button class="movement-row" *ngFor="let movement of groupDateMovement.movements; let i = index" [routerLink]="['details', movement.id]">
+  <span mat-button class="movement-row" *ngFor="let movement of groupDateMovement.movements; let i = index" [routerLink]="['details', movement.id]">
     <article class="icon-memorandum">
       <button mat-mini-fab customColor
         [color]="movement!.color"
@@ -27,5 +27,5 @@
     <article [id]="'amount-' + i">
       {{movement.amount | number:'' : numberType}}
     </article>
-  </main>
+  </span>
 </mat-card-content>
