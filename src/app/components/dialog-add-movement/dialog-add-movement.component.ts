@@ -57,7 +57,14 @@ export class DialogAddMovementComponent implements OnInit {
     )
     this.movementService.getGetMovementByFilter(request).subscribe({
       next: ([incomes, expenses]) => {
-        this.movements = [...incomes, ...expenses]
+        this.movements = [...incomes, ...expenses].sort((a, b) => b.time - a.time)
+        this.movements.forEach(x => {
+          x.date = new Date(x.time)
+          const category = this.categories.find(y => y.id === x.categoryId)!
+          x.color = category.color
+          x.backgroundColor = category.backgroundColor
+          x.memorandum = x.memorandum ?? category.name
+        })
         this.searching = false
       }, error: (e) => {
         throw e

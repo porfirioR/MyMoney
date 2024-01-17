@@ -64,13 +64,13 @@
     <mat-card-content>
       <ng-container *ngIf="movements.length; else emptyMovement">
         <mat-selection-list formControlName="selectedMovement">
-          <mat-list-option *ngFor="let movement of movements" [value]="movement.id">
+          <mat-list-option color="primary" *ngFor="let movement of movements" [value]="movement.id">
             {{movement.memorandum}}
           </mat-list-option>
         </mat-selection-list>
       </ng-container>
       <ng-template #emptyMovement>
-        Movements
+        Without Movements
       </ng-template>
     </mat-card-content>
   </mat-card>
