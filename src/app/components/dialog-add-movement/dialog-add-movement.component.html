@@ -5,25 +5,61 @@
     </mat-card-header>
     <mat-divider></mat-divider>
     <mat-card-content>
-      <mat-form-field class="w-40">
-        <mat-label>{{'Category' | translate}}</mat-label>
-        <mat-select formControlName="category">
-          <mat-option [value]="category.id" *ngFor="let category of categories" class="icon-select">
-            <!-- <button mat-mini-fab customColor
+      <mat-form-field class="w-100">
+        <mat-label>{{'Categories' | translate}}</mat-label>
+        <mat-chip-list #chipList aria-label="Categories selection">
+          <mat-chip *ngFor="let category of selectedCategories"
+            color="primary"
+            (removed)="remove(category.id)"
+          >
+            <button mat-mini-fab customColor matChipAvatar
               [color]="category.color"
               [backgroundColor]="category.backgroundColor"
               [title]="'icon-category-button' | translate"
             >
               <i class="material-icons-outlined notranslate">{{category.icon}}</i>
-            </button> -->
+            </button>
+            {{category.name}}
+            <button matChipRemove>
+              <mat-icon>cancel</mat-icon>
+            </button>
+          </mat-chip>
+          <input
+            [placeholder]="'Select a category...'| translate"
+            #categoryInput
+            formControlName="category"
+            [matAutocomplete]="auto"
+            [matChipInputFor]="chipList"
+            (matChipInputTokenEnd)="add($event)"
+          />
+        </mat-chip-list>
+        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+          <mat-option *ngFor="let category of filteredCategories | async" [value]="category.id">
+            {{category.name}}
+          </mat-option>
+        </mat-autocomplete>
+
+
+
+
+
+        <!-- <mat-select formControlName="category">
+          <mat-option [value]="category.id" *ngFor="let category of categories" class="icon-select">
+            <button mat-mini-fab customColor
+              [color]="category.color"
+              [backgroundColor]="category.backgroundColor"
+              [title]="'icon-category-button' | translate"
+            >
+              <i class="material-icons-outlined notranslate">{{category.icon}}</i>
+            </button>
             {{category.name | translate}}
           </mat-option>
-        </mat-select>
+        </mat-select> -->
         <mat-error *ngIf="formGroup.controls.month.hasError('required')" translate>
           Filter categories is required.
         </mat-error>
       </mat-form-field>
-      <mat-form-field class="w-25">
+      <mat-form-field class="w-48">
         <mat-label>{{'Month' | translate}}</mat-label>
         <mat-select formControlName="month">
           <mat-option [value]="month" *ngFor="let month of months | enumArrayLoop">
@@ -34,7 +70,7 @@
           Filter month is required.
         </mat-error>
       </mat-form-field>
-      <mat-form-field class="w-20">
+      <mat-form-field class="m-l-16 w-48">
         <mat-label>{{'Year' | translate}}</mat-label>
         <mat-select formControlName="year">
           <mat-option [value]="year" *ngFor="let year of yearRange">

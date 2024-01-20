@@ -223,6 +223,7 @@
   "Filter year is required.": "Año es obligatorio.",
   "Filter categories is required.": "Categorías es obligatorio.",
   "Home": "Inicio",
+  "Select a category...": "Seleccione una categoría...",
   "category-messages": {
     "question": "¿Está seguro de que desea eliminar esta categoría?. Todos los movimientos relacionados ({{length}}) con esta categoría serán eliminados",
     "deleted": "La categoría fue borrada",

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { CategoryType } from '../../enums/category-type.enum';
@@ -10,6 +10,10 @@ import { CategoryModel } from '../../models/category.model';
 import { FilterRelatedMovementModel } from '../../models/filter-related-movement.model';
 import { MovementModel } from '../../models/movement.model';
 import { FilterRelatedMovementForm } from '../../forms/filter-related-movement.form';
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
+import { MatChipInputEvent } from '@angular/material/chips';
+import { Observable, map, startWith } from 'rxjs';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 
 @Component({
   selector: 'app-dialog-add-movement',
@@ -17,6 +21,7 @@ import { FilterRelatedMovementForm } from '../../forms/filter-related-movement.f
   styleUrls: ['./dialog-add-movement.component.scss']
 })
 export class DialogAddMovementComponent implements OnInit {
+  @ViewChild('categoryInput') categoryInput?: ElementRef<HTMLInputElement>;
   protected yearRange: number[]
   protected categoryType!: CategoryType
   protected months = MonthType
@@ -29,6 +34,8 @@ export class DialogAddMovementComponent implements OnInit {
   })
   protected searching = false
   protected movements: MovementModel[] = []
+  protected selectedCategories: CategoryModel[] = []
+  protected filteredCategories: Observable<CategoryModel[]>
   private minValidYear = 2018
 
   constructor(
@@ -40,6 +47,11 @@ export class DialogAddMovementComponent implements OnInit {
     const diffYear = year - this.minValidYear
     const initialYear = year === this.minValidYear || diffYear > 8 ? this.minValidYear : year - diffYear
     this.yearRange = [...Array(15).keys()].map(x => initialYear + x)
+
+    this.filteredCategories = this.formGroup.controls.category.valueChanges.pipe(
+      startWith(null),
+      map((x: string | null) => (x ? this.filter(x) : this.categories.slice())),
+    );
   }
 
   ngOnInit(): void {
@@ -74,5 +86,45 @@ export class DialogAddMovementComponent implements OnInit {
 
   protected save = () => {
     
+  }
+
+  protected add(event: MatChipInputEvent): void {
+    const value = (event.value || '').trim();
+
+    if (value) {
+      const category = this.categories.find(x => x.name === value)
+
+      if (category) {
+        this.selectedCategories = [...new Set([...this.selectedCategories, category])]
+      }
+    }
+
+    event.chipInput!.clear();
+
+    this.formGroup.controls.category.setValue(null);
+  }
+
+  protected remove = (category: string): void => {
+    const index = this.selectedCategories.map(x => x.id).indexOf(category);
+
+    if (index >= 0) {
+      this.selectedCategories.splice(index, 1);
+    }
+  }
+
+  private filter = (value: string): CategoryModel[] => {
+    const filterValue = value.toLowerCase();
+
+    return this.categories.filter(x => x.name.toLowerCase().includes(filterValue));
+  }
+
+  protected selected = (event: MatAutocompleteSelectedEvent): void => {
+    const category = this.categories.find(x => x.id === event.option.value)
+
+    if (category) {
+      this.selectedCategories = [...new Set([...this.selectedCategories, category])]
+    }
+    this.categoryInput!.nativeElement.value = '';
+    this.formGroup.controls.category.setValue(null);
   }
 }
