@@ -5,4 +5,5 @@ export interface FilterRelatedMovementForm {
   category: FormControl<null | string>
   month: FormControl<null | number>
   selectedMovement: FormControl<null | string[]>
+  hasAnyCategory: FormControl<null | boolean>
 }

@@ -31,11 +31,14 @@ export class DialogAddMovementComponent implements OnInit {
     category: new FormControl(null, Validators.required),
     month: new FormControl(null, Validators.required),
     selectedMovement: new FormControl(null),
+    hasAnyCategory: new FormControl(false)
   })
   protected searching = false
   protected movements: MovementModel[] = []
   protected selectedCategories: CategoryModel[] = []
   protected filteredCategories: Observable<CategoryModel[]>
+  protected defaultColor = '#000000'
+  protected defaultBackgroundColor = '#ffffff'
   private minValidYear = 2018
 
   constructor(
@@ -50,12 +53,16 @@ export class DialogAddMovementComponent implements OnInit {
 
     this.filteredCategories = this.formGroup.controls.category.valueChanges.pipe(
       startWith(null),
-      map((x: string | null) => (x ? this.filter(x) : this.categories.slice())),
-    );
+      map((x: string | null) => x ? this.filter(x) : this.categories.filter(x => !this.selectedCategories.map(x => x.id).includes(x.id)).slice())
+    )
   }
 
   ngOnInit(): void {
     this.categories = this.userService.getActiveCategories()
+    this.categories.forEach(x => {
+      x.color = x.color ?? this.defaultColor
+      x.backgroundColor = x.backgroundColor ?? this.defaultBackgroundColor
+    })
   }
 
   protected cancelAddition = (): void => this.dialogRef.close()
@@ -63,7 +70,7 @@ export class DialogAddMovementComponent implements OnInit {
   protected search = (): void => {
     this.searching = true
     const request = new FilterRelatedMovementModel(
-      this.formGroup.value.category!,
+      this.selectedCategories.map(x => x.id)!,
       HelperService.convertStringToMonthType(this.formGroup.value.month!.toString()),
       this.formGroup.value.year!
     )
@@ -79,6 +86,7 @@ export class DialogAddMovementComponent implements OnInit {
         })
         this.searching = false
       }, error: (e) => {
+        this.searching = false
         throw e
       }
     })
@@ -88,43 +96,42 @@ export class DialogAddMovementComponent implements OnInit {
     
   }
 
-  protected add(event: MatChipInputEvent): void {
+  protected add = (event: MatChipInputEvent): void => {
     const value = (event.value || '').trim();
-
     if (value) {
       const category = this.categories.find(x => x.name === value)
-
       if (category) {
         this.selectedCategories = [...new Set([...this.selectedCategories, category])]
       }
     }
+    this.checkSelectedCategory()
 
-    event.chipInput!.clear();
-
-    this.formGroup.controls.category.setValue(null);
+    event.chipInput!.clear()
+    this.formGroup.controls.category.setValue(null)
   }
 
   protected remove = (category: string): void => {
     const index = this.selectedCategories.map(x => x.id).indexOf(category);
-
     if (index >= 0) {
       this.selectedCategories.splice(index, 1);
     }
-  }
-
-  private filter = (value: string): CategoryModel[] => {
-    const filterValue = value.toLowerCase();
-
-    return this.categories.filter(x => x.name.toLowerCase().includes(filterValue));
+    this.checkSelectedCategory()
   }
 
   protected selected = (event: MatAutocompleteSelectedEvent): void => {
     const category = this.categories.find(x => x.id === event.option.value)
-
     if (category) {
       this.selectedCategories = [...new Set([...this.selectedCategories, category])]
     }
     this.categoryInput!.nativeElement.value = '';
     this.formGroup.controls.category.setValue(null);
+    this.checkSelectedCategory()
   }
+
+  private filter = (value: string): CategoryModel[] => {
+    const filterValue = value.toLowerCase()
+    return this.categories.filter(x => !this.selectedCategories.map(x => x.id).includes(x.id) && x.name.toLowerCase().includes(filterValue))
+  }
+
+  private checkSelectedCategory = (): void => this.formGroup.controls.hasAnyCategory.patchValue(this.selectedCategories.length > 0)
 }

@@ -94,16 +94,16 @@ export class MovementService {
 
   public getGetMovementByFilter = (request: FilterRelatedMovementModel): Observable<[MovementModel[], MovementModel[]]> => {
     const [startTime, endTime] = this.getDateTimeRange(request.month, request.year)
-    const hasExpenseIds = this.userService.getActiveCategories().filter(x => x.type === CategoryType.expense.toLocaleLowerCase()).map(x => x.id).some(x => x === request.categoryId)
-    const hasIncomeIds = this.userService.getActiveCategories().filter(x => x.type === CategoryType.income.toLocaleLowerCase()).map(x => x.id).some(x => x === request.categoryId)
+    const hasExpenseIds = this.userService.getActiveCategories().filter(x => x.type === CategoryType.expense.toLocaleLowerCase()).map(x => x.id).some(x => request.categoryId.includes(x))
+    const hasIncomeIds = this.userService.getActiveCategories().filter(x => x.type === CategoryType.income.toLocaleLowerCase()).map(x => x.id).some(x => request.categoryId.includes(x))
     let expenseRequest$: Observable<MovementModel[]> = of([])
     let incomeRequest$: Observable<MovementModel[]> = of([])
     if (hasExpenseIds) {
-      const ref = query(this.getReference(CategoryType.expense), where('categoryId', '==', request.categoryId), where('time', '>=', startTime), where('time', '<=', endTime), orderBy('time'))
+      const ref = query(this.getReference(CategoryType.expense), where('categoryId', 'in', request.categoryId), where('time', '>=', startTime), where('time', '<=', endTime), orderBy('time'))
       expenseRequest$ = collectionData<MovementModel>(ref as Query<MovementModel>, { idField: 'id' })
     }
     if (hasIncomeIds) {
-      const ref = query(this.getReference(CategoryType.income), where('categoryId', '==', request.categoryId), where('time', '>=', startTime), where('time', '<=', endTime), orderBy('time'))
+      const ref = query(this.getReference(CategoryType.income), where('categoryId', 'in', request.categoryId), where('time', '>=', startTime), where('time', '<=', endTime), orderBy('time'))
       incomeRequest$ = collectionData<MovementModel>(ref as Query<MovementModel>, { idField: 'id' })
     }
     return combineLatest([incomeRequest$, expenseRequest$])

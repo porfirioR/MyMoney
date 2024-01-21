@@ -2,13 +2,6 @@
   padding-bottom: 0;
 }
 
-.m-t-10 {
-  margin-top: 10px;
-}
-
-.m-l-16 {
-  margin-left: 16px;
-}
 
 .mat-card-content {
   margin-bottom: 0
@@ -37,4 +30,20 @@
   & > span {
     padding-left: 6px;
   }
+}
+
+.mat-custom-icon-button {
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  box-shadow: unset;
+  border-radius: 50%;
+  display: inline-flex;
+  margin-right: 8px;
+}
+
+::ng-deep .mat-option-text {
+  display: inline-flex !important;
+  align-items: center !important
 }

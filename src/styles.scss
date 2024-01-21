@@ -90,3 +90,16 @@ $end: 100;
     width: #{$percentage} !important;
   }
 }
+
+$properties: (top, bottom, left, right);
+@for $length from $start + 1 through $end {
+  @each $property in $properties {
+    .m-#{str-slice($property, 0, 1)}-#{$length} {
+      margin-#{$property}: #{$length}px !important;
+    }
+
+    .p-#{str-slice($property, 0, 1)}-#{$length} {
+      padding-#{$property}: #{$length}px !important;
+    }
+  }
+}

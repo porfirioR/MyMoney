@@ -19,7 +19,7 @@
             >
               <i class="material-icons-outlined notranslate">{{category.icon}}</i>
             </button>
-            {{category.name}}
+            {{category.name | translate}}
             <button matChipRemove>
               <mat-icon>cancel</mat-icon>
             </button>
@@ -34,29 +34,19 @@
           />
         </mat-chip-list>
         <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
-          <mat-option *ngFor="let category of filteredCategories | async" [value]="category.id">
-            {{category.name}}
-          </mat-option>
-        </mat-autocomplete>
-
-
-
-
-
-        <!-- <mat-select formControlName="category">
-          <mat-option [value]="category.id" *ngFor="let category of categories" class="icon-select">
-            <button mat-mini-fab customColor
+          <mat-option *ngFor="let category of filteredCategories | async; let i = index" [id]="'' + i" [value]="category.id">
+            <span customColor class="mat-custom-icon-button"
               [color]="category.color"
               [backgroundColor]="category.backgroundColor"
-              [title]="'icon-category-button' | translate"
+              [title]="category.name | translate"
             >
               <i class="material-icons-outlined notranslate">{{category.icon}}</i>
-            </button>
-            {{category.name | translate}}
+            </span>
+            <span translate>{{category.name}}</span>
           </mat-option>
-        </mat-select> -->
-        <mat-error *ngIf="formGroup.controls.month.hasError('required')" translate>
-          Filter categories is required.
+        </mat-autocomplete>
+        <mat-error *ngIf="formGroup.controls.hasAnyCategory.value" translate>
+          Category is required.
         </mat-error>
       </mat-form-field>
       <mat-form-field class="w-48">
