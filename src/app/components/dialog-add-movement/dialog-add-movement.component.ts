@@ -1,6 +1,9 @@
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { MatChipInputEvent } from '@angular/material/chips';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Observable, debounceTime, map, startWith, take } from 'rxjs';
 import { CategoryType } from '../../enums/category-type.enum';
 import { MonthType } from '../../enums/month-type.enum';
 import { HelperService } from '../../services/helper.service';
@@ -10,10 +13,6 @@ import { CategoryModel } from '../../models/category.model';
 import { FilterRelatedMovementModel } from '../../models/filter-related-movement.model';
 import { MovementModel } from '../../models/movement.model';
 import { FilterRelatedMovementForm } from '../../forms/filter-related-movement.form';
-import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { MatChipInputEvent } from '@angular/material/chips';
-import { Observable, map, startWith } from 'rxjs';
-import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 
 @Component({
   selector: 'app-dialog-add-movement',
@@ -28,7 +27,7 @@ export class DialogAddMovementComponent implements OnInit {
   protected categories: CategoryModel[] = []
   protected formGroup: FormGroup<FilterRelatedMovementForm> = new FormGroup<FilterRelatedMovementForm>({
     year: new FormControl(null, Validators.required),
-    category: new FormControl(null, Validators.required),
+    category: new FormControl(null),
     month: new FormControl(null, Validators.required),
     selectedMovement: new FormControl(null),
     hasAnyCategory: new FormControl(false)
@@ -45,11 +44,12 @@ export class DialogAddMovementComponent implements OnInit {
     private readonly dialogRef: MatDialogRef<DialogAddMovementComponent>,
     private readonly movementService: MovementService,
     private readonly userService: UserService,
-  ) { 
+  ) {
     const year = new Date().getFullYear()
     const diffYear = year - this.minValidYear
     const initialYear = year === this.minValidYear || diffYear > 8 ? this.minValidYear : year - diffYear
     this.yearRange = [...Array(15).keys()].map(x => initialYear + x)
+    this.formGroup.controls.year.setValue(year)
 
     this.filteredCategories = this.formGroup.controls.category.valueChanges.pipe(
       startWith(null),
@@ -74,15 +74,15 @@ export class DialogAddMovementComponent implements OnInit {
       HelperService.convertStringToMonthType(this.formGroup.value.month!.toString()),
       this.formGroup.value.year!
     )
-    this.movementService.getGetMovementByFilter(request).subscribe({
+    this.movementService.getGetMovementByFilter(request).pipe(debounceTime(100), take(1)).subscribe({
       next: ([incomes, expenses]) => {
-        this.movements = [...incomes, ...expenses].sort((a, b) => b.time - a.time)
+        this.movements = [...new Set([...incomes, ...expenses])].sort((a, b) => b.time - a.time)
         this.movements.forEach(x => {
           x.date = new Date(x.time)
           const category = this.categories.find(y => y.id === x.categoryId)!
           x.color = category.color
           x.backgroundColor = category.backgroundColor
-          x.memorandum = x.memorandum ?? category.name
+          x.memorandum = !!x.memorandum ? x.memorandum : category.name
         })
         this.searching = false
       }, error: (e) => {
@@ -93,7 +93,7 @@ export class DialogAddMovementComponent implements OnInit {
   }
 
   protected save = () => {
-    
+    const movementToSave = this.formGroup.controls.selectedMovement.value!
   }
 
   protected add = (event: MatChipInputEvent): void => {

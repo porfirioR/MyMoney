@@ -1,7 +1,6 @@
 .mat-card-actions {
-  padding-bottom: 0;
+  padding: 0;
 }
-
 
 .mat-card-content {
   margin-bottom: 0
@@ -46,4 +45,17 @@
 ::ng-deep .mat-option-text {
   display: inline-flex !important;
   align-items: center !important
+}
+
+#category-hint {
+  color: #f44336;
+}
+
+.row-mat-field {
+  display: flex;
+  justify-content: space-between;
+}
+
+#month-field, #year-field {
+  width: 45% !important;
 }

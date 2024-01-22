@@ -1,12 +1,12 @@
 <form [formGroup]="formGroup">
-  <mat-card>
+  <mat-card class="m-b-10">
     <mat-card-header translate>
       <mat-card-title>{{'Filters' | translate}}</mat-card-title>
     </mat-card-header>
     <mat-divider></mat-divider>
     <mat-card-content>
       <mat-form-field class="w-100">
-        <mat-label>{{'Categories' | translate}}</mat-label>
+        <mat-label>{{'Categories' | translate}} *</mat-label>
         <mat-chip-list #chipList aria-label="Categories selection">
           <mat-chip *ngFor="let category of selectedCategories"
             color="primary"
@@ -45,34 +45,36 @@
             <span translate>{{category.name}}</span>
           </mat-option>
         </mat-autocomplete>
-        <mat-error *ngIf="formGroup.controls.hasAnyCategory.value" translate>
+        <mat-hint id="category-hint" *ngIf="!formGroup.controls.hasAnyCategory.value" translate>
           Category is required.
-        </mat-error>
+        </mat-hint>
       </mat-form-field>
-      <mat-form-field class="w-48">
-        <mat-label>{{'Month' | translate}}</mat-label>
-        <mat-select formControlName="month">
-          <mat-option [value]="month" *ngFor="let month of months | enumArrayLoop">
-            {{month | translate}}
-          </mat-option>
-        </mat-select>
-        <mat-error *ngIf="formGroup.controls.month.hasError('required')" translate>
-          Filter month is required.
-        </mat-error>
-      </mat-form-field>
-      <mat-form-field class="m-l-16 w-48">
-        <mat-label>{{'Year' | translate}}</mat-label>
-        <mat-select formControlName="year">
-          <mat-option [value]="year" *ngFor="let year of yearRange">
-            {{year}}
-          </mat-option>
-        </mat-select>
-        <mat-error *ngIf="formGroup.controls.month.hasError('required')" translate>
-          Filter year is required.
-        </mat-error>
-      </mat-form-field>
+      <article class="row-mat-field">
+        <mat-form-field id="month-field">
+          <mat-label>{{'Month' | translate}}</mat-label>
+          <mat-select formControlName="month">
+            <mat-option [value]="month" *ngFor="let month of months | enumArrayLoop">
+              {{month | translate}}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="formGroup.controls.month.hasError('required')" translate>
+            Filter month is required.
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field id="year-field">
+          <mat-label>{{'Year' | translate}}</mat-label>
+          <mat-select formControlName="year">
+            <mat-option [value]="year" *ngFor="let year of yearRange">
+              {{year}}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="formGroup.controls.month.hasError('required')" translate>
+            Filter year is required.
+          </mat-error>
+        </mat-form-field>
+      </article>
     </mat-card-content>
-    <mat-card-actions align="end" class="m-t-10">
+    <mat-card-actions align="end">
       <button mat-stroked-button color="primary"
         [disabled]="formGroup.invalid || searching" [title]="'save-button' | translate"
         (click)="search()"
@@ -105,7 +107,7 @@
       <button mat-stroked-button color="primary" (click)="cancelAddition()" [title]="'cancel-button' | translate">
         {{'Cancel' | translate}}
       </button>
-      <button mat-stroked-button color="primary" type="submit" [disabled]="formGroup.invalid" [title]="'save-button' | translate"
+      <button mat-stroked-button color="primary" type="submit" [disabled]="formGroup.controls.selectedMovement.value?.length === 0" [title]="'save-button' | translate"
         (click)="save()">{{'Save' | translate}}
       </button>
     </mat-card-footer>
