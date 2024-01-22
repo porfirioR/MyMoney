@@ -1,6 +1,6 @@
 export class FilterRelatedMovementModel {
   constructor(
-    public categoryId: string[],
+    public categoryIds: string[],
     public month: number,
     public year: number
   ) { }
