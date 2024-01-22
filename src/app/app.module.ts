@@ -72,6 +72,9 @@ import { RelatedMovementsComponent } from './components/related-movements/relate
 import { UpsertRelatedMovementComponent } from './components/upsert-related-movement/upsert-related-movement.component';
 import { RelatedMovementDetailComponent } from './components/related-movement-detail/related-movement-detail.component';
 import { DialogAddMovementComponent } from './components/dialog-add-movement/dialog-add-movement.component';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+
 registerLocaleData(localEs, 'es')
 registerLocaleData(localeEn, 'en')
 
@@ -145,6 +148,8 @@ registerLocaleData(localeEn, 'en')
     MatListModule,
     MatSnackBarModule,
     MatExpansionModule,
+    MatChipsModule,
+    MatAutocompleteModule,
     MatCheckboxModule,
     NgxMaskDirective,
     NgxMaskPipe,

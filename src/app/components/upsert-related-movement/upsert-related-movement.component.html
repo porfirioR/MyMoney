@@ -3,7 +3,7 @@
     <mat-icon>keyboard_backspace</mat-icon>
   </button>
   <span>{{title | translate}}</span>
-  <button mat-icon-button (click)="save()" [title]="'Save Related Movement' | translate">
+  <button mat-icon-button (click)="save()" [title]="'Save Related Movement' | translate" [disabled]="formGroup.invalid">
     <mat-icon>save</mat-icon>
   </button>
 </mat-toolbar>

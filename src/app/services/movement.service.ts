@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { addDoc, collection, collectionData, CollectionReference, deleteDoc, doc, DocumentData, documentId, DocumentReference, Firestore, orderBy, Query, query, setDoc, where, WriteBatch, writeBatch } from '@angular/fire/firestore';
-import { concatAll, concatMap, forkJoin, Observable, of } from 'rxjs';
+import { combineLatest, concatAll, concatMap, forkJoin, Observable, of } from 'rxjs';
 import { CategoryType } from '../enums/category-type.enum';
 import { CollectionType } from '../enums/collection-type.enum';
 import { MovementModel } from '../models/movement.model';
@@ -94,19 +94,19 @@ export class MovementService {
 
   public getGetMovementByFilter = (request: FilterRelatedMovementModel): Observable<[MovementModel[], MovementModel[]]> => {
     const [startTime, endTime] = this.getDateTimeRange(request.month, request.year)
-    const hasExpenseIds = this.userService.getActiveCategories().filter(x => x.type === CategoryType.expense).map(x => x.id).filter(x => request.categoryIds.includes(x))
-    const hasIncomeIds = this.userService.getActiveCategories().filter(x => x.type === CategoryType.income).map(x => x.id).some(x => request.categoryIds.includes(x))
+    const hasExpenseIds = this.userService.getActiveCategories().filter(x => x.type === CategoryType.expense.toLocaleLowerCase()).map(x => x.id).some(x => request.categoryIds.includes(x))
+    const hasIncomeIds = this.userService.getActiveCategories().filter(x => x.type === CategoryType.income.toLocaleLowerCase()).map(x => x.id).some(x => request.categoryIds.includes(x))
     let expenseRequest$: Observable<MovementModel[]> = of([])
     let incomeRequest$: Observable<MovementModel[]> = of([])
-    if (hasExpenseIds.length) {
-      const ref = query(this.getReference(CategoryType.expense), where('categoryId', 'in', hasExpenseIds), where('time', '>=', startTime), where('time', '<=', endTime), orderBy('time'))
+    if (hasExpenseIds) {
+      const ref = query(this.getReference(CategoryType.expense), where('categoryId', 'in', request.categoryIds), where('time', '>=', startTime), where('time', '<=', endTime), orderBy('time'))
       expenseRequest$ = collectionData<MovementModel>(ref as Query<MovementModel>, { idField: 'id' })
     }
-    if (hasExpenseIds.length) {
-      const ref = query(this.getReference(CategoryType.expense), where('categoryId', 'in', hasIncomeIds), where('time', '>=', startTime), where('time', '<=', endTime), orderBy('time'))
+    if (hasIncomeIds) {
+      const ref = query(this.getReference(CategoryType.income), where('categoryId', 'in', request.categoryIds), where('time', '>=', startTime), where('time', '<=', endTime), orderBy('time'))
       incomeRequest$ = collectionData<MovementModel>(ref as Query<MovementModel>, { idField: 'id' })
     }
-    return forkJoin([incomeRequest$, expenseRequest$])
+    return combineLatest([incomeRequest$, expenseRequest$])
   }
 
   private getDateTimeRange = (month: number, year: number): [number, number] => {
