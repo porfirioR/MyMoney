@@ -16,6 +16,7 @@ import { RelatedMapModel } from '../../models/related-map-model'
 import { MovementService } from '../../services/movement.service'
 import { RelatedMovementService } from '../../services/related-movement.service'
 import { DialogAddMovementComponent } from '../dialog-add-movement/dialog-add-movement.component'
+import { HelperService } from 'src/app/services/helper.service'
 
 @Component({
   selector: 'app-upsert-related-movement',
@@ -113,12 +114,13 @@ export class UpsertRelatedMovementComponent implements OnInit {
 
   protected save = (): void => {
     this.saving = true
+    const relatedList = [...this.incomes.map(x => new RelatedMapModel(x.id!, x.type)), ...this.expenses.map(x => new RelatedMapModel(x.id!, x.type))]
     const request: RelatedMovementModel = {
       id: this.id ?? null,
       expenseAmount: this.formGroup.controls.expenseAmount.value ?? 0,
       incomeAmount: this.formGroup.controls.incomeAmount.value ?? 0,
       name: this.formGroup.controls.name.value!,
-      related: [...this.incomes.map(x => new RelatedMapModel(x.id!, x.type)), ...this.expenses.map(x => new RelatedMapModel(x.id!, x.type))],
+      related:  HelperService.getRelatedMovementToSave(relatedList),
       owner: '',
       totalAmount: this.formGroup.controls.totalAmount.value!,
       showInUpsertMovement: this.formGroup.controls.showInUpsertMovement.value!
@@ -133,11 +135,11 @@ export class UpsertRelatedMovementComponent implements OnInit {
     })
   }
 
-  protected deleteMovement = (id: string, type: CategoryType): void => {
+  protected deleteMovement = (movementId: string, type: CategoryType): void => {
     if (type === this.categoryType.expense) {
-      this.expenses = this.expenses.filter(x => x.id !== id)
+      this.expenses = this.expenses.filter(x => x.id !== movementId)
     } else {
-      this.incomes = this.incomes.filter(x => x.id !== id)
+      this.incomes = this.incomes.filter(x => x.id !== movementId)
     }
   }
 }
