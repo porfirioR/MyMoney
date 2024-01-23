@@ -2,8 +2,7 @@
   <header class="flex-space-between">
     <b align="start" translate>Action</b>
     <b class="w-10" align="start" translate>Date</b>
-    <b class="w-10" align="start" translate>Icon</b>
-    <b class="w-30" align="start" translate>Memorandum</b>
+    <b class="w-40" align="start" translate>Memorandum</b>
     <b class="w-20" align="end" translate>Amount</b>
   </header>
   <main>
@@ -17,7 +16,7 @@
       <span class="w-10">
         {{movement.date | date: 'dd/MM': '': language}}
       </span>
-      <span class="w-10">
+      <span class="w-40 memorandum">
         <button mat-mini-fab customColor
           [color]="movement!.color"
           [backgroundColor]="movement!.backgroundColor"
@@ -27,8 +26,6 @@
             {{movement.icon}}
           </i>
         </button>
-      </span>
-      <span class="w-30">
         {{movement.memorandum}}
       </span>
       <span class="w-20" align="end">

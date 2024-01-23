@@ -71,11 +71,10 @@ export class UpsertRelatedMovementComponent implements OnInit {
           totalAmount: relatedMovement.totalAmount,
           showInUpsertMovement: relatedMovement.showInUpsertMovement
         })
-        const category = CategoryType
-        const expenses = relatedMovement.related.filter(x => x.type === category.expense)
-        const incomes = relatedMovement.related.filter(x => x.type === category.expense)
-        const expense$ = expenses.length > 0 ? this.movementService.getMovementsByIds(category.expense, expenses.map(x => x.id)) : of([])
-        const income$ = incomes.length > 0 ? this.movementService.getMovementsByIds(category.income, incomes.map(x => x.id)) : of([])
+        const expenses = relatedMovement.related.filter(x => x.type === this.categoryType.expense)
+        const incomes = relatedMovement.related.filter(x => x.type === this.categoryType.expense)
+        const expense$ = expenses.length > 0 ? this.movementService.getMovementsByIds(this.categoryType.expense, expenses.map(x => x.id)) : of([])
+        const income$ = incomes.length > 0 ? this.movementService.getMovementsByIds(this.categoryType.income, incomes.map(x => x.id)) : of([])
         return combineLatest([expense$, income$])
       })).subscribe({
         next: ([expenses, incomes]) => {
@@ -102,6 +101,14 @@ export class UpsertRelatedMovementComponent implements OnInit {
       width: '500px',
       height: '80%',
     })
+    dialogRef.afterClosed().subscribe({
+      next: (movements: MovementModel[]) => {
+        this.expenses = [... new Set([...this.expenses, ...movements.filter(x => x.type === this.categoryType.expense && !this.expenses.some(y => y.id === x.id))])]
+        this.incomes = [... new Set([...this.incomes, ...movements.filter(x => x.type === this.categoryType.income && !this.expenses.some(y => y.id === x.id))])]
+      }, error: (e) => {
+        throw e
+      }
+    })
   }
 
   protected save = (): void => {
@@ -126,7 +133,11 @@ export class UpsertRelatedMovementComponent implements OnInit {
     })
   }
 
-  protected deleteMovement = (id: string): void => {
-
+  protected deleteMovement = (id: string, type: CategoryType): void => {
+    if (type === this.categoryType.expense) {
+      this.expenses = this.expenses.filter(x => x.id !== id)
+    } else {
+      this.incomes = this.incomes.filter(x => x.id !== id)
+    }
   }
 }

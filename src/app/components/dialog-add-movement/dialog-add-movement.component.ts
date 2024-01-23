@@ -94,7 +94,8 @@ export class DialogAddMovementComponent implements OnInit {
   }
 
   protected save = () => {
-    const movementToSave = this.formGroup.controls.selectedMovement.value!
+    const movementToSave = this.movements.filter(x => this.formGroup.controls.selectedMovement.value!.some(y => y === x.id))
+    this.dialogRef.close(movementToSave)
   }
 
   protected add = (event: MatChipInputEvent): void => {
