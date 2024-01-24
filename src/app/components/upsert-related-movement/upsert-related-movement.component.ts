@@ -15,8 +15,8 @@ import { RelatedMovementModel } from '../../models/related-movement.model'
 import { RelatedMapModel } from '../../models/related-map-model'
 import { MovementService } from '../../services/movement.service'
 import { RelatedMovementService } from '../../services/related-movement.service'
+import { HelperService } from '../../services/helper.service'
 import { DialogAddMovementComponent } from '../dialog-add-movement/dialog-add-movement.component'
-import { HelperService } from 'src/app/services/helper.service'
 
 @Component({
   selector: 'app-upsert-related-movement',
@@ -36,7 +36,7 @@ export class UpsertRelatedMovementComponent implements OnInit {
     totalAmount: new FormControl(null),
     showInUpsertMovement: new FormControl(false)
   })
-  protected currentTap!: string
+  protected currentTap: string
   protected categoryType = CategoryType
   protected title = 'Create Related Movement'
   protected numberType = NumberType.English
@@ -51,14 +51,14 @@ export class UpsertRelatedMovementComponent implements OnInit {
     private readonly translateService: TranslateService,
     private readonly snackBar: MatSnackBar,
     private readonly dialog: MatDialog,
-
-  ) { }
-
-  ngOnInit(): void {
+  ) {
     this.currentTap = this.categoryType.income.toLocaleLowerCase()
     const config = this.activatedRoute.snapshot.data['config']
     this.numberType = config.number
     this.id = this.activatedRoute.snapshot.params['id']
+  }
+
+  ngOnInit(): void {
     if (!this.id) {
       this.loading = false
     } else {
@@ -81,8 +81,10 @@ export class UpsertRelatedMovementComponent implements OnInit {
         next: ([expenses, incomes]) => {
           [this.expenses, this.incomes] = [expenses, incomes]
           this.title = 'Update Related Movement'
+          this.calculateAmount()
           this.loading = false
         }, error: (e) => {
+          this.loading = false
           throw e
         }
       })
@@ -103,9 +105,12 @@ export class UpsertRelatedMovementComponent implements OnInit {
       height: '80%',
     })
     dialogRef.afterClosed().subscribe({
-      next: (movements: MovementModel[]) => {
-        this.expenses = [... new Set([...this.expenses, ...movements.filter(x => x.type === this.categoryType.expense && !this.expenses.some(y => y.id === x.id))])]
-        this.incomes = [... new Set([...this.incomes, ...movements.filter(x => x.type === this.categoryType.income && !this.expenses.some(y => y.id === x.id))])]
+      next: (movements: MovementModel[] | undefined) => {
+        if (movements) {
+          this.expenses = [... new Set([...this.expenses, ...movements.filter(x => x.type === this.categoryType.expense && !this.expenses.some(y => y.id === x.id))])]
+          this.incomes = [... new Set([...this.incomes, ...movements.filter(x => x.type === this.categoryType.income && !this.expenses.some(y => y.id === x.id))])]
+          this.calculateAmount()
+        }
       }, error: (e) => {
         throw e
       }
@@ -141,5 +146,14 @@ export class UpsertRelatedMovementComponent implements OnInit {
     } else {
       this.incomes = this.incomes.filter(x => x.id !== movementId)
     }
+    this.calculateAmount()
+  }
+
+  private calculateAmount = (): void => {
+    const expense = this.expenses.reduce((a, b) => a + b.amount, 0)
+    const income = this.incomes.reduce((a, b) => a + b.amount, 0)
+    this.formGroup.controls.expenseAmount.setValue(expense)
+    this.formGroup.controls.incomeAmount.setValue(income)
+    this.formGroup.controls.totalAmount.setValue(income - expense)
   }
 }
