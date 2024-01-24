@@ -1,34 +1,51 @@
-<form [formGroup]="formGroup">
-  <mat-toolbar color="primary">
-    <button mat-icon-button (click)="exit()">
-      <mat-icon>keyboard_backspace</mat-icon>
-    </button>
-    <span translate>Export Movements</span>
-  </mat-toolbar>
-  <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
-  <mat-card>
-    <mat-card-content>
-      <mat-form-field appearance="fill" class="w-100">
-        <mat-label translate>Start date</mat-label>
-        <input matInput [matDatepicker]="startDatePicker" formControlName="startDate" [min]="minDate" [max]="formGroup.get('endDate')?.value" id="start-date">
-        <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
-        <mat-datepicker #startDatePicker></mat-datepicker>
-      </mat-form-field>
-      <mat-form-field appearance="fill" class="w-100">
-        <mat-label translate>End date</mat-label>
-        <input matInput [matDatepicker]="endDatePicker" formControlName="endDate" [min]="formGroup.get('startDate')?.value" id="end-date">
-        <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
-        <mat-datepicker #endDatePicker></mat-datepicker>
-      </mat-form-field>
-      <mat-form-field appearance="fill" class="w-100">
-        <mat-label translate>Categories</mat-label>
-        <mat-select formControlName="categories" multiple>
-          <mat-option *ngFor="let category of categories | keyvalue" [value]="category.key">{{category.value | translate}}</mat-option>
-        </mat-select>
-      </mat-form-field>
-    </mat-card-content>
-    <mat-card-actions>
-      <button mat-stroked-button color="primary" (click)="export()" [disabled]="formGroup.invalid || loading">{{"Export" | translate}}</button>
-    </mat-card-actions>
-  </mat-card>
-</form>
+<mat-sidenav-container [hasBackdrop]="true">
+  <mat-sidenav #sidenav mode="over" [fixedInViewport]="true">
+    <app-side-nav></app-side-nav>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <ng-container *ngTemplateOutlet="exportMovement"></ng-container>
+  </mat-sidenav-content>
+</mat-sidenav-container>
+<ng-template #exportMovement>
+  <form [formGroup]="formGroup">
+    <main id="main">
+      <mat-toolbar color="primary">
+        <button mat-icon-button [title]="'menu-button' | translate" (click)="sidenav.toggle()">
+          <mat-icon>menu</mat-icon>
+        </button>
+        <span translate>Export Movements</span>
+      </mat-toolbar>
+      <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+      <mat-card>
+        <mat-card-content>
+          <mat-form-field appearance="fill" class="w-100">
+            <mat-label translate>Start date</mat-label>
+            <input matInput [matDatepicker]="startDatePicker" formControlName="startDate" [min]="minDate" [max]="formGroup.controls.endDate.value" id="start-date">
+            <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
+            <mat-datepicker #startDatePicker></mat-datepicker>
+          </mat-form-field>
+          <mat-form-field appearance="fill" class="w-100">
+            <mat-label translate>End date</mat-label>
+            <input matInput [matDatepicker]="endDatePicker" formControlName="endDate" [min]="formGroup.controls.startDate.value" id="end-date">
+            <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
+            <mat-datepicker #endDatePicker></mat-datepicker>
+          </mat-form-field>
+          <mat-form-field appearance="fill" class="w-100">
+            <mat-label translate>Categories</mat-label>
+            <mat-select formControlName="categories" multiple>
+              <mat-option *ngFor="let category of categories | keyvalue" [value]="category.key">{{category.value | translate}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </mat-card-content>
+        <mat-card-footer>
+          <button mat-stroked-button color="primary" (click)="exit()" [title]="'cancel-button' | translate">
+            {{'Cancel' | translate}}
+          </button>
+          <button mat-stroked-button color="primary" (click)="export()" [disabled]="formGroup.invalid || loading" [title]="'export-button' | translate">
+            {{"Export" | translate}}
+          </button>
+        </mat-card-footer>
+      </mat-card>
+    </main>
+  </form>
+</ng-template>

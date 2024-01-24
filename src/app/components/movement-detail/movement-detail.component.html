@@ -1,44 +1,49 @@
 <mat-toolbar color="primary">
-  <button mat-icon-button (click)="exit()">
+  <button mat-icon-button (click)="exit()" [title]="'exit-button' | translate">
     <mat-icon>keyboard_backspace</mat-icon>
   </button>
   <span translate>Details</span>
-  <button mat-icon-button (click)="deleteMovement()">
+  <button mat-icon-button (click)="deleteMovement()" [title]="'delete-button' | translate">
     <mat-icon>delete</mat-icon>
   </button>
 </mat-toolbar>
-<ng-container *ngIf="load">
+<main id="main" *ngIf="load">
   <mat-card>
     <span class="mat-card-header">
       <button mat-icon-button customColor
-              [color]="movement!.color"
-              [backgroundColor]="movement!.backgroundColor">
+        [color]="movement!.color"
+        [backgroundColor]="movement!.backgroundColor"
+      >
         <mat-icon>{{movement!.icon}}</mat-icon>
       </button>
-      <span>{{movement!.categoryName | translate}}</span>
-      <button mat-icon-button (click)="editMovement(movement!.id)">
+      <span>{{movement?.categoryName ?? '' | translate}}</span>
+      <button mat-icon-button [title]="'edit-button' | translate" (click)="editMovement(movement!.id)">
         <mat-icon>edit</mat-icon>
       </button>
     </span>
   </mat-card>
   <mat-card>
     <mat-card-content>
-      <p>
+      <p id="memorandum">
         <label translate>Memorandum: </label>
         <span>{{movement!.memorandum! | translate}}</span>
       </p>
-      <p>
+      <p id="category">
         <label translate>Category: </label>
         <span translate>{{movement!.type}}</span>
       </p>
-      <p>
+      <p id="date">
         <label translate>Date: </label>
         <span>{{movement!.date | date: 'dd/MM/YYY E': '': language}}</span>
       </p>
-      <p>
+      <p id="amount">
         <label translate>Amount: </label>
         <span>{{movement!.amount | number:'' : numberType}}</span>
       </p>
+      <dl id="related-movement" *ngIf="relatedMovements.length > 0">
+        <dt translate>Related Movements:</dt>
+        <dd *ngFor="let relatedMovement of relatedMovements">-{{relatedMovement}}</dd>
+      </dl>
     </mat-card-content>
   </mat-card>
-</ng-container>
+</main>

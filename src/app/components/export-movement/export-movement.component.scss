@@ -1,7 +1,4 @@
-.mat-card-actions {
-  display: flex;
-  justify-content: center;
-}
+
 
 .mat-toolbar {
   justify-content: unset;
@@ -13,4 +10,9 @@
 
 .mat-card {
   margin: 1rem;
+}
+
+#main {
+  height: 100vh;
+  overflow-y: auto !important;
 }

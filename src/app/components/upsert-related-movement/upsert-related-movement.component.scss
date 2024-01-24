@@ -1,0 +1,24 @@
+.mat-card {
+  margin: 1rem;
+}
+
+#main {
+  height: 93vh !important;
+  overflow-y: auto;
+}
+
+.mat-mini-fab {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: unset !important;
+  width: 24px;
+  height: 24px;
+}
+
+.movement-row {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}

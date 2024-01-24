@@ -22,7 +22,7 @@
 }
 
 .mat-card {
-  margin-bottom: 0.5rem;
+  margin: 1rem;
 }
 
 .mat-form-field {
@@ -49,4 +49,9 @@
 ::ng-deep .mat-form-field-empty.mat-form-field-label, 
 ::ng-deep .mat-form-field-appearance-fill .mat-form-field-infix {
   padding-left: 6px !important;
+}
+
+#main {
+  height: 93vh;
+  overflow-y: auto !important;
 }

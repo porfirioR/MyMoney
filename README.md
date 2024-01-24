@@ -1,4 +1,4 @@
-![Logo](/src/assets/img/preview-image-128x128.png)
+![Logo](/src/assets/img/project-image.png)
 # My Money
 [Web Aplication](https://mymoney-993366.web.app/)
 ## Skills

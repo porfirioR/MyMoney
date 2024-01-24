@@ -28,6 +28,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatListModule } from '@angular/material/list';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 import { SelectYearMonthComponent } from './components/select-year-mount/select-year-month.component';
 import { SideNavComponent } from './components/side-nav/side-nav.component';
@@ -67,6 +68,15 @@ import { AnnualReportComponent } from './components/annual-report/annual-report.
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { NgxMaskDirective, NgxMaskPipe, provideEnvironmentNgxMask } from 'ngx-mask';
+import { RelatedMovementsComponent } from './components/related-movements/related-movements.component';
+import { UpsertRelatedMovementComponent } from './components/upsert-related-movement/upsert-related-movement.component';
+import { RelatedMovementDetailComponent } from './components/related-movement-detail/related-movement-detail.component';
+import { DialogAddMovementComponent } from './components/dialog-add-movement/dialog-add-movement.component';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { TitleStrategy } from '@angular/router';
+import { PageTitleStrategyService } from './services/page-title-strategy.service';
+
 registerLocaleData(localEs, 'es')
 registerLocaleData(localeEn, 'en')
 
@@ -95,7 +105,11 @@ registerLocaleData(localeEn, 'en')
     ConfigurationComponent,
     CustomColorDirective,
     EnumArrayLoopPipe,
-    AnnualReportComponent
+    AnnualReportComponent,
+    RelatedMovementsComponent,
+    UpsertRelatedMovementComponent,
+    RelatedMovementDetailComponent,
+    DialogAddMovementComponent
   ],
   imports: [
     BrowserModule,
@@ -136,20 +150,31 @@ registerLocaleData(localeEn, 'en')
     MatListModule,
     MatSnackBarModule,
     MatExpansionModule,
+    MatChipsModule,
+    MatAutocompleteModule,
+    MatCheckboxModule,
     NgxMaskDirective,
     NgxMaskPipe,
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => getAuth()),
     provideFirestore(() => getFirestore()),
     StoreModule.forRoot({}, {}),
-    StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !environment.production })
+    StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !environment.production }),
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      enabled: environment.production,
+      registrationStrategy: 'registerWhenStable:30000'
+    })
   ],
   providers: [
     { provide: LOCALE_ID, useValue: 'es' },
     { provide: LOCALE_ID, useValue: 'en' },
     UserService,
     UserGuard,
-    provideEnvironmentNgxMask()
+    provideEnvironmentNgxMask(),
+    {
+      provide: TitleStrategy,
+      useClass: PageTitleStrategyService,
+    },
   ],
   bootstrap: [AppComponent],
   exports: []

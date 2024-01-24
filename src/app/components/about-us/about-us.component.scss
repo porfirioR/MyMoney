@@ -9,3 +9,8 @@
 p {
   font-weight: bold
 }
+
+#main {
+  height: 100vh;
+  overflow-y: auto !important;
+}

@@ -1,54 +1,65 @@
-<form [formGroup]="formGroup">
-  <mat-toolbar color="primary">
-    <button mat-icon-button (click)="exit()">
-      <mat-icon>keyboard_backspace</mat-icon>
-    </button>
-    <span>{{'Configuration' | translate}}</span>
-    <button mat-icon-button (click)="exit()">
-      <mat-icon>home</mat-icon>
-    </button>
-  </mat-toolbar>
-  <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
-  <mat-card *ngIf="!loading">
-    <mat-card-content>
-      <mat-form-field class="w-100">
-        <mat-label>{{'Numbers format' | translate}}</mat-label>
-        <mat-select formControlName="number">
-          <mat-option [value]="numberType.Spanish">
-            {{'Spanish' | translate}}
-          </mat-option>
-          <mat-option [value]="numberType.English">
-            {{'English' | translate}}
-          </mat-option>
-        </mat-select>
-        <mat-hint align="start">
-          {{'Example' | translate}}: {{amount | number:'' : formGroup.get('number')!.value}}
-            - 
-          {{'Date' | translate}}: {{date | date:'shortDate' : '': formGroup.get('language')!.value}}
-        </mat-hint>
-      </mat-form-field>
-      <mat-form-field class="w-100">
-        <mat-label>{{'System language' | translate}}</mat-label>
-        <mat-select formControlName="language">
-          <mat-option [value]="language.value" *ngFor="let language of languages | keyvalue">
-            {{language.key}}
-          </mat-option>
-        </mat-select>
-        <mat-hint align="start">
-          <strong>**{{'System language' | translate}}</strong>
-          {{'only changes the elements of the views and some words, not all those entered by the user' | translate}}
-        </mat-hint>
-      </mat-form-field>
-    </mat-card-content>
-  </mat-card>
-  <mat-card>
-    <mat-card-footer>
-      <button mat-stroked-button color="primary" (click)="exit()">
-        {{'Cancel' | translate}}
-      </button>
-      <button mat-stroked-button color="primary" type="submit" [disabled]="formGroup.invalid" (click)="save()">
-        {{'Save' | translate}}
-      </button>
-    </mat-card-footer>
-  </mat-card>
-</form>
+<mat-sidenav-container [hasBackdrop]="true">
+  <mat-sidenav #sidenav mode="over" [fixedInViewport]="true">
+    <app-side-nav></app-side-nav>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <ng-container *ngTemplateOutlet="config"></ng-container>
+  </mat-sidenav-content>
+</mat-sidenav-container>
+
+<ng-template #config>
+  <form [formGroup]="formGroup">
+    <main id="main">
+      <mat-toolbar color="primary">
+        <button mat-icon-button [title]="'menu-button' | translate" (click)="sidenav.toggle()">
+          <mat-icon>menu</mat-icon>
+        </button>
+        <span>{{'Configuration' | translate}}</span>
+        <button mat-icon-button (click)="exit()" [title]="'home-button' | translate">
+          <mat-icon>home</mat-icon>
+        </button>
+      </mat-toolbar>
+      <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+      <mat-card *ngIf="!loading">
+        <mat-card-content>
+          <mat-form-field class="w-100">
+            <mat-label>{{'Numbers format' | translate}}</mat-label>
+            <mat-select formControlName="number">
+              <mat-option [value]="numberType.Spanish">
+                {{'Spanish' | translate}}
+              </mat-option>
+              <mat-option [value]="numberType.English">
+                {{'English' | translate}}
+              </mat-option>
+            </mat-select>
+            <mat-hint align="start">
+              {{'Example' | translate}}: {{amount | number: '' : formGroup.controls.number.value!}}
+                - 
+              {{'Date' | translate}}: {{date | date: 'shortDate' : '': formGroup.controls.language.value!}}
+            </mat-hint>
+          </mat-form-field>
+          <mat-form-field class="w-100">
+            <mat-label>{{'System language' | translate}}</mat-label>
+            <mat-select formControlName="language">
+              <mat-option [value]="language.value" *ngFor="let language of languages | keyvalue">
+                {{language.key}}
+              </mat-option>
+            </mat-select>
+            <mat-hint align="start">
+              <strong>**{{'System language' | translate}}</strong>
+              {{'only changes the elements of the views and some words, not all those entered by the user' | translate}}
+            </mat-hint>
+          </mat-form-field>
+        </mat-card-content>
+        <mat-card-footer>
+          <button mat-stroked-button color="primary" (click)="exit()" [title]="'cancel-button' | translate">
+            {{'Cancel' | translate}}
+          </button>
+          <button mat-stroked-button color="primary" type="submit" [disabled]="formGroup.invalid" [title]="'save-button' | translate" (click)="save()">
+            {{'Save' | translate}}
+          </button>
+        </mat-card-footer>
+      </mat-card>
+    </main>
+  </form>
+</ng-template>

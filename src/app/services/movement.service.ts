@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
-import { addDoc, collection, collectionData, CollectionReference, deleteDoc, doc, DocumentData, DocumentReference, Firestore, orderBy, Query, query, setDoc, where, WriteBatch, writeBatch } from '@angular/fire/firestore';
-import { Observable } from 'rxjs';
+import { addDoc, collection, collectionData, CollectionReference, deleteDoc, doc, DocumentData, documentId, DocumentReference, Firestore, orderBy, Query, query, setDoc, where, WriteBatch, writeBatch } from '@angular/fire/firestore';
+import { combineLatest, concatAll, concatMap, forkJoin, Observable, of } from 'rxjs';
 import { CategoryType } from '../enums/category-type.enum';
 import { CollectionType } from '../enums/collection-type.enum';
 import { MovementModel } from '../models/movement.model';
 import { UserService } from './user.service';
+import { FilterRelatedMovementModel } from '../models/filter-related-movement.model';
 
 @Injectable({
   providedIn: 'root'
@@ -16,12 +17,7 @@ export class MovementService {
   constructor(private readonly firestore: Firestore, private readonly userService: UserService) { }
 
   public getBySelectedMonth = (category: CategoryType, month: number, year: number): Observable<MovementModel[]> => {
-    const startDate = new Date(year, month, 1)
-    startDate.setHours(0, 0, 0)
-    const startTime = startDate.getTime()
-    const endDate = new Date(+year, +month + 1, 0)
-    endDate.setHours(23, 59, 59)
-    const endTime = endDate.getTime()
+    const [startTime, endTime] = this.getDateTimeRange(month, year)
 
     const ref = query(this.getReference(category), where('time', '>=', startTime), where('time', '<=', endTime), orderBy('time'))
     return collectionData<MovementModel>(ref as Query<MovementModel>, { idField: 'id' })
@@ -88,6 +84,39 @@ export class MovementService {
     return collectionData<MovementModel>(ref as Query<MovementModel>, { idField: 'id' })
   }
 
-  public getMovementDocumentReferenceById = (type: CategoryType, id: string): DocumentReference<DocumentData> => 
+  public getMovementDocumentReferenceById = (type: CategoryType, id: string): DocumentReference<DocumentData> =>
     doc(this.firestore, `${this.collections}/${this.userService.getUserEmail()}/${type.toLowerCase()}/${id}`)
+
+  public getMovementsByIds = (category: CategoryType, movementIds: string[]): Observable<MovementModel[]> => {
+    const ref = query(this.getReference(category), where(documentId(), 'in', movementIds))
+    return collectionData<MovementModel>(ref as Query<MovementModel>, { idField: 'id' })
+  }
+
+  public getGetMovementByFilter = (request: FilterRelatedMovementModel): Observable<[MovementModel[], MovementModel[]]> => {
+    const [startTime, endTime] = this.getDateTimeRange(request.month, request.year)
+    const hasExpenseIds = this.userService.getActiveCategories().filter(x => x.type === CategoryType.expense.toLocaleLowerCase()).map(x => x.id).some(x => request.categoryIds.includes(x))
+    const hasIncomeIds = this.userService.getActiveCategories().filter(x => x.type === CategoryType.income.toLocaleLowerCase()).map(x => x.id).some(x => request.categoryIds.includes(x))
+    let expenseRequest$: Observable<MovementModel[]> = of([])
+    let incomeRequest$: Observable<MovementModel[]> = of([])
+    if (hasExpenseIds) {
+      const ref = query(this.getReference(CategoryType.expense), where('categoryId', 'in', request.categoryIds), where('time', '>=', startTime), where('time', '<=', endTime), orderBy('time'))
+      expenseRequest$ = collectionData<MovementModel>(ref as Query<MovementModel>, { idField: 'id' })
+    }
+    if (hasIncomeIds) {
+      const ref = query(this.getReference(CategoryType.income), where('categoryId', 'in', request.categoryIds), where('time', '>=', startTime), where('time', '<=', endTime), orderBy('time'))
+      incomeRequest$ = collectionData<MovementModel>(ref as Query<MovementModel>, { idField: 'id' })
+    }
+    return combineLatest([incomeRequest$, expenseRequest$])
+  }
+
+  private getDateTimeRange = (month: number, year: number): [number, number] => {
+    const startDate = new Date(year, month, 1)
+    startDate.setHours(0, 0, 0)
+    const startTime = startDate.getTime()
+    const endDate = new Date(+year, +month + 1, 0)
+    endDate.setHours(23, 59, 59)
+    const endTime = endDate.getTime()
+
+    return [startTime, endTime]
+  }
 }

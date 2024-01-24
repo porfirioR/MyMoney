@@ -1,145 +1,163 @@
-<mat-toolbar color="primary">
-  <button mat-icon-button (click)="exit()">
-    <mat-icon>keyboard_backspace</mat-icon>
-  </button>
-  <span>{{'Annual Report' | translate}}</span>
-  <button mat-button mat-stroked-button [matMenuTriggerFor]="yearList">
-    {{year}}
-  </button>
-  <mat-menu #yearList="matMenu">
-    <button mat-menu-item *ngFor="let year of yearRange" (click)="yearChanges(year)">{{year}}</button>
-  </mat-menu>
-</mat-toolbar>
-<div class="header-height"></div>
-<mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
-<ng-container *ngIf="!loading">
-  <mat-card>
-    <canvas baseChart width="150" height="150"
-      [data]="globalChartData"
-      [labels]="globalChart.labels"
-      [options]="globalChart.chartOptions"
-      [legend]="globalChart.legend"
-      [type]="globalChart.type">
-    </canvas>
-  </mat-card>
-  <mat-card class="mat-card-header">
-    <span class="amount-header">
-      <span>
-        <strong>
-          {{'Incomes' | translate}}
-        </strong>
-        <p class="flex-center">
-          <span>
-            {{incomeAmount | number:'' : numberType}}
-          </span>
-          <span customColor [color]="greenColor" [backgroundColor]="'#fff'">
-            <i class="material-icons-outlined notranslate">call_made</i>
-          </span>
-        </p>
-      </span>
-      <hr>
-      <span>
-        <strong>
-          {{'Expenses' | translate}}
-        </strong>
-        <p class="flex-center">
-          <span>
-            {{expenseAmount | number:'' : numberType}}
-          </span>
-          <span  customColor [color]="redColor" [backgroundColor]="'#fff'">
-            <i class="material-icons-outlined notranslate icon-rotate-270">call_received</i>
-          </span>
-        </p>
-      </span>
-      <hr>
-      <span>
-        <strong>
-          {{'Difference' | translate}}
-        </strong>
-        <p class="flex-center">
-          <span>
-            {{balance | number:'' : numberType}}
-          </span>
-          <span  customColor [color]=" balance > 0 ? greenColor : redColor" [backgroundColor]="'#fff'">
-            <i class="material-icons-outlined notranslate icon-rotate-270">import_export</i>
-          </span>
-        </p>
-      </span>
+<mat-sidenav-container [hasBackdrop]="true">
+  <mat-sidenav #sidenav mode="over" [fixedInViewport]="true">
+    <app-side-nav></app-side-nav>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <ng-container *ngTemplateOutlet="annualReport"></ng-container>
+  </mat-sidenav-content>
+</mat-sidenav-container>
+
+<ng-template #annualReport>
+  <mat-toolbar color="primary">
+    <button mat-icon-button [title]="'menu-button' | translate" (click)="sidenav.toggle()">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <span>
+      {{'Annual Report' | translate}}
     </span>
-  </mat-card>
-  <mat-card>
-    <canvas baseChart width="150" height="150"
-      [data]="monthsChartData"
-      [labels]="monthsChart.labels"
-      [options]="monthsChart.chartOptions"
-      [legend]="monthsChart.legend"
-      [type]="monthsChart.type">
-    </canvas>
-  </mat-card>
-  <mat-accordion displayMode="default" [multi]="true" [hideToggle]="false">
-    <mat-expansion-panel [hideToggle]="false">
-      <mat-expansion-panel-header class="flex-center">
-        {{'Income details' | translate}}
-      </mat-expansion-panel-header>
-      <canvas baseChart width="150" height="150"
-        [data]="incomeChartData"
-        [labels]="incomeChart.labels"
-        [options]="incomeChart.chartOptions"
-        [legend]="incomeChart.legend"
-        [type]="incomeChart.type">
-      </canvas>
-      <mat-accordion class="no-margins">
-        <ng-container *ngTemplateOutlet="movementDetails context: { groups: incomeGroupMovementCategoryModel }">
-        </ng-container>
+    <button mat-button mat-stroked-button [matMenuTriggerFor]="yearList" [title]="'year-button' | translate">
+      {{year}}
+    </button>
+    <mat-menu #yearList="matMenu">
+      <button mat-menu-item *ngFor="let year of yearRange" (click)="yearChanges(year)" [title]="'year-range-buttons' | translate: { year: year }">
+        {{year}}
+      </button>
+    </mat-menu>
+  </mat-toolbar>
+  <div class="header-height"></div>
+  <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+  <main id="main">
+    <ng-container *ngIf="!loading">
+      <mat-card>
+        <canvas baseChart width="150" height="150"
+          [data]="globalChartData"
+          [labels]="globalChart.labels"
+          [options]="globalChart.chartOptions"
+          [legend]="globalChart.legend"
+          [type]="globalChart.type">
+        </canvas>
+      </mat-card>
+      <mat-card class="mat-card-header">
+        <main class="amount-header">
+          <article>
+            <strong>
+              {{'Incomes' | translate}}
+            </strong>
+            <p class="flex-center">
+              <span>
+                {{incomeAmount | number:'' : numberType}}
+              </span>
+              <span customColor [color]="greenColor" [backgroundColor]="'#fff'">
+                <i class="material-icons-outlined notranslate">call_made</i>
+              </span>
+            </p>
+          </article>
+          <hr>
+          <article>
+            <strong>
+              {{'Expenses' | translate}}
+            </strong>
+            <p class="flex-center">
+              <span>
+                {{expenseAmount | number:'' : numberType}}
+              </span>
+              <span  customColor [color]="redColor" [backgroundColor]="'#fff'">
+                <i class="material-icons-outlined notranslate icon-rotate-270">call_received</i>
+              </span>
+            </p>
+          </article>
+          <hr>
+          <article>
+            <strong>
+              {{'Difference' | translate}}
+            </strong>
+            <p class="flex-center">
+              <span>
+                {{balance | number:'' : numberType}}
+              </span>
+              <span  customColor [color]=" balance > 0 ? greenColor : redColor" [backgroundColor]="'#fff'">
+                <i class="material-icons-outlined notranslate icon-rotate-270">import_export</i>
+              </span>
+            </p>
+          </article>
+        </main>
+      </mat-card>
+      <mat-card>
+        <canvas baseChart width="150" height="150"
+          [data]="monthsChartData"
+          [labels]="monthsChart.labels"
+          [options]="monthsChart.chartOptions"
+          [legend]="monthsChart.legend"
+          [type]="monthsChart.type">
+        </canvas>
+      </mat-card>
+      <mat-accordion displayMode="default" [multi]="true" [hideToggle]="false">
+        <mat-expansion-panel [hideToggle]="false">
+          <mat-expansion-panel-header class="flex-center">
+            {{'Income details' | translate}}
+          </mat-expansion-panel-header>
+          <canvas baseChart width="150" height="150"
+            [data]="incomeChartData"
+            [labels]="incomeChart.labels"
+            [options]="incomeChart.chartOptions"
+            [legend]="incomeChart.legend"
+            [type]="incomeChart.type">
+          </canvas>
+          <mat-accordion class="m-0">
+            <ng-container *ngTemplateOutlet="matExpansionPanelContent
+              context: { groups: incomeGroupMovementCategoryModel }"
+            >
+            </ng-container>
+          </mat-accordion>
+        </mat-expansion-panel>
+        <mat-expansion-panel [hideToggle]="false">
+          <mat-expansion-panel-header class="flex-center">
+            {{'Expense details' | translate}}
+          </mat-expansion-panel-header>
+          <canvas baseChart width="250" height="250"
+            [data]="expenseChartData"
+            [labels]="expenseChart.labels"
+            [options]="expenseChart.chartOptions"
+            [legend]="expenseChart.legend"
+            [type]="expenseChart.type">
+          </canvas>
+          <mat-accordion class="m-0">
+            <ng-container *ngTemplateOutlet="matExpansionPanelContent context: { groups: expenseGroupMovementCategoryModel }">
+            </ng-container>
+          </mat-accordion>
+        </mat-expansion-panel>
       </mat-accordion>
-    </mat-expansion-panel>
-    <mat-expansion-panel [hideToggle]="false">
+    </ng-container>
 
-    <mat-expansion-panel-header class="flex-center">
-      {{'Expense details' | translate}}
-    </mat-expansion-panel-header>
-    <canvas baseChart width="250" height="250"
-      [data]="expenseChartData"
-      [labels]="expenseChart.labels"
-      [options]="expenseChart.chartOptions"
-      [legend]="expenseChart.legend"
-      [type]="expenseChart.type">
-    </canvas>
-    <mat-accordion class="no-margins">
-      <ng-container *ngTemplateOutlet="movementDetails context: { groups: expenseGroupMovementCategoryModel }">
-      </ng-container>
-    </mat-accordion>
-    </mat-expansion-panel>
-  </mat-accordion>
-</ng-container>
-
-<ng-template #movementDetails let-groups="groups">
-  <mat-expansion-panel hideToggle *ngFor="let group of groups" class="no-margins">
-    <mat-expansion-panel-header>
-      <mat-panel-title>
-        <button mat-mini-fab customColor [color]="group!.color" [backgroundColor]="group!.backgroundColor">
-          <i class="material-icons-outlined notranslate">{{group.icon}}</i>
-        </button>
-        <span>
-          {{group.categoryName | translate}}
-        </span>
-        <span>
-          {{group.amount | number:'' : numberType}}
-        </span>
-      </mat-panel-title>
-    </mat-expansion-panel-header>
-    <ul>
-      <li *ngFor="let movement of group.movements" class="row">
-        <span>
-          <strong>
-            - {{movement.date | date: 'dd/MM': '': language}}
-          </strong>
-          {{movement.memorandum! | translate}}
-        </span>
-        <span>
-          {{movement.amount | number:'' : numberType}}
-        </span>
-      </li>
-    </ul>
-  </mat-expansion-panel>
+    <ng-template #matExpansionPanelContent let-groups="groups">
+      <mat-expansion-panel hideToggle *ngFor="let group of groups" class="m-0">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <button mat-mini-fab customColor [color]="group!.color" [backgroundColor]="group!.backgroundColor" [title]="'icon-group-button' | translate">
+              <i class="material-icons-outlined notranslate">{{group.icon}}</i>
+            </button>
+            <span>
+              {{group.categoryName | translate}}
+            </span>
+            <span>
+              {{group.amount | number:'' : numberType}}
+            </span>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <ul>
+          <li *ngFor="let movement of group.movements" class="row">
+            <span>
+              <strong>
+                - {{movement.date | date: 'dd/MM': '': language}}
+              </strong>
+              {{movement.memorandum! | translate}}
+            </span>
+            <span>
+              {{movement.amount | number:'' : numberType}}
+            </span>
+          </li>
+        </ul>
+      </mat-expansion-panel>
+    </ng-template>
+  </main>
 </ng-template>

@@ -9,7 +9,7 @@
     <mat-card-subtitle>{{'If you want login please click on' | translate}}</mat-card-subtitle>
   </mat-card-header>
   <mat-card-footer>
-    <button mat-stroked-button color="primary" (click)="goToLogin()">
+    <button mat-stroked-button color="primary" [title]="'login-button' | translate" (click)="goToLogin()">
       <mat-icon>account_circle</mat-icon>
       {{'Login' | translate}}
     </button>

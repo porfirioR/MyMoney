@@ -1,0 +1,21 @@
+#main {
+  height: 100vh !important;
+  overflow-y: auto;
+}
+
+.mat-card {
+  overflow-y: auto;
+  height: 89%;
+}
+
+.mat-card-actions {
+  display: flex;
+  justify-content: center;
+}
+
+@media (max-width: 599px) {
+  #main {
+    height: 100vh !important;
+    overflow-y: auto !important;
+  }
+}

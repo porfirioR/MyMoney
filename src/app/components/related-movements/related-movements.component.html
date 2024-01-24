@@ -1,0 +1,80 @@
+<mat-sidenav-container [hasBackdrop]="true">
+  <mat-sidenav #sidenav mode="over" [fixedInViewport]="true">
+    <app-side-nav></app-side-nav>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <ng-container *ngTemplateOutlet="relatedMovement"></ng-container>
+  </mat-sidenav-content>
+</mat-sidenav-container>
+
+<ng-template #relatedMovement>
+  <main id="main">
+    <mat-toolbar color="primary">
+      <button mat-icon-button [title]="'menu-button' | translate" (click)="sidenav.toggle()">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <span>{{'Related Mov.' | translate}}</span>
+      <button mat-icon-button [routerLink]="'add'" [title]="'Add Related Movement' | translate">
+        <mat-icon>add</mat-icon>
+      </button>
+    </mat-toolbar>
+    <div class="header-height"></div>
+    <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+    <mat-card *ngIf="!loading">
+      <mat-card-content>
+        <mat-accordion displayMode="default" [multi]="true" [hideToggle]="true" *ngIf="relatedMovements.length > 0">
+          <ng-container *ngFor="let related of relatedMovements">
+            <mat-expansion-panel [hideToggle]="true" (click)="displayMovements(related.id!)">
+              <mat-expansion-panel-header>
+                <article class="w-50">{{'Name:' | translate}} {{related.name}}</article>
+                <article class="w-50" align="end">{{'Total:' | translate}} {{related.totalAmount || 0 | number: '' : numberType}}</article>
+              </mat-expansion-panel-header>
+              <article for="incomeAmount" class="w-100">
+                <b translate>Income Amount:</b> {{related.incomeAmount | number:'' : numberType}}
+              </article>
+              <article for="expenseAmount" class="w-100">
+                <b translate>Expense Amount:</b> {{related.expenseAmount | number:'' : numberType}}
+              </article>
+              <mat-divider></mat-divider>
+              <article class="w-100 p-15" align="center">
+                <b translate>Movements</b>
+              </article>
+              <app-related-movement-detail *ngIf="movements.get(related.id!) && movements.get(related.id!)!.length > 0; else noMovements"
+                [movements]="movements.get(related.id!)!"
+                [configuration]="configuration"
+                [relatedMovement]="related"
+                (deletedMovementEvent)="deletedMovement($event, related.id!)"
+              ></app-related-movement-detail>
+              <ng-template #noMovements>
+                <span class="flex-justify-center" translate>Without movements</span>
+              </ng-template>
+              <mat-action-row>
+                <button mat-stroked-button color="warn" (click)="deleteRelatedMovement(related.id!)"
+                  [title]="'delete-button' | translate" translate>
+                  Delete
+                </button>
+                <button mat-stroked-button color="primary" [routerLink]="['update', related.id]" [title]="'edit-button' | translate" translate>
+                  Edit
+                </button>
+              </mat-action-row>
+            </mat-expansion-panel>
+          </ng-container>
+        </mat-accordion>
+        <section *ngIf="relatedMovements.length === 0" align="center">
+          <button mat-stroked-button color="primary" [routerLink]="'add'" [title]="'Add Related Movement' | translate">
+            <mat-icon>add</mat-icon>
+            {{'Add Related Movement' | translate}}
+          </button>
+        </section>
+      </mat-card-content>
+      <mat-card-footer>
+        <button mat-stroked-button color="primary" (click)="exit()" [title]="'cancel-button' | translate">
+          {{'Cancel' | translate}}
+        </button>
+        <button mat-stroked-button color="primary"  [routerLink]="'add'" [title]="'export-button' | translate">
+          {{'Add Related Movement' | translate}}
+        </button>
+      </mat-card-footer>
+    </mat-card>
+  </main>
+</ng-template>

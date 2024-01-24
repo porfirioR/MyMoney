@@ -8,7 +8,7 @@
   margin: 1rem;
 }
 
-.no-margins {
+.m-0 {
   margin: 0 !important
 }
 
@@ -32,15 +32,15 @@ li {
   transform: rotate(270deg);
 }
 
-.flex-center {
-  display: flex;
-  align-items: center;
-}
-
 .mat-mini-fab {
   box-shadow: unset;
 }
 
 canvas {
   padding-bottom: 1rem;
+}
+
+#main {
+  height: 93vh !important;
+  overflow-y: auto !important;
 }

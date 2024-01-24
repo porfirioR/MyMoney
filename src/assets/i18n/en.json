@@ -18,10 +18,19 @@
     "required-password": "Password is required"
   },
   "movement-messages": {
+    "title-delete-movement": "Delete movement's relation",
     "title-delete": "Delete movement",
     "question-delete": "Are you sure you want to remove this move?",
     "deleted": "Movement was deleted",
     "required-row": "Required first row: {{csvHeader}}"
+  },
+  "related-movement-messages": {
+    "title-delete-movement": "Borrar movement form related movement",
+    "question-delete-movement": "Are you sure you want to remove this movement from related movement?",
+    "title-delete": "Delete related movement",
+    "question-delete": "Are you sure you want to remove this related movement?",
+    "deleted": "Related movement was deleted",
+    "required-name": "Name is required"
   },
   "import-movement-messages": {
     "empty-file": "Empty file",
@@ -36,5 +45,6 @@
     "invalid-type": "Invalid type, expected expense or income but was {{type}} in row {{index}}",
     "invalid-amount": "Invalid amount {{num}} in row {{index}}",
     "invalid-category": "Invalid category {{category}} are inactive or not exist in row {{index}}"
-  }
+  },
+  "year-range-button": "{{year}}-button"
 }

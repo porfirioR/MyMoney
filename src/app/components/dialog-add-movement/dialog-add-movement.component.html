@@ -1,0 +1,115 @@
+<form [formGroup]="formGroup">
+  <mat-card class="m-b-10">
+    <mat-card-header translate>
+      <mat-card-title>{{'Filters' | translate}}</mat-card-title>
+    </mat-card-header>
+    <mat-divider></mat-divider>
+    <mat-card-content>
+      <mat-form-field class="w-100">
+        <mat-label>{{'Categories' | translate}} *</mat-label>
+        <mat-chip-list #chipList aria-label="Categories selection">
+          <mat-chip *ngFor="let category of selectedCategories"
+            color="primary"
+            (removed)="remove(category.id)"
+          >
+            <button mat-mini-fab customColor matChipAvatar
+              [color]="category.color"
+              [backgroundColor]="category.backgroundColor"
+              [title]="'icon-category-button' | translate"
+            >
+              <i class="material-icons-outlined notranslate">{{category.icon}}</i>
+            </button>
+            {{category.name | translate}}
+            <button matChipRemove>
+              <mat-icon>cancel</mat-icon>
+            </button>
+          </mat-chip>
+          <input
+            [placeholder]="'Select a category...'| translate"
+            #categoryInput
+            formControlName="category"
+            [matAutocomplete]="auto"
+            [matChipInputFor]="chipList"
+            (matChipInputTokenEnd)="add($event)"
+          />
+        </mat-chip-list>
+        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+          <mat-option *ngFor="let category of filteredCategories | async; let i = index" [id]="'' + i" [value]="category.id">
+            <span customColor class="mat-custom-icon-button"
+              [color]="category.color"
+              [backgroundColor]="category.backgroundColor"
+              [title]="category.name | translate"
+            >
+              <i class="material-icons-outlined notranslate">{{category.icon}}</i>
+            </span>
+            <span translate>{{category.name}}</span>
+          </mat-option>
+        </mat-autocomplete>
+        <mat-hint id="category-hint" *ngIf="!formGroup.controls.hasAnyCategory.value" translate>
+          Category is required.
+        </mat-hint>
+      </mat-form-field>
+      <article class="row-mat-field">
+        <mat-form-field id="month-field">
+          <mat-label>{{'Month' | translate}}</mat-label>
+          <mat-select formControlName="month">
+            <mat-option [value]="month" *ngFor="let month of months | enumArrayLoop">
+              {{month | translate}}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="formGroup.controls.month.hasError('required')" translate>
+            Filter month is required.
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field id="year-field">
+          <mat-label>{{'Year' | translate}}</mat-label>
+          <mat-select formControlName="year">
+            <mat-option [value]="year" *ngFor="let year of yearRange">
+              {{year}}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="formGroup.controls.month.hasError('required')" translate>
+            Filter year is required.
+          </mat-error>
+        </mat-form-field>
+      </article>
+    </mat-card-content>
+    <mat-card-actions align="end">
+      <button mat-stroked-button color="primary"
+        [disabled]="formGroup.invalid || searching" [title]="'save-button' | translate"
+        (click)="search()"
+      >
+        {{"Search" | translate}}
+      </button>
+    </mat-card-actions>
+  </mat-card>
+  <mat-progress-bar mode="indeterminate" *ngIf="searching"></mat-progress-bar>
+  <mat-card class="m-t-10">
+    <mat-card-header>
+      <mat-card-title>{{'Movements' | translate}}</mat-card-title>
+    </mat-card-header>
+    <mat-divider></mat-divider>
+    <mat-card-content>
+      <ng-container *ngIf="movements.length; else emptyMovement">
+        <mat-selection-list formControlName="selectedMovement">
+          <mat-list-option color="primary" *ngFor="let movement of movements" [value]="movement.id">
+            {{movement.memorandum}}
+          </mat-list-option>
+        </mat-selection-list>
+      </ng-container>
+      <ng-template #emptyMovement>
+        Without Movements
+      </ng-template>
+    </mat-card-content>
+  </mat-card>
+  <mat-card class="m-t-10">
+    <mat-card-footer id="footer">
+      <button mat-stroked-button color="primary" (click)="cancelAddition()" [title]="'cancel-button' | translate">
+        {{'Cancel' | translate}}
+      </button>
+      <button mat-stroked-button color="primary" type="submit" [disabled]="formGroup.controls.selectedMovement.value?.length === 0" [title]="'save-button' | translate"
+        (click)="save()">{{'Save' | translate}}
+      </button>
+    </mat-card-footer>
+  </mat-card>
+</form>

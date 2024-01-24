@@ -16,7 +16,7 @@
   }
 }
 
-.mat-card-content{
+.mat-card-content {
   & > p {
     margin-top: 12px;
     > label {
@@ -25,8 +25,21 @@
   }
 }
 
+dt {
+  font-weight: bold;
+}
+
+dd {
+  margin-inline-start: 1rem;
+}
+
 .mat-toolbar {
   position: unset;
   z-index: unset;
   top: unset;
+}
+
+#main {
+  height: 93vh !important;
+  overflow-y: auto !important;
 }

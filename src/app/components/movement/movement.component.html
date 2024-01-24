@@ -1,29 +1,31 @@
-<span class="header">
-  <span>
+<header class="header">
+  <article>
     {{groupDateMovement.date | date: 'dd/MM E': '': language}}
-  </span>
-  <span>
-    <span class="income-title" *ngIf="totalIncome && totalIncome > 0">
+  </article>
+  <article>
+    <span [ngClass]="{'income-title': totalExpense && totalExpense > 0}" *ngIf="totalIncome && totalIncome > 0">
       {{'Incomes' | translate}}: {{totalIncome | number:'' : numberType}}
     </span>
     <span *ngIf="totalExpense && totalExpense > 0">
       {{'Expenses' | translate}}: {{totalExpense | number:'' : numberType}}
     </span>
-  </span>
-</span>
+  </article>
+</header>
 <mat-divider></mat-divider>
 <mat-card-content>
-  <span mat-button *ngFor="let movement of groupDateMovement.movements">
-    <span class="movement-row" [routerLink]="['details', movement.id]">
-      <span class="icon-memorandum">
-        <button mat-mini-fab customColor
-            [color]="movement!.color"
-            [backgroundColor]="movement!.backgroundColor">
-          <i class="material-icons-outlined notranslate">{{movement.icon}}</i>
-        </button>
-        <span>{{movement.memorandum! | translate}}</span>
-      </span>
-      <span>{{movement.amount | number:'' : numberType}}</span>
-    </span>
+  <span mat-button class="movement-row" *ngFor="let movement of groupDateMovement.movements; let i = index" [routerLink]="['details', movement.id]">
+    <article class="icon-memorandum">
+      <button mat-mini-fab customColor
+        [color]="movement!.color"
+        [backgroundColor]="movement!.backgroundColor"
+        [title]="'movement-icon-button' | translate"
+      >
+        <i [id]="'icon-' + i" class="material-icons-outlined notranslate">{{movement.icon}}</i>
+      </button>
+      <span [id]="'memorandum-' + i">{{movement.memorandum! | translate}}</span>
+    </article>
+    <article [id]="'amount-' + i">
+      {{movement.amount | number:'' : numberType}}
+    </article>
   </span>
 </mat-card-content>

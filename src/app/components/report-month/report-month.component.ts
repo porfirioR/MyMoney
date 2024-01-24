@@ -15,6 +15,7 @@ import { YearMonthModel } from '../../models/year-month-model';
 import { MovementService } from '../../services/movement.service';
 import { UserService } from '../../services/user.service';
 import { SelectYearMonthComponent } from '../select-year-mount/select-year-month.component';
+import { TypeForm } from '../../forms/type.form';
 
 @Component({
   selector: 'app-report-month',
@@ -41,8 +42,8 @@ export class ReportMonthComponent implements OnInit {
   protected yearMonth!: YearMonthModel
   protected categoryType = CategoryType
   protected groupMovementCategoryModel!: GroupMovementCategoryModel[]
-  protected formGroup: FormGroup = new FormGroup({
-    type: new FormControl<CategoryType>(this.categoryType.expense),
+  protected formGroup: FormGroup<TypeForm> = new FormGroup<TypeForm>({
+    type: new FormControl(this.categoryType.expense),
   })
   protected numberType = NumberType.Spanish
   protected language = LanguageType.English
@@ -62,7 +63,7 @@ export class ReportMonthComponent implements OnInit {
       next: ([params, queryParams, config]) => {
         this.yearMonth = queryParams as YearMonthModel
         const type = params['type']
-        this.formGroup.controls['type'].setValue(type)
+        this.formGroup.controls.type.setValue(type)
         this.getMovementsByType(type)
         this.language = config.language
       }, error: (e) => {
@@ -70,12 +71,12 @@ export class ReportMonthComponent implements OnInit {
         throw e;
       }
     })
-    this.formGroup.controls['type'].valueChanges.subscribe(this.getMovementsByType)
+    this.formGroup.controls.type.valueChanges.subscribe(this.getMovementsByType)
   }
 
-  private getMovementsByType = (type: CategoryType): void => {
+  private getMovementsByType = (type: CategoryType | null): void => {
     this.loading = true
-    this.movementService.getBySelectedMonth(type, this.yearMonth?.month!, this.yearMonth?.year!).pipe(take(1)).subscribe({
+    this.movementService.getBySelectedMonth(type!, this.yearMonth?.month!, this.yearMonth?.year!).pipe(take(1)).subscribe({
       next: (movements) => {
         movements.sort((a, b) => a.categoryId.localeCompare(b.categoryId))
         this.groupMovementCategoryModel = this.groupByCategoryName(movements)
@@ -83,7 +84,7 @@ export class ReportMonthComponent implements OnInit {
         movements.forEach(x => amountMovements += x.amount)
         this.doughnutChartLabels = this.groupMovementCategoryModel.map(x => this.labelMovements(x, amountMovements))
         this.chartData.labels = this.doughnutChartLabels
-        this.chartData.datasets[0].label = type
+        this.chartData.datasets[0].label = type!
         this.chartData.datasets[0].data = this.groupMovementCategoryModel.map(x => x.amount)
         this.loading = false
       }, error: (e) => {
@@ -134,7 +135,7 @@ export class ReportMonthComponent implements OnInit {
     dialogRef.afterClosed().pipe(take(1)).subscribe((result: YearMonthModel) => {
       if (result && (this.yearMonth?.month !== result.month || this.yearMonth?.year !== result.year)) {
         this.yearMonth = result;
-        this.getMovementsByType(this.formGroup.controls['type'].value)
+        this.getMovementsByType(this.formGroup.controls.type.value)
       }
     })
   }
