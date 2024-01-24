@@ -263,12 +263,9 @@ export class RegisterMovementComponent implements OnInit {
   private updateRelatedMovement = (relatedMovement: RelatedMovementModel[], batch: WriteBatch) => {
     relatedMovement.forEach(x => {
       const relatedMovementDocReference = this.relateMovementService.getReferenceById(x.id!)
-      batch.update(relatedMovementDocReference, {'related': x.related.map(y => {
-        const relatedValue: Record<string, string> = {}
-        relatedValue['id'] = y.id,
-        relatedValue['type'] = y.type
-        return relatedValue
-      })})
+      batch.update(relatedMovementDocReference, {
+        'related': HelperService.getRelatedMovementToSave(x.related as RelatedMapModel[])
+      })
     })
   }
 }

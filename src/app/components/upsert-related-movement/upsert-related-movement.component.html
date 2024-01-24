@@ -47,7 +47,7 @@
           <mat-expansion-panel-header>
             {{categoryType.expense | translate}}
           </mat-expansion-panel-header>
-          <ng-container *ngTemplateOutlet="matExpansionPanelContent context: { groups: incomes }">
+          <ng-container *ngTemplateOutlet="matExpansionPanelContent context: { movements: expenses }">
           </ng-container>
         </mat-expansion-panel>
         <mat-action-row>
@@ -71,10 +71,9 @@
 </form>
 
 <ng-template #matExpansionPanelContent let-movements="movements">
-  <ng-container *ngFor="let movement of movements; let i = index">
-    <mat-icon class="mat-18">ligature</mat-icon>
-    <button mat-icon-button color="warn" (click)="deleteMovement(movement.id)">
-      <mat-icon>add_circle_outline</mat-icon>
+  <article *ngFor="let movement of movements; let i = index" class="movement-row">
+    <button mat-icon-button color="warn" (click)="deleteMovement(movement.id, movement.type)">
+      <mat-icon>highlight_off</mat-icon>
     </button>
     <button mat-mini-fab customColor
       [color]="movement!.color"
@@ -83,11 +82,11 @@
     >
       <i [id]="'icon-' + i" class="material-icons-outlined notranslate">{{movement.icon}}</i>
     </button>
-    <span [id]="'memorandum-' + i">{{movement.memorandum! | translate}}</span>
-    <article [id]="'amount-' + i">
-      {{movement.amount | number:'' : numberType}}
+    <span [id]="'memorandum-' + i" class="w-40">{{movement.memorandum! | translate}}</span>
+    <article [id]="'amount-' + i" class="w-20" align="end">
+      {{movement.amount | number: '' : numberType}}
     </article>
-  </ng-container>
+  </article>
   <span class="flex-justify-center" *ngIf="!movements || movements.length === 0" translate>
     Without movements to show.
   </span>

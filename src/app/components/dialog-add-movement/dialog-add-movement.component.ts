@@ -3,7 +3,7 @@ import { MatChipInputEvent } from '@angular/material/chips';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Observable, debounceTime, map, startWith, take } from 'rxjs';
+import { Observable, debounceTime, map, of, startWith, take } from 'rxjs';
 import { CategoryType } from '../../enums/category-type.enum';
 import { MonthType } from '../../enums/month-type.enum';
 import { HelperService } from '../../services/helper.service';
@@ -50,6 +50,7 @@ export class DialogAddMovementComponent implements OnInit {
     const initialYear = year === this.minValidYear || diffYear > 8 ? this.minValidYear : year - diffYear
     this.yearRange = [...Array(15).keys()].map(x => initialYear + x)
     this.formGroup.controls.year.setValue(year)
+    this.formGroup.controls.month.setValue(this.months[0])
 
     this.filteredCategories = this.formGroup.controls.category.valueChanges.pipe(
       startWith(null),
@@ -93,7 +94,8 @@ export class DialogAddMovementComponent implements OnInit {
   }
 
   protected save = () => {
-    const movementToSave = this.formGroup.controls.selectedMovement.value!
+    const movementToSave = this.movements.filter(x => this.formGroup.controls.selectedMovement.value!.some(y => y === x.id))
+    this.dialogRef.close(movementToSave)
   }
 
   protected add = (event: MatChipInputEvent): void => {
@@ -116,6 +118,7 @@ export class DialogAddMovementComponent implements OnInit {
       this.selectedCategories.splice(index, 1);
     }
     this.checkSelectedCategory()
+    this.formGroup.controls.category.updateValueAndValidity({emitEvent: true})
   }
 
   protected selected = (event: MatAutocompleteSelectedEvent): void => {

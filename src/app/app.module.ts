@@ -74,6 +74,8 @@ import { RelatedMovementDetailComponent } from './components/related-movement-de
 import { DialogAddMovementComponent } from './components/dialog-add-movement/dialog-add-movement.component';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { TitleStrategy } from '@angular/router';
+import { PageTitleStrategyService } from './services/page-title-strategy.service';
 
 registerLocaleData(localEs, 'es')
 registerLocaleData(localeEn, 'en')
@@ -168,7 +170,11 @@ registerLocaleData(localeEn, 'en')
     { provide: LOCALE_ID, useValue: 'en' },
     UserService,
     UserGuard,
-    provideEnvironmentNgxMask()
+    provideEnvironmentNgxMask(),
+    {
+      provide: TitleStrategy,
+      useClass: PageTitleStrategyService,
+    },
   ],
   bootstrap: [AppComponent],
   exports: []
