@@ -1,5 +1,5 @@
 import {test as base }from "@playwright/test";
-import { CategoryPage, ConfigurationPage, LoginPage } from "../pages/index";
+import { LoginPage, CategoryPage, ConfigurationPage } from "../pages";
 
 export const test = base.extend<{
   loginPage: LoginPage

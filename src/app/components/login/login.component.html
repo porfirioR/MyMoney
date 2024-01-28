@@ -4,40 +4,42 @@
   <mat-toolbar color="primary">
     <h1>{{title | translate}}</h1>
   </mat-toolbar>
-  <mat-card>
-    <mat-card-header>
-      <mat-card-title>{{'Manual Login' | translate}}</mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-      <mat-form-field appearance="fill" class="w-100">
-        <mat-label translate>
-          Email
-        </mat-label>
-        <input matInput type="email" formControlName="email" id="email">
-        <mat-error *ngIf="formGroup.controls.email.hasError('required')">
-          {{ 'message-error.required-email'| translate }}
-        </mat-error>
-      </mat-form-field>
+  <main id="main">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>{{'Manual Login' | translate}}</mat-card-title>
+      </mat-card-header>
       <mat-card-content>
         <mat-form-field appearance="fill" class="w-100">
           <mat-label translate>
-            Password
+            Email
           </mat-label>
-          <input matInput type="password" formControlName="password" id="password">
-          <mat-error *ngIf="formGroup.controls.password.hasError('required')">
-            {{ 'message-error.required-password'| translate }}
+          <input matInput type="email" formControlName="email" id="email">
+          <mat-error *ngIf="formGroup.controls.email.hasError('required')">
+            {{ 'message-error.required-email'| translate }}
           </mat-error>
         </mat-form-field>
+        <mat-card-content>
+          <mat-form-field appearance="fill" class="w-100">
+            <mat-label translate>
+              Password
+            </mat-label>
+            <input matInput type="password" formControlName="password" id="password">
+            <mat-error *ngIf="formGroup.controls.password.hasError('required')">
+              {{ 'message-error.required-password'| translate }}
+            </mat-error>
+          </mat-form-field>
+        </mat-card-content>
+        <mat-card-footer>
+          <button mat-stroked-button color="primary"
+            [disabled]="formGroup.invalid"
+            [title]="'login-button' | translate"
+            (click)="loginUser()"
+          >
+            {{'Login' | translate}}
+          </button>
+        </mat-card-footer>
       </mat-card-content>
-      <mat-card-footer>
-        <button mat-stroked-button color="primary"
-          [disabled]="formGroup.invalid"
-          [title]="'login-button' | translate"
-          (click)="loginUser()"
-        >
-          {{'Login' | translate}}
-        </button>
-      </mat-card-footer>
-    </mat-card-content>
-  </mat-card>
+    </mat-card>
+  </main>
 </section>

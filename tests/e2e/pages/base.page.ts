@@ -32,7 +32,6 @@ export class BasePage {
 
   public async clickByRoleName(role: roleTye, value: string) {
     await this.basePage.getByRole(role, { name: value }).click()
-    await this.wait()
   }
 
   public async close() {
@@ -56,8 +55,18 @@ export class BasePage {
       throw new Error('The item with the provided ID was not found.')
     }
   }
-  
+
   public async wait(url: string = this.baseUrl) {
     await this.basePage.waitForURL(url)
+    await this.basePage.waitForURL(url)
+    await this.basePage.waitForLoadState('load')
+  }
+
+  /**
+   * 
+   * @param timeout is in milliseconds
+   */
+  public async waitByTime(timeout: number) {
+    await this.basePage.waitForTimeout(timeout)
   }
 }
