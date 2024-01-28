@@ -8,22 +8,22 @@ export class LoginPage extends BasePage {
   }
 
   public async gotoLoginPage() {
-    await this.goto('http://localhost:4200')
-    await this.goto('http://localhost:4200/logout')
+    await this.goto(this.baseUrl)
+    await this.goto(`${this.baseUrl}/logout`)
     await this.page.getByRole('button', { name: 'Login' }).click()
   }
 
   public async fillContent() {
     await this.page.locator('div').filter({ hasText: 'Email *' }).nth(3).click()
     await this.fillData('Email  *', process.env['EMAIL']!)
-    await this.getByLabelAndPress('Email  *', 'Tab')
+    await this.pressByLabel('Email  *', 'Tab')
     await this.fillData('Password  *', process.env['PASSWORD']!)
     await this.page.getByRole('button', { name: 'Login' }).click()
   }
 
   public async logout() {
     await this.clickMenu()
-    await this.getByText('exit_to_app')
+    await this.clickByText('exit_to_app')
   }
 
   public async testAssertions() {

@@ -25,14 +25,24 @@
             <mat-icon>{{category.icon}}</mat-icon>
           </button>
         </div>
-        <mat-form-field appearance="fill" class="w-100">
+        <div class="w-100 bg-gray">
+          <mat-label for="color" translate>Icon color</mat-label>
+          <input matInput type="color" formControlName="color" id="color">
+        </div>
+        <br>
+        <!-- <mat-form-field appearance="fill" class="w-100" id="color">
           <mat-label translate>Icon color</mat-label>
           <input matInput type="color" formControlName="color" id="color">
-        </mat-form-field>
-        <mat-form-field appearance="fill" class="w-100">
+        </mat-form-field> -->
+        <div class="w-100 bg-gray">
+          <mat-label for="color" translate>Background color</mat-label>
+          <input matInput type="color" formControlName="backgroundColor" id="background-color">
+        </div>
+        <br>
+        <!-- <mat-form-field appearance="fill" class="w-100">
           <mat-label translate>Background color</mat-label>
           <input matInput type="color" formControlName="backgroundColor" id="background-color">
-        </mat-form-field>
+        </mat-form-field> -->
         <mat-form-field appearance="fill" class="w-100">
           <mat-label translate>Order</mat-label>
           <input matInput type="text" formControlName="order" [mask]="mask" [thousandSeparator]="thousandSeparator" id="order">

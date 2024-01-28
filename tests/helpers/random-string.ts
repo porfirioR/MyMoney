@@ -9,5 +9,4 @@ export function getRandomString() {
     counter += 1;
   }
   return result;
-  
 }
