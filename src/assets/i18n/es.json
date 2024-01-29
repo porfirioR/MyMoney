@@ -225,6 +225,7 @@
   "Home": "Inicio",
   "Select a category...": "Seleccione una categoría...",
   "New category": "Nueva categoría",
+  "Category is required.": "Categoría es requerida",
   "category-messages": {
     "question": "¿Está seguro de que desea eliminar esta categoría?. Todos los movimientos relacionados ({{length}}) con esta categoría serán eliminados",
     "deleted": "La categoría fue borrada",

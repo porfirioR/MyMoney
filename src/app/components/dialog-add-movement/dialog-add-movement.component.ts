@@ -13,6 +13,7 @@ import { CategoryModel } from '../../models/category.model';
 import { FilterRelatedMovementModel } from '../../models/filter-related-movement.model';
 import { MovementModel } from '../../models/movement.model';
 import { FilterRelatedMovementForm } from '../../forms/filter-related-movement.form';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-dialog-add-movement',
@@ -44,6 +45,7 @@ export class DialogAddMovementComponent implements OnInit {
     private readonly dialogRef: MatDialogRef<DialogAddMovementComponent>,
     private readonly movementService: MovementService,
     private readonly userService: UserService,
+    private readonly translateService: TranslateService,
   ) {
     const year = new Date().getFullYear()
     const diffYear = year - this.minValidYear
@@ -133,7 +135,7 @@ export class DialogAddMovementComponent implements OnInit {
 
   private filter = (value: string): CategoryModel[] => {
     const filterValue = value.toLowerCase()
-    return this.categories.filter(x => !this.selectedCategories.map(x => x.id).includes(x.id) && x.name.toLowerCase().includes(filterValue))
+    return this.categories.filter(x => !this.selectedCategories.map(x => x.id).includes(x.id) && this.translateService.instant(x.name).toLowerCase().includes(filterValue))
   }
 
   private checkSelectedCategory = (): void => this.formGroup.controls.hasAnyCategory.patchValue(this.selectedCategories.length > 0)
