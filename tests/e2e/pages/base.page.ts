@@ -1,4 +1,5 @@
 import { Page } from "@playwright/test";
+require('dotenv').config()
 
 export class BasePage {
   protected readonly baseUrl: string

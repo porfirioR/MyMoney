@@ -3,7 +3,7 @@ const authFile = '../playwright/.auth/user.json';
 require('dotenv').config()
 
 setup('authenticate', async ({ page }) => {
-  const url = process.env['EMAIL']!
+  const url = process.env['URL']!
   await page.goto(`${url}/logout`);
   await page.getByRole('button', { name: 'Login' }).click();
   await page.locator('div').filter({ hasText: 'Email *' }).nth(3).click();
