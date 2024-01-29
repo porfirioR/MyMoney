@@ -1,4 +1,4 @@
-export function getRandomString() {
+export function getRandomString(): string {
   const length = 10;
   let result = '';
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -9,5 +9,4 @@ export function getRandomString() {
     counter += 1;
   }
   return result;
-  
 }

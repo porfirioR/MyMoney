@@ -4,7 +4,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
-import { combineLatest, take } from 'rxjs';
+import { combineLatest, debounceTime, distinctUntilChanged, take } from 'rxjs';
 import { UserCategoryService } from '../../services/user-category.service';
 import { UserService } from '../../services/user.service';
 import { HelperService } from '../../services/helper.service';
@@ -23,7 +23,9 @@ export class EditCategoryComponent implements OnInit {
   protected defaultColor = '#000000'
   protected defaultBackgroundColor = '#ffffff'
   protected formGroup: FormGroup<ColorForm> = new FormGroup<ColorForm>({
+    hexColor: new FormControl(this.defaultColor, [Validators.required]),
     color: new FormControl(this.defaultColor, Validators.required),
+    hexBackgroundColor: new FormControl(this.defaultBackgroundColor, [Validators.required]),
     backgroundColor: new FormControl(this.defaultBackgroundColor, Validators.required),
     order: new FormControl(0, Validators.min(0))
   })
@@ -38,7 +40,9 @@ export class EditCategoryComponent implements OnInit {
     private snackBar: MatSnackBar,
     private translate: TranslateService,
     private configurationService: ConfigurationService
-  ) {
+  ) { }
+
+  ngOnInit(): void {
     combineLatest([
       this.activatedRoute.params,
       this.userService.getAllCategories$().pipe(take(1)),
@@ -57,9 +61,8 @@ export class EditCategoryComponent implements OnInit {
         }
       }
     })
+    this.valueChanges()
   }
-
-  ngOnInit(): void { }
 
   protected exit = (): void => {
     this.location.back()
@@ -89,4 +92,39 @@ export class EditCategoryComponent implements OnInit {
     })
   }
 
+  private valueChanges = (): void => {
+    this.formGroup.controls.hexColor.valueChanges.pipe(debounceTime(500), distinctUntilChanged()).subscribe({
+      next: (hexColor) => this.hexColorValueChanges(this.formGroup.controls.color, this.formGroup.controls.hexColor, hexColor) 
+    })
+    this.formGroup.controls.color.valueChanges.pipe(distinctUntilChanged()).subscribe({
+      next: (color) => this.colorValueChanges(this.formGroup.controls.hexColor, color)
+    })
+    this.formGroup.controls.hexBackgroundColor.valueChanges.pipe(debounceTime(500),distinctUntilChanged()).subscribe({
+      next: (hexColor) => this.hexColorValueChanges(this.formGroup.controls.backgroundColor, this.formGroup.controls.hexBackgroundColor, hexColor) 
+    })
+    this.formGroup.controls.backgroundColor.valueChanges.pipe(distinctUntilChanged()).subscribe({
+      next: (color) => this.colorValueChanges(this.formGroup.controls.hexBackgroundColor, color)
+    })
+  }
+
+  private colorValueChanges = (refColor: FormControl<string | null>, color: string | null): void => {
+    const hexColor = refColor
+    if (hexColor.value != color) {
+      hexColor.setValue(color, { emitEvent: false, onlySelf: true })
+    }
+  }
+
+  private hexColorValueChanges = (
+    refColor: FormControl,
+    refHexColor: FormControl,
+    hexColor: string | null,
+    defaultColor: string = this.defaultColor
+  ): void => {
+    let finalValue = hexColor?.replace(/[^A-Fa-f0-9]/g, '').slice(0, 6)
+    finalValue = finalValue ? `#${finalValue}` : defaultColor
+    refHexColor.setValue(finalValue, { emitEvent: false } )
+    if (refColor.value != finalValue) {
+      refColor.setValue(finalValue)
+    }
+  }
 }

@@ -29,3 +29,7 @@
 #main {
   height: calc(92vh - 7px);
 }
+
+#color::ng-deep  div.mat-form-field-flex, #backgroundColor::ng-deep  div.mat-form-field-flex {
+  padding-top: 0 !important;
+}

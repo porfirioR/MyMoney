@@ -16,7 +16,7 @@
     </mat-card>
     <mat-card *ngIf="category">
       <mat-card-content>
-        <div class="icon-button">
+        <article class="icon-button">
           <button mat-fab customColor
             [color]="formGroup.controls.color.value ?? undefined"
             [backgroundColor]="formGroup.controls.backgroundColor.value ?? undefined"
@@ -24,15 +24,25 @@
           >
             <mat-icon>{{category.icon}}</mat-icon>
           </button>
-        </div>
-        <mat-form-field appearance="fill" class="w-100">
-          <mat-label translate>Icon color</mat-label>
-          <input matInput type="color" formControlName="color" id="color">
-        </mat-form-field>
-        <mat-form-field appearance="fill" class="w-100">
-          <mat-label translate>Background color</mat-label>
-          <input matInput type="color" formControlName="backgroundColor" id="background-color">
-        </mat-form-field>
+        </article>
+        <article class="w-100">
+          <mat-form-field appearance="fill" class="w-40" id="color">
+            <input matInput type="color" formControlName="color" id="color">
+          </mat-form-field>
+          <mat-form-field appearance="fill" class="w-60">
+            <mat-label for="hexColor" translate>Icon color</mat-label>
+            <input matInput type="text" formControlName="hexColor" id="hexColor">
+          </mat-form-field>
+        </article>
+        <article class="w-100">
+          <mat-form-field appearance="fill" class="w-40" id="backgroundColor">
+            <input matInput type="color" formControlName="backgroundColor" id="backgroundColor">
+          </mat-form-field>
+          <mat-form-field appearance="fill" class="w-60" id="hexBackgroundColor">
+            <mat-label for="hex-background-color" translate>Background color</mat-label>
+            <input matInput type="text" formControlName="hexBackgroundColor" id="hex-background-color">
+          </mat-form-field>
+        </article>
         <mat-form-field appearance="fill" class="w-100">
           <mat-label translate>Order</mat-label>
           <input matInput type="text" formControlName="order" [mask]="mask" [thousandSeparator]="thousandSeparator" id="order">
