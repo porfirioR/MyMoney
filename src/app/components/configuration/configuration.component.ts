@@ -1,8 +1,8 @@
-import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { DateAdapter } from '@angular/material/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormControl, FormGroup } from '@angular/forms';
+import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { catchError, take } from 'rxjs';
 import { ConfigurationService } from '../../services/configuration.service';
@@ -30,12 +30,12 @@ export class ConfigurationComponent implements OnInit {
   })
 
   constructor(
-    private readonly location: Location,
     private readonly configurationService: ConfigurationService,
     private translate: TranslateService,
     private userService: UserService,
     private readonly snackBar: MatSnackBar,
     private dateAdapter: DateAdapter<Date>,
+    private router: Router,
   ) { }
 
   ngOnInit(): void {
@@ -64,14 +64,14 @@ export class ConfigurationComponent implements OnInit {
   }
 
   protected exit = (): void => {
-    this.location.back()
+    this.router.navigate([''])
   }
 
   protected save = (): void => {
     const request: ConfigurationModel = this.formGroup.getRawValue()! as ConfigurationModel
     this.configurationService.upsert(request).then(() => {
       this.snackBar.open(this.translate.instant(`User configuration was ${request.id ? 'updated' : 'created'}`), '', { duration: 3000 })
-      this.location.back()
+      this.exit()
     }).catch(e => console.error(e))
   }
 }

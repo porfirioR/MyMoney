@@ -1,5 +1,5 @@
-import { Location } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
 
 @Component({
@@ -7,14 +7,13 @@ import { environment } from '../../../environments/environment';
   templateUrl: './about-us.component.html',
   styleUrls: ['./about-us.component.scss']
 })
-export class AboutUsComponent implements OnInit {
+export class AboutUsComponent {
   protected title = environment.title
-  constructor(private readonly location: Location) { }
-
-  ngOnInit(): void {
-  }
+  constructor(
+    private router: Router,
+  ) { }
 
   protected exit = (): void => {
-    this.location.back()
+    this.router.navigate([''])
   }
 }

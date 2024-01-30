@@ -1,7 +1,8 @@
 import { Location } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { combineLatest } from 'rxjs';
 import { CategoryType } from '../../enums/category-type.enum';
@@ -17,7 +18,7 @@ import { ExportMovementForm } from '../../forms/export-movement.form';
   templateUrl: './export-movement.component.html',
   styleUrls: ['./export-movement.component.scss']
 })
-export class ExportMovementComponent implements OnInit {
+export class ExportMovementComponent {
   protected minDate = new Date('2018-01-01:00:00:00')
   protected loading = false
   protected formGroup: FormGroup<ExportMovementForm> = new FormGroup<ExportMovementForm>({
@@ -29,18 +30,15 @@ export class ExportMovementComponent implements OnInit {
   protected categories = CategoryType
   private request!: ExportRequestModel
   constructor(
-    private readonly location: Location,
     private readonly userService: UserService,
     private readonly movementService: MovementService,
     private readonly snackBar: MatSnackBar,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private router: Router,
   ) { }
 
-  ngOnInit(): void {
-  }
-
   protected exit = (): void => {
-    this.location.back()
+    this.router.navigate([''])
   }
 
   protected export = (): void => {

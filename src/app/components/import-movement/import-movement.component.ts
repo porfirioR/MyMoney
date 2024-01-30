@@ -1,7 +1,8 @@
 import { Location } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { UserService } from '../../services/user.service';
 import { ImportMovementRequestModel } from '../../models/import-movement-request.model';
@@ -16,7 +17,7 @@ import { DialogUploadMovementComponent } from '../dialog-upload-movement/dialog-
   templateUrl: './import-movement.component.html',
   styleUrls: ['./import-movement.component.scss']
 })
-export class ImportMovementComponent implements OnInit {
+export class ImportMovementComponent {
   protected fileName!: string
   protected file?: File
   protected csvHeader = environment.header;
@@ -30,13 +31,12 @@ export class ImportMovementComponent implements OnInit {
     private readonly userService: UserService,
     private readonly snackBar: MatSnackBar,
     private readonly dialog: MatDialog,
+    private router: Router,
     private translate: TranslateService
   ) { }
-  
-  ngOnInit(): void { }
 
   protected exit = (): void => {
-    this.location.back()
+    this.router.navigate([''])
   }
 
   protected onFileSelected = (event: Event): void => {
