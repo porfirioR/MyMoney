@@ -23,7 +23,11 @@ export class LoginComponent implements OnInit {
   })
   protected title = environment.title
 
-  constructor(private authService: AuthService, private router: Router, private readonly userService: UserService) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private readonly userService: UserService
+  ) {}
 
   ngOnInit(): void {
     if(!this.isLocal) {

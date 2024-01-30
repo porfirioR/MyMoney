@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Location } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
+import { Router } from '@angular/router';
 import { combineLatest, of, switchMap, take } from 'rxjs';
 import { RelatedMovementModel } from '../../models/related-movement.model';
 import { RelatedMovementDetailModel } from '../../models/related-movement-detail.model';
@@ -29,13 +29,13 @@ export class RelatedMovementsComponent implements OnInit {
   protected numberType = NumberType.English
 
   constructor(
-    private readonly location: Location,
     private readonly relatedMovementsService: RelatedMovementService,
     private readonly dialog: MatDialog,
     private translate: TranslateService,
     private readonly snackBar: MatSnackBar,
     private readonly movementService: MovementService,
     private readonly userService: UserService,
+    private router: Router,
   ) { }
 
   ngOnInit(): void {
@@ -56,7 +56,7 @@ export class RelatedMovementsComponent implements OnInit {
   }
 
   protected exit = (): void => {
-    this.location.back()
+    this.router.navigate([''])
   }
 
   protected deleteRelatedMovement = (id: string): void => {
