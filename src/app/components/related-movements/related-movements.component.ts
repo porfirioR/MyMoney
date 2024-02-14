@@ -72,13 +72,12 @@ export class RelatedMovementsComponent implements OnInit {
       if (result) {
         this.relatedMovementsService.delete(id).then(() => {
           this.snackBar.open(this.translate.instant('related-movement-messages.deleted'), '', { duration: 3000 })
-          this.exit()
         }).catch((reason: any) => this.snackBar.open(reason, '', { duration: 3000 }))
       }
     })
   }
 
-  protected displayMovements = (id: string) => {
+  protected displayMovements = (id: string): void => {
     if (this.movements.get(id)) {
       return
     }

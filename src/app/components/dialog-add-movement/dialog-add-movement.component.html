@@ -97,7 +97,7 @@
           </mat-list-option>
         </mat-selection-list>
       </ng-container>
-      <ng-template #emptyMovement>
+      <ng-template #emptyMovement translate>
         Without Movements
       </ng-template>
     </mat-card-content>
@@ -107,7 +107,9 @@
       <button mat-stroked-button color="primary" (click)="cancelAddition()" [title]="'cancel-button' | translate">
         {{'Cancel' | translate}}
       </button>
-      <button mat-stroked-button color="primary" type="submit" [disabled]="formGroup.controls.selectedMovement.value?.length === 0" [title]="'save-button' | translate"
+      <button mat-stroked-button color="primary" type="submit"
+        [disabled]="selectedCategories.length === 0"
+        [title]="'save-button' | translate"
         (click)="save()">{{'Save' | translate}}
       </button>
     </mat-card-footer>
