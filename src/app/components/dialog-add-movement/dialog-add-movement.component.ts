@@ -3,7 +3,8 @@ import { MatChipInputEvent } from '@angular/material/chips';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Observable, debounceTime, map, of, startWith, take } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
+import { Observable, debounceTime, map, startWith, take } from 'rxjs';
 import { CategoryType } from '../../enums/category-type.enum';
 import { MonthType } from '../../enums/month-type.enum';
 import { HelperService } from '../../services/helper.service';
@@ -13,7 +14,6 @@ import { CategoryModel } from '../../models/category.model';
 import { FilterRelatedMovementModel } from '../../models/filter-related-movement.model';
 import { MovementModel } from '../../models/movement.model';
 import { FilterRelatedMovementForm } from '../../forms/filter-related-movement.form';
-import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-dialog-add-movement',
@@ -95,7 +95,7 @@ export class DialogAddMovementComponent implements OnInit {
     })
   }
 
-  protected save = () => {
+  protected save = (): void => {
     const movementToSave = this.movements.filter(x => this.formGroup.controls.selectedMovement.value!.some(y => y === x.id))
     this.dialogRef.close(movementToSave)
   }

@@ -61,13 +61,16 @@
           </ng-container>
         </mat-accordion>
         <section *ngIf="relatedMovements.length === 0" align="center">
+          <span class="flex-justify-center p-b-10" translate>
+            Without movements to show.
+          </span>
           <button mat-stroked-button color="primary" [routerLink]="'add'" [title]="'Add Related Movement' | translate">
             <mat-icon>add</mat-icon>
             {{'Add Related Movement' | translate}}
           </button>
         </section>
       </mat-card-content>
-      <mat-card-footer>
+      <mat-card-footer *ngIf="relatedMovements.length !== 0">
         <button mat-stroked-button color="primary" (click)="exit()" [title]="'cancel-button' | translate">
           {{'Cancel' | translate}}
         </button>

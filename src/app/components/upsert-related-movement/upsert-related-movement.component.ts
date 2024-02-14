@@ -108,7 +108,7 @@ export class UpsertRelatedMovementComponent implements OnInit {
       next: (movements: MovementModel[] | undefined) => {
         if (movements) {
           this.expenses = [... new Set([...this.expenses, ...movements.filter(x => x.type === this.categoryType.expense && !this.expenses.some(y => y.id === x.id))])]
-          this.incomes = [... new Set([...this.incomes, ...movements.filter(x => x.type === this.categoryType.income && !this.expenses.some(y => y.id === x.id))])]
+          this.incomes = [... new Set([...this.incomes, ...movements.filter(x => x.type === this.categoryType.income && !this.incomes.some(y => y.id === x.id))])]
           this.calculateAmount()
         }
       }, error: (e) => {
