@@ -13,9 +13,11 @@ import { RelatedMovementForm } from '../../forms/related-movement.form'
 import { MovementModel } from '../../models/movement.model'
 import { RelatedMovementModel } from '../../models/related-movement.model'
 import { RelatedMapModel } from '../../models/related-map-model'
+import { ConfigurationModel } from '../../models/configuration.model'
 import { MovementService } from '../../services/movement.service'
 import { RelatedMovementService } from '../../services/related-movement.service'
 import { HelperService } from '../../services/helper.service'
+import { UserService } from '../../services/user.service'
 import { DialogAddMovementComponent } from '../dialog-add-movement/dialog-add-movement.component'
 
 @Component({
@@ -30,8 +32,9 @@ export class UpsertRelatedMovementComponent implements OnInit {
   protected formGroup = new FormGroup<RelatedMovementForm>({
     id: new FormControl(null),
     name: new FormControl(null, Validators.required),
-    expenseAmount: new FormControl({value: null, disabled: true}),
-    incomeAmount: new FormControl({value: null, disabled: true}),
+    expenseAmount: new FormControl({ value: null, disabled: true }),
+    incomeAmount: new FormControl({ value: null, disabled: true }),
+    resultingAmount: new FormControl({ value: null, disabled: true }),
     relatedIds: new FormControl(null),
     totalAmount: new FormControl(null),
     showInUpsertMovement: new FormControl(false)
@@ -41,6 +44,8 @@ export class UpsertRelatedMovementComponent implements OnInit {
   protected title = 'Create Related Movement'
   protected numberType = NumberType.English
   protected saving = false
+  protected thousandSeparator = '.'
+  protected mask = 'separator.0'
   private id = ''
 
   constructor(
@@ -51,10 +56,12 @@ export class UpsertRelatedMovementComponent implements OnInit {
     private readonly translateService: TranslateService,
     private readonly snackBar: MatSnackBar,
     private readonly dialog: MatDialog,
+    private readonly userService: UserService,
   ) {
     this.currentTap = this.categoryType.income.toLocaleLowerCase()
-    const config = this.activatedRoute.snapshot.data['config']
-    this.numberType = config.number
+    const configuration = this.activatedRoute.snapshot.data['config'] as ConfigurationModel
+    [this.mask, this.thousandSeparator] = HelperService.getMarkValues(configuration)
+    this.numberType = configuration.number
     this.id = this.activatedRoute.snapshot.params['id']
   }
 
@@ -62,7 +69,8 @@ export class UpsertRelatedMovementComponent implements OnInit {
     if (!this.id) {
       this.loading = false
     } else {
-      this.relatedMovementsService.getById(this.id).pipe(take(1), switchMap((relatedMovement) => {
+      this.relatedMovementsService.getById(this.id).pipe(take(1))
+      .pipe(switchMap((relatedMovement) => {
         this.formGroup.patchValue({
           id: relatedMovement.id,
           name: relatedMovement.name,
@@ -70,7 +78,8 @@ export class UpsertRelatedMovementComponent implements OnInit {
           incomeAmount: relatedMovement.incomeAmount,
           relatedIds: relatedMovement.related.map(y => y.id),
           totalAmount: relatedMovement.totalAmount,
-          showInUpsertMovement: relatedMovement.showInUpsertMovement
+          showInUpsertMovement: relatedMovement.showInUpsertMovement,
+          resultingAmount: relatedMovement.incomeAmount - relatedMovement.expenseAmount
         })
         const expenses = relatedMovement.related.filter(x => x.type === this.categoryType.expense)
         const incomes = relatedMovement.related.filter(x => x.type === this.categoryType.expense)
@@ -79,7 +88,14 @@ export class UpsertRelatedMovementComponent implements OnInit {
         return combineLatest([expense$, income$])
       })).subscribe({
         next: ([expenses, incomes]) => {
-          [this.expenses, this.incomes] = [expenses, incomes]
+          this.expenses = expenses.map(expense => {
+            expense.memorandum = expense.memorandum ? expense.memorandum : this.userService.getActiveCategories().find(y => y.id === expense.categoryId)!.name
+            return expense
+          })
+          this.incomes = incomes.map(income => {
+            income.memorandum = income.memorandum ? income.memorandum : this.userService.getActiveCategories().find(y => y.id === income.categoryId)!.name
+            return income
+          })
           this.title = 'Update Related Movement'
           this.calculateAmount()
           this.loading = false
@@ -127,7 +143,7 @@ export class UpsertRelatedMovementComponent implements OnInit {
       name: this.formGroup.controls.name.value!,
       related:  HelperService.getRelatedMovementToSave(relatedList),
       owner: '',
-      totalAmount: this.formGroup.controls.totalAmount.value!,
+      totalAmount: this.formGroup.controls.totalAmount.value ? this.formGroup.controls.totalAmount.value : this.formGroup.controls.resultingAmount.value!,
       showInUpsertMovement: this.formGroup.controls.showInUpsertMovement.value!
     }
     const request$ = this.id ? this.relatedMovementsService.update(request) : this.relatedMovementsService.create(request)
@@ -154,6 +170,6 @@ export class UpsertRelatedMovementComponent implements OnInit {
     const income = this.incomes.reduce((a, b) => a + b.amount, 0)
     this.formGroup.controls.expenseAmount.setValue(expense)
     this.formGroup.controls.incomeAmount.setValue(income)
-    this.formGroup.controls.totalAmount.setValue(income - expense)
+    this.formGroup.controls.resultingAmount.setValue(income - expense)
   }
 }

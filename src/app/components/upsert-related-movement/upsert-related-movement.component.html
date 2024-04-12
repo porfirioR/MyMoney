@@ -21,15 +21,48 @@
       </mat-form-field>
       <mat-form-field class="w-100">
         <mat-label translate>Expense Amount</mat-label>
-        <input matInput formControlName="expenseAmount" id="expenseAmount">
+        <input
+          matInput
+          type="text"
+          formControlName="expenseAmount"
+          id="expenseAmount"
+          [mask]="mask"
+          [thousandSeparator]="thousandSeparator"
+          autocomplete="off"
+        />
       </mat-form-field>
       <mat-form-field class="w-100">
         <mat-label translate>Income Amount</mat-label>
-        <input matInput formControlName="incomeAmount" id="incomeAmount">
+        <input
+          matInput
+          type="text"
+          formControlName="incomeAmount"
+          id="incomeAmount"
+          [mask]="mask"
+          [thousandSeparator]="thousandSeparator"
+        />
+      </mat-form-field>
+      <mat-form-field class="w-100">
+        <mat-label translate>Resulting Amount</mat-label>
+        <input
+          matInput
+          type="text"
+          formControlName="resultingAmount"
+          id="resultingAmount"
+          [mask]="mask"
+          [thousandSeparator]="thousandSeparator"
+        />
       </mat-form-field>
       <mat-form-field class="w-100">
         <mat-label translate>Total Amount</mat-label>
-        <input matInput formControlName="totalAmount" id="totalAmount">
+        <input
+          matInput
+          type="text"
+          formControlName="totalAmount"
+          id="totalAmount"
+          [mask]="mask"
+          [thousandSeparator]="thousandSeparator"
+        />
       </mat-form-field>
       <mat-checkbox color="primary" formControlName="showInUpsertMovement" id="showInUpsertMovement" translate>
         Show in Movement
