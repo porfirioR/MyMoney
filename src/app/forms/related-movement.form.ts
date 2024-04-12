@@ -5,6 +5,7 @@ export interface RelatedMovementForm {
   name: FormControl<string | null>
   relatedIds: FormControl<string[] | null>
   totalAmount: FormControl<number | null>
+  resultingAmount: FormControl<number | null>
   incomeAmount: FormControl<number | null>
   expenseAmount: FormControl<number | null>
   showInUpsertMovement: FormControl<boolean | null>
