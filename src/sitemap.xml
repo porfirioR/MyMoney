@@ -8,9 +8,4 @@
     <loc>https://my-money.click/logout</loc>
     <lastmod>2024-11-01</lastmod>
   </url>
-  <url>
-    <loc>www.my-money.click</loc>
-    <loc:alternate href="https://my-money.click/" />
-    <lastmod>2024-11-01</lastmod>
-  </url>
 </urlset>
