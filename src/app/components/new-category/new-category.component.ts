@@ -139,6 +139,11 @@ export class NewCategoryComponent implements OnInit {
     this.inputCategoryName?.nativeElement.focus()
   }
 
+  protected getIconName = (icon: IconType): string => {
+    const key = Object.keys(IconType).find(k => IconType[k as keyof typeof IconType] === icon)
+    return key ? key.replace(/([a-z])([A-Z])/g, '$1 $2').replace(/_/g, ' ') : icon
+  }
+
   protected save = (): void => {
     const category: CategoryModel = this.formGroup.getRawValue() as CategoryModel
     this.categoryService.create(category).then((categoryReference) => {

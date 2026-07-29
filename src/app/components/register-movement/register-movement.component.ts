@@ -198,7 +198,7 @@ export class RegisterMovementComponent implements OnInit {
       type: movement.type,
       icon: movement.icon,
       categoryId: movement.categoryId,
-      memorandum: movement.memorandum,
+      memorandum: this.translate.instant(movement.memorandum || ''),
       date: movement.date,
       time: movement.date?.getTime(),
       amount: Math.abs(movement.amount),
