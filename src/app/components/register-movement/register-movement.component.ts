@@ -225,9 +225,9 @@ export class RegisterMovementComponent implements OnInit {
       selectedRelatedMovements
       .forEach(x => x.related = [...new Set([...x.related, new RelatedMapModel(id, this.formGroup.controls.type.value!)])])
 
-      if (this.movementRegistrationType === MovementRegistrationType.update && this.relatedMovements.length >= 0) {
+      if (this.movementRegistrationType === MovementRegistrationType.update && this.relatedMovements.length > 0) {
         const allSavedRelatedMovements = this.relatedMovements.filter(x => x.related.some(y => y.id === this.movementId))
-        const deletedRelatedMovements = allSavedRelatedMovements.filter(x => formRelatedMovementValues.some(y => y !== x.id!))
+        const deletedRelatedMovements = allSavedRelatedMovements.filter(x => !formRelatedMovementValues.includes(x.id!))
         if (deletedRelatedMovements.length > 0) {
           deletedRelatedMovements.forEach(x => x.related = x.related.filter(y => y.id !== this.movementId))
           this.updateRelatedMovement(deletedRelatedMovements, batch)

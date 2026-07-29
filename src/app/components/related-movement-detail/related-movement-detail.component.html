@@ -26,7 +26,7 @@
             {{movement.icon}}
           </i>
         </button>
-        {{movement.memorandum}}
+        {{movement.memorandum | translate}}
       </span>
       <span class="w-20" align="end">
         {{movement.isExpense ? '-' : ''}}{{movement.amount | number:'' : numberType}}

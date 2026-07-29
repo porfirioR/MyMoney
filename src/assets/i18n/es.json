@@ -207,6 +207,7 @@
   "Income Amount": "Monto de los ingresos",
   "Description": "Descripción",
   "Total Amount": "Monto Total",
+  "Resulting Amount": "Monto Resultante",
   "Name": "Nombre",
   "Save Related Movement": "Guardar Movimiento Relacionado",
   "Related Movement was updated": "Movimiento relacionado fue actualizado",
@@ -262,7 +263,8 @@
     "title-delete": "Borrar movimiento relacionado",
     "question-delete": "¿Estás seguro que quieres eliminar esta relación?",
     "deleted": "Movimiento relacionado fue borrada",
-    "required-name": "El nombre es requerido"
+    "required-name": "El nombre es requerido",
+    "show-in-movement-hint": "Al activarlo, este grupo va a aparecer como opción al crear o editar un movimiento, para agregarlo a esta relación directamente desde ahí"
   },
   "import-movement-messages": {
     "empty-file": "Archivo vacío",

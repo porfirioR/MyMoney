@@ -31,7 +31,8 @@
     "title-delete": "Delete related movement",
     "question-delete": "Are you sure you want to remove this related movement?",
     "deleted": "Related movement was deleted",
-    "required-name": "Name is required"
+    "required-name": "Name is required",
+    "show-in-movement-hint": "When enabled, this group will appear as an option while creating or editing a movement, so it can be added to this relation directly from there"
   },
   "import-movement-messages": {
     "empty-file": "Empty file",
