@@ -15,7 +15,8 @@
     "required-category": "The category is required",
     "repeating-category": "A category with the same name already exists",
     "required-email": "Email is required",
-    "required-password": "Password is required"
+    "required-password": "Password is required",
+    "login-failed": "Could not log in. Check your email and password and try again."
   },
   "movement-messages": {
     "title-delete-movement": "Delete movement's relation",

@@ -247,7 +247,8 @@
     "required-category": "La categoría es requerida",
     "required-email": "Correo electrónico es requerida",
     "required-password": "Contraseña es requerida",
-    "repeating-category": "Ya existe una categoría con el mismo nombre"
+    "repeating-category": "Ya existe una categoría con el mismo nombre",
+    "login-failed": "No se pudo iniciar sesión. Verificá tu correo y contraseña e intentá de nuevo."
   },
   "movement-messages": {
     "title-delete": "Borrar movimiento",

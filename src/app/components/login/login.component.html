@@ -1,4 +1,4 @@
-<mat-progress-bar mode="indeterminate" *ngIf="!isLocal"></mat-progress-bar>
+<mat-progress-bar mode="indeterminate" *ngIf="!isLocal || isLoading"></mat-progress-bar>
 
 <section *ngIf="isLocal" [formGroup]="formGroup" class="p-t-16">
   <mat-toolbar color="primary">
@@ -32,7 +32,7 @@
         </mat-card-content>
         <mat-card-footer>
           <button mat-stroked-button color="primary"
-            [disabled]="formGroup.invalid"
+            [disabled]="formGroup.invalid || isLoading"
             [title]="'login-button' | translate"
             (click)="loginUser()"
           >
