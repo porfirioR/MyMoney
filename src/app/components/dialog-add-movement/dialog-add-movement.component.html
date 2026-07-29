@@ -93,7 +93,7 @@
       <ng-container *ngIf="movements.length; else emptyMovement">
         <mat-selection-list formControlName="selectedMovement">
           <mat-list-option color="primary" *ngFor="let movement of movements" [value]="movement.id">
-            {{movement.memorandum}}
+            {{movement.memorandum ?? '' | translate}}
           </mat-list-option>
         </mat-selection-list>
       </ng-container>

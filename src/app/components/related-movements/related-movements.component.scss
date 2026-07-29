@@ -13,6 +13,14 @@
   justify-content: center;
 }
 
+.show-in-movement-icon {
+  font-size: 16px;
+  height: 16px;
+  width: 16px;
+  vertical-align: middle;
+  color: #82b366;
+}
+
 @media (max-width: 599px) {
   #main {
     height: 100vh !important;

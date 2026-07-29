@@ -64,9 +64,10 @@
           [thousandSeparator]="thousandSeparator"
         />
       </mat-form-field>
-      <mat-checkbox color="primary" formControlName="showInUpsertMovement" id="showInUpsertMovement" translate>
-        Show in Movement
+      <mat-checkbox color="primary" formControlName="showInUpsertMovement" id="showInUpsertMovement">
+        {{'Show in Movement' | translate}}
       </mat-checkbox>
+      <p class="hint" translate>related-movement-messages.show-in-movement-hint</p>
       <label for="movements" class="flex-justify-center" translate>Movements</label>
       <mat-accordion displayMode="default" [multi]="true" [hideToggle]="false">
         <mat-expansion-panel [hideToggle]="false">

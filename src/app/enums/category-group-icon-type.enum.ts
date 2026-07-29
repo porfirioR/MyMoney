@@ -8,4 +8,6 @@ export enum CategoryGroupIconType {
   Family = 'Family',
   Electronic = 'Electronic',
   Education = 'Education',
+  Finance = 'Finance',
+  Housing = 'Housing',
 }

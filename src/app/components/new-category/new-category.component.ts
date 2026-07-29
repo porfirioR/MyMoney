@@ -41,12 +41,11 @@ export class NewCategoryComponent implements OnInit {
       ]),
       new NewCategoryGroupModel(CategoryGroupIconType.Shopping, [
         IconType.ShoppingCart, IconType.Mall, IconType.CreditCard, IconType.Offer,
-        IconType.Monetization, IconType.Store, IconType.Savings, IconType.Receipt,
-        IconType.CurrencyExchange, IconType.Luggage, IconType.Payment, IconType.Loyalty,
-        IconType.Wallet, IconType.BalanceWallet, IconType.Key
+        IconType.Store, IconType.Receipt, IconType.Luggage, IconType.Payment,
+        IconType.Loyalty, IconType.Key, IconType.Subscriptions
       ]),
       new NewCategoryGroupModel(CategoryGroupIconType.Entertainment, [
-        IconType.Movie, IconType.Casino, IconType.Pool, IconType.Golf, IconType.Fitness,
+        IconType.Movie, IconType.Casino, IconType.Pool, IconType.Golf,
         IconType.Sports, IconType.Tennis, IconType.Surfing, IconType.Baseball,
         IconType.Roller, IconType.Audiotrack, IconType.ColorLens, IconType.HotTub
       ]),
@@ -56,18 +55,21 @@ export class NewCategoryComponent implements OnInit {
         IconType.Church, IconType.Flag, IconType.Cloud
       ]),
       new NewCategoryGroupModel(CategoryGroupIconType.Medical, [
-        IconType.Hospital, IconType.Pharmacy, IconType.Recycling, IconType.Mask
+        IconType.Hospital, IconType.Pharmacy, IconType.Recycling, IconType.Mask,
+        IconType.Fitness, IconType.Medication, IconType.HealthAndSafety,
+        IconType.Vaccines, IconType.Dentist, IconType.Spa
       ]),
       new NewCategoryGroupModel(CategoryGroupIconType.Family, [
         IconType.Marry, IconType.Child, IconType.Baby, IconType.Pregnant,
-        IconType.Diversity, IconType.People, IconType.Spa, IconType.Hotel,
-        IconType.Home, IconType.Florist, IconType.Old, IconType.OldWoman,
-        IconType.Man, IconType.Woman, IconType.Transgender, IconType.Pets
+        IconType.Diversity, IconType.People, IconType.Hotel,
+        IconType.Florist, IconType.Old, IconType.OldWoman,
+        IconType.Man, IconType.Woman, IconType.Transgender, IconType.Pets,
+        IconType.Gift, IconType.Donation
       ]),
       new NewCategoryGroupModel(CategoryGroupIconType.Electronic, [
         IconType.Tv, IconType.Print, IconType.Computer, IconType.Kitchen,
-        IconType.Camera, IconType.Sync, IconType.Wifi, IconType.Sms,
-        IconType.Sd, IconType.Power, IconType.Phone, IconType.Bluetooth,
+        IconType.Camera, IconType.Sync, IconType.Sms,
+        IconType.Sd, IconType.Phone, IconType.Bluetooth,
         IconType.Post, IconType.Phone2, IconType.Encryption, IconType.Security,
         IconType.Rotate, IconType.Headphones, IconType.PhoneAndroid, IconType.Keyboard,
         IconType.Cast, IconType.CastConnected, IconType.Memory
@@ -77,6 +79,15 @@ export class NewCategoryComponent implements OnInit {
         IconType.Book, IconType.Poll, IconType.Business, IconType.Inclusive,
         IconType.Pdf, IconType.Attach_file, IconType.Calculate,
         IconType.NewFolder, IconType.Folder
+      ]),
+      new NewCategoryGroupModel(CategoryGroupIconType.Finance, [
+        IconType.Savings, IconType.Wallet, IconType.BalanceWallet,
+        IconType.CurrencyExchange, IconType.Monetization, IconType.AttachMoney,
+        IconType.TrendingUp, IconType.RequestQuote, IconType.Shield
+      ]),
+      new NewCategoryGroupModel(CategoryGroupIconType.Housing, [
+        IconType.Home, IconType.Apartment, IconType.Bolt, IconType.WaterDrop,
+        IconType.Wifi, IconType.Power
       ])
     ]
   )
@@ -126,6 +137,11 @@ export class NewCategoryComponent implements OnInit {
   protected updateIcon = (icon: IconType): void => {
     this.formGroup.controls.icon.setValue(icon)
     this.inputCategoryName?.nativeElement.focus()
+  }
+
+  protected getIconName = (icon: IconType): string => {
+    const key = Object.keys(IconType).find(k => IconType[k as keyof typeof IconType] === icon)
+    return key ? key.replace(/([a-z])([A-Z])/g, '$1 $2').replace(/_/g, ' ') : icon
   }
 
   protected save = (): void => {

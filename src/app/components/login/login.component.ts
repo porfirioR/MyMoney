@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { UserCredential } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { TranslateService } from '@ngx-translate/core';
 import { UserService } from '../../services/user.service';
 import { AuthService } from '../../services/auth.service';
 import { UserDataModel } from '../../models/user-data.model';
@@ -22,11 +24,14 @@ export class LoginComponent implements OnInit {
     password: new FormControl('', Validators.required)
   })
   protected title = environment.title
+  protected isLoading = false
 
   constructor(
     private authService: AuthService,
     private router: Router,
-    private readonly userService: UserService
+    private readonly userService: UserService,
+    private readonly snackBar: MatSnackBar,
+    private readonly translateService: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -36,6 +41,7 @@ export class LoginComponent implements OnInit {
   }
 
   private login = (): void => {
+    this.isLoading = true
     this.authService.loginWithGoogle()
     .then((x: UserCredential) => {
       const userData: UserDataModel = {
@@ -50,10 +56,15 @@ export class LoginComponent implements OnInit {
       this.userService.setUser(userData)
       this.router.navigate([''])
     })
-    .catch((x) => console.error(x))
+    .catch((x) => {
+      console.error(x)
+      this.isLoading = false
+      this.snackBar.open(this.translateService.instant('message-error.login-failed'), '', { duration: 4000 })
+    })
   };
 
   protected loginUser = (): void => {
+    this.isLoading = true
     this.authService.signInUser(this.formGroup.value.email!, this.formGroup.value.password!)
     .then((x: UserCredential) => {
       const userData: UserDataModel = {
@@ -68,6 +79,10 @@ export class LoginComponent implements OnInit {
       this.userService.setUser(userData)
       this.router.navigate([''])
     })
-    .catch((x) => console.error(x))
+    .catch((x) => {
+      console.error(x)
+      this.isLoading = false
+      this.snackBar.open(this.translateService.instant('message-error.login-failed'), '', { duration: 4000 })
+    })
   }
 }

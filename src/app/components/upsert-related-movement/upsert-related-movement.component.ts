@@ -82,7 +82,7 @@ export class UpsertRelatedMovementComponent implements OnInit {
           resultingAmount: relatedMovement.incomeAmount - relatedMovement.expenseAmount
         })
         const expenses = relatedMovement.related.filter(x => x.type === this.categoryType.expense)
-        const incomes = relatedMovement.related.filter(x => x.type === this.categoryType.expense)
+        const incomes = relatedMovement.related.filter(x => x.type === this.categoryType.income)
         const expense$ = expenses.length > 0 ? this.movementService.getMovementsByIds(this.categoryType.expense, expenses.map(x => x.id)) : of([])
         const income$ = incomes.length > 0 ? this.movementService.getMovementsByIds(this.categoryType.income, incomes.map(x => x.id)) : of([])
         return combineLatest([expense$, income$])

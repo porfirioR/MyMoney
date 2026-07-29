@@ -114,6 +114,19 @@ export enum IconType {
   Calculate = 'calculate',
   NewFolder = 'create_new_folder',
   Folder = 'folder',
-  Pets = 'pets'
-
+  Pets = 'pets',
+  Subscriptions = 'subscriptions',
+  Shield = 'shield',
+  Gift = 'card_giftcard',
+  Donation = 'volunteer_activism',
+  Bolt = 'bolt',
+  WaterDrop = 'water_drop',
+  Apartment = 'apartment',
+  AttachMoney = 'attach_money',
+  TrendingUp = 'trending_up',
+  RequestQuote = 'request_quote',
+  Medication = 'medication',
+  HealthAndSafety = 'health_and_safety',
+  Vaccines = 'vaccines',
+  Dentist = 'medical_services'
 }
