@@ -45,6 +45,8 @@ jobs:
           GOOGLE_APPLICATION_CREDENTIALS: ${{ github.workspace }}/firebase-service-account.json
         run: |
           echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT_MYMONEY_993366 }}' > "$GOOGLE_APPLICATION_CREDENTIALS"
-          npx firebase-tools@15.24.0 hosting:channel:deploy "pr${{ github.event.pull_request.number }}" \
+          CHANNEL_ID="pr${{ github.event.pull_request.number }}"
+          npx firebase-tools@15.24.0 hosting:channel:create "$CHANNEL_ID" --project mymoney-993366 --non-interactive || true
+          npx firebase-tools@15.24.0 hosting:channel:deploy "$CHANNEL_ID" \
             --expires 7d --project mymoney-993366 --non-interactive
           rm -f "$GOOGLE_APPLICATION_CREDENTIALS"
