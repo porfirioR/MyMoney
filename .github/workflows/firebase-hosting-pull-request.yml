@@ -3,6 +3,9 @@
 
 name: Deploy to Firebase Hosting on PR
 on: pull_request
+concurrency:
+  group: firebase-preview-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
 permissions:
   checks: write
   contents: read
