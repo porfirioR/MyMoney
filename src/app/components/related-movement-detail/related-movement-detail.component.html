@@ -7,7 +7,7 @@
   </header>
   <main>
     <article *ngFor="let movement of movements; let i = index">
-      <button mat-icon-button color="warn" [title]="'title-delete-movement' | translate"
+      <button mat-icon-button color="warn" [title]="'related-movement-messages.title-delete-movement' | translate"
         (click)="deletedMovement(movement.id!)">
         <mat-icon>
           highlight_off
