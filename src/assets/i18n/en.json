@@ -235,6 +235,10 @@
   "Select a category...": "Select a category...",
   "New category": "New category",
   "Category is required.": "Category is required.",
+  "Add category": "Add category",
+  "upload-button": "Upload button",
+  "Total:": "Total:",
+  "Edit": "Edit",
   "category-messages": {
     "question": "Are you sure you want to delete this category?. All movements ({{length}}) related to this category will be deleted",
     "deleted": "The category was deleted",
