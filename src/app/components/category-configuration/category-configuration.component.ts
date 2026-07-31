@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core'
 import { Location } from '@angular/common'
-import { MatTabChangeEvent } from '@angular/material/tabs'
+import { MatLegacyTabChangeEvent as MatTabChangeEvent } from '@angular/material/legacy-tabs'
 import { catchError } from 'rxjs'
 import { CategoryType } from '../../enums/category-type.enum'
 import { CategoryModel } from '../../models/category.model'

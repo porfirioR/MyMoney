@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core'
-import { MatSnackBar } from '@angular/material/snack-bar'
-import { MatDialog } from '@angular/material/dialog'
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar'
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog'
 import { TranslateService } from '@ngx-translate/core'
 import { catchError, take } from 'rxjs'
 import { CategoryService } from '../../services/category.service'
