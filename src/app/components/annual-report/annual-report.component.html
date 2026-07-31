@@ -19,7 +19,7 @@
       {{year}}
     </button>
     <mat-menu #yearList="matMenu">
-      <button mat-menu-item *ngFor="let year of yearRange" (click)="yearChanges(year)" [title]="'year-range-buttons' | translate: { year: year }">
+      <button mat-menu-item *ngFor="let year of yearRange" (click)="yearChanges(year)" [title]="'year-range-button' | translate: { year: year }">
         {{year}}
       </button>
     </mat-menu>
