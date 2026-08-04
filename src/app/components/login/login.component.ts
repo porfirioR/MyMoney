@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UserCredential } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { UserService } from '../../services/user.service';
 import { AuthService } from '../../services/auth.service';
