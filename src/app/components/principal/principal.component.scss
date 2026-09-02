@@ -2,6 +2,19 @@
   display: flex;
   flex-direction: column;
   margin: 1rem;
+  position: relative;
+}
+
+.toggle-amounts {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 1;
+  color: rgba(0, 0, 0, 0.54);
+}
+
+.mat-card-header .amount-header {
+  padding-top: 1.5rem;
 }
 
 .mat-card-movement {

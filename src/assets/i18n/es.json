@@ -187,6 +187,8 @@
   "update-icon-button": "botón-actualizar-icono",
   "menu-button": "botón-menu",
   "year-month-button": "botón-año-mes",
+  "hide-amounts-button": "botón-ocultar-montos",
+  "show-amounts-button": "botón-mostrar-montos",
   "category-icon-button": "botón-icono-categoría",
   "category-name-button": "botón-nombre-categoría",
   "back-button": "botón-atras",

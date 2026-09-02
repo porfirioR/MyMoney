@@ -188,6 +188,8 @@
   "update-icon-button": "Update icon button",
   "menu-button": "Menu button",
   "year-month-button": "Year month button",
+  "hide-amounts-button": "Hide amounts button",
+  "show-amounts-button": "Show amounts button",
   "category-icon-button": "Category icon button",
   "category-name-button": "Category name button",
   "back-button": "Back button",

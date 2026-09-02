@@ -21,6 +21,11 @@
   <main id="main">
     <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
     <mat-card class="mat-card-header" *ngIf="!loading">
+      <button mat-icon-button type="button" class="toggle-amounts"
+        [title]="(hideAmounts ? 'show-amounts-button' : 'hide-amounts-button') | translate"
+        (click)="toggleAmountsVisibility()">
+        <mat-icon>{{hideAmounts ? 'visibility_off' : 'visibility'}}</mat-icon>
+      </button>
       <header class="amount-header">
         <article matRipple id="incomes"
           [matRippleCentered]="true"
@@ -28,7 +33,7 @@
           [routerLink]="['report-month', categoryType.income]"
           [queryParams]="yearMonth">
           {{'Incomes' | translate}}
-          <p>{{income | number:'' : numberType}}</p>
+          <p>{{hideAmounts ? '••••••' : (income | number:'' : numberType)}}</p>
         </article>
         <hr>
         <article matRipple id="expenses"
@@ -37,12 +42,12 @@
           [routerLink]="['report-month', categoryType.expense]"
           [queryParams]="yearMonth">
           {{'Expenses' | translate}}
-          <p>{{expenses | number:'' : numberType}}</p>
+          <p>{{hideAmounts ? '••••••' : (expenses | number:'' : numberType)}}</p>
         </article>
         <hr>
         <article matRipple id="difference-balance">
           {{'Difference' | translate}}
-          <p>{{balance | number:'' : numberType}}</p>
+          <p>{{hideAmounts ? '••••••' : (balance | number:'' : numberType)}}</p>
         </article>
       </header>
     </mat-card>
