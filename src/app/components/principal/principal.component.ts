@@ -32,6 +32,8 @@ import { environment } from '../../../environments/environment';
   styleUrls: ['./principal.component.scss'],
 })
 export class PrincipalComponent implements OnInit {
+  private static readonly hideAmountsStorageKey = 'my-money.hide-amounts'
+  protected hideAmounts = false
   protected income: number = 0
   protected expenses: number = 0
   protected balance: number = 0
@@ -57,6 +59,7 @@ export class PrincipalComponent implements OnInit {
     private dateAdapter: DateAdapter<Date>
   ) {
     this.yearMonth = HelperService.getSearchMessage()
+    this.hideAmounts = localStorage.getItem(PrincipalComponent.hideAmountsStorageKey) === 'true'
     onAuthStateChanged(getAuth(), (user) => {
       if (user) {
         const userData: UserDataModel = {
@@ -102,6 +105,11 @@ export class PrincipalComponent implements OnInit {
         throw e;
       }
     })
+  }
+
+  protected toggleAmountsVisibility = (): void => {
+    this.hideAmounts = !this.hideAmounts
+    localStorage.setItem(PrincipalComponent.hideAmountsStorageKey, String(this.hideAmounts))
   }
 
   protected openYearMonth = (): void => {
