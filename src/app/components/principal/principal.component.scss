@@ -7,14 +7,16 @@
 
 .toggle-amounts {
   position: absolute;
-  top: 0;
-  right: 0;
+  top: -8px;
+  right: -8px;
   z-index: 1;
+  transform: scale(0.8);
   color: rgba(0, 0, 0, 0.54);
+  padding-right: 10px;
 }
 
-.mat-card-header .amount-header {
-  padding-top: 1.5rem;
+.mat-card-header #difference-balance {
+  padding-right: 0.75rem;
 }
 
 .mat-card-movement {
