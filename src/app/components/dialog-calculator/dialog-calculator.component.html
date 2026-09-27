@@ -1,0 +1,38 @@
+<h1 matDialogTitle translate>Calculator</h1>
+<mat-dialog-content>
+  <div class="calculator-display" [title]="display">{{display}}</div>
+  <div class="calculator-grid">
+    <button mat-stroked-button type="button" (click)="clear()" [title]="'calculator-clear-button' | translate">AC</button>
+    <button mat-stroked-button type="button" (click)="backspace()" [title]="'calculator-backspace-button' | translate">
+      <mat-icon>backspace</mat-icon>
+    </button>
+    <button mat-stroked-button type="button" (click)="calculatePercent()" [title]="'calculator-percent-button' | translate">%</button>
+    <button mat-stroked-button type="button" color="primary" (click)="inputOperator('/')" [title]="'calculator-divide-button' | translate">÷</button>
+
+    <button mat-stroked-button type="button" (click)="inputDigit('7')">7</button>
+    <button mat-stroked-button type="button" (click)="inputDigit('8')">8</button>
+    <button mat-stroked-button type="button" (click)="inputDigit('9')">9</button>
+    <button mat-stroked-button type="button" color="primary" (click)="inputOperator('*')" [title]="'calculator-multiply-button' | translate">×</button>
+
+    <button mat-stroked-button type="button" (click)="inputDigit('4')">4</button>
+    <button mat-stroked-button type="button" (click)="inputDigit('5')">5</button>
+    <button mat-stroked-button type="button" (click)="inputDigit('6')">6</button>
+    <button mat-stroked-button type="button" color="primary" (click)="inputOperator('-')" [title]="'calculator-subtract-button' | translate">−</button>
+
+    <button mat-stroked-button type="button" (click)="inputDigit('1')">1</button>
+    <button mat-stroked-button type="button" (click)="inputDigit('2')">2</button>
+    <button mat-stroked-button type="button" (click)="inputDigit('3')">3</button>
+    <button mat-stroked-button type="button" color="primary" (click)="inputOperator('+')" [title]="'calculator-add-button' | translate">+</button>
+
+    <button mat-stroked-button type="button" class="zero-button" (click)="inputDigit('0')">0</button>
+    <button mat-stroked-button type="button" color="primary" class="equals-button" (click)="equals()" [title]="'calculator-equals-button' | translate">=</button>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-stroked-button color="primary" (click)="cancel()" [title]="'cancel-button' | translate">
+    {{'Cancel' | translate}}
+  </button>
+  <button mat-stroked-button color="primary" (click)="save()" [title]="'save-button' | translate">
+    {{'Save' | translate}}
+  </button>
+</mat-dialog-actions>

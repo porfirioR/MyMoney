@@ -74,6 +74,7 @@ import { RelatedMovementDetailComponent } from './components/related-movement-de
 import { DialogAddMovementComponent } from './components/dialog-add-movement/dialog-add-movement.component';
 import { MatLegacyChipsModule as MatChipsModule } from '@angular/material/legacy-chips';
 import { MatLegacyAutocompleteModule as MatAutocompleteModule } from '@angular/material/legacy-autocomplete';
+import { DialogCalculatorComponent } from './components/dialog-calculator/dialog-calculator.component';
 import { TitleStrategy } from '@angular/router';
 import { PageTitleStrategyService } from './services/page-title-strategy.service';
 
@@ -109,7 +110,8 @@ registerLocaleData(localeEn, 'en')
     RelatedMovementsComponent,
     UpsertRelatedMovementComponent,
     RelatedMovementDetailComponent,
-    DialogAddMovementComponent
+    DialogAddMovementComponent,
+    DialogCalculatorComponent
   ],
   imports: [
     BrowserModule,
