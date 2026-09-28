@@ -47,8 +47,12 @@ export class DialogCalculatorComponent implements OnInit {
   }
 
   protected inputOperator = (operator: string): void => {
+    if (this.operator !== null && this.startNewValue) {
+      this.operator = operator
+      return
+    }
     const currentValue = Number(this.currentValue)
-    this.previousValue = this.operator && !this.startNewValue ? this.operate(this.previousValue!, currentValue, this.operator) : currentValue
+    this.previousValue = this.operator !== null ? this.operate(this.previousValue!, currentValue, this.operator) : currentValue
     this.operator = operator
     this.startNewValue = true
   }
@@ -73,28 +77,30 @@ export class DialogCalculatorComponent implements OnInit {
   }
 
   protected equals = (): void => {
-    if (this.operator && this.previousValue !== null) {
-      const currentValue = Number(this.currentValue)
-      this.currentValue = `${this.operate(this.previousValue, currentValue, this.operator)}`
-      this.previousValue = null
-      this.operator = null
-      this.startNewValue = true
+    if (this.operator === null || this.previousValue === null) {
+      return
     }
+    this.currentValue = this.startNewValue
+      ? `${this.previousValue}`
+      : `${this.operate(this.previousValue, Number(this.currentValue), this.operator)}`
+    this.previousValue = null
+    this.operator = null
+    this.startNewValue = true
   }
 
   protected cancel = (): void => this.dialogRef.close()
 
   protected save = (): void => {
     this.equals()
-    this.dialogRef.close(Math.round(Number(this.currentValue)))
+    this.dialogRef.close(Math.abs(Math.round(Number(this.currentValue))))
   }
 
   private operate = (previous: number, current: number, operator: string): number => {
     switch (operator) {
-      case '+': return Math.abs(previous + current)
-      case '-': return Math.abs(previous - current)
-      case '*': return Math.abs(previous * current)
-      case '/': return current === 0 ? previous : Math.abs(previous / current)
+      case '+': return previous + current
+      case '-': return previous - current
+      case '*': return previous * current
+      case '/': return current === 0 ? previous : previous / current
       default: return current
     }
   }
