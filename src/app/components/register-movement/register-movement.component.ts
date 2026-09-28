@@ -2,6 +2,7 @@ import { Location } from '@angular/common';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { ActivatedRoute } from '@angular/router';
 import { DocumentData, DocumentReference, WriteBatch } from '@angular/fire/firestore';
 import { TranslateService } from '@ngx-translate/core';
@@ -19,6 +20,8 @@ import { RelatedMovementService } from '../../services/related-movement.service'
 import { MovementForm } from '../../forms/movement.form';
 import { RelatedMapModel } from '../../models/related-map-model';
 import { MovementRegistrationType } from '../../enums/movement-registration-type.enum';
+import { CalculatorDialogData } from '../../models/calculator-dialog-data';
+import { DialogCalculatorComponent } from '../dialog-calculator/dialog-calculator.component';
 
 @Component({
   selector: 'app-register-movement',
@@ -63,6 +66,7 @@ export class RegisterMovementComponent implements OnInit {
     protected location: Location,
     private readonly snackBar: MatSnackBar,
     private readonly activatedRoute: ActivatedRoute,
+    private readonly dialog: MatDialog,
     private readonly userService: UserService,
     private translate: TranslateService,
     private configurationService: ConfigurationService,
@@ -146,6 +150,20 @@ export class RegisterMovementComponent implements OnInit {
 
   protected exit = (): void => {
     this.location.back()
+  }
+
+  protected openCalculator = (): void => {
+    const dialogRef = this.dialog.open(DialogCalculatorComponent, {
+      width: '320px',
+      data: { initialValue: this.formGroup.controls.amount.value, thousandSeparator: this.thousandSeparator } as CalculatorDialogData
+    })
+    dialogRef.afterClosed().subscribe({
+      next: (result?: number) => {
+        if (result !== undefined && result !== null) {
+          this.formGroup.controls.amount.setValue(result)
+        }
+      }
+    })
   }
 
   protected save = (): void => {

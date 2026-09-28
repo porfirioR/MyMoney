@@ -286,5 +286,15 @@
     "invalid-amount": "Cantidad no válida {{num}} en la fila {{index}}",
     "invalid-category": "La categoría no válida {{category}} está inactiva o no existe en la fila {{index}}"
   },
-  "year-range-button": "botón-{{year}}"
+  "year-range-button": "botón-{{year}}",
+  "Calculator": "Calculadora",
+  "calculator-button": "botón-calculadora",
+  "calculator-clear-button": "botón-limpiar-calculadora",
+  "calculator-backspace-button": "botón-borrar-calculadora",
+  "calculator-percent-button": "botón-porcentaje-calculadora",
+  "calculator-divide-button": "botón-dividir-calculadora",
+  "calculator-multiply-button": "botón-multiplicar-calculadora",
+  "calculator-subtract-button": "botón-restar-calculadora",
+  "calculator-add-button": "botón-sumar-calculadora",
+  "calculator-equals-button": "botón-igual-calculadora"
 }
