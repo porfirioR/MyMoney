@@ -66,7 +66,8 @@ export class DialogCalculatorComponent implements OnInit {
   }
 
   protected backspace = (): void => {
-    this.currentValue = this.currentValue.length > 1 ? this.currentValue.slice(0, -1) : '0'
+    const trimmedValue = this.currentValue.slice(0, -1)
+    this.currentValue = trimmedValue.length > 0 && trimmedValue !== '-' ? trimmedValue : '0'
   }
 
   protected clear = (): void => {
@@ -92,7 +93,8 @@ export class DialogCalculatorComponent implements OnInit {
 
   protected save = (): void => {
     this.equals()
-    this.dialogRef.close(Math.abs(Math.round(Number(this.currentValue))))
+    const result = Math.abs(Math.round(Number(this.currentValue)))
+    this.dialogRef.close(Number.isNaN(result) ? 0 : result)
   }
 
   private operate = (previous: number, current: number, operator: string): number => {
@@ -100,7 +102,7 @@ export class DialogCalculatorComponent implements OnInit {
       case '+': return previous + current
       case '-': return previous - current
       case '*': return previous * current
-      case '/': return current === 0 ? previous : previous / current
+      case '/': return current === 0 ? previous : Math.round(previous / current)
       default: return current
     }
   }
