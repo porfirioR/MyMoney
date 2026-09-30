@@ -13,6 +13,7 @@ import { UserService } from '../../services/user.service';
 import { GroupMovementCategoryModel } from '../../models/group-movement-category.model';
 import { MovementModel } from '../../models/movement.model';
 import { ChartModel } from '../../models/chart.model';
+import { AnnualReportExportModel, CategoryMonthlyAmountModel } from '../../models/annual-report-export.model';
 
 @Component({
   selector: 'app-annual-report',
@@ -260,6 +261,47 @@ export class AnnualReportComponent implements OnInit {
 
   protected exit = (): void => {
     this.location.back()
+  }
+
+  protected exportReport = (): void => {
+    const report: AnnualReportExportModel = {
+      year: this.year,
+      generatedAt: new Date().toISOString().split('T')[0],
+      summary: {
+        totalIncome: this.incomeAmount,
+        totalExpense: this.expenseAmount,
+        balance: this.balance
+      },
+      categoriesByMonth: {
+        expense: this.buildMonthlyCategoryBreakdown(this.expenseGroupMovementCategoryModel),
+        income: this.buildMonthlyCategoryBreakdown(this.incomeGroupMovementCategoryModel)
+      }
+    }
+    this.downloadJson(report, `annual-report-${this.year}.json`)
+  }
+
+  private buildMonthlyCategoryBreakdown = (groups: GroupMovementCategoryModel[]): CategoryMonthlyAmountModel[] => {
+    const monthKeys = Object.keys(MonthType).filter((v) => isNaN(Number(v)))
+    return groups.map(group => {
+      const months = monthKeys.reduce((acc, monthKey) => ({ ...acc, [monthKey]: 0 }), {} as Record<string, number>)
+      group.movements.forEach(movement => {
+        const monthKey = MonthType[new Date(movement.time).getMonth()]
+        months[monthKey] += movement.amount
+      })
+      return { category: group.categoryName, total: group.amount, months }
+    })
+  }
+
+  private downloadJson = (data: unknown, filename: string): void => {
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' })
+    const url = URL.createObjectURL(blob)
+    const a: HTMLAnchorElement = document.createElement('a') as HTMLAnchorElement
+    a.href = url
+    a.download = filename
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+    URL.revokeObjectURL(url)
   }
 
   private labelMovements = (x: GroupMovementCategoryModel, amountMovements: number): string => {

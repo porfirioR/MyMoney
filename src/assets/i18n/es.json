@@ -178,6 +178,7 @@
   "delete-button": "botón-borrar",
   "icon-button": "botón-icono",
   "export-button": "botón-exportar",
+  "export-annual-report-button": "botón-exportar-reporte-anual",
   "file-input-button": "botón-cargar-archivo",
   "process-file-button": "botón-procesar-archivo",
   "upload-file-button": "botón-cargar-archivo",
