@@ -127,6 +127,13 @@
           </mat-accordion>
         </mat-expansion-panel>
       </mat-accordion>
+      <mat-card>
+        <mat-card-footer>
+          <button mat-stroked-button color="primary" (click)="exportReport()" [disabled]="loading" [title]="'export-annual-report-button' | translate">
+            {{'Export' | translate}}
+          </button>
+        </mat-card-footer>
+      </mat-card>
     </ng-container>
 
     <ng-template #matExpansionPanelContent let-groups="groups">
