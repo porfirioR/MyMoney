@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { canActivate, redirectUnauthorizedTo } from '@angular/fire/auth-guard'
 import { CategoryConfigurationComponent } from './components/category-configuration/category-configuration.component';
-import { NewCategoryComponent } from './components/new-category/new-category.component';
+import { UpsertCategoryComponent } from './components/upsert-category/upsert-category.component';
 import { PrincipalComponent } from './components/principal/principal.component';
 import { RegisterMovementComponent } from './components/register-movement/register-movement.component';
 import { LoginComponent } from './components/login/login.component';
@@ -11,7 +11,6 @@ import { ImportMovementComponent } from './components/import-movement/import-mov
 import { ExportMovementComponent } from './components/export-movement/export-movement.component';
 import { LogoutComponent } from './components/logout/logout.component';
 import { ReportMonthComponent } from './components/report-month/report-month.component';
-import { EditCategoryComponent } from './components/edit-category/edit-category.component';
 import { AboutUsComponent } from './components/about-us/about-us.component';
 import { ConfigurationComponent } from './components/configuration/configuration.component';
 import { AnnualReportComponent } from './components/annual-report/annual-report.component';
@@ -37,13 +36,13 @@ const routes: Routes = [
   {
     path: 'category/new-category/:type',
     canActivate: [UserGuard],
-    component: NewCategoryComponent,
+    component: UpsertCategoryComponent,
     title: 'New category'
   },
   {
     path: 'category/edit-category/:id',
     canActivate: [UserGuard],
-    component: EditCategoryComponent,
+    component: UpsertCategoryComponent,
     title: 'Edit category'
   },
   {

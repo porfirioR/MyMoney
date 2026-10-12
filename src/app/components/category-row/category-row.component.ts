@@ -24,6 +24,7 @@ export class CategoryRowComponent implements OnInit, OnDestroy {
   @Output() updateCategoryEvent = new EventEmitter<CategoryEvent>()
   @Output() deletedCategoryEvent = new EventEmitter<CategoryEvent>()
   private ownerSystem = ResourceType.ownerSystem
+  protected isOwnCategory = false
 
   constructor(
     private readonly categoryService: CategoryService,
@@ -36,10 +37,7 @@ export class CategoryRowComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    const user = this.translate.instant('(user)')
-    if (this.category && this.category.owner !== this.ownerSystem && !this.category.name.endsWith(user)) {
-      this.category.name = `${this.translate.instant(this.category.name)} ${user}`
-    }
+    this.isOwnCategory = this.category.owner !== this.ownerSystem
   }
 
   ngOnDestroy(): void { }

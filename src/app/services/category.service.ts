@@ -36,8 +36,9 @@ export class CategoryService {
   }
 
   public update = (model: CategoryModel): Promise<void> => {
-    const ref = doc(this.firestore, `${this.categories}/${model.id}`)
-    return setDoc(ref, model)
+    const { id, ...data } = model
+    const ref = doc(this.firestore, `${this.categories}/${id}`)
+    return setDoc(ref, data)
   }
 
   private getReference = (): CollectionReference => {

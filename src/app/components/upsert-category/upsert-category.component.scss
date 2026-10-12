@@ -1,0 +1,183 @@
+.mat-toolbar {
+  justify-content: space-between;
+}
+
+#main {
+  height: 93vh;
+  overflow-y: auto;
+}
+
+.mat-card {
+  margin: 1rem;
+}
+
+.w-100 {
+  width: 100%;
+}
+
+// Compact preview pinned to the top of the scroll area so the result is always visible
+.preview {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 1rem;
+  background: #fafafa;
+  box-shadow: 0 2px 4px rgb(0 0 0 / 10%);
+}
+
+.preview-icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 30%);
+  &.empty {
+    opacity: 0.35;
+  }
+}
+
+.preview-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.preview-name {
+  font-weight: bold;
+  font-size: 18px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  &.placeholder {
+    font-weight: normal;
+    color: rgb(0 0 0 / 40%);
+  }
+}
+
+.preview-subtitle {
+  font-size: 12px;
+  color: rgb(0 0 0 / 60%);
+}
+
+.mine-chip {
+  display: inline-block;
+  margin-left: 0.4rem;
+  padding: 0 0.45rem;
+  border-radius: 0.6rem;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.3rem;
+  vertical-align: middle;
+  color: #2e7d32;
+  background: #e8f5e9;
+}
+
+// Keeps scrolled-to sections below the sticky preview
+.icon-card, .color-card {
+  scroll-margin-top: 4.5rem;
+}
+
+.icon-card {
+  padding: 0;
+  & .mat-expansion-panel {
+    background: transparent;
+  }
+  & .panel-icon {
+    margin-right: 0.5rem;
+    vertical-align: middle;
+  }
+  & .required {
+    color: #f44336;
+  }
+}
+
+.color-section {
+  margin: 0 0 1rem 0;
+}
+
+.color-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  & .color-label {
+    color: rgb(0 0 0 / 66%);
+  }
+  & .hex-field {
+    width: 7rem;
+  }
+}
+
+.swatches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.swatch {
+  position: relative;
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid rgb(0 0 0 / 20%);
+  cursor: pointer;
+  box-sizing: border-box;
+  &.selected {
+    outline: 3px solid currentColor;
+    outline-offset: 2px;
+  }
+  &.custom {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: conic-gradient(red, yellow, lime, aqua, blue, magenta, red);
+    & mat-icon {
+      color: #fff;
+      text-shadow: 0 0 3px rgb(0 0 0 / 70%);
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+    }
+    & input[type="color"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+    }
+  }
+}
+
+.mat-card-subtitle {
+  text-align: center !important;
+  margin: 8px 0 8px 0 !important;
+  color: rgb(0 0 0 / 66%);
+}
+
+.icon-list {
+  flex-wrap: wrap;
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.btn-icon {
+  margin: 0.5rem;
+}
+
+.actions {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  justify-content: space-around;
+  padding: 0.75rem 1rem;
+  background: #fafafa;
+  box-shadow: 0 -2px 4px rgb(0 0 0 / 10%);
+}

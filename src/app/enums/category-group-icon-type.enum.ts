@@ -1,10 +1,12 @@
 export enum CategoryGroupIconType {
+  Incomes = 'Incomes',
   Food = 'Food',
   Transport = 'Transport',
   Shopping = 'Shopping',
   Entertainment = 'Entertainment',
   Maps = 'Maps',
   Medical = 'Medical',
+  PersonalCare = 'Personal care',
   Family = 'Family',
   Electronic = 'Electronic',
   Education = 'Education',

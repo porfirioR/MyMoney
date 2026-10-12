@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core'
 import { Location } from '@angular/common'
 import { MatLegacyTabChangeEvent as MatTabChangeEvent } from '@angular/material/legacy-tabs'
-import { catchError } from 'rxjs'
+import { ActivatedRoute, Router } from '@angular/router'
+import { catchError, take } from 'rxjs'
 import { CategoryType } from '../../enums/category-type.enum'
 import { CategoryModel } from '../../models/category.model'
 import { CategoryEvent } from '../../models/category-event.model'
@@ -19,14 +20,21 @@ export class CategoryConfigurationComponent implements OnInit {
   protected currentTap!: string
   protected categoryType = CategoryType
   protected loading = true
+  protected selectedIndex = 0
+  private readonly tabs = Object.keys(CategoryType)
 
   constructor(
     private readonly location: Location,
-    private readonly userService: UserService
+    private readonly userService: UserService,
+    private readonly activatedRoute: ActivatedRoute,
+    private readonly router: Router
   ) { }
 
   ngOnInit(): void {
-    this.userService.getAllCategories$().pipe(catchError((e) => {
+    const tab = this.activatedRoute.snapshot.queryParamMap.get('tab')
+    this.currentTap = this.tabs.includes(tab!) ? tab! : this.tabs[0]
+    this.selectedIndex = this.tabs.indexOf(this.currentTap)
+    this.userService.getAllCategories$().pipe(take(1), catchError((e) => {
       this.loading = false
       throw e
     })).subscribe({
@@ -36,7 +44,6 @@ export class CategoryConfigurationComponent implements OnInit {
         this.loading = false
       }
     })
-    this.currentTap = this.categoryType.income.toLocaleLowerCase()
   }
 
   protected exit = (): void => {
@@ -44,7 +51,9 @@ export class CategoryConfigurationComponent implements OnInit {
   }
 
   protected tabChanged = (tabChangeEvent: MatTabChangeEvent): void => {
-    this.currentTap = Object.keys(this.categoryType)[tabChangeEvent.index]
+    this.selectedIndex = tabChangeEvent.index
+    this.currentTap = this.tabs[tabChangeEvent.index]
+    this.router.navigate([], { relativeTo: this.activatedRoute, queryParams: { tab: this.currentTap }, replaceUrl: true })
   }
 
   protected updateCategories = (result: CategoryEvent): void => {

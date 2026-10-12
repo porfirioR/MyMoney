@@ -22,6 +22,7 @@ import { RelatedMapModel } from '../../models/related-map-model';
 import { MovementRegistrationType } from '../../enums/movement-registration-type.enum';
 import { CalculatorDialogData } from '../../models/calculator-dialog-data';
 import { DialogCalculatorComponent } from '../dialog-calculator/dialog-calculator.component';
+import { DEFAULT_BACKGROUND_COLOR, DEFAULT_ICON_COLOR } from '../../constants/category.constants';
 
 @Component({
   selector: 'app-register-movement',
@@ -31,8 +32,8 @@ import { DialogCalculatorComponent } from '../dialog-calculator/dialog-calculato
 export class RegisterMovementComponent implements OnInit {
   @ViewChild("memorandum") inputMemorandum?: ElementRef
   protected categoryType = CategoryType
-  protected defaultColor = '#000000'
-  protected defaultBackgroundColor = '#ffffff'
+  protected defaultColor = DEFAULT_ICON_COLOR
+  protected defaultBackgroundColor = DEFAULT_BACKGROUND_COLOR
   protected minDate = new Date('2018-01-01:00:00:00')
   protected inputCharacter = InputType.Characters
   protected inputDigit = InputType.Digits

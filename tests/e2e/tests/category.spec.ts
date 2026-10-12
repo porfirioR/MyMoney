@@ -1,4 +1,4 @@
-import { addUserToCategoryName, getRandomString } from '../../helpers';
+import { getRandomString } from '../../helpers';
 import { test } from '../fixtures/base.fixture'
 
 test.beforeAll(async ({ loginPage, configurationPage }) => {
@@ -21,7 +21,7 @@ test('Create Income Category', async ({ loginPage, categoryPage }) => {
   await categoryPage.addCategory(categoryName)
   await categoryPage.waitToLoadPage()
 
-  await categoryPage.createTestAssertions(addUserToCategoryName(categoryName))
+  await categoryPage.createTestAssertions(categoryName)
   await loginPage.logout()
   await categoryPage.close()
 })
@@ -29,20 +29,21 @@ test('Create Income Category', async ({ loginPage, categoryPage }) => {
 test('Create Expense Category', async ({ loginPage, categoryPage }) => {
   const categoryName = getRandomString()
   await categoryPage.gotoCategory()
-  await categoryPage.addCategory(categoryName)
   await categoryPage.gotoExpenseCategory()
+  await categoryPage.addCategory(categoryName)
+  await categoryPage.waitToLoadPage()
 
-  await categoryPage.createTestAssertions(addUserToCategoryName(categoryName))
+  // Coming back from the form must keep the Expense tab selected
+  await categoryPage.createTestAssertions(categoryName)
   await loginPage.logout()
   await categoryPage.close()
 })
 
 test('Update Category', async ({ loginPage, categoryPage }) => {
-  let categoryName = getRandomString()
+  const categoryName = getRandomString()
   await categoryPage.gotoCategory()
   await categoryPage.addCategory(categoryName)
   await categoryPage.waitToLoadPage()
-  categoryName = addUserToCategoryName(categoryName)
   const [color, backgroundColor] = await categoryPage.editCategory(categoryName)
   await categoryPage.waitToLoadPage()
 
@@ -58,7 +59,7 @@ test('Delete Category', async ({ loginPage, categoryPage }) => {
   await categoryPage.waitToLoadPage()
   await categoryPage.deleteCategory(categoryName)
 
-  await categoryPage.deleteTestAssertions(addUserToCategoryName(categoryName))
+  await categoryPage.deleteTestAssertions(categoryName)
   await loginPage.logout()
   await categoryPage.close()
 })

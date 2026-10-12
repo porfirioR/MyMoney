@@ -1,4 +1,5 @@
 import { DocumentData, DocumentReference } from "firebase/firestore";
+import { DEFAULT_BACKGROUND_COLOR, DEFAULT_ICON_COLOR } from "../constants/category.constants";
 
 export class UserCategoryModel {
   constructor(
@@ -7,8 +8,8 @@ export class UserCategoryModel {
     public email?: string,
     public id?: string,
     public category?: DocumentReference<DocumentData>,
-    public color: string = '#000000',
-    public backgroundColor: string = '#ffffff',
+    public color: string = DEFAULT_ICON_COLOR,
+    public backgroundColor: string = DEFAULT_BACKGROUND_COLOR,
     public order: number = 0,
   ) { }
 }

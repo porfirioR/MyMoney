@@ -1,6 +1,6 @@
 import { Page, expect } from "@playwright/test"
 import { BasePage } from "./base.page"
-import { addUserToCategoryName, convertHexToRgbColor, getRandomHexColor } from "../../helpers"
+import { convertHexToRgbColor, getRandomHexColor } from "../../helpers"
 
 export class CategoryPage extends BasePage {
 
@@ -14,10 +14,11 @@ export class CategoryPage extends BasePage {
   }
 
   public async addCategory(categoryName: string) {
-    await this.saveNewCategory()
+    await this.page.getByRole('button', { name: 'Add category' }).click()
     await this.clickByLabel('Category name *')
     await this.fillData('Category name *', categoryName)
-    await this.saveNewCategory()
+    await this.page.getByTitle('Fast Food').click()
+    await this.clickByRoleName('button', 'Save')
   }
 
   public async gotoExpenseCategory() {
@@ -25,46 +26,37 @@ export class CategoryPage extends BasePage {
     await this.waitToLoadPage()
   }
 
+  // The list keeps the selected tab in the query string (/category?tab=expense)
   public async waitToLoadPage() {
-    await this.wait(`${this.baseUrl}/category`)
-  }
-
-  public async saveNewCategory() {
-    await this.page.getByRole('button', { name: 'Add category' }).click()
+    await this.page.waitForURL(/\/category(\?.*)?$/)
+    await this.page.waitForLoadState('load')
   }
 
   public async editCategory(categoryName: string) {
     const [color, backgroundColor] = [getRandomHexColor(), getRandomHexColor()]
-    const rowName = this.getRowName(categoryName)
-    await this.page.locator('article').filter({ hasText: rowName }).getByRole('button').nth(2).click()
-    await this.page.locator('div').filter({ hasText: 'Icon color *' }).nth(3).click()
-    await this.clickByLabel('Icon color *')
-    await this.fillData('Icon color *', color)
-    await this.clickByLabel('Background color *')
-    await this.fillData('Background color *', backgroundColor)
-
-    await this.page.locator('div').filter({ hasText: 'Order' }).nth(3).click()
-    await this.fillData('Order', '-1')
-    await this.waitByTime(501)
+    await this.getRow(categoryName).getByRole('button').nth(2).click()
+    await this.fillData('Icon color', color)
+    await this.fillData('Background color', backgroundColor)
+    await this.fillData('List position', '-1')
     await this.clickByRoleName('button', 'Save')
     return [color, backgroundColor]
   }
 
   public async deleteCategory(categoryName: string) {
-    const rowName = this.getRowName(addUserToCategoryName(categoryName))
-    await this.page.locator('article').filter({ hasText: rowName }).getByRole('button').first().click()
+    await this.getRow(categoryName).getByRole('button').first().click()
     await this.page.getByRole('button', { name: 'Delete' }).click()
   }
 
   public async createTestAssertions(categoryName: string) {
     await expect(this.page).toHaveTitle(/Category/)
-    expect(this.page.getByText(addUserToCategoryName(categoryName))).toBeDefined()
+    const row = this.getRow(categoryName)
+    await expect(row).toBeVisible()
+    await expect(row.getByText('Mine', { exact: true })).toBeVisible()
   }
 
   public async updateTestAssertions(categoryName: string, color: string, backgroundColor: string) {
-    const text = this.getRowName(categoryName)
     await this.createTestAssertions(categoryName)
-    const button = this.page.locator('article').filter({ hasText: text }).getByRole('button').nth(1)
+    const button = this.getRow(categoryName).getByRole('button').nth(1)
 
     const buttonStyles = await button.evaluate((element) => {
       const style = window.getComputedStyle(element)
@@ -82,10 +74,10 @@ export class CategoryPage extends BasePage {
 
   public async deleteTestAssertions(categoryName: string) {
     await expect(this.page).toHaveTitle(/Category/)
-    const isVisible = await this.page.isVisible(`text="${this.getRowName(categoryName)}"`)
-    expect(isVisible).not.toBeTruthy()
+    await expect(this.getRow(categoryName)).toHaveCount(0)
   }
 
-  private getRowName = (categoryName: string) => `highlight_off fastfood${categoryName}edit`
+  // Category names are random strings, so the name alone identifies the row
+  private getRow = (categoryName: string) => this.page.locator('article').filter({ hasText: categoryName })
 
 }
