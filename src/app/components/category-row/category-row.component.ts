@@ -97,8 +97,9 @@ export class CategoryRowComponent implements OnInit, OnDestroy {
       if (userCategory?.id) {
         references.push(this.userCategoryService.getUserCategoryReferenceById(userCategory.id))
       }
-      await this.categoryService.delete(this.category.id)
+      // Movements go first: if their deletion fails the category still exists and can be deleted again
       await this.deleteDocuments(references)
+      await this.categoryService.delete(this.category.id)
       this.user.removeCategory(this.category.id)
       this.snackBar.open(this.translate.instant('category-messages.deleted'), '', { duration: 3000 })
       this.updateCategoryEvent.emit(new CategoryEvent(this.category.type, this.category.id))

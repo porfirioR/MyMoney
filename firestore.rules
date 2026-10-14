@@ -1,11 +1,46 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /{document=**} {
-      allow read, write: if request.auth != null;
+    function signedIn() {
+      return request.auth != null && request.auth.token.email != null;
     }
-    match /movements/{userEmail} {
-      allow read, write: if request.auth != null && request.auth.token.email == userEmail
+    function myEmail() {
+      return request.auth.token.email;
+    }
+
+    // System categories (owner 'system') are read-only; own categories can be edited by their owner
+    match /categories/{id} {
+      allow read: if signedIn() && resource.data.owner in ['system', myEmail()];
+      allow create: if signedIn() && request.resource.data.owner == myEmail();
+      allow update: if signedIn() && resource.data.owner == myEmail()
+                    && request.resource.data.owner == myEmail();
+      allow delete: if signedIn() && resource.data.owner == myEmail();
+    }
+
+    match /user_categories/{id} {
+      allow read, delete: if signedIn() && resource.data.email == myEmail();
+      allow create: if signedIn() && request.resource.data.email == myEmail();
+      allow update: if signedIn() && resource.data.email == myEmail()
+                    && request.resource.data.email == myEmail();
+    }
+
+    match /configurations/{id} {
+      allow read, delete: if signedIn() && resource.data.email == myEmail();
+      allow create: if signedIn() && request.resource.data.email == myEmail();
+      allow update: if signedIn() && resource.data.email == myEmail()
+                    && request.resource.data.email == myEmail();
+    }
+
+    match /related_movements/{id} {
+      allow read, delete: if signedIn() && resource.data.owner == myEmail();
+      allow create: if signedIn() && request.resource.data.owner == myEmail();
+      allow update: if signedIn() && resource.data.owner == myEmail()
+                    && request.resource.data.owner == myEmail();
+    }
+
+    // movements/{email}/{income|expense}/{id}
+    match /movements/{userEmail}/{document=**} {
+      allow read, write: if signedIn() && myEmail() == userEmail;
     }
   }
 }

@@ -43,7 +43,9 @@ export const CATEGORY_ICON_GROUPS: CategoryIconGroupModel[] = [
     IconType.Movie, IconType.Casino, IconType.Pool, IconType.Golf,
     IconType.Sports, IconType.Tennis, IconType.Surfing, IconType.Baseball,
     IconType.Roller, IconType.Audiotrack, IconType.ColorLens, IconType.HotTub,
-    IconType.LiveTv, IconType.SportsSoccer, IconType.TheaterComedy
+    IconType.LiveTv, IconType.SportsSoccer, IconType.TheaterComedy,
+    IconType.Celebration, IconType.Ticket, IconType.LocalActivity,
+    IconType.Festival, IconType.Groups, IconType.Mic
   ]),
   new CategoryIconGroupModel(CategoryGroupIconType.Maps, [
     IconType.Beach, IconType.Ice, IconType.Mountain, IconType.Place,

@@ -149,5 +149,11 @@ export enum IconType {
   Build = 'build',
   LiveTv = 'live_tv',
   SportsSoccer = 'sports_soccer',
-  TheaterComedy = 'theater_comedy'
+  TheaterComedy = 'theater_comedy',
+  Celebration = 'celebration',
+  Ticket = 'confirmation_number',
+  LocalActivity = 'local_activity',
+  Festival = 'festival',
+  Groups = 'groups',
+  Mic = 'mic'
 }
