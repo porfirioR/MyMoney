@@ -14,9 +14,26 @@ export class HelperService {
 
 constructor() { }
 
-  public static categoriesByType = (categories: CategoryModel[], type: CategoryType): CategoryModel[] => {
-    categories.sort((a, b) => a.order - b.order)
-    return categories.filter(x => x.type.toLocaleLowerCase() ===  type.toLowerCase())
+  // getName receives the stored name (a translation key for system categories) and returns the text shown to the user
+  public static categoriesByType = (
+    categories: CategoryModel[],
+    type: CategoryType,
+    getName: (name: string) => string = (name) => name
+  ): CategoryModel[] => categories
+    .filter(x => x.type.toLocaleLowerCase() === type.toLowerCase())
+    .sort((a, b) => HelperService.compareCategoryOrder(a, b, getName))
+
+  // Lower order first; categories with the same order are sorted alphabetically
+  public static compareCategoryOrder = (
+    a: CategoryModel,
+    b: CategoryModel,
+    getName: (name: string) => string = (name) => name
+  ): number => (a.order - b.order) || getName(a.name).localeCompare(getName(b.name))
+
+  // New categories go to the end of their list
+  public static getNextCategoryOrder = (categories: CategoryModel[], type: string): number => {
+    const orders = categories.filter(x => x.type.toLowerCase() === type.toLowerCase()).map(x => x.order ?? 0)
+    return orders.length ? Math.max(...orders) + 1 : 0
   }
 
   public static convertStringToMonthType = (value: string): MonthType => Number.parseInt(Object.entries(MonthType).find(([key, val]) => val === value)![0])

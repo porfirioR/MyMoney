@@ -88,7 +88,7 @@
   "system-category-hint": "Default category · only colors and position can be changed",
   "Personal care": "Personal care",
   "List position": "List position",
-  "list-position-hint": "Lower numbers appear first",
+  "list-position-hint": "Lower numbers appear higher. New categories are added at the end",
   "Choose an icon": "Choose an icon",
   "Mine": "Mine",
   "Export Movements": "Export Movements",

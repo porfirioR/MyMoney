@@ -90,7 +90,7 @@ export class RegisterMovementComponent implements OnInit {
           this.title = 'Movement update'
           this.patchFormGroup(this.updateMovement)
         } else {
-          this.currentCategories = HelperService.categoriesByType(this.categoryList, this.categoryType.expense)
+          this.currentCategories = HelperService.categoriesByType(this.categoryList, this.categoryType.expense, this.getCategoryName)
           if (this.currentCategories.length > 0) {
             const currentCategory = this.currentCategories[0]
             this.formGroup.controls.icon.setValue(currentCategory.icon)
@@ -102,7 +102,7 @@ export class RegisterMovementComponent implements OnInit {
 
         this.formGroup.controls.type.valueChanges.subscribe({
           next: (type) => {
-            this.currentCategories = HelperService.categoriesByType(this.categoryList, type!)
+            this.currentCategories = HelperService.categoriesByType(this.categoryList, type!, this.getCategoryName)
             const currentCategory = this.currentCategories.find(x => x.id === this.formGroup.controls.categoryId.value)
             if(currentCategory || this.currentCategories.length === 0) {
               this.formGroup.controls.icon.setValue(null)
@@ -152,6 +152,8 @@ export class RegisterMovementComponent implements OnInit {
   protected exit = (): void => {
     this.location.back()
   }
+
+  private getCategoryName = (name: string): string => this.translate.instant(name)
 
   protected openCalculator = (): void => {
     const dialogRef = this.dialog.open(DialogCalculatorComponent, {
@@ -210,7 +212,7 @@ export class RegisterMovementComponent implements OnInit {
   }
 
   private patchFormGroup = (movement: MovementModel): void => {
-    this.currentCategories = HelperService.categoriesByType(this.categoryList, movement.type)
+    this.currentCategories = HelperService.categoriesByType(this.categoryList, movement.type, this.getCategoryName)
     const currentCategory = this.currentCategories.find(x => x.id === movement.categoryId)
     const relatedMovementIds = this.relatedMovements.filter(x => x.related.map(y => y.id).includes(movement.id!)).map(x => x.id!)
     this.formGroup.patchValue({

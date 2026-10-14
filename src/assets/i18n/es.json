@@ -87,7 +87,7 @@
   "system-category-hint": "Categoría predeterminada · solo podés cambiar los colores y la posición",
   "Personal care": "Cuidado personal",
   "List position": "Posición en la lista",
-  "list-position-hint": "Las de número menor aparecen primero",
+  "list-position-hint": "Número menor = aparece más arriba. Las nuevas se agregan al final",
   "Choose an icon": "Elegí un ícono",
   "Mine": "Mía",
   "Export Movements": "Exportar movimientos",

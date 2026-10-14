@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core'
 import { Location } from '@angular/common'
 import { MatLegacyTabChangeEvent as MatTabChangeEvent } from '@angular/material/legacy-tabs'
 import { ActivatedRoute, Router } from '@angular/router'
+import { TranslateService } from '@ngx-translate/core'
 import { catchError, take } from 'rxjs'
 import { CategoryType } from '../../enums/category-type.enum'
 import { CategoryModel } from '../../models/category.model'
@@ -27,7 +28,8 @@ export class CategoryConfigurationComponent implements OnInit {
     private readonly location: Location,
     private readonly userService: UserService,
     private readonly activatedRoute: ActivatedRoute,
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly translateService: TranslateService
   ) { }
 
   ngOnInit(): void {
@@ -69,7 +71,8 @@ export class CategoryConfigurationComponent implements OnInit {
 
   private orderCategoryByActive = (categories: CategoryModel[]): CategoryModel[] => categories.sort((a, b) => {
     const compareActive = a.active === b.active ? 0 : a.active ? -1 : 1
-    const compareOrder = a.order - b.order
-    return compareActive || compareOrder
+    return compareActive || HelperService.compareCategoryOrder(a, b, this.getName)
   })
+
+  private getName = (name: string): string => this.translateService.instant(name)
 }

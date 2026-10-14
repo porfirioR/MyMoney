@@ -50,6 +50,7 @@ export class UpsertCategoryComponent implements OnInit {
   protected thousandSeparator = '.'
   private type!: string
   private categoryNames: string[] = []
+  private nextOrder = 0
 
   constructor(
     private readonly location: Location,
@@ -91,6 +92,7 @@ export class UpsertCategoryComponent implements OnInit {
           .filter(x => x.id !== this.category?.id && x.type.toLowerCase() === this.type.toLowerCase())
           .flatMap(x => [x.name, this.translateService.instant(x.name)])
           .map(x => x.toLowerCase().trim())
+        this.nextOrder = HelperService.getNextCategoryOrder(categories, this.type)
         const userCategory = this.category ? userCategories.find(x => x.categoryId === this.category!.id) : undefined
         this.buildForm(userCategory)
         if (!this.category) {
@@ -226,14 +228,24 @@ export class UpsertCategoryComponent implements OnInit {
       hexColor: new FormControl(color, [Validators.required, Validators.pattern(HEX_COLOR_PATTERN)]),
       backgroundColor: new FormControl(backgroundColor, Validators.required),
       hexBackgroundColor: new FormControl(backgroundColor, [Validators.required, Validators.pattern(HEX_COLOR_PATTERN)]),
-      order: new FormControl(userCategory?.order ?? 0, Validators.min(0))
+      // Categories without user data keep the order assigned on load (setCategories); new ones go last
+      order: new FormControl(userCategory?.order ?? this.category?.order ?? this.nextOrder, Validators.min(0))
     })
     const controls = this.formGroup.controls
+    // Shows the duplicate name error while typing, without waiting for blur
+    controls.name.statusChanges.subscribe({
+      next: () => {
+        if (controls.name.hasError('sameName')) {
+          controls.name.markAsTouched()
+        }
+      }
+    })
     this.syncColor(controls.color, controls.hexColor)
     this.syncColor(controls.backgroundColor, controls.hexBackgroundColor)
   }
 
-  // Keeps the picker and the hex input in sync; only complete #rrggbb values reach the picker
+  // Keeps the picker and the hex input in sync; only complete #rrggbb values reach the picker.
+  // A complete value typed without "#" (or in uppercase) is normalized in the hex input too.
   private syncColor = (colorControl: FormControl<string | null>, hexControl: FormControl<string | null>): void => {
     colorControl.valueChanges.pipe(distinctUntilChanged()).subscribe({
       next: (color) => {
@@ -245,7 +257,11 @@ export class UpsertCategoryComponent implements OnInit {
     hexControl.valueChanges.pipe(distinctUntilChanged()).subscribe({
       next: (hexColor) => {
         const finalValue = `#${(hexColor ?? '').replace(/[^A-Fa-f0-9]/g, '')}`.toLowerCase()
-        if (HEX_COLOR_PATTERN.test(finalValue) && colorControl.value !== finalValue) {
+        if (!HEX_COLOR_PATTERN.test(finalValue)) { return }
+        if (hexControl.value !== finalValue) {
+          hexControl.setValue(finalValue, { emitEvent: false })
+        }
+        if (colorControl.value !== finalValue) {
           colorControl.setValue(finalValue, { emitEvent: false })
         }
       }
@@ -260,7 +276,6 @@ export class UpsertCategoryComponent implements OnInit {
   private sameNameValidator = (control: AbstractControl): ValidationErrors | null => {
     const name = (control.value as string | null)?.toLowerCase().trim()
     if (name && this.categoryNames.includes(name)) {
-      control.markAsTouched()
       return { sameName: true }
     }
     return null

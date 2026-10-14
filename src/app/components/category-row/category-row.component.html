@@ -2,6 +2,7 @@
   <button mat-icon-button
     [ngClass]="{ 'mat-warn': category.active }"
     [title]="'active-category-button' | translate"
+    [disabled]="saving"
     (click)="deactivateReactivateCategory(category.active)"
   >
     <mat-icon [ngClass]="{ 'icon-color-green': !category.active }">
