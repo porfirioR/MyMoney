@@ -4,10 +4,10 @@
   Movements to save: {{data.length}}
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-  <button mat-stroked-button [mat-dialog-close]="false" color="warn" cdkFocusInitial [disabled]="loading" [title]="'cancel-button' | translate">
+  <button mat-stroked-button [mat-dialog-close]="false" color="primary" cdkFocusInitial [disabled]="loading" [title]="'cancel-button' | translate">
     {{'Cancel' | translate}}
   </button>
-  <button mat-stroked-button (click)="upload()" color="primary" [disabled]="loading" [title]="'upload-button' | translate">
+  <button mat-flat-button (click)="upload()" color="primary" [disabled]="loading" [title]="'upload-button' | translate">
     {{'Upload' | translate}}
   </button>
 </mat-dialog-actions>
