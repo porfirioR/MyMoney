@@ -170,6 +170,7 @@ export class RegisterMovementComponent implements OnInit {
   }
 
   protected save = (): void => {
+    if (this.formGroup.invalid || this.saving) { return }
     const request: MovementModel = {
       type: this.formGroup.controls.type.value!,
       icon: this.formGroup.controls.icon.value!,
@@ -193,8 +194,8 @@ export class RegisterMovementComponent implements OnInit {
       request$ = this.movementService.create(request)
       this.movementRegistrationType = MovementRegistrationType.create
     }
+    // saving stays true until the related movements are saved and the screen closes, so a second tap cannot duplicate the movement
     request$.then((x) => {
-      this.saving = false
       const movementUpdated = this.movementService.getMovementById(this.movementId)!
       if (request.id) {
         movementUpdated.type = request.type
@@ -208,7 +209,11 @@ export class RegisterMovementComponent implements OnInit {
         this.movementService.deleteMovementForList(this.movementId)
       }
       this.setRelatedMovements(x)
-    }).catch((error) => console.error(error))
+    }).catch((error) => {
+      console.error(error)
+      this.saving = false
+      this.snackBar.open(String(error), '', { duration: 3000 })
+    })
   }
 
   private patchFormGroup = (movement: MovementModel): void => {
@@ -268,9 +273,14 @@ export class RegisterMovementComponent implements OnInit {
     this.updateRelatedMovement(selectedRelatedMovements, batch)
     request$.push(batch.commit())
     if (request$.length >= 0) {
+      // The movement is already saved: on error show it and close instead of allowing a duplicate save
       Promise.all(request$)
       .then(() => this.updateSuccess())
-      .catch((e) => console.error(e))
+      .catch((e) => {
+        console.error(e)
+        this.snackBar.open(String(e), '', { duration: 3000 })
+        this.location.back()
+      })
     } else {
       this.updateSuccess()
     }

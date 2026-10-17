@@ -134,6 +134,7 @@ export class UpsertRelatedMovementComponent implements OnInit {
   }
 
   protected save = (): void => {
+    if (this.formGroup.invalid || this.saving) { return }
     this.saving = true
     const relatedList = [...this.incomes.map(x => new RelatedMapModel(x.id!, x.type)), ...this.expenses.map(x => new RelatedMapModel(x.id!, x.type))]
     const request: RelatedMovementModel = {
@@ -153,6 +154,7 @@ export class UpsertRelatedMovementComponent implements OnInit {
     }).catch(e => {
       this.saving = false
       console.error(e)
+      this.snackBar.open(String(e), '', { duration: 3000 })
     })
   }
 

@@ -4,15 +4,28 @@ import { CategoryModel } from '../models/category.model';
 import { ConfigurationModel } from '../models/configuration.model';
 import { UserCategoryModel } from '../models/user-category.model';
 import { UserDataModel } from '../models/user-data.model';
+import { YearMonthModel } from '../models/year-month-model';
+import { HelperService } from './helper.service';
 import { ItemObservable } from '../observables/item.observable';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService extends ItemObservable<UserDataModel> {
+  // Month being viewed; kept only in memory so reopening the app starts on the current month
+  private selectedYearMonth?: YearMonthModel
 
   constructor() {
     super()
+  }
+
+  public getSelectedYearMonth = (): YearMonthModel => {
+    return this.selectedYearMonth ?? HelperService.getSearchMessage()
+  }
+
+  // Query params arrive as strings, so values are always stored as numbers
+  public setSelectedYearMonth = (yearMonth: YearMonthModel): void => {
+    this.selectedYearMonth = new YearMonthModel(Number(yearMonth.year), Number(yearMonth.month))
   }
 
   public getUserEmail = (): string => {

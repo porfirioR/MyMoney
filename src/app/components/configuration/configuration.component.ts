@@ -22,6 +22,7 @@ export class ConfigurationComponent implements OnInit {
   protected languages = LanguageType
   protected amount = 1000000000
   protected loading = true
+  protected saving = false
   protected date = new Date()
   protected formGroup: FormGroup<ConfigurationForm> = new FormGroup<ConfigurationForm>({
     id: new FormControl(),
@@ -68,10 +69,16 @@ export class ConfigurationComponent implements OnInit {
   }
 
   protected save = (): void => {
+    if (this.formGroup.invalid || this.saving) { return }
+    this.saving = true
     const request: ConfigurationModel = this.formGroup.getRawValue()! as ConfigurationModel
     this.configurationService.upsert(request).then(() => {
       this.snackBar.open(this.translate.instant(`User configuration was ${request.id ? 'updated' : 'created'}`), '', { duration: 3000 })
       this.exit()
-    }).catch(e => console.error(e))
+    }).catch(e => {
+      console.error(e)
+      this.saving = false
+      this.snackBar.open(String(e), '', { duration: 3000 })
+    })
   }
 }

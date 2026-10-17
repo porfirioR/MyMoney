@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { SafeUrl } from '@angular/platform-browser';
 import { AuthService } from '../../services/auth.service';
 import { UserService } from '../../services/user.service';
-import { HelperService } from '../../services/helper.service';
 import { NavItemModel } from '../../models/nav-item.model';
 import { UserDataModel } from '../../models/user-data.model';
 import { ConfigurationModel } from '../../models/configuration.model';
@@ -38,8 +37,7 @@ export class SideNavComponent implements OnInit {
     private readonly userService: UserService
   ) {
     if (!this.year) {
-      const yearMonth = HelperService.getSearchMessage()
-      this.year = yearMonth.year
+      this.year = this.userService.getSelectedYearMonth().year
     }
   }
 
