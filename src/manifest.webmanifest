@@ -2,7 +2,7 @@
   "name": "My Money",
   "short_name": "My Money",
   "theme_color": "#82b366",
-  "background_color": "#d1e9ca",
+  "background_color": "#fafafa",
   "display": "standalone",
   "scope": "./",
   "start_url": "./",

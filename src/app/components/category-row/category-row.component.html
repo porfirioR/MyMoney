@@ -2,6 +2,7 @@
   <button mat-icon-button
     [ngClass]="{ 'mat-warn': category.active }"
     [title]="'active-category-button' | translate"
+    [disabled]="saving"
     (click)="deactivateReactivateCategory(category.active)"
   >
     <mat-icon [ngClass]="{ 'icon-color-green': !category.active }">
@@ -16,7 +17,10 @@
   >
     <i class="material-icons-outlined notranslate">{{category.icon}}</i>
   </button>
-  <span class="category-name">{{category.name | translate}}</span>
+  <span class="category-name">
+    {{category.name | translate}}
+    <span class="mine-chip" *ngIf="isOwnCategory">{{ 'Mine' | translate }}</span>
+  </span>
   <button mat-icon-button [routerLink]="['edit-category', category.id]" [title]="'edit-category-button' | translate">
     <mat-icon>edit</mat-icon>
   </button>

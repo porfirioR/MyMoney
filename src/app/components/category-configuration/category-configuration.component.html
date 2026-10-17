@@ -19,7 +19,7 @@
   </mat-toolbar>
   <div class="mat-toolbar-block"></div>
   <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
-  <mat-tab-group mat-stretch-tabs mat-align-tabs="center" *ngIf="!loading" (selectedTabChange)="tabChanged($event)">
+  <mat-tab-group mat-stretch-tabs mat-align-tabs="center" *ngIf="!loading" [selectedIndex]="selectedIndex" (selectedTabChange)="tabChanged($event)">
     <mat-tab [label]="categoryType.income | translate">
       <main id="main-income">
         <ng-container *ngFor="let item of incomeCategory">

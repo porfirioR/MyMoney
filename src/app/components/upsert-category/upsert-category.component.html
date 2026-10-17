@@ -1,0 +1,136 @@
+<mat-toolbar color="primary">
+  <button mat-icon-button (click)="exit()" [title]="'exit-button' | translate">
+    <mat-icon>keyboard_backspace</mat-icon>
+  </button>
+  <span>{{title | translate}}</span>
+  <button mat-icon-button routerLink="/" [title]="'home-button' | translate">
+    <mat-icon>home</mat-icon>
+  </button>
+</mat-toolbar>
+<div class="mat-toolbar-block"></div>
+<main id="main" *ngIf="formGroup">
+  <header class="preview">
+    <span class="preview-icon" customColor
+      [class.empty]="!formGroup.controls.icon.value"
+      [color]="formGroup.controls.color.value ?? undefined"
+      [backgroundColor]="formGroup.controls.backgroundColor.value ?? undefined"
+    >
+      <i class="material-icons-outlined notranslate">{{formGroup.controls.icon.value || placeholderIcon}}</i>
+    </span>
+    <span class="preview-text">
+      <span class="preview-name" [class.placeholder]="!formGroup.controls.name.value">
+        {{ (formGroup.controls.name.value || 'Category name') | translate }}
+        <span class="mine-chip" *ngIf="!isSystemCategory">{{ 'Mine' | translate }}</span>
+      </span>
+      <span class="preview-subtitle" *ngIf="isSystemCategory">{{ 'system-category-hint' | translate }}</span>
+    </span>
+  </header>
+
+  <form [formGroup]="formGroup" (ngSubmit)="save()">
+    <mat-card *ngIf="!isSystemCategory">
+      <mat-form-field class="w-100">
+        <mat-label translate>Category name</mat-label>
+        <input matInput formControlName="name" #nameInput id="name" autocomplete="off" (keydown.enter)="onNameEnter($event)">
+        <mat-error *ngIf="formGroup.controls.name.hasError('required')">
+          {{ 'message-error.required-category' | translate }}
+        </mat-error>
+        <mat-error *ngIf="formGroup.controls.name.hasError('sameName')">
+          {{ 'message-error.repeating-category' | translate }}
+        </mat-error>
+      </mat-form-field>
+    </mat-card>
+
+    <mat-card *ngIf="!isSystemCategory" class="icon-card" #iconSection>
+      <mat-expansion-panel class="mat-elevation-z0"
+        [expanded]="iconPanelExpanded"
+        (opened)="iconPanelExpanded = true"
+        (closed)="iconPanelExpanded = false"
+      >
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <ng-container *ngIf="formGroup.controls.icon.value as icon; else noIcon">
+              <i class="material-icons-outlined notranslate panel-icon">{{icon}}</i>
+              {{ 'Change icon' | translate }}
+            </ng-container>
+            <ng-template #noIcon>
+              <span [class.required]="formGroup.controls.icon.touched">{{ 'Choose an icon' | translate }} *</span>
+            </ng-template>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <ng-container *ngFor="let group of iconGroups">
+          <mat-card-subtitle translate>{{group.groupName}}</mat-card-subtitle>
+          <span class="icon-list">
+            <button class="btn-icon" mat-mini-fab type="button"
+              *ngFor="let icon of group.icons"
+              [color]="icon === formGroup.controls.icon.value ? 'primary' : ''"
+              [title]="getIconName(icon)"
+              (click)="selectIcon(icon)"
+            >
+              <i class="material-icons-outlined notranslate">{{icon}}</i>
+            </button>
+          </span>
+        </ng-container>
+      </mat-expansion-panel>
+    </mat-card>
+
+    <mat-card class="color-card" #colorSection>
+      <ng-container *ngTemplateOutlet="colorPicker; context: {
+        label: 'Icon color',
+        control: formGroup.controls.color,
+        hexControl: formGroup.controls.hexColor,
+        presets: iconColorPresets
+      }"></ng-container>
+      <ng-container *ngTemplateOutlet="colorPicker; context: {
+        label: 'Background color',
+        control: formGroup.controls.backgroundColor,
+        hexControl: formGroup.controls.hexBackgroundColor,
+        presets: backgroundColorPresets
+      }"></ng-container>
+
+      <mat-form-field class="w-100">
+        <mat-label translate>List position</mat-label>
+        <input matInput type="text" formControlName="order" [mask]="mask" [thousandSeparator]="thousandSeparator" id="order" inputmode="numeric">
+        <mat-hint>{{ 'list-position-hint' | translate }}</mat-hint>
+        <mat-error *ngIf="formGroup.controls.order.hasError('min')" translate>Value cannot less than zero</mat-error>
+      </mat-form-field>
+    </mat-card>
+
+    <footer class="actions form-actions">
+      <button mat-stroked-button color="primary" type="button" (click)="exit()" [title]="'cancel-button' | translate">
+        {{'Cancel' | translate}}
+      </button>
+      <button mat-flat-button color="primary" type="submit" [disabled]="formGroup.invalid || saving" [title]="'save-button' | translate">
+        {{'Save' | translate}}
+      </button>
+    </footer>
+  </form>
+</main>
+
+<ng-template #colorPicker let-label="label" let-control="control" let-hexControl="hexControl" let-presets="presets">
+  <section class="color-section">
+    <div class="color-header">
+      <span class="color-label">{{label | translate}}</span>
+      <mat-form-field class="hex-field">
+        <input matInput [formControl]="hexControl" maxlength="7" autocomplete="off" [attr.aria-label]="label | translate">
+        <mat-error *ngIf="hexControl.invalid">{{ 'Invalid color' | translate }}</mat-error>
+      </mat-form-field>
+    </div>
+    <div class="swatches">
+      <button type="button" class="swatch"
+        *ngFor="let preset of presets"
+        [style.background-color]="preset"
+        [class.selected]="control.value === preset"
+        [title]="preset"
+        (click)="selectColor(control, preset)"
+      ></button>
+      <label class="swatch custom"
+        [class.selected]="!isPreset(presets, control.value)"
+        [style.background]="isPreset(presets, control.value) ? null : control.value"
+        [title]="'Custom color' | translate"
+      >
+        <mat-icon>colorize</mat-icon>
+        <input type="color" [formControl]="control">
+      </label>
+    </div>
+  </section>
+</ng-template>

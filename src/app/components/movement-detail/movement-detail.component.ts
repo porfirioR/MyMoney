@@ -12,6 +12,7 @@ import { RelatedMovementService } from '../../services/related-movement.service'
 import { MovementModel } from '../../models/movement.model';
 import { NumberType } from '../../enums/number-type.enum';
 import { LanguageType } from '../../enums/language-type.enum';
+import { DEFAULT_BACKGROUND_COLOR, DEFAULT_ICON_COLOR } from '../../constants/category.constants';
 
 @Component({
   selector: 'app-movement-detail',
@@ -24,8 +25,8 @@ export class MovementDetailComponent implements OnInit {
   protected language = LanguageType.English
   protected relatedMovements: string[] = []
   protected load = false
-  private defaultColor = '#000000'
-  private defaultBackgroundColor = '#ffffff'
+  private defaultColor = DEFAULT_ICON_COLOR
+  private defaultBackgroundColor = DEFAULT_BACKGROUND_COLOR
 
   constructor(
     private readonly location: Location,

@@ -89,7 +89,8 @@ body {
   top: 0;
 }
 
-.mat-stroked-button {
+// Only the stroked buttons on the green toolbar need a white border
+.mat-toolbar .mat-stroked-button {
   border-color: white !important;
 }
 
@@ -97,6 +98,17 @@ body {
   display: flex !important;
   justify-content: space-evenly !important;
   padding-bottom: 1.34375em !important;
+}
+
+// Cancel + main action at the end of a form: equal-width buttons aligned with the card content
+.form-actions {
+  display: flex !important;
+  gap: 1rem;
+  padding: 0.5rem 16px 16px !important;
+  & > button {
+    flex: 1;
+    height: 2.75rem;
+  }
 }
 
 .app-principal {

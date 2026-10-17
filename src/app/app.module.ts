@@ -34,7 +34,7 @@ import { SelectYearMonthComponent } from './components/select-year-mount/select-
 import { SideNavComponent } from './components/side-nav/side-nav.component';
 import { CategoryConfigurationComponent } from './components/category-configuration/category-configuration.component';
 import { CategoryRowComponent } from './components/category-row/category-row.component';
-import { NewCategoryComponent } from './components/new-category/new-category.component';
+import { UpsertCategoryComponent } from './components/upsert-category/upsert-category.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RegisterMovementComponent } from './components/register-movement/register-movement.component';
 import { initializeApp,provideFirebaseApp } from '@angular/fire/app';
@@ -60,7 +60,6 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { CustomColorDirective } from './directive/custom-color.directive';
-import { EditCategoryComponent } from './components/edit-category/edit-category.component';
 import { AboutUsComponent } from './components/about-us/about-us.component';
 import { ConfigurationComponent } from './components/configuration/configuration.component';
 import { EnumArrayLoopPipe } from './directive/enum-array-loop.pipe';
@@ -90,7 +89,7 @@ registerLocaleData(localeEn, 'en')
     SideNavComponent,
     CategoryConfigurationComponent,
     CategoryRowComponent,
-    NewCategoryComponent,
+    UpsertCategoryComponent,
     RegisterMovementComponent,
     LoginComponent,
     MovementComponent,
@@ -101,7 +100,6 @@ registerLocaleData(localeEn, 'en')
     DialogUploadMovementComponent,
     LogoutComponent,
     ReportMonthComponent,
-    EditCategoryComponent,
     AboutUsComponent,
     ConfigurationComponent,
     CustomColorDirective,
@@ -161,11 +159,7 @@ registerLocaleData(localeEn, 'en')
     provideAuth(() => getAuth()),
     provideFirestore(() => getFirestore()),
     StoreModule.forRoot({}, {}),
-    StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !environment.production }),
-    ServiceWorkerModule.register('ngsw-worker.js', {
-      enabled: environment.production,
-      registrationStrategy: 'registerWhenStable:30000'
-    })
+    StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !environment.production })
   ],
   providers: [
     { provide: LOCALE_ID, useValue: 'es' },

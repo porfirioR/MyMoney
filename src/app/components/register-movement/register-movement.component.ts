@@ -22,6 +22,7 @@ import { RelatedMapModel } from '../../models/related-map-model';
 import { MovementRegistrationType } from '../../enums/movement-registration-type.enum';
 import { CalculatorDialogData } from '../../models/calculator-dialog-data';
 import { DialogCalculatorComponent } from '../dialog-calculator/dialog-calculator.component';
+import { DEFAULT_BACKGROUND_COLOR, DEFAULT_ICON_COLOR } from '../../constants/category.constants';
 
 @Component({
   selector: 'app-register-movement',
@@ -31,8 +32,8 @@ import { DialogCalculatorComponent } from '../dialog-calculator/dialog-calculato
 export class RegisterMovementComponent implements OnInit {
   @ViewChild("memorandum") inputMemorandum?: ElementRef
   protected categoryType = CategoryType
-  protected defaultColor = '#000000'
-  protected defaultBackgroundColor = '#ffffff'
+  protected defaultColor = DEFAULT_ICON_COLOR
+  protected defaultBackgroundColor = DEFAULT_BACKGROUND_COLOR
   protected minDate = new Date('2018-01-01:00:00:00')
   protected inputCharacter = InputType.Characters
   protected inputDigit = InputType.Digits
@@ -89,7 +90,7 @@ export class RegisterMovementComponent implements OnInit {
           this.title = 'Movement update'
           this.patchFormGroup(this.updateMovement)
         } else {
-          this.currentCategories = HelperService.categoriesByType(this.categoryList, this.categoryType.expense)
+          this.currentCategories = HelperService.categoriesByType(this.categoryList, this.categoryType.expense, this.getCategoryName)
           if (this.currentCategories.length > 0) {
             const currentCategory = this.currentCategories[0]
             this.formGroup.controls.icon.setValue(currentCategory.icon)
@@ -101,7 +102,7 @@ export class RegisterMovementComponent implements OnInit {
 
         this.formGroup.controls.type.valueChanges.subscribe({
           next: (type) => {
-            this.currentCategories = HelperService.categoriesByType(this.categoryList, type!)
+            this.currentCategories = HelperService.categoriesByType(this.categoryList, type!, this.getCategoryName)
             const currentCategory = this.currentCategories.find(x => x.id === this.formGroup.controls.categoryId.value)
             if(currentCategory || this.currentCategories.length === 0) {
               this.formGroup.controls.icon.setValue(null)
@@ -152,6 +153,8 @@ export class RegisterMovementComponent implements OnInit {
     this.location.back()
   }
 
+  private getCategoryName = (name: string): string => this.translate.instant(name)
+
   protected openCalculator = (): void => {
     const dialogRef = this.dialog.open(DialogCalculatorComponent, {
       width: '320px',
@@ -167,6 +170,7 @@ export class RegisterMovementComponent implements OnInit {
   }
 
   protected save = (): void => {
+    if (this.formGroup.invalid || this.saving) { return }
     const request: MovementModel = {
       type: this.formGroup.controls.type.value!,
       icon: this.formGroup.controls.icon.value!,
@@ -190,8 +194,8 @@ export class RegisterMovementComponent implements OnInit {
       request$ = this.movementService.create(request)
       this.movementRegistrationType = MovementRegistrationType.create
     }
+    // saving stays true until the related movements are saved and the screen closes, so a second tap cannot duplicate the movement
     request$.then((x) => {
-      this.saving = false
       const movementUpdated = this.movementService.getMovementById(this.movementId)!
       if (request.id) {
         movementUpdated.type = request.type
@@ -205,11 +209,15 @@ export class RegisterMovementComponent implements OnInit {
         this.movementService.deleteMovementForList(this.movementId)
       }
       this.setRelatedMovements(x)
-    }).catch((error) => console.error(error))
+    }).catch((error) => {
+      console.error(error)
+      this.saving = false
+      this.snackBar.open(String(error), '', { duration: 3000 })
+    })
   }
 
   private patchFormGroup = (movement: MovementModel): void => {
-    this.currentCategories = HelperService.categoriesByType(this.categoryList, movement.type)
+    this.currentCategories = HelperService.categoriesByType(this.categoryList, movement.type, this.getCategoryName)
     const currentCategory = this.currentCategories.find(x => x.id === movement.categoryId)
     const relatedMovementIds = this.relatedMovements.filter(x => x.related.map(y => y.id).includes(movement.id!)).map(x => x.id!)
     this.formGroup.patchValue({
@@ -265,9 +273,14 @@ export class RegisterMovementComponent implements OnInit {
     this.updateRelatedMovement(selectedRelatedMovements, batch)
     request$.push(batch.commit())
     if (request$.length >= 0) {
+      // The movement is already saved: on error show it and close instead of allowing a duplicate save
       Promise.all(request$)
       .then(() => this.updateSuccess())
-      .catch((e) => console.error(e))
+      .catch((e) => {
+        console.error(e)
+        this.snackBar.open(String(e), '', { duration: 3000 })
+        this.location.back()
+      })
     } else {
       this.updateSuccess()
     }

@@ -92,11 +92,11 @@
         </mat-action-row>
       </mat-accordion>
     </mat-card-content>
-    <mat-card-footer>
-      <button mat-stroked-button color="primary" (click)="exit()" [title]="'cancel-button' | translate">
+    <mat-card-footer class="form-actions">
+      <button mat-stroked-button color="primary" type="button" (click)="exit()" [title]="'cancel-button' | translate">
         {{'Cancel' | translate}}
       </button>
-      <button mat-stroked-button color="primary" type="submit" [disabled]="formGroup.invalid || saving"
+      <button mat-flat-button color="primary" type="submit" [disabled]="formGroup.invalid || saving"
         [title]="'save-button' | translate" (click)="save()">
         {{'Save' | translate}}
       </button>

@@ -62,6 +62,9 @@ export class ReportMonthComponent implements OnInit {
     .subscribe({
       next: ([params, queryParams, config]) => {
         this.yearMonth = queryParams as YearMonthModel
+        if (queryParams['year'] && queryParams['month']) {
+          this.userService.setSelectedYearMonth(this.yearMonth)
+        }
         const type = params['type']
         this.formGroup.controls.type.setValue(type)
         this.getMovementsByType(type)
@@ -135,6 +138,7 @@ export class ReportMonthComponent implements OnInit {
     dialogRef.afterClosed().pipe(take(1)).subscribe((result: YearMonthModel) => {
       if (result && (this.yearMonth?.month !== result.month || this.yearMonth?.year !== result.year)) {
         this.yearMonth = result;
+        this.userService.setSelectedYearMonth(result)
         this.getMovementsByType(this.formGroup.controls.type.value)
       }
     })

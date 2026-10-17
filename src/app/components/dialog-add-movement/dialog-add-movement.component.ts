@@ -14,6 +14,7 @@ import { CategoryModel } from '../../models/category.model';
 import { FilterRelatedMovementModel } from '../../models/filter-related-movement.model';
 import { MovementModel } from '../../models/movement.model';
 import { FilterRelatedMovementForm } from '../../forms/filter-related-movement.form';
+import { DEFAULT_BACKGROUND_COLOR, DEFAULT_ICON_COLOR } from '../../constants/category.constants';
 
 @Component({
   selector: 'app-dialog-add-movement',
@@ -37,8 +38,8 @@ export class DialogAddMovementComponent implements OnInit {
   protected movements: MovementModel[] = []
   protected selectedCategories: CategoryModel[] = []
   protected filteredCategories: Observable<CategoryModel[]>
-  protected defaultColor = '#000000'
-  protected defaultBackgroundColor = '#ffffff'
+  protected defaultColor = DEFAULT_ICON_COLOR
+  protected defaultBackgroundColor = DEFAULT_BACKGROUND_COLOR
   private minValidYear = 2018
 
   constructor(

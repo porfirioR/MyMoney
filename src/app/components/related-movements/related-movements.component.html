@@ -75,11 +75,11 @@
           </button>
         </section>
       </mat-card-content>
-      <mat-card-footer *ngIf="relatedMovements.length !== 0">
+      <mat-card-footer class="form-actions" *ngIf="relatedMovements.length !== 0">
         <button mat-stroked-button color="primary" (click)="exit()" [title]="'cancel-button' | translate">
           {{'Cancel' | translate}}
         </button>
-        <button mat-stroked-button color="primary"  [routerLink]="'add'" [title]="'save-button' | translate">
+        <button mat-flat-button color="primary" [routerLink]="'add'" [title]="'Add Related Movement' | translate">
           {{'Add Related Movement' | translate}}
         </button>
       </mat-card-footer>

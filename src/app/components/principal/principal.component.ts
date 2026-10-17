@@ -18,7 +18,6 @@ import { CategoryService } from '../../services/category.service';
 import { MovementService } from '../../services/movement.service';
 import { UserCategoryService } from '../../services/user-category.service';
 import { UserService } from '../../services/user.service';
-import { HelperService } from '../../services/helper.service';
 import { ConfigurationService } from '../../services/configuration.service';
 import { SelectYearMonthComponent } from '../select-year-mount/select-year-month.component';
 import { CategoryType } from '../../enums/category-type.enum';
@@ -58,7 +57,7 @@ export class PrincipalComponent implements OnInit {
     private readonly router: Router,
     private dateAdapter: DateAdapter<Date>
   ) {
-    this.yearMonth = HelperService.getSearchMessage()
+    this.yearMonth = this.userService.getSelectedYearMonth()
     this.hideAmounts = localStorage.getItem(PrincipalComponent.hideAmountsStorageKey) === 'true'
     onAuthStateChanged(getAuth(), (user) => {
       if (user) {
@@ -121,6 +120,7 @@ export class PrincipalComponent implements OnInit {
     dialogRef.afterClosed().pipe(take(1)).subscribe((result: YearMonthModel) => {
       if (result && (this.yearMonth?.month !== result.month || this.yearMonth?.year !== result.year)) {
         this.yearMonth = result;
+        this.userService.setSelectedYearMonth(result)
         this.movements = []
         this.income = 0
         this.expenses = 0
