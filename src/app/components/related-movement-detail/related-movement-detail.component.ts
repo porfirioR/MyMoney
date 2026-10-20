@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 import { TranslateService } from '@ngx-translate/core';
+import { take } from 'rxjs';
 import { LanguageType } from '../../enums/language-type.enum';
 import { NumberType } from '../../enums/number-type.enum';
 import { RelatedMovementDetailModel } from '../../models/related-movement-detail.model';
@@ -41,18 +42,19 @@ export class RelatedMovementDetailComponent implements OnInit {
       width: '350px',
       data: {
         title: this.translateService.instant('related-movement-messages.title-delete-movement'),
-        message: this.translateService.instant('related-movement-messages.question-delete')
+        message: this.translateService.instant('related-movement-messages.question-delete-movement')
       }
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().pipe(take(1)).subscribe(result => {
       if (result) {
-        const updated = { ...this.relatedMovement } as RelatedMovementModel
-        updated.related = this.relatedMovement.related.filter(x => x.id !== id) 
-        this.relatedMovementsService.update(updated).then(() => {
-          this.snackBar.open(this.translateService.instant('related-movement-messages.deleted'), '', { duration: 3000 })
+        const related = this.relatedMovement.related.filter(x => x.id !== id)
+        this.relatedMovementsService.updateRelated(this.relatedMovement.id!, related).then(() => {
+          // Keeps the group in sync so removing a second movement does not bring back the first one
+          this.relatedMovement.related = related
+          this.snackBar.open(this.translateService.instant('related-movement-messages.movement-removed'), '', { duration: 3000 })
           this.deletedMovementEvent.emit(id)
-        }).catch((reason: any) => this.snackBar.open(reason, '', { duration: 3000 }))
+        }).catch((reason: any) => this.snackBar.open(String(reason), '', { duration: 3000 }))
       }
     })
 

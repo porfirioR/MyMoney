@@ -2,7 +2,6 @@
 
 .mat-toolbar {
   justify-content: unset;
-  position: unset;
   & > span {
     margin: auto;
   }
@@ -10,9 +9,4 @@
 
 .mat-card {
   margin: 1rem;
-}
-
-#main {
-  height: 100vh;
-  overflow-y: auto !important;
 }

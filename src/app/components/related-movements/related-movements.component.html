@@ -14,75 +14,118 @@
         <mat-icon>menu</mat-icon>
       </button>
       <span>{{'Related Mov.' | translate}}</span>
-      <button mat-icon-button [routerLink]="'add'" [title]="'Add Related Movement' | translate">
+      <button mat-icon-button routerLink="add" [title]="'Add Related Movement' | translate">
         <mat-icon>add</mat-icon>
       </button>
     </mat-toolbar>
     <div class="header-height"></div>
     <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
-    <mat-card *ngIf="!loading">
-      <mat-card-content>
-        <mat-accordion displayMode="default" [multi]="true" [hideToggle]="true" *ngIf="relatedMovements.length > 0">
-          <ng-container *ngFor="let related of relatedMovements">
-            <mat-expansion-panel [hideToggle]="true" (click)="displayMovements(related.id!)">
-              <mat-expansion-panel-header>
-                <article class="w-50">
-                  {{'Name:' | translate}} {{related.name}}
-                  <mat-icon *ngIf="related.showInUpsertMovement" class="show-in-movement-icon" [title]="'Show in Movement' | translate">
-                    visibility
-                  </mat-icon>
-                </article>
-                <article class="w-50" align="end">{{'Total:' | translate}} {{related.totalAmount || 0 | number: '' : numberType}}</article>
-              </mat-expansion-panel-header>
-              <article for="incomeAmount" class="w-100">
-                <b translate>Income Amount:</b> {{related.incomeAmount | number:'' : numberType}}
-              </article>
-              <article for="expenseAmount" class="w-100">
-                <b translate>Expense Amount:</b> {{related.expenseAmount | number:'' : numberType}}
-              </article>
-              <mat-divider></mat-divider>
-              <article class="w-100 p-15" align="center">
-                <b translate>Movements</b>
-              </article>
-              <app-related-movement-detail *ngIf="movements.get(related.id!) && movements.get(related.id!)!.length > 0; else noMovements"
-                [movements]="movements.get(related.id!)!"
-                [configuration]="configuration"
-                [relatedMovement]="related"
-                (deletedMovementEvent)="deletedMovement($event, related.id!)"
-              ></app-related-movement-detail>
-              <ng-template #noMovements>
-                <span class="flex-justify-center" translate>Without movements</span>
-              </ng-template>
-              <mat-action-row>
-                <button mat-stroked-button color="warn" (click)="deleteRelatedMovement(related.id!)"
-                  [title]="'delete-button' | translate" translate>
-                  Delete
-                </button>
-                <button mat-stroked-button color="primary" [routerLink]="['update', related.id]" [title]="'edit-button' | translate" translate>
-                  Edit
-                </button>
-              </mat-action-row>
-            </mat-expansion-panel>
-          </ng-container>
-        </mat-accordion>
-        <section *ngIf="relatedMovements.length === 0" align="center">
-          <span class="flex-justify-center p-b-10" translate>
-            Without movements to show.
-          </span>
-          <button mat-stroked-button color="primary" [routerLink]="'add'" [title]="'Add Related Movement' | translate">
-            <mat-icon>add</mat-icon>
-            {{'Add Related Movement' | translate}}
-          </button>
-        </section>
-      </mat-card-content>
-      <mat-card-footer class="form-actions" *ngIf="relatedMovements.length !== 0">
-        <button mat-stroked-button color="primary" (click)="exit()" [title]="'cancel-button' | translate">
-          {{'Cancel' | translate}}
-        </button>
-        <button mat-flat-button color="primary" [routerLink]="'add'" [title]="'Add Related Movement' | translate">
+
+    <ng-container *ngIf="!loading">
+      <section class="empty-state" *ngIf="relatedMovements.length === 0">
+        <mat-icon class="empty-icon">link</mat-icon>
+        <p>{{'related-movement-messages.empty' | translate}}</p>
+        <button mat-flat-button color="primary" routerLink="add" [title]="'Add Related Movement' | translate">
+          <mat-icon>add</mat-icon>
           {{'Add Related Movement' | translate}}
         </button>
-      </mat-card-footer>
-    </mat-card>
+      </section>
+
+      <mat-accordion [multi]="true" class="groups" *ngIf="relatedMovements.length > 0">
+        <!-- The default toggle is hidden: it floats over the amounts, so the chevron lives in the last row -->
+        <mat-expansion-panel *ngFor="let related of relatedMovements" class="group" [hideToggle]="true" #panel>
+          <mat-expansion-panel-header collapsedHeight="auto" expandedHeight="auto">
+            <div class="group-summary" *ngIf="summaries.get(related.id!) as summary">
+              <div class="group-title">
+                <span class="group-name">{{related.name}}</span>
+                <button mat-icon-button class="group-menu"
+                  [matMenuTriggerFor]="groupMenu"
+                  (click)="$event.stopPropagation()"
+                  [title]="'more-options-button' | translate"
+                >
+                  <mat-icon>more_vert</mat-icon>
+                </button>
+                <mat-menu #groupMenu="matMenu">
+                  <button mat-menu-item [routerLink]="['update', related.id]">
+                    <mat-icon>edit</mat-icon>
+                    <span>{{'Edit' | translate}}</span>
+                  </button>
+                  <button mat-menu-item (click)="deleteRelatedMovement(related.id!)">
+                    <mat-icon color="warn">delete</mat-icon>
+                    <span>{{'Delete' | translate}}</span>
+                  </button>
+                </mat-menu>
+              </div>
+
+              <ng-container *ngIf="summary.goal > 0; else withoutGoal">
+                <mat-progress-bar mode="determinate" [value]="summary.percent"></mat-progress-bar>
+                <div class="group-progress">
+                  <span>
+                    {{ ('related-progress-short.' + summary.progressType) | translate }}:
+                    {{ 'related-movement-messages.progress' | translate: {
+                      current: (summary.progress | number:'':numberType),
+                      goal: (summary.goal | number:'':numberType)
+                    } }}
+                  </span>
+                  <b>{{summary.percent | number:'1.0-0':numberType}}%</b>
+                </div>
+                <ng-container *ngTemplateOutlet="remaining; context: { $implicit: summary }"></ng-container>
+              </ng-container>
+              <ng-template #withoutGoal>
+                <div class="group-progress">
+                  <span>{{ ('related-progress-short.' + summary.progressType) | translate }}</span>
+                  <b>{{summary.progress | number:'':numberType}}</b>
+                </div>
+              </ng-template>
+
+              <div class="group-footer">
+                <span class="group-meta">
+                  {{ 'related-movement-messages.movement-count' | translate: { count: summary.count } }}
+                  <ng-container *ngIf="summary.lastDate">
+                    · {{'related-movement-messages.last-movement' | translate}} {{summary.lastDate | date:'dd/MM/yy':'':language}}
+                  </ng-container>
+                </span>
+                <mat-icon class="chevron" [class.expanded]="panel.expanded">expand_more</mat-icon>
+              </div>
+            </div>
+          </mat-expansion-panel-header>
+
+          <p class="shown-in-movement" *ngIf="related.showInUpsertMovement">
+            <mat-icon>check_circle</mat-icon>
+            {{'related-movement-messages.shown-in-movement' | translate}}
+          </p>
+
+          <ng-container *ngIf="summaries.get(related.id!) as summary">
+            <div class="totals">
+              <span>{{'Expenses' | translate}}: <b>{{summary.expenseAmount | number:'':numberType}}</b></span>
+              <span>{{'Incomes' | translate}}: <b>{{summary.incomeAmount | number:'':numberType}}</b></span>
+              <span>{{'Difference' | translate}}: <b>{{summary.balance | number:'':numberType}}</b></span>
+            </div>
+          </ng-container>
+          <mat-divider></mat-divider>
+          <app-related-movement-detail *ngIf="movements.get(related.id!)?.length; else noMovements"
+            [movements]="movements.get(related.id!)!"
+            [configuration]="configuration"
+            [relatedMovement]="related"
+            (deletedMovementEvent)="deletedMovement($event, related)"
+          ></app-related-movement-detail>
+          <ng-template #noMovements>
+            <p class="no-movements">{{'related-movement-messages.no-movements' | translate}}</p>
+          </ng-template>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </ng-container>
   </main>
+</ng-template>
+
+<ng-template #remaining let-summary>
+  <p class="remaining" [class.done]="summary.remaining <= 0">
+    <ng-container *ngIf="summary.remaining > 0">
+      {{ ('related-remaining.' + summary.progressType) | translate }}: <b>{{summary.remaining | number:'':numberType}}</b>
+    </ng-container>
+    <ng-container *ngIf="summary.remaining === 0">{{'related-movement-messages.goal-reached' | translate}}</ng-container>
+    <ng-container *ngIf="summary.remaining < 0">
+      {{'related-movement-messages.goal-exceeded' | translate: { amount: (summary.remaining * -1 | number:'':numberType) } }}
+    </ng-container>
+  </p>
 </ng-template>

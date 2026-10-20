@@ -273,14 +273,44 @@
     "required-row": "Required first row: {{csvHeader}}"
   },
   "related-movement-messages": {
-    "title-delete-movement": "Delete movement from related movement",
-    "question-delete-movement": "Are you sure you want to remove this movement from this relation?",
+    "title-delete-movement": "Remove movement from group",
+    "question-delete-movement": "Remove this movement from the group? The movement is not deleted, it stays in your list.",
+    "movement-removed": "The movement was removed from the group",
     "title-delete": "Delete related movement",
-    "question-delete": "Are you sure you want to delete this relation?",
+    "question-delete": "Delete this group? Its movements are not deleted, they stay in your list.",
     "deleted": "Related movement was deleted",
     "required-name": "Name is required",
-    "show-in-movement-hint": "When enabled, this group will appear as an option while creating or editing a movement, so it can be added to this relation directly from there"
+    "show-in-movement-hint": "When enabled, this group will appear as an option while creating or editing a movement, so it can be added to this relation directly from there",
+    "empty": "Group movements to track a debt, a saving or something paid to you in installments.",
+    "progress": "{{current}} of {{goal}}",
+    "movement-count": "{{count}} movements",
+    "last-movement": "last",
+    "no-movements": "There are no movements in this group yet.",
+    "progress-type": "What counts as progress?",
+    "goal": "Goal (optional)",
+    "goal-hint": "The total amount you want to reach, for example what you have to pay or what you are owed",
+    "search-text": "Search by description or category",
+    "categories-hint": "Optional: if you choose none, every movement of the month is shown",
+    "goal-reached": "Goal reached!",
+    "goal-exceeded": "You went over the goal by {{amount}}",
+    "shown-in-movement": "Shown as an option when registering movements"
   },
+  "related-remaining": {
+    "expense": "Left to pay",
+    "income": "Left to receive",
+    "balance": "Left"
+  },
+  "related-progress": {
+    "expense": "Payments I make (adds up expenses)",
+    "income": "Payments I receive (adds up incomes)",
+    "balance": "Balance (incomes − expenses)"
+  },
+  "related-progress-short": {
+    "expense": "Paid",
+    "income": "Received",
+    "balance": "Balance"
+  },
+  "more-options-button": "More options",
   "import-movement-messages": {
     "empty-file": "Empty file",
     "invalid-row": "Invalid first row",

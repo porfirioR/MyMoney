@@ -2,29 +2,126 @@
   margin: 1rem;
 }
 
-#main {
-  height: 93vh !important;
-  overflow-y: auto;
+.hint {
+  font-size: 12px;
+  color: rgb(0 0 0 / 60%);
+  margin: 0.4rem 0 0;
 }
 
-.mat-mini-fab {
+.mat-form-field + .mat-form-field {
+  margin-top: 0.5rem;
+}
+
+// The goal hint wraps to two lines on phones; its area has a fixed height, so the field reserves the extra line
+.goal-field {
+  margin-bottom: 1.5rem;
+}
+
+.mat-checkbox {
+  display: block;
+  margin-top: 0.5rem;
+}
+
+.summary {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: unset !important;
-  width: 24px;
-  height: 24px;
+  flex-direction: column;
+  gap: 0.6rem;
+  & .mat-progress-bar {
+    border-radius: 3px;
+    height: 8px;
+  }
 }
 
-.movement-row {
-  width: 100%;
+.summary-progress {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: 15px;
+}
+
+.remaining {
+  margin: 0;
+  font-size: 14px;
+  color: #c62828;
+  &.done {
+    color: #2e7d32;
+  }
+}
+
+.totals {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+  font-size: 13px;
+  color: rgb(0 0 0 / 70%);
+}
+
+.movements-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
 }
 
-.hint {
+.movement-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0;
+  border-bottom: 1px solid rgb(0 0 0 / 6%);
+}
+
+.movement-icon {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  & .material-icons-outlined {
+    font-size: 16px;
+  }
+}
+
+.movement-text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.movement-memorandum {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.movement-date {
   font-size: 12px;
-  color: rgba(0, 0, 0, 0.6);
-  margin: 0 0 1rem;
+  color: rgb(0 0 0 / 60%);
+}
+
+.movement-amount {
+  flex-shrink: 0;
+  &.income {
+    color: #2e7d32;
+  }
+}
+
+.no-movements {
+  text-align: center;
+  color: rgb(0 0 0 / 60%);
+  margin: 1rem 0 0.5rem;
+}
+
+// Same sticky action bar as the category form
+.actions {
+  position: sticky;
+  bottom: 0;
+  z-index: 2;
+  padding: 0.75rem 1rem calc(0.75rem + env(safe-area-inset-bottom, 0px)) !important;
+  background: #fafafa;
 }

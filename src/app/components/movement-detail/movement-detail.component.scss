@@ -2,10 +2,6 @@
   margin: 0.5rem 1rem;
 }
 
-.mat-toolbar-block {
-  margin-top: 62px;
-}
-
 .mat-card-header {
   display: flex;
   justify-content: space-between;
@@ -34,13 +30,3 @@ dd {
   margin-inline-start: 1rem;
 }
 
-.mat-toolbar {
-  position: unset;
-  z-index: unset;
-  top: unset;
-}
-
-#main {
-  height: 93vh !important;
-  overflow-y: auto !important;
-}

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { addDoc, collection, collectionData, CollectionReference, deleteDoc, doc, DocumentData, documentId, DocumentReference, Firestore, orderBy, Query, query, setDoc, where, WriteBatch, writeBatch } from '@angular/fire/firestore';
-import { combineLatest, concatAll, concatMap, forkJoin, Observable, of } from 'rxjs';
+import { combineLatest, concatAll, concatMap, forkJoin, map, Observable, of, take } from 'rxjs';
 import { CategoryType } from '../enums/category-type.enum';
 import { CollectionType } from '../enums/collection-type.enum';
 import { MovementModel } from '../models/movement.model';
@@ -87,12 +87,29 @@ export class MovementService {
   public getMovementDocumentReferenceById = (type: CategoryType, id: string): DocumentReference<DocumentData> =>
     doc(this.firestore, `${this.collections}/${this.userService.getUserEmail()}/${type.toLowerCase()}/${id}`)
 
+  // Firestore 'in' queries accept up to 30 values, so long groups are fetched in chunks
   public getMovementsByIds = (category: CategoryType, movementIds: string[]): Observable<MovementModel[]> => {
-    const ref = query(this.getReference(category), where(documentId(), 'in', movementIds))
-    return collectionData<MovementModel>(ref as Query<MovementModel>, { idField: 'id' })
+    const chunkSize = 30
+    const ids = [...new Set(movementIds)]
+    if (ids.length === 0) {
+      return of([])
+    }
+    const requests$: Observable<MovementModel[]>[] = []
+    for (let i = 0; i < ids.length; i += chunkSize) {
+      const ref = query(this.getReference(category), where(documentId(), 'in', ids.slice(i, i + chunkSize)))
+      requests$.push(collectionData<MovementModel>(ref as Query<MovementModel>, { idField: 'id' }).pipe(take(1)))
+    }
+    return combineLatest(requests$).pipe(map(x => x.flat()))
   }
 
+  // Without categories it returns every movement of the month
   public getGetMovementByFilter = (request: FilterRelatedMovementModel): Observable<[MovementModel[], MovementModel[]]> => {
+    if (request.categoryIds.length === 0) {
+      return combineLatest([
+        this.getBySelectedMonth(CategoryType.income, request.month, request.year),
+        this.getBySelectedMonth(CategoryType.expense, request.month, request.year)
+      ])
+    }
     const [startTime, endTime] = this.getDateTimeRange(request.month, request.year)
     const hasExpenseIds = this.userService.getActiveCategories().filter(x => x.type === CategoryType.expense.toLocaleLowerCase()).map(x => x.id).some(x => request.categoryIds.includes(x))
     const hasIncomeIds = this.userService.getActiveCategories().filter(x => x.type === CategoryType.income.toLocaleLowerCase()).map(x => x.id).some(x => request.categoryIds.includes(x))

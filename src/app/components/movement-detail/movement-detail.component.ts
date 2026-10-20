@@ -81,10 +81,12 @@ export class MovementDetailComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.movementService.delete(this.movement?.id!, this.movement?.type!).then(() => {
+        this.movementService.delete(this.movement?.id!, this.movement?.type!)
+        .then(() => this.relateMovementService.removeMovements([this.movement!.id!]))
+        .then(() => {
           this.snackBar.open(this.translateService.instant('movement-messages.deleted'), '', { duration: 3000 })
           this.exit()
-        }).catch((reason: any) => this.snackBar.open(reason, '', { duration: 3000 }))
+        }).catch((reason: any) => this.snackBar.open(String(reason), '', { duration: 3000 }))
       }
     })
   }

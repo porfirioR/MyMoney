@@ -1,6 +1,5 @@
 .mat-toolbar {
   justify-content: unset;
-  position: unset;
   & > span {
     margin: auto;
   }
@@ -48,9 +47,4 @@ span.mat-list-item-content {
     font-size: medium;
     font-weight: bold;
   }
-}
-
-#main {
-  height: 100vh;
-  overflow-y: auto !important;
 }
