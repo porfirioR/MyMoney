@@ -6,6 +6,9 @@ import { YearMonthModel } from '../models/year-month-model';
 import { ConfigurationModel } from '../models/configuration.model';
 import { NumberType } from '../enums/number-type.enum';
 import { RelatedMapModel } from '../models/related-map-model';
+import { RelatedMovementModel } from '../models/related-movement.model';
+import { RelatedMovementSummaryModel } from '../models/related-movement-summary.model';
+import { RelatedProgressType } from '../enums/related-progress-type.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +16,35 @@ import { RelatedMapModel } from '../models/related-map-model';
 export class HelperService {
 
 constructor() { }
+
+  // Movement types are compared case-insensitively ('Expense' and 'expense' both exist)
+  public static isExpense = (type: string | undefined): boolean =>
+    (type ?? '').toLowerCase() === CategoryType.expense.toLowerCase()
+
+  // Groups created before progressType existed: only expenses → payments, only incomes → collections, both → balance
+  public static getRelatedProgressType = (group: RelatedMovementModel): RelatedProgressType => {
+    if (group.progressType) {
+      return group.progressType
+    }
+    const hasExpense = group.related.some(x => HelperService.isExpense(x.type))
+    const hasIncome = group.related.some(x => !HelperService.isExpense(x.type))
+    if (hasExpense && hasIncome) {
+      return RelatedProgressType.Balance
+    }
+    return hasIncome ? RelatedProgressType.Income : RelatedProgressType.Expense
+  }
+
+  public static getRelatedSummary = (
+    progressType: RelatedProgressType,
+    goal: number | null | undefined,
+    movements: { amount: number, isExpense: boolean, date?: Date }[]
+  ): RelatedMovementSummaryModel => {
+    const expenseAmount = movements.filter(x => x.isExpense).reduce((a, b) => a + Math.abs(b.amount), 0)
+    const incomeAmount = movements.filter(x => !x.isExpense).reduce((a, b) => a + Math.abs(b.amount), 0)
+    const times = movements.filter(x => !!x.date).map(x => x.date!.getTime())
+    const lastDate = times.length ? new Date(Math.max(...times)) : undefined
+    return new RelatedMovementSummaryModel(progressType, Math.abs(Number(goal ?? 0)), expenseAmount, incomeAmount, movements.length, lastDate)
+  }
 
   // getName receives the stored name (a translation key for system categories) and returns the text shown to the user
   public static categoriesByType = (

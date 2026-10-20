@@ -1,12 +1,11 @@
 import { FormControl } from "@angular/forms"
+import { RelatedProgressType } from "../enums/related-progress-type.enum"
 
 export interface RelatedMovementForm {
   id: FormControl<string | null>
   name: FormControl<string | null>
-  relatedIds: FormControl<string[] | null>
-  totalAmount: FormControl<number | null>
-  resultingAmount: FormControl<number | null>
-  incomeAmount: FormControl<number | null>
-  expenseAmount: FormControl<number | null>
+  progressType: FormControl<RelatedProgressType | null>
+  // Saved as totalAmount
+  goal: FormControl<number | null>
   showInUpsertMovement: FormControl<boolean | null>
 }

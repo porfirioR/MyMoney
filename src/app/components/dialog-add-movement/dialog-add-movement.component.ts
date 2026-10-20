@@ -1,12 +1,14 @@
 import { MatLegacyAutocompleteSelectedEvent as MatAutocompleteSelectedEvent } from '@angular/material/legacy-autocomplete';
 import { MatLegacyChipInputEvent as MatChipInputEvent } from '@angular/material/legacy-chips';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
+import { Component, ElementRef, Inject, OnInit, Optional, ViewChild } from '@angular/core';
+import { MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA, MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, debounceTime, map, startWith, take } from 'rxjs';
 import { CategoryType } from '../../enums/category-type.enum';
 import { MonthType } from '../../enums/month-type.enum';
+import { LanguageType } from '../../enums/language-type.enum';
+import { NumberType } from '../../enums/number-type.enum';
 import { HelperService } from '../../services/helper.service';
 import { MovementService } from '../../services/movement.service';
 import { UserService } from '../../services/user.service';
@@ -31,11 +33,15 @@ export class DialogAddMovementComponent implements OnInit {
     year: new FormControl(null, Validators.required),
     category: new FormControl(null),
     month: new FormControl(null, Validators.required),
-    selectedMovement: new FormControl(null),
-    hasAnyCategory: new FormControl(false)
+    text: new FormControl(null),
+    selectedMovement: new FormControl([])
   })
   protected searching = false
   protected movements: MovementModel[] = []
+  protected filteredMovements: MovementModel[] = []
+  protected language = LanguageType.English
+  protected numberType = NumberType.English
+  private excludedIds: string[] = []
   protected selectedCategories: CategoryModel[] = []
   protected filteredCategories: Observable<CategoryModel[]>
   protected defaultColor = DEFAULT_ICON_COLOR
@@ -47,13 +53,20 @@ export class DialogAddMovementComponent implements OnInit {
     private readonly movementService: MovementService,
     private readonly userService: UserService,
     private readonly translateService: TranslateService,
+    @Optional() @Inject(MAT_DIALOG_DATA) data?: { excludedIds?: string[] }
   ) {
+    this.excludedIds = data?.excludedIds ?? []
     const year = new Date().getFullYear()
     const diffYear = year - this.minValidYear
     const initialYear = year === this.minValidYear || diffYear > 8 ? this.minValidYear : year - diffYear
     this.yearRange = [...Array(15).keys()].map(x => initialYear + x)
-    this.formGroup.controls.year.setValue(year)
-    this.formGroup.controls.month.setValue(this.months[0])
+    // Starts on the month the user is viewing in the main screen
+    const selected = this.userService.getSelectedYearMonth()
+    this.formGroup.controls.year.setValue(selected.year)
+    this.formGroup.controls.month.setValue(this.months[selected.month])
+    this.formGroup.controls.text.valueChanges.subscribe(() => this.applyTextFilter())
+    this.formGroup.controls.month.valueChanges.subscribe(() => this.search())
+    this.formGroup.controls.year.valueChanges.subscribe(() => this.search())
 
     this.filteredCategories = this.formGroup.controls.category.valueChanges.pipe(
       startWith(null),
@@ -67,11 +80,22 @@ export class DialogAddMovementComponent implements OnInit {
       x.color = x.color ?? this.defaultColor
       x.backgroundColor = x.backgroundColor ?? this.defaultBackgroundColor
     })
+    this.userService.getUserConfiguration$().pipe(take(1)).subscribe({
+      next: (configuration) => {
+        this.language = configuration.language
+        this.numberType = configuration.number
+      }
+    })
+    this.search()
   }
 
   protected cancelAddition = (): void => this.dialogRef.close()
 
+  protected isExpense = (movement: MovementModel): boolean => HelperService.isExpense(movement.type)
+
+  // Without categories it brings every movement of the month; already added movements are hidden
   protected search = (): void => {
+    if (this.formGroup.controls.month.invalid || this.formGroup.controls.year.invalid || this.searching) { return }
     this.searching = true
     const request = new FilterRelatedMovementModel(
       this.selectedCategories.map(x => x.id)!,
@@ -80,14 +104,21 @@ export class DialogAddMovementComponent implements OnInit {
     )
     this.movementService.getGetMovementByFilter(request).pipe(debounceTime(100), take(1)).subscribe({
       next: ([incomes, expenses]) => {
-        this.movements = [...new Set([...incomes, ...expenses])].sort((a, b) => b.time - a.time)
+        const selected = this.formGroup.controls.selectedMovement.value ?? []
+        this.movements = [...incomes, ...expenses]
+          .filter(x => !this.excludedIds.includes(x.id!))
+          .sort((a, b) => b.time - a.time)
         this.movements.forEach(x => {
           x.date = new Date(x.time)
-          const category = this.categories.find(y => y.id === x.categoryId)!
-          x.color = category.color
-          x.backgroundColor = category.backgroundColor
-          x.memorandum = !!x.memorandum ? x.memorandum : category.name
+          const category = this.userService.getAllCategories().find(y => y.id === x.categoryId)
+          x.color = category?.color ?? this.defaultColor
+          x.backgroundColor = category?.backgroundColor ?? this.defaultBackgroundColor
+          x.categoryName = category?.name
+          x.memorandum = x.memorandum ? x.memorandum : category?.name ?? ''
         })
+        // Keeps the selection of movements that are still in the results
+        this.formGroup.controls.selectedMovement.setValue(selected.filter(id => this.movements.some(x => x.id === id)))
+        this.applyTextFilter()
         this.searching = false
       }, error: (e) => {
         this.searching = false
@@ -97,8 +128,18 @@ export class DialogAddMovementComponent implements OnInit {
   }
 
   protected save = (): void => {
-    const movementToSave = this.movements.filter(x => this.formGroup.controls.selectedMovement.value!.some(y => y === x.id))
-    this.dialogRef.close(movementToSave)
+    const selected = this.formGroup.controls.selectedMovement.value ?? []
+    if (selected.length === 0) { return }
+    this.dialogRef.close(this.movements.filter(x => selected.includes(x.id!)))
+  }
+
+  private applyTextFilter = (): void => {
+    const text = (this.formGroup.controls.text.value ?? '').toLowerCase().trim()
+    this.filteredMovements = text
+      ? this.movements.filter(x =>
+        this.translateService.instant(x.memorandum ?? '').toLowerCase().includes(text) ||
+        this.translateService.instant(x.categoryName ?? '').toLowerCase().includes(text))
+      : this.movements
   }
 
   protected add = (event: MatChipInputEvent): void => {
@@ -109,7 +150,7 @@ export class DialogAddMovementComponent implements OnInit {
         this.selectedCategories = [...new Set([...this.selectedCategories, category])]
       }
     }
-    this.checkSelectedCategory()
+    this.onCategoriesChanged()
 
     event.chipInput!.clear()
     this.formGroup.controls.category.setValue(null)
@@ -120,7 +161,7 @@ export class DialogAddMovementComponent implements OnInit {
     if (index >= 0) {
       this.selectedCategories.splice(index, 1);
     }
-    this.checkSelectedCategory()
+    this.onCategoriesChanged()
     this.formGroup.controls.category.updateValueAndValidity({emitEvent: true})
   }
 
@@ -131,7 +172,7 @@ export class DialogAddMovementComponent implements OnInit {
     }
     this.categoryInput!.nativeElement.value = '';
     this.formGroup.controls.category.setValue(null);
-    this.checkSelectedCategory()
+    this.onCategoriesChanged()
   }
 
   private filter = (value: string): CategoryModel[] => {
@@ -139,5 +180,6 @@ export class DialogAddMovementComponent implements OnInit {
     return this.categories.filter(x => !this.selectedCategories.map(x => x.id).includes(x.id) && this.translateService.instant(x.name).toLowerCase().includes(filterValue))
   }
 
-  private checkSelectedCategory = (): void => this.formGroup.controls.hasAnyCategory.patchValue(this.selectedCategories.length > 0)
+  // Categories are an optional filter: changing them refreshes the results
+  private onCategoriesChanged = (): void => this.search()
 }

@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { CollectionType } from '../enums/collection-type.enum';
-import { CollectionReference, DocumentData, DocumentReference, Firestore, Query, WriteBatch, addDoc, collection, collectionData, deleteDoc, doc, documentId, orderBy, query, setDoc, where, writeBatch } from '@angular/fire/firestore';
+import { CollectionReference, DocumentData, DocumentReference, Firestore, Query, WriteBatch, addDoc, collection, collectionData, deleteDoc, doc, documentId, orderBy, query, setDoc, updateDoc, where, writeBatch } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
 import { UserService } from './user.service';
-import { Observable, map } from 'rxjs';
+import { Observable, firstValueFrom, map } from 'rxjs';
 import { RelatedMovementModel } from '../models/related-movement.model';
+import { RelatedMapModel } from '../models/related-map-model';
 
 @Injectable({
   providedIn: 'root'
@@ -48,9 +49,29 @@ export class RelatedMovementService {
   }
 
   public update = (model: RelatedMovementModel): Promise<void> => {
-    model.owner = this.userService.getUserEmail()
-    const ref = doc(this.firestore, `${this.collectionType}/${model.id}`)
-    return setDoc(ref, model)
+    const { id, ...data } = model
+    data.owner = this.userService.getUserEmail()
+    const ref = doc(this.firestore, `${this.collectionType}/${id}`)
+    return setDoc(ref, data)
+  }
+
+  // Only the movement list changes, the rest of the group stays as it is
+  public updateRelated = (id: string, related: (RelatedMapModel | Record<string, string>)[]): Promise<void> => {
+    const ref = doc(this.firestore, `${this.collectionType}/${id}`)
+    return updateDoc(ref, { related: related.map(x => ({ id: x.id, type: x.type })) })
+  }
+
+  // Called after deleting movements so groups do not keep ids of movements that no longer exist
+  public removeMovements = async (movementIds: string[]): Promise<void> => {
+    if (movementIds.length === 0) { return }
+    const groups = await firstValueFrom(this.getAll())
+    const affected = groups.filter(x => x.related.some(y => movementIds.includes(y.id)))
+    if (affected.length === 0) { return }
+    const batch = this.openBatch()
+    affected.forEach(x => batch.update(this.getReferenceById(x.id!), {
+      related: x.related.filter(y => !movementIds.includes(y.id)).map(y => ({ id: y.id, type: y.type }))
+    }))
+    await batch.commit()
   }
 
   public openBatch = (): WriteBatch => {

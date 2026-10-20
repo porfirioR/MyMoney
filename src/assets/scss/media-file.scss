@@ -24,78 +24,37 @@
   }
 }
 
+// From tablet width the app is a centered column; the toolbar and the add button follow that column
 @media only screen and (min-width: 768px) {
-  .content {
-    max-width: 500px;
-    margin: auto calc(16%);
-    // height: 100%;
+  :root {
+    --column-width: 500px;
   }
 
+  .content {
+    max-width: var(--column-width);
+    margin: 0 auto;
+  }
+
+  // Positioned with left (not margin: auto): Material's typography resets the toolbar margin to 0
   .mat-toolbar {
-    width: 500px !important;
+    width: var(--column-width) !important;
+    left: calc(50% - var(--column-width) / 2) !important;
+    right: auto !important;
   }
 
   .btn-add {
-    right: calc(100% - calc(15% + 500px)) !important;
+    right: calc(50% - var(--column-width) / 2 + 18px) !important;
   }
 
   .header-height {
     height: 64px !important;
   }
-}
-
-@media only screen and (min-width: 1024px) {
-  .content {
-    max-width: 500px;
-    margin: auto calc(25%);
-    // height: 100%;
-  }
-
-  .btn-add {
-    right: calc(100% - calc(25% + 480px)) !important;
-  }
-
-  .header-height {
-    height: 64px !important;
-  }
-}
-
-@media only screen and (min-width: 1440px) {
-  .content {
-    max-width: 500px;
-    margin: auto calc(32%);
-    // height: 100%;
-  }
-
-  .btn-add {
-    right: calc(100% - calc(30% + 520px)) !important;
-  }
-
-  .header-height {
-    height: 64px !important;
-  }
-
 }
 
 @media only screen and (min-width: 2560px) {
-  .content {
-    max-width: 544px;
-    margin: auto calc(39%);
-    // height: 100%;
+  :root {
+    --column-width: 544px;
   }
-
-  .mat-toolbar {
-    width: 544px !important;
-  }
-
-  .btn-add {
-    right: calc(100% - calc(39.5% + 520px)) !important;
-  }
-
-  .header-height {
-    height: 64px !important;
-  }
-
 }
 
 // @media only screen and(max-height: 900px) {

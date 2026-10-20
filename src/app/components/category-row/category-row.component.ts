@@ -8,6 +8,7 @@ import { CategoryService } from '../../services/category.service'
 import { UserCategoryService } from '../../services/user-category.service'
 import { MovementService } from '../../services/movement.service'
 import { UserService } from '../../services/user.service'
+import { RelatedMovementService } from '../../services/related-movement.service'
 import { CategoryModel } from '../../models/category.model'
 import { UserCategoryModel } from '../../models/user-category.model'
 import { CategoryEvent } from '../../models/category-event.model'
@@ -36,7 +37,8 @@ export class CategoryRowComponent implements OnInit, OnDestroy {
     private readonly userCategoryService: UserCategoryService,
     private readonly movementService: MovementService,
     private translate: TranslateService,
-    private readonly user: UserService
+    private readonly user: UserService,
+    private readonly relatedMovementService: RelatedMovementService
   ) { }
 
   ngOnInit(): void {
@@ -77,6 +79,7 @@ export class CategoryRowComponent implements OnInit, OnDestroy {
     await this.runSaving(async () => {
       await this.saveSystemCategoryActive(false)
       await this.deleteDocuments(this.getMovementReferences(movements))
+      await this.relatedMovementService.removeMovements(movements.map(x => x.id!))
       this.snackBar.open(this.translate.instant('category-messages.deleted'), '', { duration: 3000 })
       this.updateCategoryEvent.emit(new CategoryEvent(this.category.type))
     })
@@ -99,6 +102,7 @@ export class CategoryRowComponent implements OnInit, OnDestroy {
       }
       // Movements go first: if their deletion fails the category still exists and can be deleted again
       await this.deleteDocuments(references)
+      await this.relatedMovementService.removeMovements(movements.map(x => x.id!))
       await this.categoryService.delete(this.category.id)
       this.user.removeCategory(this.category.id)
       this.snackBar.open(this.translate.instant('category-messages.deleted'), '', { duration: 3000 })

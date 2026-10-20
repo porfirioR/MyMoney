@@ -2,11 +2,6 @@
   justify-content: space-between;
 }
 
-#main {
-  height: 93vh;
-  overflow-y: auto;
-}
-
 .mat-card {
   margin: 1rem;
 }
@@ -15,10 +10,10 @@
   width: 100%;
 }
 
-// Compact preview pinned to the top of the scroll area so the result is always visible
+// Compact preview pinned right below the fixed toolbar so the result is always visible
 .preview {
   position: sticky;
-  top: 0;
+  top: var(--toolbar-height);
   z-index: 2;
   display: flex;
   align-items: center;
@@ -78,9 +73,9 @@
   background: #e8f5e9;
 }
 
-// Keeps scrolled-to sections below the sticky preview
+// Keeps scrolled-to sections below the toolbar and the sticky preview
 .icon-card, .color-card {
-  scroll-margin-top: 4.5rem;
+  scroll-margin-top: calc(var(--toolbar-height) + 4.5rem);
 }
 
 .icon-card {

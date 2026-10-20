@@ -6,7 +6,7 @@
     <mat-divider></mat-divider>
     <mat-card-content>
       <mat-form-field class="w-100">
-        <mat-label>{{'Categories' | translate}} *</mat-label>
+        <mat-label>{{'Categories' | translate}}</mat-label>
         <mat-chip-list #chipList aria-label="Categories selection">
           <mat-chip *ngFor="let category of selectedCategories"
             color="primary"
@@ -45,9 +45,7 @@
             <span translate>{{category.name}}</span>
           </mat-option>
         </mat-autocomplete>
-        <mat-hint id="category-hint" *ngIf="!formGroup.controls.hasAnyCategory.value" translate>
-          Category is required.
-        </mat-hint>
+        <mat-hint>{{'related-movement-messages.categories-hint' | translate}}</mat-hint>
       </mat-form-field>
       <article class="row-mat-field">
         <mat-form-field id="month-field">
@@ -90,15 +88,32 @@
     </mat-card-header>
     <mat-divider></mat-divider>
     <mat-card-content>
+      <mat-form-field class="w-100" *ngIf="movements.length">
+        <mat-label>{{'related-movement-messages.search-text' | translate}}</mat-label>
+        <input matInput formControlName="text" autocomplete="off">
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
       <ng-container *ngIf="movements.length; else emptyMovement">
+        <!-- Options are hidden instead of removed so the text filter does not lose the selection -->
         <mat-selection-list formControlName="selectedMovement">
-          <mat-list-option color="primary" *ngFor="let movement of movements" [value]="movement.id">
-            {{movement.memorandum ?? '' | translate}}
+          <mat-list-option color="primary" *ngFor="let movement of movements" [value]="movement.id"
+            [class.is-hidden]="!filteredMovements.includes(movement)"
+          >
+            <span class="option-row">
+              <span class="option-text">
+                <span class="option-memorandum">{{movement.memorandum ?? '' | translate}}</span>
+                <span class="option-date">{{movement.date | date:'dd/MM/yy':'':language}}</span>
+              </span>
+              <span class="option-amount" [class.income]="!isExpense(movement)">
+                {{isExpense(movement) ? '-' : ''}}{{movement.amount | number:'':numberType}}
+              </span>
+            </span>
           </mat-list-option>
         </mat-selection-list>
+        <p class="empty-filter" *ngIf="filteredMovements.length === 0" translate>Without movements to show.</p>
       </ng-container>
-      <ng-template #emptyMovement translate>
-        Without Movements
+      <ng-template #emptyMovement>
+        <p class="empty-filter" translate>Without movements to show.</p>
       </ng-template>
     </mat-card-content>
   </mat-card>
@@ -108,7 +123,7 @@
         {{'Cancel' | translate}}
       </button>
       <button mat-flat-button color="primary" type="submit"
-        [disabled]="selectedCategories.length === 0"
+        [disabled]="!formGroup.controls.selectedMovement.value?.length"
         [title]="'save-button' | translate"
         (click)="save()">{{'Save' | translate}}
       </button>

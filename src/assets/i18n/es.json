@@ -273,14 +273,44 @@
     "required-row": "La primera fila es requerida: {{csvHeader}}"
   },
   "related-movement-messages": {
-    "title-delete-movement": "Borrar movimiento de la relación",
-    "question-delete-movement": "¿Estás seguro que quieres eliminar el movimento de esta relación?",
+    "title-delete-movement": "Quitar movimiento del grupo",
+    "question-delete-movement": "¿Querés quitar este movimiento del grupo? El movimiento no se borra, sigue en tu lista.",
+    "movement-removed": "El movimiento se quitó del grupo",
     "title-delete": "Borrar movimiento relacionado",
-    "question-delete": "¿Estás seguro que quieres eliminar esta relación?",
-    "deleted": "Movimiento relacionado fue borrada",
+    "question-delete": "¿Querés borrar este grupo? Los movimientos no se borran, siguen en tu lista.",
+    "deleted": "El movimiento relacionado fue borrado",
     "required-name": "El nombre es requerido",
-    "show-in-movement-hint": "Al activarlo, este grupo va a aparecer como opción al crear o editar un movimiento, para agregarlo a esta relación directamente desde ahí"
+    "show-in-movement-hint": "Al activarlo, este grupo va a aparecer como opción al crear o editar un movimiento, para agregarlo a esta relación directamente desde ahí",
+    "empty": "Agrupá movimientos para seguir una deuda, un ahorro o algo que te pagan en cuotas.",
+    "progress": "{{current}} de {{goal}}",
+    "movement-count": "{{count}} movimientos",
+    "last-movement": "último",
+    "no-movements": "Todavía no hay movimientos en este grupo.",
+    "progress-type": "¿Qué cuenta como avance?",
+    "goal": "Meta (opcional)",
+    "goal-hint": "El monto total que querés alcanzar, por ejemplo lo que tenés que pagar o te tienen que devolver",
+    "search-text": "Buscar por descripción o categoría",
+    "categories-hint": "Opcional: si no elegís ninguna, se muestran todos los movimientos del mes",
+    "goal-reached": "¡Meta alcanzada!",
+    "goal-exceeded": "Superaste la meta por {{amount}}",
+    "shown-in-movement": "Aparece como opción al registrar movimientos"
   },
+  "related-remaining": {
+    "expense": "Falta pagar",
+    "income": "Falta cobrar",
+    "balance": "Falta"
+  },
+  "related-progress": {
+    "expense": "Pagos que hago (suma los gastos)",
+    "income": "Cobros que recibo (suma los ingresos)",
+    "balance": "Saldo (ingresos − gastos)"
+  },
+  "related-progress-short": {
+    "expense": "Pagado",
+    "income": "Cobrado",
+    "balance": "Saldo"
+  },
+  "more-options-button": "Más opciones",
   "import-movement-messages": {
     "empty-file": "Archivo vacío",
     "invalid-row": "Primera fila inválida",

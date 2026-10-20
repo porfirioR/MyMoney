@@ -62,8 +62,21 @@ $my-theme: mat.define-light-theme((
 @include mat.legacy-core();
 @include mat.all-legacy-component-themes($my-theme);
 
+// Every screen scrolls the whole page under the fixed toolbar (no inner scroll areas with their own heights)
+:root {
+  --toolbar-height: 56px;
+}
+
+@media (min-width: 600px) {
+  :root {
+    --toolbar-height: 64px;
+  }
+}
+
 html {
   height: 100%;
+  // Keeps the same width whether the current screen scrolls or not, so the layout does not jump between screens
+  scrollbar-gutter: stable;
 }
 
 body {
@@ -87,6 +100,8 @@ body {
   position: fixed;
   z-index: 5;
   top: 0;
+  left: 0;
+  right: 0;
 }
 
 // Only the stroked buttons on the green toolbar need a white border

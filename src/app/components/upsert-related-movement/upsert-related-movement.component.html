@@ -3,125 +3,128 @@
     <mat-icon>keyboard_backspace</mat-icon>
   </button>
   <span>{{title | translate}}</span>
-  <button mat-icon-button (click)="save()" [title]="'Save Related Movement' | translate" [disabled]="formGroup.invalid">
-    <mat-icon>save</mat-icon>
+  <button mat-icon-button routerLink="/" [title]="'home-button' | translate">
+    <mat-icon>home</mat-icon>
   </button>
 </mat-toolbar>
 <div class="mat-toolbar-block"></div>
 <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
-<form id="main" [formGroup]="formGroup" *ngIf="!loading">
+<form id="main" [formGroup]="formGroup" *ngIf="!loading" (ngSubmit)="save()">
   <mat-card>
-    <mat-card-content>
-      <mat-form-field class="w-100">
-        <mat-label translate>Name</mat-label>
-        <input matInput formControlName="name" id="name">
-        <mat-error *ngIf="formGroup.controls.name.hasError('required')">
-          {{'related-movement-messages.required-name' | translate}}
-        </mat-error>
-      </mat-form-field>
-      <mat-form-field class="w-100">
-        <mat-label translate>Expense Amount</mat-label>
-        <input
-          matInput
-          type="text"
-          formControlName="expenseAmount"
-          id="expenseAmount"
-          [mask]="mask"
-          [thousandSeparator]="thousandSeparator"
-          autocomplete="off"
-        />
-      </mat-form-field>
-      <mat-form-field class="w-100">
-        <mat-label translate>Income Amount</mat-label>
-        <input
-          matInput
-          type="text"
-          formControlName="incomeAmount"
-          id="incomeAmount"
-          [mask]="mask"
-          [thousandSeparator]="thousandSeparator"
-        />
-      </mat-form-field>
-      <mat-form-field class="w-100">
-        <mat-label translate>Resulting Amount</mat-label>
-        <input
-          matInput
-          type="text"
-          formControlName="resultingAmount"
-          id="resultingAmount"
-          [mask]="mask"
-          [thousandSeparator]="thousandSeparator"
-        />
-      </mat-form-field>
-      <mat-form-field class="w-100">
-        <mat-label translate>Total Amount</mat-label>
-        <input
-          matInput
-          type="text"
-          formControlName="totalAmount"
-          id="totalAmount"
-          [mask]="mask"
-          [thousandSeparator]="thousandSeparator"
-        />
-      </mat-form-field>
-      <mat-checkbox color="primary" formControlName="showInUpsertMovement" id="showInUpsertMovement">
-        {{'Show in Movement' | translate}}
-      </mat-checkbox>
-      <p class="hint" translate>related-movement-messages.show-in-movement-hint</p>
-      <label for="movements" class="flex-justify-center" translate>Movements</label>
-      <mat-accordion displayMode="default" [multi]="true" [hideToggle]="false">
-        <mat-expansion-panel [hideToggle]="false">
-          <mat-expansion-panel-header>
-            {{categoryType.income | translate}}
-          </mat-expansion-panel-header>
-          <ng-container *ngTemplateOutlet="matExpansionPanelContent context: { movements: incomes }">
-          </ng-container>
-        </mat-expansion-panel>
-        <mat-expansion-panel [hideToggle]="false">
-          <mat-expansion-panel-header>
-            {{categoryType.expense | translate}}
-          </mat-expansion-panel-header>
-          <ng-container *ngTemplateOutlet="matExpansionPanelContent context: { movements: expenses }">
-          </ng-container>
-        </mat-expansion-panel>
-        <mat-action-row>
-          <button mat-stroked-button color="primary" (click)="addMovement()">
-            <mat-icon>add</mat-icon>
-            {{'Add Movements' | translate}}
-          </button>
-        </mat-action-row>
-      </mat-accordion>
-    </mat-card-content>
-    <mat-card-footer class="form-actions">
-      <button mat-stroked-button color="primary" type="button" (click)="exit()" [title]="'cancel-button' | translate">
-        {{'Cancel' | translate}}
-      </button>
-      <button mat-flat-button color="primary" type="submit" [disabled]="formGroup.invalid || saving"
-        [title]="'save-button' | translate" (click)="save()">
-        {{'Save' | translate}}
-      </button>
-    </mat-card-footer>
-  </mat-card>
-</form>
+    <mat-form-field class="w-100">
+      <mat-label translate>Name</mat-label>
+      <input matInput formControlName="name" id="name" autocomplete="off">
+      <mat-error *ngIf="formGroup.controls.name.hasError('required')">
+        {{'related-movement-messages.required-name' | translate}}
+      </mat-error>
+    </mat-form-field>
 
-<ng-template #matExpansionPanelContent let-movements="movements">
-  <article *ngFor="let movement of movements; let i = index" class="movement-row">
-    <button mat-icon-button color="warn" (click)="deleteMovement(movement.id, movement.type)">
-      <mat-icon>highlight_off</mat-icon>
-    </button>
-    <button mat-mini-fab customColor
-      [color]="movement!.color"
-      [backgroundColor]="movement!.backgroundColor"
-      [title]="'movement-icon-button' | translate"
-    >
-      <i [id]="'icon-' + i" class="material-icons-outlined notranslate">{{movement.icon}}</i>
-    </button>
-    <span [id]="'memorandum-' + i" class="w-40">{{movement.memorandum! | translate}}</span>
-    <article [id]="'amount-' + i" class="w-20" align="end">
-      {{movement.amount | number: '' : numberType}}
+    <mat-form-field class="w-100">
+      <mat-label>{{'related-movement-messages.progress-type' | translate}}</mat-label>
+      <mat-select formControlName="progressType" id="progressType">
+        <mat-option *ngFor="let type of progressTypes" [value]="type">
+          {{ ('related-progress.' + type) | translate }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field class="w-100 goal-field">
+      <mat-label>{{'related-movement-messages.goal' | translate}}</mat-label>
+      <input
+        matInput
+        type="text"
+        inputmode="numeric"
+        formControlName="goal"
+        id="goal"
+        [mask]="mask"
+        [thousandSeparator]="thousandSeparator"
+        autocomplete="off"
+      />
+      <mat-hint>{{'related-movement-messages.goal-hint' | translate}}</mat-hint>
+    </mat-form-field>
+
+    <mat-checkbox color="primary" formControlName="showInUpsertMovement" id="showInUpsertMovement">
+      {{'Show in Movement' | translate}}
+    </mat-checkbox>
+    <p class="hint" translate>related-movement-messages.show-in-movement-hint</p>
+  </mat-card>
+
+  <mat-card class="summary">
+    <ng-container *ngIf="summary.goal > 0; else withoutGoal">
+      <div class="summary-progress">
+        <span>
+          {{ ('related-progress-short.' + summary.progressType) | translate }}:
+          {{ 'related-movement-messages.progress' | translate: {
+            current: (summary.progress | number:'':numberType),
+            goal: (summary.goal | number:'':numberType)
+          } }}
+        </span>
+        <b>{{summary.percent | number:'1.0-0':numberType}}%</b>
+      </div>
+      <mat-progress-bar mode="determinate" [value]="summary.percent"></mat-progress-bar>
+      <p class="remaining" [class.done]="summary.remaining <= 0">
+        <ng-container *ngIf="summary.remaining > 0">
+          {{ ('related-remaining.' + summary.progressType) | translate }}: <b>{{summary.remaining | number:'':numberType}}</b>
+        </ng-container>
+        <ng-container *ngIf="summary.remaining === 0">{{'related-movement-messages.goal-reached' | translate}}</ng-container>
+        <ng-container *ngIf="summary.remaining < 0">
+          {{'related-movement-messages.goal-exceeded' | translate: { amount: (summary.remaining * -1 | number:'':numberType) } }}
+        </ng-container>
+      </p>
+    </ng-container>
+    <ng-template #withoutGoal>
+      <div class="summary-progress">
+        <span>{{ ('related-progress-short.' + summary.progressType) | translate }}</span>
+        <b>{{summary.progress | number:'':numberType}}</b>
+      </div>
+    </ng-template>
+    <div class="totals">
+      <span>{{'Expenses' | translate}}: <b>{{summary.expenseAmount | number:'':numberType}}</b></span>
+      <span>{{'Incomes' | translate}}: <b>{{summary.incomeAmount | number:'':numberType}}</b></span>
+      <span>{{'Difference' | translate}}: <b>{{summary.balance | number:'':numberType}}</b></span>
+    </div>
+  </mat-card>
+
+  <mat-card>
+    <div class="movements-header">
+      <b>{{'Movements' | translate}} ({{movements.length}})</b>
+      <button mat-stroked-button color="primary" type="button" (click)="addMovement()">
+        <mat-icon>add</mat-icon>
+        {{'Add Movements' | translate}}
+      </button>
+    </div>
+    <article *ngFor="let movement of movements; let i = index" class="movement-row">
+      <button mat-icon-button color="warn" type="button"
+        (click)="removeMovement(movement.id!)"
+        [title]="'related-movement-messages.title-delete-movement' | translate"
+      >
+        <mat-icon>highlight_off</mat-icon>
+      </button>
+      <span class="movement-icon" customColor
+        [color]="movement.color"
+        [backgroundColor]="movement.backgroundColor"
+      >
+        <i [id]="'icon-' + i" class="material-icons-outlined notranslate">{{movement.icon}}</i>
+      </span>
+      <span class="movement-text">
+        <span [id]="'memorandum-' + i" class="movement-memorandum">{{movement.memorandum! | translate}}</span>
+        <span class="movement-date">{{movement.date | date:'dd/MM/yy':'':language}}</span>
+      </span>
+      <span [id]="'amount-' + i" class="movement-amount" [class.income]="!isExpense(movement)">
+        {{isExpense(movement) ? '-' : ''}}{{movement.amount | number:'':numberType}}
+      </span>
     </article>
-  </article>
-  <span class="flex-justify-center" *ngIf="!movements || movements.length === 0" translate>
-    Without movements to show.
-  </span>
-</ng-template>
+    <p class="no-movements" *ngIf="movements.length === 0">
+      {{'related-movement-messages.no-movements' | translate}}
+    </p>
+  </mat-card>
+
+  <footer class="actions form-actions">
+    <button mat-stroked-button color="primary" type="button" (click)="exit()" [title]="'cancel-button' | translate">
+      {{'Cancel' | translate}}
+    </button>
+    <button mat-flat-button color="primary" type="submit" [disabled]="formGroup.invalid || saving" [title]="'save-button' | translate">
+      {{'Save' | translate}}
+    </button>
+  </footer>
+</form>

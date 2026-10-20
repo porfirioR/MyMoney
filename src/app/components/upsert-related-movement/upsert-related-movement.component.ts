@@ -2,16 +2,18 @@ import { Component, OnInit } from '@angular/core'
 import { FormControl, FormGroup, Validators } from '@angular/forms'
 import { ActivatedRoute } from '@angular/router'
 import { Location } from '@angular/common'
-import { MatLegacyTabChangeEvent as MatTabChangeEvent } from '@angular/material/legacy-tabs'
 import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar'
 import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog'
 import { TranslateService } from '@ngx-translate/core'
-import { combineLatest, of, switchMap, take } from 'rxjs'
+import { combineLatest, switchMap, take } from 'rxjs'
 import { CategoryType } from '../../enums/category-type.enum'
 import { NumberType } from '../../enums/number-type.enum'
+import { LanguageType } from '../../enums/language-type.enum'
+import { RelatedProgressType } from '../../enums/related-progress-type.enum'
 import { RelatedMovementForm } from '../../forms/related-movement.form'
 import { MovementModel } from '../../models/movement.model'
 import { RelatedMovementModel } from '../../models/related-movement.model'
+import { RelatedMovementSummaryModel } from '../../models/related-movement-summary.model'
 import { RelatedMapModel } from '../../models/related-map-model'
 import { ConfigurationModel } from '../../models/configuration.model'
 import { MovementService } from '../../services/movement.service'
@@ -27,22 +29,19 @@ import { DialogAddMovementComponent } from '../dialog-add-movement/dialog-add-mo
 })
 export class UpsertRelatedMovementComponent implements OnInit {
   protected loading = true
-  protected expenses: MovementModel[] = []
-  protected incomes: MovementModel[] = []
+  protected movements: MovementModel[] = []
   protected formGroup = new FormGroup<RelatedMovementForm>({
     id: new FormControl(null),
     name: new FormControl(null, Validators.required),
-    expenseAmount: new FormControl({ value: null, disabled: true }),
-    incomeAmount: new FormControl({ value: null, disabled: true }),
-    resultingAmount: new FormControl({ value: null, disabled: true }),
-    relatedIds: new FormControl(null),
-    totalAmount: new FormControl(null),
+    progressType: new FormControl(RelatedProgressType.Expense, Validators.required),
+    goal: new FormControl(null, Validators.min(0)),
     showInUpsertMovement: new FormControl(false)
   })
-  protected currentTap: string
-  protected categoryType = CategoryType
+  protected summary: RelatedMovementSummaryModel = HelperService.getRelatedSummary(RelatedProgressType.Expense, 0, [])
+  protected progressTypes = Object.values(RelatedProgressType)
   protected title = 'Create Related Movement'
   protected numberType = NumberType.English
+  protected language = LanguageType.English
   protected saving = false
   protected thousandSeparator = '.'
   protected mask = 'separator.0'
@@ -58,57 +57,45 @@ export class UpsertRelatedMovementComponent implements OnInit {
     private readonly dialog: MatDialog,
     private readonly userService: UserService,
   ) {
-    this.currentTap = this.categoryType.income.toLocaleLowerCase()
     const configuration = this.activatedRoute.snapshot.data['config'] as ConfigurationModel
     [this.mask, this.thousandSeparator] = HelperService.getMarkValues(configuration)
     this.numberType = configuration.number
+    this.language = configuration.language
     this.id = this.activatedRoute.snapshot.params['id']
   }
 
   ngOnInit(): void {
+    // The summary follows the form so the user sees the effect of the goal and type right away
+    this.formGroup.controls.progressType.valueChanges.subscribe(() => this.refreshSummary())
+    this.formGroup.controls.goal.valueChanges.subscribe(() => this.refreshSummary())
     if (!this.id) {
       this.loading = false
-    } else {
-      this.relatedMovementsService.getById(this.id).pipe(take(1))
-      .pipe(switchMap((relatedMovement) => {
-        this.formGroup.patchValue({
-          id: relatedMovement.id,
-          name: relatedMovement.name,
-          expenseAmount: relatedMovement.expenseAmount,
-          incomeAmount: relatedMovement.incomeAmount,
-          relatedIds: relatedMovement.related.map(y => y.id),
-          totalAmount: relatedMovement.totalAmount,
-          showInUpsertMovement: relatedMovement.showInUpsertMovement,
-          resultingAmount: relatedMovement.incomeAmount - relatedMovement.expenseAmount
-        })
-        const expenses = relatedMovement.related.filter(x => x.type === this.categoryType.expense)
-        const incomes = relatedMovement.related.filter(x => x.type === this.categoryType.income)
-        const expense$ = expenses.length > 0 ? this.movementService.getMovementsByIds(this.categoryType.expense, expenses.map(x => x.id)) : of([])
-        const income$ = incomes.length > 0 ? this.movementService.getMovementsByIds(this.categoryType.income, incomes.map(x => x.id)) : of([])
-        return combineLatest([expense$, income$])
-      })).subscribe({
-        next: ([expenses, incomes]) => {
-          this.expenses = expenses.map(expense => {
-            expense.memorandum = expense.memorandum ? expense.memorandum : this.userService.getActiveCategories().find(y => y.id === expense.categoryId)!.name
-            return expense
-          })
-          this.incomes = incomes.map(income => {
-            income.memorandum = income.memorandum ? income.memorandum : this.userService.getActiveCategories().find(y => y.id === income.categoryId)!.name
-            return income
-          })
-          this.title = 'Update Related Movement'
-          this.calculateAmount()
-          this.loading = false
-        }, error: (e) => {
-          this.loading = false
-          throw e
-        }
-      })
+      return
     }
-  }
-
-  protected tabChanged = (tabChangeEvent: MatTabChangeEvent): void => {
-    this.currentTap = Object.keys(this.categoryType)[tabChangeEvent.index]
+    this.relatedMovementsService.getById(this.id).pipe(take(1), switchMap((relatedMovement) => {
+      this.formGroup.patchValue({
+        id: relatedMovement.id,
+        name: relatedMovement.name,
+        progressType: HelperService.getRelatedProgressType(relatedMovement),
+        goal: relatedMovement.totalAmount ? Math.abs(relatedMovement.totalAmount) : null,
+        showInUpsertMovement: relatedMovement.showInUpsertMovement
+      }, { emitEvent: false })
+      const expenseIds = relatedMovement.related.filter(x => HelperService.isExpense(x.type)).map(x => x.id)
+      const incomeIds = relatedMovement.related.filter(x => !HelperService.isExpense(x.type)).map(x => x.id)
+      return combineLatest([
+        this.movementService.getMovementsByIds(CategoryType.expense, expenseIds),
+        this.movementService.getMovementsByIds(CategoryType.income, incomeIds)
+      ]).pipe(take(1))
+    })).subscribe({
+      next: ([expenses, incomes]) => {
+        this.setMovements([...expenses, ...incomes])
+        this.title = 'Update Related Movement'
+        this.loading = false
+      }, error: (e) => {
+        this.loading = false
+        throw e
+      }
+    })
   }
 
   protected exit = (): void => {
@@ -119,37 +106,42 @@ export class UpsertRelatedMovementComponent implements OnInit {
     const dialogRef = this.dialog.open(DialogAddMovementComponent, {
       width: '500px',
       height: '80%',
+      data: { excludedIds: this.movements.map(x => x.id!) }
     })
-    dialogRef.afterClosed().subscribe({
+    dialogRef.afterClosed().pipe(take(1)).subscribe({
       next: (movements: MovementModel[] | undefined) => {
-        if (movements) {
-          this.expenses = [... new Set([...this.expenses, ...movements.filter(x => x.type === this.categoryType.expense && !this.expenses.some(y => y.id === x.id))])]
-          this.incomes = [... new Set([...this.incomes, ...movements.filter(x => x.type === this.categoryType.income && !this.incomes.some(y => y.id === x.id))])]
-          this.calculateAmount()
+        if (movements?.length) {
+          this.setMovements([...this.movements, ...movements.filter(x => !this.movements.some(y => y.id === x.id))])
         }
-      }, error: (e) => {
-        throw e
       }
     })
   }
 
+  protected removeMovement = (movementId: string): void => {
+    this.setMovements(this.movements.filter(x => x.id !== movementId))
+  }
+
+  protected isExpense = (movement: MovementModel): boolean => HelperService.isExpense(movement.type)
+
   protected save = (): void => {
     if (this.formGroup.invalid || this.saving) { return }
     this.saving = true
-    const relatedList = [...this.incomes.map(x => new RelatedMapModel(x.id!, x.type)), ...this.expenses.map(x => new RelatedMapModel(x.id!, x.type))]
+    const value = this.formGroup.getRawValue()
+    const related = this.movements.map(x => new RelatedMapModel(x.id!, x.type))
     const request: RelatedMovementModel = {
-      id: this.id ?? null,
-      expenseAmount: this.formGroup.controls.expenseAmount.value ?? 0,
-      incomeAmount: this.formGroup.controls.incomeAmount.value ?? 0,
-      name: this.formGroup.controls.name.value!,
-      related:  HelperService.getRelatedMovementToSave(relatedList),
+      id: this.id || undefined,
+      name: value.name!.trim(),
+      related: HelperService.getRelatedMovementToSave(related),
       owner: '',
-      totalAmount: this.formGroup.controls.totalAmount.value ? this.formGroup.controls.totalAmount.value : this.formGroup.controls.resultingAmount.value!,
-      showInUpsertMovement: this.formGroup.controls.showInUpsertMovement.value!
+      totalAmount: Number(value.goal ?? 0),
+      expenseAmount: this.summary.expenseAmount,
+      incomeAmount: this.summary.incomeAmount,
+      showInUpsertMovement: !!value.showInUpsertMovement,
+      progressType: value.progressType!
     }
     const request$ = this.id ? this.relatedMovementsService.update(request) : this.relatedMovementsService.create(request)
     request$.then(() => {
-      this.snackBar.open(this.translateService.instant(`Related Movement was ${request.id ? 'updated' : 'created'}`), '', { duration: 3000 })
+      this.snackBar.open(this.translateService.instant(`Related Movement was ${this.id ? 'updated' : 'created'}`), '', { duration: 3000 })
       this.exit()
     }).catch(e => {
       this.saving = false
@@ -158,20 +150,23 @@ export class UpsertRelatedMovementComponent implements OnInit {
     })
   }
 
-  protected deleteMovement = (movementId: string, type: CategoryType): void => {
-    if (type === this.categoryType.expense) {
-      this.expenses = this.expenses.filter(x => x.id !== movementId)
-    } else {
-      this.incomes = this.incomes.filter(x => x.id !== movementId)
-    }
-    this.calculateAmount()
+  private setMovements = (movements: MovementModel[]): void => {
+    this.movements = movements
+      .map(x => {
+        x.date = new Date(x.time)
+        x.memorandum = x.memorandum ? x.memorandum : this.userService.getAllCategories().find(y => y.id === x.categoryId)?.name ?? ''
+        return x
+      })
+      .sort((a, b) => b.time - a.time)
+    this.refreshSummary()
   }
 
-  private calculateAmount = (): void => {
-    const expense = this.expenses.reduce((a, b) => a + b.amount, 0)
-    const income = this.incomes.reduce((a, b) => a + b.amount, 0)
-    this.formGroup.controls.expenseAmount.setValue(expense)
-    this.formGroup.controls.incomeAmount.setValue(income)
-    this.formGroup.controls.resultingAmount.setValue(income - expense)
+  private refreshSummary = (): void => {
+    const value = this.formGroup.getRawValue()
+    this.summary = HelperService.getRelatedSummary(
+      value.progressType ?? RelatedProgressType.Expense,
+      value.goal,
+      this.movements.map(x => ({ amount: x.amount, isExpense: HelperService.isExpense(x.type), date: x.date }))
+    )
   }
 }
