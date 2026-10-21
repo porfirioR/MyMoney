@@ -15,6 +15,13 @@ form {
   padding-bottom: 0.1rem;
 }
 
+.type-toggle {
+  display: flex;
+  & .mat-button-toggle {
+    flex: 1;
+  }
+}
+
 .mat-mini-fab {
   box-shadow: unset;
 }

@@ -249,8 +249,27 @@
   "upload-button": "botón-cargar",
   "Total:": "Total:",
   "Edit": "Editar",
+  "Type:": "Tipo:",
+  "Hide": "Ocultar",
+  "Delete category": "Eliminar categoría",
+  "Login with Google": "Ingresar con Google",
+  "Upload Movement": "Cargar movimientos",
+  "hide-category-button": "Ocultar categoría",
+  "show-category-button": "Mostrar categoría",
+  "Theme": "Tema",
+  "Dark mode": "Modo oscuro",
+  "Light mode": "Modo claro",
+  "theme-type": {
+    "system": "Igual que el sistema",
+    "light": "Claro",
+    "dark": "Oscuro"
+  },
   "category-messages": {
-    "question": "¿Está seguro de que desea eliminar esta categoría?. Todos los movimientos relacionados ({{length}}) con esta categoría serán eliminados",
+    "title-deactivate": "Ocultar categoría",
+    "question-deactivate": "La categoría dejará de aparecer al registrar movimientos. Sus movimientos ({{length}}) se mantienen y podés volver a mostrarla cuando quieras.",
+    "deactivated": "La categoría fue ocultada",
+    "delete-hint": "Eliminar borra la categoría y todos sus movimientos. Si solo querés que no aparezca, ocultala desde la lista de categorías.",
+    "question": "Esta acción no se puede deshacer: se eliminará la categoría y sus {{length}} movimientos. Si solo querés que no aparezca, cancelá y ocultala desde la lista.",
     "deleted": "La categoría fue borrada",
     "title-delete": "Borrar categoría ",
     "title-restarted": "La categoría fue restaurada",
@@ -259,6 +278,8 @@
     "add": "Agregar categoría de {{type}}"
   },
   "message-error": {
+    "generic": "Algo salió mal. Revisá tu conexión e intentá de nuevo.",
+    "amount-min": "El monto debe ser mayor que cero",
     "exceed": "El valor no debe exceder {{count}} {{type}}",
     "required-category": "La categoría es requerida",
     "required-email": "Correo electrónico es requerida",
@@ -267,6 +288,8 @@
     "login-failed": "No se pudo iniciar sesión. Verificá tu correo y contraseña e intentá de nuevo."
   },
   "movement-messages": {
+    "empty-month": "No hay movimientos en {{month}} de {{year}}",
+    "empty-report": "No hay movimientos de este tipo en el mes",
     "title-delete": "Borrar movimiento",
     "question-delete": "¿Estás seguro que quieres eliminar este movimiento?",
     "deleted": "El movimiento fue borrado",
@@ -312,6 +335,7 @@
   },
   "more-options-button": "Más opciones",
   "import-movement-messages": {
+    "to-save": "Movimientos a guardar: {{count}}",
     "empty-file": "Archivo vacío",
     "invalid-row": "Primera fila inválida",
     "loaded": "Todos los movimientos se cargaron correctamente",

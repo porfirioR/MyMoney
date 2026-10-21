@@ -1,7 +1,3 @@
-.mat-toolbar {
-  justify-content: space-between;
-}
-
 .mat-card {
   margin: 1rem;
 }
@@ -19,7 +15,7 @@
   align-items: center;
   gap: 0.75rem;
   padding: 0.6rem 1rem;
-  background: #fafafa;
+  background: var(--bg);
   box-shadow: 0 2px 4px rgb(0 0 0 / 10%);
 }
 
@@ -31,7 +27,7 @@
   width: 2.75rem;
   height: 2.75rem;
   border-radius: 50%;
-  box-shadow: 0 1px 3px rgb(0 0 0 / 30%);
+  box-shadow: 0 1px 3px var(--text-disabled);
   &.empty {
     opacity: 0.35;
   }
@@ -51,13 +47,13 @@
   white-space: nowrap;
   &.placeholder {
     font-weight: normal;
-    color: rgb(0 0 0 / 40%);
+    color: var(--text-disabled);
   }
 }
 
 .preview-subtitle {
   font-size: 12px;
-  color: rgb(0 0 0 / 60%);
+  color: var(--text-secondary);
 }
 
 .mine-chip {
@@ -69,8 +65,8 @@
   font-weight: 500;
   line-height: 1.3rem;
   vertical-align: middle;
-  color: #2e7d32;
-  background: #e8f5e9;
+  color: var(--success);
+  background: var(--success-bg);
 }
 
 // Keeps scrolled-to sections below the toolbar and the sticky preview
@@ -88,7 +84,7 @@
     vertical-align: middle;
   }
   & .required {
-    color: #f44336;
+    color: var(--warn);
   }
 }
 
@@ -102,7 +98,7 @@
   justify-content: space-between;
   gap: 1rem;
   & .color-label {
-    color: rgb(0 0 0 / 66%);
+    color: var(--text-secondary);
   }
   & .hex-field {
     width: 7rem;
@@ -121,7 +117,7 @@
   height: 2.25rem;
   padding: 0;
   border-radius: 50%;
-  border: 1px solid rgb(0 0 0 / 20%);
+  border: 1px solid var(--divider);
   cursor: pointer;
   box-sizing: border-box;
   &.selected {
@@ -135,7 +131,7 @@
     background: conic-gradient(red, yellow, lime, aqua, blue, magenta, red);
     & mat-icon {
       color: #fff;
-      text-shadow: 0 0 3px rgb(0 0 0 / 70%);
+      text-shadow: 0 0 3px var(--text-secondary);
       font-size: 18px;
       width: 18px;
       height: 18px;
@@ -154,7 +150,7 @@
 .mat-card-subtitle {
   text-align: center !important;
   margin: 8px 0 8px 0 !important;
-  color: rgb(0 0 0 / 66%);
+  color: var(--text-secondary);
 }
 
 .icon-list {
@@ -173,5 +169,20 @@
   bottom: 0;
   z-index: 2;
   padding: 0.75rem 1rem calc(0.75rem + env(safe-area-inset-bottom, 0px)) !important;
-  background: #fafafa;
+  background: var(--bg);
+}
+
+// Separated from the form: deleting an own category also deletes its movements
+.danger-zone {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 1.5rem 1rem 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--divider);
+  & p {
+    margin: 0;
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
 }

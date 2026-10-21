@@ -1,14 +1,15 @@
-import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 import { TranslateService } from '@ngx-translate/core';
-import { combineLatest, take } from 'rxjs';
+import { firstValueFrom, take } from 'rxjs';
 import { DialogDeleteComponent } from '../dialog-delete/dialog-delete.component';
 import { MovementService } from '../../services/movement.service';
 import { UserService } from '../../services/user.service';
 import { RelatedMovementService } from '../../services/related-movement.service';
+import { HelperService } from '../../services/helper.service';
+import { NavigationService } from '../../services/navigation.service';
+import { NotificationService } from '../../services/notification.service';
 import { MovementModel } from '../../models/movement.model';
 import { NumberType } from '../../enums/number-type.enum';
 import { LanguageType } from '../../enums/language-type.enum';
@@ -25,52 +26,56 @@ export class MovementDetailComponent implements OnInit {
   protected language = LanguageType.English
   protected relatedMovements: string[] = []
   protected load = false
+  protected deleting = false
   private defaultColor = DEFAULT_ICON_COLOR
   private defaultBackgroundColor = DEFAULT_BACKGROUND_COLOR
 
   constructor(
-    private readonly location: Location,
     private readonly movementService: MovementService,
     private readonly activatedRoute: ActivatedRoute,
     private readonly router: Router,
     private readonly dialog: MatDialog,
-    private readonly snackBar: MatSnackBar,
     private readonly userService: UserService,
     private translateService: TranslateService,
     private relateMovementService: RelatedMovementService,
-  ) {
-    combineLatest([
-      this.activatedRoute.params,
-      this.userService.getUserCategories$().pipe(take(1)),
-      this.userService.getUserConfiguration$().pipe(take(1)),
-      this.relateMovementService.getRelatedMovementsShowingInMovements().pipe(take(1))
-    ]).subscribe({
-      next: ([params, userCategories, config, relatedMovements]) => {
-        this.movement = this.movementService.getMovementById(params['id'])
-        if (!this.movement) {
-          this.exit()
-        }
-        const userCategory = userCategories.find(x => x.categoryId === this.movement!.categoryId)
-        this.movement!.color = userCategory?.color ?? this.defaultColor
-        this.movement!.backgroundColor = userCategory?.backgroundColor ?? this.defaultBackgroundColor
-        this.numberType = config.number
-        this.language = config.language
-        this.load = true
-        this.relatedMovements = relatedMovements.filter(x => x.related.map(y => y.id).includes(this.movement!.id!)).map(x => x.name!)
-      }, error: (e) => {
-        console.error(e)
-        throw e
-      }
-    })
-  }
+    private readonly navigationService: NavigationService,
+    private readonly notificationService: NotificationService,
+  ) { }
 
-  ngOnInit(): void { }
+  async ngOnInit(): Promise<void> {
+    const id = this.activatedRoute.snapshot.params['id']
+    const config = this.userService.item!.userConfiguration
+    this.numberType = config.number
+    this.language = config.language
+    try {
+      // After a reload the movement is not in the list of the main screen, so it is read from the server
+      const movement = this.movementService.getMovementById(id) ?? await this.movementService.getMovementByIdFromServer(id)
+      if (!movement) {
+        this.exit()
+        return
+      }
+      const relatedMovements = await firstValueFrom(this.relateMovementService.getRelatedMovementsShowingInMovements().pipe(take(1)))
+      const userCategory = this.userService.getUserCategories().find(x => x.categoryId === movement.categoryId)
+      movement.categoryName = this.userService.getAllCategories().find(x => x.id === movement.categoryId)?.name
+      movement.color = userCategory?.color ?? this.defaultColor
+      movement.backgroundColor = userCategory?.backgroundColor ?? this.defaultBackgroundColor
+      this.relatedMovements = relatedMovements.filter(x => x.related.map(y => y.id).includes(movement.id!)).map(x => x.name!)
+      this.movement = movement
+      this.load = true
+    } catch (e) {
+      this.notificationService.error(e)
+      this.exit()
+    }
+  }
 
   protected exit = () => {
-    this.location.back()
+    this.navigationService.back()
   }
 
+  protected getSignedAmount = (movement: MovementModel): number => HelperService.getSignedAmount(movement)
+
   protected deleteMovement = (): void => {
+    if (!this.movement || this.deleting) { return }
     const dialogRef = this.dialog.open(DialogDeleteComponent, {
       width: '350px',
       data: {
@@ -79,19 +84,25 @@ export class MovementDetailComponent implements OnInit {
       }
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().pipe(take(1)).subscribe(result => {
       if (result) {
-        this.movementService.delete(this.movement?.id!, this.movement?.type!)
-        .then(() => this.relateMovementService.removeMovements([this.movement!.id!]))
+        this.deleting = true
+        const movement = this.movement!
+        this.movementService.delete(movement.id!, movement.type)
+        .then(() => this.relateMovementService.removeMovements([movement.id!]))
         .then(() => {
-          this.snackBar.open(this.translateService.instant('movement-messages.deleted'), '', { duration: 3000 })
+          this.movementService.deleteMovementForList(movement.id!)
+          this.notificationService.message('movement-messages.deleted')
           this.exit()
-        }).catch((reason: any) => this.snackBar.open(String(reason), '', { duration: 3000 }))
+        }).catch((e) => {
+          this.deleting = false
+          this.notificationService.error(e)
+        })
       }
     })
   }
 
-  protected editMovement = (id?: string): void => {
-    this.router.navigateByUrl(`/movement-update/${id}`)
+  protected editMovement = (): void => {
+    this.router.navigateByUrl(`/movement-update/${this.movement!.id}`)
   }
 }

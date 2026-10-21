@@ -1,21 +1,6 @@
-<mat-sidenav-container [hasBackdrop]="true">
-  <mat-sidenav #sidenav mode="over" [fixedInViewport]="true">
-    <app-side-nav></app-side-nav>
-  </mat-sidenav>
-  <mat-sidenav-content>
-    <ng-container *ngTemplateOutlet="annualReport"></ng-container>
-  </mat-sidenav-content>
-</mat-sidenav-container>
-
-<ng-template #annualReport>
-  <mat-toolbar color="primary">
-    <button mat-icon-button [title]="'menu-button' | translate" (click)="sidenav.toggle()">
-      <mat-icon>menu</mat-icon>
-    </button>
-    <span>
-      {{'Annual Report' | translate}}
-    </span>
-    <button mat-button mat-stroked-button [matMenuTriggerFor]="yearList" [title]="'year-button' | translate">
+<app-page-layout title="Annual Report" [year]="year">
+  <span toolbarActions>
+    <button mat-stroked-button [matMenuTriggerFor]="yearList" [title]="'year-button' | translate">
       {{year}}
     </button>
     <mat-menu #yearList="matMenu">
@@ -23,10 +8,10 @@
         {{year}}
       </button>
     </mat-menu>
-  </mat-toolbar>
-  <div class="header-height"></div>
+  </span>
   <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
   <main id="main">
+    <app-skeleton *ngIf="loading" [cards]="3"></app-skeleton>
     <ng-container *ngIf="!loading">
       <mat-card>
         <canvas baseChart width="150" height="150"
@@ -47,7 +32,7 @@
               <span>
                 {{incomeAmount | number:'' : numberType}}
               </span>
-              <span customColor [color]="greenColor" [backgroundColor]="'#fff'">
+              <span customColor [color]="greenColor" [backgroundColor]="'transparent'">
                 <i class="material-icons-outlined notranslate">call_made</i>
               </span>
             </p>
@@ -61,7 +46,7 @@
               <span>
                 {{expenseAmount | number:'' : numberType}}
               </span>
-              <span  customColor [color]="redColor" [backgroundColor]="'#fff'">
+              <span  customColor [color]="redColor" [backgroundColor]="'transparent'">
                 <i class="material-icons-outlined notranslate icon-rotate-270">call_received</i>
               </span>
             </p>
@@ -75,7 +60,7 @@
               <span>
                 {{balance | number:'' : numberType}}
               </span>
-              <span  customColor [color]=" balance > 0 ? greenColor : redColor" [backgroundColor]="'#fff'">
+              <span  customColor [color]="getBalanceColor()" [backgroundColor]="'transparent'">
                 <i class="material-icons-outlined notranslate icon-rotate-270">import_export</i>
               </span>
             </p>
@@ -157,7 +142,7 @@
               <strong>
                 - {{movement.date | date: 'dd/MM': '': language}}
               </strong>
-              {{movement.memorandum! | translate}}
+              {{(movement.memorandum || movement.categoryName || '') | translate}}
             </span>
             <span>
               {{movement.amount | number:'' : numberType}}
@@ -167,4 +152,4 @@
       </mat-expansion-panel>
     </ng-template>
   </main>
-</ng-template>
+</app-page-layout>

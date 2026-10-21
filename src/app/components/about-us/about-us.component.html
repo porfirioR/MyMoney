@@ -1,31 +1,12 @@
-<mat-sidenav-container [hasBackdrop]="true">
-  <mat-sidenav #sidenav mode="over" [fixedInViewport]="true">
-    <app-side-nav></app-side-nav>
-  </mat-sidenav>
-  <mat-sidenav-content>
-    <ng-container *ngTemplateOutlet="aboutUs"></ng-container>
-  </mat-sidenav-content>
-</mat-sidenav-container>
-
-<ng-template #aboutUs>
+<app-page-layout title="About us">
   <main id="main">
-    <mat-toolbar color="primary">
-      <button mat-icon-button [title]="'menu-button' | translate" (click)="sidenav.toggle()">
-        <mat-icon>menu</mat-icon>
-      </button>
-      <span>{{'About us' | translate}}</span>
-      <button mat-icon-button (click)="exit()" [title]="'home-button' | translate">
-        <mat-icon>home</mat-icon>
-      </button>
-    </mat-toolbar>
-    <div class="mat-toolbar-block"></div>
     <mat-card>
       <mat-card-content>
         <mat-list>
           <mat-list-item>{{'Project name' | translate}}: {{title}}</mat-list-item>
           <mat-list-item>
             Github:
-            <a href="https://github.com/porfirioR/MyMoney" target="_blank">
+            <a href="https://github.com/porfirioR/MyMoney" target="_blank" rel="noopener">
               {{'Github page' | translate}}
             </a>
           </mat-list-item>
@@ -34,4 +15,4 @@
       </mat-card-content>
     </mat-card>
   </main>
-</ng-template>
+</app-page-layout>

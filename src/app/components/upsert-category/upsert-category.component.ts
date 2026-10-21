@@ -1,8 +1,8 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { Location } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { AbstractControl, FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { DocumentData, DocumentReference } from '@angular/fire/firestore';
 import { TranslateService } from '@ngx-translate/core';
 import { combineLatest, distinctUntilChanged, take } from 'rxjs';
 import { CategoryType } from '../../enums/category-type.enum';
@@ -15,7 +15,11 @@ import { CategoryService } from '../../services/category.service';
 import { UserCategoryService } from '../../services/user-category.service';
 import { UserService } from '../../services/user.service';
 import { HelperService } from '../../services/helper.service';
-import { ConfigurationService } from '../../services/configuration.service';
+import { MovementService } from '../../services/movement.service';
+import { RelatedMovementService } from '../../services/related-movement.service';
+import { NavigationService } from '../../services/navigation.service';
+import { NotificationService } from '../../services/notification.service';
+import { DialogDeleteComponent } from '../dialog-delete/dialog-delete.component';
 import { UpsertCategoryForm } from '../../forms/upsert-category.form';
 import {
   BACKGROUND_COLOR_PRESETS,
@@ -24,7 +28,8 @@ import {
   DEFAULT_ICON_COLOR,
   HEX_COLOR_PATTERN,
   ICON_COLOR_PRESETS,
-  INCOME_ICON_GROUP
+  INCOME_ICON_GROUP,
+  UNSET_CATEGORY_ORDER
 } from '../../constants/category.constants';
 
 @Component({
@@ -40,6 +45,7 @@ export class UpsertCategoryComponent implements OnInit {
   protected category?: CategoryModel
   protected isSystemCategory = false
   protected saving = false
+  protected deleting = false
   protected iconPanelExpanded = false
   protected formGroup!: FormGroup<UpsertCategoryForm>
   protected iconGroups: CategoryIconGroupModel[] = []
@@ -53,25 +59,26 @@ export class UpsertCategoryComponent implements OnInit {
   private nextOrder = 0
 
   constructor(
-    private readonly location: Location,
     private readonly route: ActivatedRoute,
     private readonly categoryService: CategoryService,
     private readonly userCategoryService: UserCategoryService,
     private readonly userService: UserService,
-    private readonly configurationService: ConfigurationService,
-    private readonly snackBar: MatSnackBar,
+    private readonly movementService: MovementService,
+    private readonly relatedMovementService: RelatedMovementService,
+    private readonly dialog: MatDialog,
     private readonly translateService: TranslateService,
+    private readonly navigationService: NavigationService,
+    private readonly notificationService: NotificationService,
   ) { }
 
   ngOnInit(): void {
     combineLatest([
       this.route.params,
       this.userService.getAllCategories$(),
-      this.userService.getUserCategories$(),
-      this.configurationService.getConfiguration()
+      this.userService.getUserCategories$()
     ]).pipe(take(1)).subscribe({
-      next: ([params, categories, userCategories, configuration]) => {
-        [this.mask, this.thousandSeparator] = HelperService.getMarkValues(configuration)
+      next: ([params, categories, userCategories]) => {
+        [this.mask, this.thousandSeparator] = HelperService.getMarkValues(this.userService.item!.userConfiguration)
         if (params['id']) {
           this.category = categories.find(x => x.id === params['id'])
           if (!this.category) {
@@ -103,7 +110,7 @@ export class UpsertCategoryComponent implements OnInit {
   }
 
   protected exit = (): void => {
-    this.location.back()
+    this.navigationService.back('/category')
   }
 
   // Enter on the name moves to the next step (icons) instead of submitting
@@ -138,17 +145,79 @@ export class UpsertCategoryComponent implements OnInit {
     try {
       if (this.category) {
         await this.update(this.category)
-        this.snackBar.open(this.translateService.instant('category-messages.updated'), '', { duration: 3000 })
+        this.notificationService.message('category-messages.updated')
       } else {
         await this.create()
-        this.snackBar.open(this.translateService.instant('category-messages.created'), '', { duration: 3000 })
+        this.notificationService.message('category-messages.created')
       }
-      this.location.back()
+      this.exit()
     } catch (e) {
       this.saving = false
-      this.snackBar.open(String(e), '', { duration: 3000 })
+      this.notificationService.error(e)
     }
   }
+
+  // Only own categories can be deleted, and it removes their movements: the dialog says how many
+  protected deleteCategory = (): void => {
+    const category = this.category
+    if (!category || this.isSystemCategory || this.deleting) { return }
+    this.movementService.getMovementsByCategoryId(category.type, category.id).pipe(take(1)).subscribe({
+      next: (movements) => {
+        const dialogRef = this.dialog.open(DialogDeleteComponent, {
+          width: '350px',
+          data: {
+            title: this.translateService.instant('category-messages.title-delete'),
+            message: this.translateService.instant('category-messages.question', { length: movements.length })
+          }
+        })
+        dialogRef.afterClosed().pipe(take(1)).subscribe({
+          next: (confirmed) => {
+            if (confirmed) {
+              this.deleteOwnCategory(category, movements.map(x => x.id!))
+            }
+          }
+        })
+      },
+      error: (e) => this.notificationService.error(e)
+    })
+  }
+
+  private deleteOwnCategory = async (category: CategoryModel, movementIds: string[]): Promise<void> => {
+    this.deleting = true
+    try {
+      const references = movementIds.map(x => this.movementService.getMovementDocumentReferenceById(category.type, x))
+      const userCategory = this.userService.getUserCategories().find(x => x.categoryId === category.id)
+      if (userCategory?.id) {
+        references.push(this.userCategoryService.getUserCategoryReferenceById(userCategory.id))
+      }
+      // Movements go first: if their deletion fails the category still exists and can be deleted again
+      await this.deleteDocuments(references)
+      await this.relatedMovementService.removeMovements(movementIds)
+      await this.categoryService.delete(category.id)
+      this.userService.removeCategory(category.id)
+      this.notificationService.message('category-messages.deleted')
+      this.exit()
+    } catch (e) {
+      this.deleting = false
+      this.notificationService.error(e)
+    }
+  }
+
+  // Firestore batches accept up to 500 operations
+  private deleteDocuments = async (references: DocumentReference<DocumentData>[]): Promise<void> => {
+    const batchSize = 500
+    const commits: Promise<void>[] = []
+    for (let i = 0; i < references.length; i += batchSize) {
+      const batch = this.movementService.openBatch()
+      references.slice(i, i + batchSize).forEach(x => batch.delete(x))
+      commits.push(batch.commit())
+    }
+    await Promise.all(commits)
+  }
+
+  // An empty position keeps the category after the positioned ones
+  private getOrderToSave = (order: number | string | null | undefined): number =>
+    order === null || order === undefined || order === '' ? UNSET_CATEGORY_ORDER : Number(order)
 
   private create = async (): Promise<void> => {
     const value = this.formGroup!.getRawValue()
@@ -162,7 +231,7 @@ export class UpsertCategoryComponent implements OnInit {
     } as CategoryModel
     const categoryReference = await this.categoryService.create(category)
     const userCategory = new UserCategoryModel(
-      true, categoryReference.id, email, undefined, undefined, value.color!, value.backgroundColor!, Number(value.order ?? 0)
+      true, categoryReference.id, email, undefined, undefined, value.color!, value.backgroundColor!, this.getOrderToSave(value.order)
     )
     const userCategoryReference = await this.userCategoryService.upsertCategory(userCategory)
     userCategory.id = userCategoryReference?.id
@@ -200,7 +269,7 @@ export class UpsertCategoryComponent implements OnInit {
       undefined,
       value.color!,
       value.backgroundColor!,
-      Number(value.order ?? 0)
+      this.getOrderToSave(value.order)
     )
     const docReference = await this.userCategoryService.upsertCategory(request)
     if (docReference) {
@@ -228,8 +297,8 @@ export class UpsertCategoryComponent implements OnInit {
       hexColor: new FormControl(color, [Validators.required, Validators.pattern(HEX_COLOR_PATTERN)]),
       backgroundColor: new FormControl(backgroundColor, Validators.required),
       hexBackgroundColor: new FormControl(backgroundColor, [Validators.required, Validators.pattern(HEX_COLOR_PATTERN)]),
-      // Categories without user data keep the order assigned on load (setCategories); new ones go last
-      order: new FormControl(userCategory?.order ?? this.category?.order ?? this.nextOrder, Validators.min(0))
+      // New categories go last; existing ones without a position show the field empty
+      order: new FormControl(this.getInitialOrder(userCategory), Validators.min(0))
     })
     const controls = this.formGroup.controls
     // Shows the duplicate name error while typing, without waiting for blur
@@ -242,6 +311,14 @@ export class UpsertCategoryComponent implements OnInit {
     })
     this.syncColor(controls.color, controls.hexColor)
     this.syncColor(controls.backgroundColor, controls.hexBackgroundColor)
+  }
+
+  private getInitialOrder = (userCategory?: UserCategoryModel): number | null => {
+    if (!this.category) {
+      return this.nextOrder
+    }
+    const order = userCategory?.order ?? this.category.order
+    return HelperService.isUnsetCategoryOrder(order) ? null : order
   }
 
   // Keeps the picker and the hex input in sync; only complete #rrggbb values reach the picker.

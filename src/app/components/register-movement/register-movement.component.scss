@@ -2,7 +2,7 @@
 .mat-card-subtitle {
   text-align: center !important;
   margin: 8px 0 8px 0 !important;
-  color: rgb(0 0 0 / 66%);
+  color: var(--text-secondary);
 }
 
 .icon-list {
@@ -16,9 +16,13 @@
   margin: 0.2rem;
 }
 
-.mat-toolbar {
+// Expense / income as two big buttons instead of a dropdown
+.type-toggle {
   display: flex;
-  justify-content: space-between;
+  margin: 0.6rem;
+  & .mat-button-toggle {
+    flex: 1;
+  }
 }
 
 .mat-card {

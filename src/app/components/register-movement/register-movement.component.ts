@@ -1,12 +1,10 @@
-import { Location } from '@angular/common';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { ActivatedRoute } from '@angular/router';
-import { DocumentData, DocumentReference, WriteBatch } from '@angular/fire/firestore';
+import { doc } from '@angular/fire/firestore';
 import { TranslateService } from '@ngx-translate/core';
-import { combineLatest, take } from 'rxjs';
+import { firstValueFrom, take } from 'rxjs';
 import { CategoryType } from '../../enums/category-type.enum';
 import { InputType } from '../../enums/input-type.enum';
 import { MovementModel } from '../../models/movement.model';
@@ -15,11 +13,10 @@ import { RelatedMovementModel } from '../../models/related-movement.model';
 import { HelperService } from '../../services/helper.service';
 import { MovementService } from '../../services/movement.service';
 import { UserService } from '../../services/user.service';
-import { ConfigurationService } from '../../services/configuration.service';
 import { RelatedMovementService } from '../../services/related-movement.service';
+import { NavigationService } from '../../services/navigation.service';
+import { NotificationService } from '../../services/notification.service';
 import { MovementForm } from '../../forms/movement.form';
-import { RelatedMapModel } from '../../models/related-map-model';
-import { MovementRegistrationType } from '../../enums/movement-registration-type.enum';
 import { CalculatorDialogData } from '../../models/calculator-dialog-data';
 import { DialogCalculatorComponent } from '../dialog-calculator/dialog-calculator.component';
 import { DEFAULT_BACKGROUND_COLOR, DEFAULT_ICON_COLOR } from '../../constants/category.constants';
@@ -44,7 +41,7 @@ export class RegisterMovementComponent implements OnInit {
     categoryId: new FormControl(null, Validators.required),
     memorandum: new FormControl('', Validators.maxLength(50)),
     date: new FormControl({ value: null, disabled: true }),
-    amount: new FormControl(null, [Validators.required, Validators.min(0), Validators.minLength(1), Validators.max(999999999999)]),
+    amount: new FormControl(null, [Validators.required, Validators.min(1), Validators.max(999999999999)]),
     color: new FormControl(this.defaultColor),
     backgroundColor: new FormControl(this.defaultBackgroundColor),
     time: new FormControl(null, Validators.required),
@@ -57,100 +54,86 @@ export class RegisterMovementComponent implements OnInit {
   protected mask = 'separator.0'
   protected thousandSeparator = '.'
   protected relatedMovements: RelatedMovementModel[] = []
-  protected movementRegistrationType!: MovementRegistrationType
   private categoryList!: CategoryModel[]
   private updateMovement?: MovementModel
-  private movementId!: string
 
   constructor(
     private readonly movementService: MovementService,
-    protected location: Location,
-    private readonly snackBar: MatSnackBar,
     private readonly activatedRoute: ActivatedRoute,
     private readonly dialog: MatDialog,
     private readonly userService: UserService,
     private translate: TranslateService,
-    private configurationService: ConfigurationService,
-    private relateMovementService: RelatedMovementService
+    private relateMovementService: RelatedMovementService,
+    private readonly navigationService: NavigationService,
+    private readonly notificationService: NotificationService
   ) { }
 
-  ngOnInit(): void {
-    combineLatest([
-      this.activatedRoute.params, this.userService.getActiveCategories$().pipe(take(1)),
-      this.configurationService.getConfiguration().pipe(take(1)),
-      this.relateMovementService.getRelatedMovementsShowingInMovements().pipe(take(1))
-    ]).subscribe({
-      next: ([params, categories, configuration, relatedMovements]) => {
-        [this.mask, this.thousandSeparator] = HelperService.getMarkValues(configuration)
-        this.relatedMovements = relatedMovements
-        this.movementId = params['id']
-        this.categoryList = categories
-        this.updateMovement = this.movementService.getMovementById(this.movementId)
-        if (this.updateMovement) {
-          this.title = 'Movement update'
-          this.patchFormGroup(this.updateMovement)
-        } else {
-          this.currentCategories = HelperService.categoriesByType(this.categoryList, this.categoryType.expense, this.getCategoryName)
-          if (this.currentCategories.length > 0) {
-            const currentCategory = this.currentCategories[0]
-            this.formGroup.controls.icon.setValue(currentCategory.icon)
-            this.formGroup.controls.categoryId.setValue(currentCategory.id)
-            this.formGroup.patchValue({ color: currentCategory.color ?? this.defaultColor })
-            this.formGroup.patchValue({ backgroundColor: currentCategory.backgroundColor ?? this.defaultBackgroundColor})
-          }
-        }
-
-        this.formGroup.controls.type.valueChanges.subscribe({
-          next: (type) => {
-            this.currentCategories = HelperService.categoriesByType(this.categoryList, type!, this.getCategoryName)
-            const currentCategory = this.currentCategories.find(x => x.id === this.formGroup.controls.categoryId.value)
-            if(currentCategory || this.currentCategories.length === 0) {
-              this.formGroup.controls.icon.setValue(null)
-              this.formGroup.controls.categoryId.setValue('')
-              this.formGroup.controls.color.setValue(this.defaultColor)
-              this.formGroup.controls.backgroundColor.setValue(this.defaultBackgroundColor)
-            } else {
-              this.formGroup.controls.icon.setValue(this.currentCategories[0].icon)
-              this.formGroup.controls.categoryId.setValue(this.currentCategories[0].id)
-              this.formGroup.controls.color.setValue(this.currentCategories[0].color ?? this.defaultColor)
-              this.formGroup.controls.backgroundColor.setValue(this.currentCategories[0].backgroundColor ?? this.defaultBackgroundColor)
-            }
-          }
-        })
-        this.formGroup.controls.memorandum.valueChanges.subscribe({
-          next: (value: string | null) => {
-            const newValue = value?.replace(/,/g, '')
-            this.formGroup.controls.memorandum.patchValue(newValue!, { emitEvent: false })
-          }
-        })
-        this.formGroup.controls.date.valueChanges.subscribe({
-          next: (date) => {
-            const dateCopy = new Date(date!.getTime())
-            dateCopy.setHours(0, 0, 0, 0)
-            this.formGroup.controls.time.setValue(dateCopy.getTime()!)
-          }
-        })
-        this.loading = false
-      }, error: (e) => {
-        this.loading = false
-        throw e
-      }
-    })
+  async ngOnInit(): Promise<void> {
+    [this.mask, this.thousandSeparator] = HelperService.getMarkValues(this.userService.item!.userConfiguration)
     this.inputCharacter = this.translate.instant(InputType.Characters)
     this.inputDigit = this.translate.instant(InputType.Digits)
+    this.categoryList = this.userService.getActiveCategories()
+    const movementId: string | undefined = this.activatedRoute.snapshot.params['id']
+    try {
+      this.relatedMovements = await firstValueFrom(this.relateMovementService.getRelatedMovementsShowingInMovements().pipe(take(1)))
+      if (movementId) {
+        // After a reload the movement is not in the list of the main screen, so it is read from the server
+        this.updateMovement = this.movementService.getMovementById(movementId) ?? await this.movementService.getMovementByIdFromServer(movementId)
+        if (!this.updateMovement) {
+          this.exit()
+          return
+        }
+        this.title = 'Movement update'
+        this.patchFormGroup(this.updateMovement)
+      } else {
+        this.currentCategories = HelperService.categoriesByType(this.categoryList, this.categoryType.expense, this.getCategoryName)
+        if (this.currentCategories.length > 0) {
+          this.selectCategory(this.currentCategories[0])
+        }
+        // New movements start on today, or on the first day of the month being viewed
+        this.setDate(HelperService.getDefaultMovementDate(this.userService.getSelectedYearMonth()))
+      }
+    } catch (e) {
+      this.notificationService.error(e)
+      this.exit()
+      return
+    }
+
+    this.formGroup.controls.type.valueChanges.subscribe({
+      next: (type) => {
+        this.currentCategories = HelperService.categoriesByType(this.categoryList, type!, this.getCategoryName)
+        const currentCategory = this.currentCategories.find(x => x.id === this.formGroup.controls.categoryId.value)
+        if (currentCategory) { return }
+        if (this.currentCategories.length > 0) {
+          this.selectCategory(this.currentCategories[0])
+        } else {
+          this.formGroup.controls.icon.setValue(null)
+          this.formGroup.controls.categoryId.setValue('')
+          this.formGroup.controls.color.setValue(this.defaultColor)
+          this.formGroup.controls.backgroundColor.setValue(this.defaultBackgroundColor)
+        }
+      }
+    })
+    this.formGroup.controls.memorandum.valueChanges.subscribe({
+      next: (value: string | null) => {
+        const newValue = value?.replace(/,/g, '')
+        this.formGroup.controls.memorandum.patchValue(newValue!, { emitEvent: false })
+      }
+    })
+    this.formGroup.controls.date.valueChanges.subscribe({
+      next: (date) => this.setDate(date!)
+    })
+    this.loading = false
   }
 
   protected selectedIcon = (category: CategoryModel): void => {
-    this.formGroup.controls.icon.setValue(category.icon)
-    this.formGroup.controls.categoryId.setValue(category.id)
-    this.formGroup.controls.color.setValue(category.color ?? this.defaultColor)
-    this.formGroup.controls.backgroundColor.setValue(category.backgroundColor ?? this.defaultBackgroundColor)
+    this.selectCategory(category)
     this.inputMemorandum?.nativeElement.focus()
     this.formGroup.markAllAsTouched()
   }
 
   protected exit = (): void => {
-    this.location.back()
+    this.navigationService.back()
   }
 
   private getCategoryName = (name: string): string => this.translate.instant(name)
@@ -169,7 +152,7 @@ export class RegisterMovementComponent implements OnInit {
     })
   }
 
-  protected save = (): void => {
+  protected save = async (): Promise<void> => {
     if (this.formGroup.invalid || this.saving) { return }
     const request: MovementModel = {
       type: this.formGroup.controls.type.value!,
@@ -181,39 +164,55 @@ export class RegisterMovementComponent implements OnInit {
       backgroundColor: this.formGroup.controls.backgroundColor.value!,
       time: this.formGroup.controls.time.value!,
     }
+    // saving stays true until the screen closes, so a second tap cannot duplicate the movement
     this.saving = true
-    let request$: Promise<void> | Promise<DocumentReference<DocumentData>> | Promise<[DocumentReference<DocumentData>, void]>
-    if (this.movementId && request.type !== this.updateMovement?.type) {// create new movement type, and delete the movement with old type
-      request$ = Promise.all([this.movementService.create(request), this.movementService.delete(this.movementId, this.updateMovement?.type!)])
-      this.movementRegistrationType = MovementRegistrationType.complexUpdate
-    } else if(this.movementId) {// simple update
-      request.id = this.movementId
-      request$ = this.movementService.update(request)
-      this.movementRegistrationType = MovementRegistrationType.update
-    } else {// create
-      request$ = this.movementService.create(request)
-      this.movementRegistrationType = MovementRegistrationType.create
-    }
-    // saving stays true until the related movements are saved and the screen closes, so a second tap cannot duplicate the movement
-    request$.then((x) => {
-      const movementUpdated = this.movementService.getMovementById(this.movementId)!
-      if (request.id) {
-        movementUpdated.type = request.type
-        movementUpdated.icon = request.icon
-        movementUpdated.categoryId = request.categoryId
-        movementUpdated.memorandum = request.memorandum
-        movementUpdated.amount = request.amount
-        movementUpdated.id = request.id
-        movementUpdated.time = request.time
+    const oldId = this.updateMovement?.id
+    let movementId: string
+    try {
+      if (this.updateMovement && request.type !== this.updateMovement.type) {
+        // The type is part of the path, so the movement moves to the other collection in a single batch
+        const batch = this.movementService.openBatch()
+        const newReference = doc(this.movementService.getReference(request.type))
+        batch.set(newReference, request)
+        batch.delete(this.movementService.getMovementDocumentReferenceById(this.updateMovement.type, oldId!))
+        await batch.commit()
+        movementId = newReference.id
+        this.movementService.deleteMovementForList(oldId!)
+      } else if (this.updateMovement) {
+        request.id = oldId
+        await this.movementService.update(request)
+        movementId = oldId!
+        Object.assign(this.updateMovement, request, { date: new Date(request.time) })
       } else {
-        this.movementService.deleteMovementForList(this.movementId)
+        movementId = (await this.movementService.create(request)).id
       }
-      this.setRelatedMovements(x)
-    }).catch((error) => {
-      console.error(error)
+    } catch (e) {
       this.saving = false
-      this.snackBar.open(String(error), '', { duration: 3000 })
-    })
+      this.notificationService.error(e)
+      return
+    }
+    try {
+      await this.saveRelatedMovements(oldId, movementId, request.type)
+      this.notificationService.message(`Movement was ${oldId ? 'updated' : 'created'}`)
+    } catch (e) {
+      // The movement is already saved: show the error and close instead of allowing a duplicate save
+      this.notificationService.error(e)
+    }
+    this.exit()
+  }
+
+  private selectCategory = (category: CategoryModel): void => {
+    this.formGroup.controls.icon.setValue(category.icon)
+    this.formGroup.controls.categoryId.setValue(category.id)
+    this.formGroup.controls.color.setValue(category.color ?? this.defaultColor)
+    this.formGroup.controls.backgroundColor.setValue(category.backgroundColor ?? this.defaultBackgroundColor)
+  }
+
+  private setDate = (date: Date): void => {
+    const dateCopy = new Date(date.getTime())
+    dateCopy.setHours(0, 0, 0, 0)
+    this.formGroup.controls.date.setValue(dateCopy, { emitEvent: false })
+    this.formGroup.controls.time.setValue(dateCopy.getTime())
   }
 
   private patchFormGroup = (movement: MovementModel): void => {
@@ -224,7 +223,7 @@ export class RegisterMovementComponent implements OnInit {
       type: movement.type,
       icon: movement.icon,
       categoryId: movement.categoryId,
-      memorandum: this.translate.instant(movement.memorandum || ''),
+      memorandum: movement.memorandum ?? '',
       date: movement.date,
       time: movement.date?.getTime(),
       amount: Math.abs(movement.amount),
@@ -234,69 +233,27 @@ export class RegisterMovementComponent implements OnInit {
     })
   }
 
-  private setRelatedMovements = (x: void | DocumentReference<DocumentData, DocumentData> | [DocumentReference<DocumentData, DocumentData>, void]) => {
-    let id = this.movementId
-    if(this.movementRegistrationType === MovementRegistrationType.create) {
-      id = (x as DocumentReference<DocumentData, DocumentData>).id
-    } else if (this.movementRegistrationType === MovementRegistrationType.complexUpdate) {
-      id = (x as [DocumentReference<DocumentData, DocumentData>, void])[0].id
-    }
-    let batch = this.relateMovementService.openBatch()
-
-    let request$: Promise<void>[] = []
-    const formRelatedMovementValues = this.formGroup.controls.relatedMovements.value
-    let selectedRelatedMovements: RelatedMovementModel[] = []
-    if (formRelatedMovementValues) {
-      selectedRelatedMovements = JSON.parse(JSON.stringify(this.relatedMovements?.filter(x => formRelatedMovementValues.find(y => y === x.id))))
-      selectedRelatedMovements
-      .forEach(x => x.related = [...new Set([...x.related, new RelatedMapModel(id, this.formGroup.controls.type.value!)])])
-
-      if (this.movementRegistrationType === MovementRegistrationType.update && this.relatedMovements.length > 0) {
-        const allSavedRelatedMovements = this.relatedMovements.filter(x => x.related.some(y => y.id === this.movementId))
-        const deletedRelatedMovements = allSavedRelatedMovements.filter(x => !formRelatedMovementValues.includes(x.id!))
-        if (deletedRelatedMovements.length > 0) {
-          deletedRelatedMovements.forEach(x => x.related = x.related.filter(y => y.id !== this.movementId))
-          this.updateRelatedMovement(deletedRelatedMovements, batch)
-          request$.push(batch.commit())
-          batch = this.relateMovementService.openBatch()
-        }
+  // Each group is written once with its final list. Groups offered in the form follow the selection;
+  // the others keep the movement if they had it (with the new id when the type changed)
+  private saveRelatedMovements = async (oldId: string | undefined, newId: string, type: CategoryType): Promise<void> => {
+    const groups = await firstValueFrom(this.relateMovementService.getAll().pipe(take(1)))
+    const selectableIds = this.relatedMovements.map(x => x.id!)
+    const selectedIds = this.formGroup.controls.relatedMovements.value ?? []
+    const batch = this.relateMovementService.openBatch()
+    let changes = 0
+    groups.forEach(group => {
+      const wasIncluded = !!oldId && group.related.some(x => x.id === oldId)
+      const include = selectableIds.includes(group.id!) ? selectedIds.includes(group.id!) : wasIncluded
+      if ((!wasIncluded && !include) || (wasIncluded && include && oldId === newId)) { return }
+      const related = group.related.filter(x => x.id !== oldId).map(x => ({ id: x.id, type: x.type }))
+      if (include) {
+        related.push({ id: newId, type })
       }
-    }
-    // delete related movement
-    if (this.movementRegistrationType === MovementRegistrationType.complexUpdate ||
-      (this.movementRegistrationType === MovementRegistrationType.update && formRelatedMovementValues?.length === 0)
-    ) {
-      const deletedRelatedMovements = this.relatedMovements?.filter(x => x.related.some(y => y.id ===  this.movementId))
-      deletedRelatedMovements.forEach(x => x.related = x.related.filter(y => y.id !== this.movementId))
-      selectedRelatedMovements = [...selectedRelatedMovements, ...deletedRelatedMovements]
-    }
-    this.updateRelatedMovement(selectedRelatedMovements, batch)
-    request$.push(batch.commit())
-    if (request$.length >= 0) {
-      // The movement is already saved: on error show it and close instead of allowing a duplicate save
-      Promise.all(request$)
-      .then(() => this.updateSuccess())
-      .catch((e) => {
-        console.error(e)
-        this.snackBar.open(String(e), '', { duration: 3000 })
-        this.location.back()
-      })
-    } else {
-      this.updateSuccess()
-    }
-  }
-
-  private updateSuccess = () => {
-    this.snackBar.open(this.translate.instant(`Movement was ${this.movementId ? 'updated' : 'created'}`), '', { duration: 3000 })
-    this.location.back()
-  }
-
-  private updateRelatedMovement = (relatedMovement: RelatedMovementModel[], batch: WriteBatch) => {
-    relatedMovement.forEach(x => {
-      const relatedMovementDocReference = this.relateMovementService.getReferenceById(x.id!)
-      batch.update(relatedMovementDocReference, {
-        'related': HelperService.getRelatedMovementToSave(x.related as RelatedMapModel[])
-      })
+      batch.update(this.relateMovementService.getReferenceById(group.id!), { related })
+      changes++
     })
+    if (changes > 0) {
+      await batch.commit()
+    }
   }
 }

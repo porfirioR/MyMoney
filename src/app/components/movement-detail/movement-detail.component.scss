@@ -4,7 +4,7 @@
 
 .mat-card-header {
   display: flex;
-  justify-content: space-between;
+  gap: 0.75rem;
   align-items: center;
   & > span {
     font-weight: bold;
@@ -20,6 +20,15 @@
       margin-right: 4px;
     }
   }
+}
+
+.category-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
 }
 
 dt {

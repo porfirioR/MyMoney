@@ -66,7 +66,7 @@
               {{year}}
             </mat-option>
           </mat-select>
-          <mat-error *ngIf="formGroup.controls.month.hasError('required')" translate>
+          <mat-error *ngIf="formGroup.controls.year.hasError('required')" translate>
             Filter year is required.
           </mat-error>
         </mat-form-field>
@@ -74,7 +74,7 @@
     </mat-card-content>
     <mat-card-actions align="end">
       <button mat-stroked-button color="primary"
-        [disabled]="formGroup.invalid || searching" [title]="'save-button' | translate"
+        [disabled]="formGroup.invalid || searching" [title]="'Search' | translate"
         (click)="search()"
       >
         {{"Search" | translate}}

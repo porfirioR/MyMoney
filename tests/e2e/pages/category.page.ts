@@ -42,9 +42,11 @@ export class CategoryPage extends BasePage {
     return [color, backgroundColor]
   }
 
+  // Own categories are deleted from their edit screen; the first button of the row only hides them
   public async deleteCategory(categoryName: string) {
-    await this.getRow(categoryName).getByRole('button').first().click()
-    await this.page.getByRole('button', { name: 'Delete' }).click()
+    await this.getRow(categoryName).getByRole('button').nth(2).click()
+    await this.page.getByRole('button', { name: 'Delete category' }).click()
+    await this.page.getByRole('button', { name: 'Delete', exact: true }).click()
   }
 
   public async createTestAssertions(categoryName: string) {

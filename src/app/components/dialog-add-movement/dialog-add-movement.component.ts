@@ -12,6 +12,7 @@ import { NumberType } from '../../enums/number-type.enum';
 import { HelperService } from '../../services/helper.service';
 import { MovementService } from '../../services/movement.service';
 import { UserService } from '../../services/user.service';
+import { NotificationService } from '../../services/notification.service';
 import { CategoryModel } from '../../models/category.model';
 import { FilterRelatedMovementModel } from '../../models/filter-related-movement.model';
 import { MovementModel } from '../../models/movement.model';
@@ -53,6 +54,7 @@ export class DialogAddMovementComponent implements OnInit {
     private readonly movementService: MovementService,
     private readonly userService: UserService,
     private readonly translateService: TranslateService,
+    private readonly notificationService: NotificationService,
     @Optional() @Inject(MAT_DIALOG_DATA) data?: { excludedIds?: string[] }
   ) {
     this.excludedIds = data?.excludedIds ?? []
@@ -122,7 +124,7 @@ export class DialogAddMovementComponent implements OnInit {
         this.searching = false
       }, error: (e) => {
         this.searching = false
-        throw e
+        this.notificationService.error(e)
       }
     })
   }

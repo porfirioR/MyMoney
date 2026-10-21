@@ -11,6 +11,7 @@ import { MovementModel } from '../../models/movement.model';
 import { MovementService } from '../../services/movement.service';
 import { UserService } from '../../services/user.service';
 import { environment } from '../../../environments/environment';
+import { NotificationService } from '../../services/notification.service';
 import { ExportMovementForm } from '../../forms/export-movement.form';
 
 @Component({
@@ -35,6 +36,7 @@ export class ExportMovementComponent {
     private readonly snackBar: MatSnackBar,
     private translate: TranslateService,
     private router: Router,
+    private readonly notificationService: NotificationService,
   ) { }
 
   protected exit = (): void => {
@@ -51,8 +53,7 @@ export class ExportMovementComponent {
         this.movementListResponse = this.movementListResponse.concat(response.flatMap(x => x))
       }, error: (e) => {
         this.loading = false
-        console.error(e);
-        throw e;
+        this.notificationService.error(e)
       }
     })
 

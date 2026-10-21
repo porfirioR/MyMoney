@@ -8,11 +8,19 @@
   </div>
   <mat-divider></mat-divider>
   <div mat-subheader>{{'Actions' | translate}}</div>
-  <mat-list-item *ngFor="let item of navItems" [id]="item.icon" (click)="performItemAction(item.action)">
+  <mat-list-item *ngFor="let item of navItems" [id]="item.icon"
+    [class.active]="isActive(item.action)"
+    [attr.aria-current]="isActive(item.action) ? 'page' : null"
+    (click)="performItemAction(item.action)"
+  >
     <mat-icon mat-list-icon color="primary">{{item.icon}}</mat-icon>
     <span mat-line>{{item.name | translate}}</span>
   </mat-list-item>
   <mat-divider></mat-divider>
+  <mat-list-item id="theme-toggle" (click)="toggleTheme()">
+    <mat-icon mat-list-icon color="primary">{{themeService.isDark ? 'light_mode' : 'dark_mode'}}</mat-icon>
+    <span mat-line>{{(themeService.isDark ? 'Light mode' : 'Dark mode') | translate}}</span>
+  </mat-list-item>
   <mat-list-item (click)="logout()">
     <mat-icon mat-list-icon color="primary">exit_to_app</mat-icon>
     <span mat-line>{{'Exit' | translate}}</span>

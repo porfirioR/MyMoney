@@ -1,8 +1,9 @@
-import { Location } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { BaseChartDirective } from 'ng2-charts';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { combineLatest, switchMap, take } from 'rxjs';
+import { combineLatest, skip, take } from 'rxjs';
 import { ChartConfiguration } from 'chart.js';
 import { LanguageType } from '../../enums/language-type.enum';
 import { NumberType } from '../../enums/number-type.enum';
@@ -14,6 +15,9 @@ import { GroupMovementCategoryModel } from '../../models/group-movement-category
 import { MovementModel } from '../../models/movement.model';
 import { ChartModel } from '../../models/chart.model';
 import { AnnualReportExportModel, CategoryMonthlyAmountModel } from '../../models/annual-report-export.model';
+import { NotificationService } from '../../services/notification.service';
+import { ThemeService } from '../../services/theme.service';
+import { DEFAULT_BACKGROUND_COLOR, DEFAULT_ICON_COLOR } from '../../constants/category.constants';
 
 @Component({
   selector: 'app-annual-report',
@@ -25,6 +29,7 @@ export class AnnualReportComponent implements OnInit {
   protected year: number = new Date().getFullYear()
   protected redColor = 'rgb(255, 99, 132)'
   protected greenColor = 'rgb(75, 192, 192)'
+  protected neutralColor = 'var(--text-secondary)'
   protected incomeChartData: ChartConfiguration<'doughnut'>['data'] = {
     labels: [''],
     datasets: [
@@ -137,7 +142,7 @@ export class AnnualReportComponent implements OnInit {
   protected loading: boolean = true
   protected incomeGroupMovementCategoryModel!: GroupMovementCategoryModel[]
   protected expenseGroupMovementCategoryModel!: GroupMovementCategoryModel[]
-  protected numberType = NumberType.Spanish
+  protected numberType = NumberType.English
   protected language = LanguageType.English
   protected incomeAmount: number = 0
   protected expenseAmount: number = 0
@@ -146,30 +151,30 @@ export class AnnualReportComponent implements OnInit {
 
   constructor(
     private readonly movementService: MovementService,
-    protected location: Location,
     private readonly userService: UserService,
     private translateService: TranslateService,
-    private route: ActivatedRoute
-  ) { }
+    private route: ActivatedRoute,
+    private readonly router: Router,
+    private readonly notificationService: NotificationService,
+    private readonly themeService: ThemeService
+  ) {
+    // Chart colors come from Chart.defaults, so the charts on screen are redrawn when the theme changes
+    this.themeService.isDark$.pipe(skip(1), takeUntilDestroyed()).subscribe(() => this.charts?.forEach(x => x.chart?.update()))
+  }
+
+  @ViewChildren(BaseChartDirective) private charts?: QueryList<BaseChartDirective>
   
   ngOnInit(): void {
-    this.year = +this.route.snapshot.params['year']
-    this.loading = true
-    const diffYear = this.year - this.minValidYear
-    const initialYear = this.year === this.minValidYear || diffYear > 8 ? this.minValidYear : this.year - diffYear
-    this.yearRange = [...Array(15).keys()].map(x => initialYear + x)
-    this.userService.getUserConfiguration$().pipe(take(1)).pipe(switchMap(config => {
-      this.language = config.language
-      return this.getMovementForCategoriesByYear(this.year)
-    })).pipe(take(1))
-    .subscribe({
-      next: ([expense, income]) => this.subscribeMovements(expense, income),
-      error: (e) => {
-        this.loading = false
-        console.error(e)
-        throw e;
-      }
-    })
+    const currentYear = new Date().getFullYear()
+    const year = Number(this.route.snapshot.params['year'])
+    this.year = Number.isInteger(year) && year >= this.minValidYear && year <= currentYear ? year : currentYear
+    // Only years that can have movements: from the first valid year to the current one, newest first
+    this.yearRange = Array.from({ length: currentYear - this.minValidYear + 1 }, (_, i) => currentYear - i)
+    const config = this.userService.item!.userConfiguration
+    this.language = config.language
+    this.numberType = config.number
+    this.setChartsLocale(config.number)
+    this.loadYear(this.year)
   }
 
   private subscribeMovements = (expense: MovementModel[], income: MovementModel[]): void => {
@@ -204,7 +209,7 @@ export class AnnualReportComponent implements OnInit {
 
     this.expenseChart.labels = this.expenseGroupMovementCategoryModel.map(x => this.labelMovements(x, this.expenseAmount))
     this.expenseChartData.labels = this.expenseChart.labels
-    this.expenseChartData.datasets[0].label = CategoryType.expense
+    this.expenseChartData.datasets[0].label = this.translateService.instant(CategoryType.expense)
     this.expenseChartData.datasets[0].data = this.expenseGroupMovementCategoryModel.map(x => x.amount)
   }
 
@@ -224,28 +229,40 @@ export class AnnualReportComponent implements OnInit {
     })
   }
 
+  // The URL follows the selected year, so reloading or going back keeps it
   protected yearChanges = (selectedYear: number): void => {
-    this.loading = true
     this.year = selectedYear
-    this.getMovementForCategoriesByYear(selectedYear).pipe(take(1)).subscribe({
+    this.router.navigate(['annual-report', selectedYear], { replaceUrl: true })
+    this.loadYear(selectedYear)
+  }
+
+  private loadYear = (year: number): void => {
+    this.loading = true
+    this.getMovementForCategoriesByYear(year).pipe(take(1)).subscribe({
       next: ([expense, income]) => this.subscribeMovements(expense, income),
       error: (e) => {
         this.loading = false
-        console.error(e)
-        throw e;
+        this.notificationService.error(e)
       }
     })
   }
 
+  // Ticks and tooltips of every chart use the configured number format
+  private setChartsLocale = (locale: string): void => {
+    [this.globalChart, this.monthsChart, this.incomeChart, this.expenseChart].forEach(x => x.chartOptions = { ...x.chartOptions, locale })
+  }
+
+  protected getBalanceColor = (): string => this.balance > 0 ? this.greenColor : this.balance < 0 ? this.redColor : this.neutralColor
+
   private groupByCategoryName = (movements: MovementModel[]): GroupMovementCategoryModel[] => {
     const groups: GroupMovementCategoryModel[] = []
     movements.forEach((movement) => {
-      const category = this.userService.getActiveCategories().find(x => x.id === movement.categoryId)!
-      movement.categoryName = category.name!
-      movement.color = category.color!
-      movement.backgroundColor = category.backgroundColor!
+      // Hidden categories are included: their movements still count for the year
+      const category = this.userService.getAllCategories().find(x => x.id === movement.categoryId)
+      movement.categoryName = category?.name ?? ''
+      movement.color = category?.color ?? DEFAULT_ICON_COLOR
+      movement.backgroundColor = category?.backgroundColor ?? DEFAULT_BACKGROUND_COLOR
       movement.date = new Date(movement.time)
-      movement.memorandum = movement.memorandum ? movement.memorandum : movement.categoryName
       const movementCategory = groups.find(x => x.categoryName == movement.categoryName)
       if (movementCategory) {
         movementCategory.movements.push(movement)
@@ -257,10 +274,6 @@ export class AnnualReportComponent implements OnInit {
     })
     groups.sort((a, b) => b.amount - a.amount)
     return groups
-  }
-
-  protected exit = (): void => {
-    this.location.back()
   }
 
   protected exportReport = (): void => {

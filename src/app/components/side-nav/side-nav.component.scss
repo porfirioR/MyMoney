@@ -1,5 +1,11 @@
 .mat-list-item {
   cursor: pointer;
+  // Current screen: tinted with the primary green and bold text
+  &.active {
+    background: var(--active-bg);
+    font-weight: 500;
+    box-shadow: inset 4px 0 0 var(--primary);
+  }
 }
 
 .user-block {

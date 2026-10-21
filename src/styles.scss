@@ -62,6 +62,64 @@ $my-theme: mat.define-light-theme((
 @include mat.legacy-core();
 @include mat.all-legacy-component-themes($my-theme);
 
+// Dark mode: ThemeService puts .dark-theme on <html>, so dialogs, menus and the datepicker
+// (rendered outside the app, in <body>) change too. Only colors: typography is already included.
+$my-dark-theme: mat.define-dark-theme((
+  color: (
+    primary: $my-primary,
+    accent: $my-accent,
+    warn: $my-warn,
+  )
+));
+
+.dark-theme {
+  @include mat.all-legacy-component-colors($my-dark-theme);
+  color-scheme: dark;
+
+  // A darker green on the toolbar dazzles less at night
+  & .mat-toolbar.mat-primary {
+    background: #5b7d47;
+  }
+}
+
+// Color tokens used by the components instead of fixed colors
+:root {
+  --bg: #fafafa;
+  --text-primary: rgb(0 0 0 / 87%);
+  --text-secondary: rgb(0 0 0 / 60%);
+  --text-disabled: rgb(0 0 0 / 38%);
+  --divider: rgb(0 0 0 / 12%);
+  --primary: #82b366;
+  --success: #2e7d32;
+  --success-bg: #e8f5e9;
+  --danger: #c62828;
+  --warn: #f44336;
+  --active-bg: #f0f6ed;
+  --skeleton-base: #eeeeee;
+  --skeleton-highlight: #f5f5f5;
+  // Categories that keep the default black on white follow the theme
+  --icon-default-color: #000000;
+  --icon-default-background: #ffffff;
+}
+
+.dark-theme {
+  --bg: #303030;
+  --text-primary: #ffffff;
+  --text-secondary: rgb(255 255 255 / 70%);
+  --text-disabled: rgb(255 255 255 / 40%);
+  --divider: rgb(255 255 255 / 12%);
+  --primary: #a8ca94;
+  --success: #81c784;
+  --success-bg: rgb(129 199 132 / 16%);
+  --danger: #ef9a9a;
+  --warn: #ef5350;
+  --active-bg: rgb(130 179 102 / 18%);
+  --skeleton-base: #3a3a3a;
+  --skeleton-highlight: #484848;
+  --icon-default-color: rgb(255 255 255 / 87%);
+  --icon-default-background: #555555;
+}
+
 // Every screen scrolls the whole page under the fixed toolbar (no inner scroll areas with their own heights)
 :root {
   --toolbar-height: 56px;
@@ -83,15 +141,52 @@ body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
   // box-shadow: 0px 2px 1px -1px rgb(0 0 0 / 20%), 0px 1px 1px 0px rgb(0 0 0 / 14%), 0px 1px 3px 0px rgb(0 0 0 / 12%);
-  background: #fafafa;
+  background: var(--bg);
+  color: var(--text-primary);
 }
 
 .w-100 {
   width: 100%;
 }
 
-.header-height {
-  height: 56px;
+// Space under the fixed toolbar; follows the toolbar height (56px on phones, 64px from 600px)
+.mat-toolbar-block {
+  height: var(--toolbar-height);
+}
+
+// Floating add button shared by the list screens
+.btn-add {
+  position: fixed !important;
+  width: 60px !important;
+  height: 60px !important;
+  bottom: 40px;
+  right: 18px;
+  z-index: 4;
+}
+
+// Lists with the floating button leave room so it never covers the last item
+.fab-space {
+  padding-bottom: 110px;
+}
+
+// Message shown when a screen has nothing to list yet
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.75rem;
+  margin: 2.5rem 1.5rem;
+  color: var(--text-secondary);
+  & .empty-icon {
+    width: 48px;
+    height: 48px;
+    font-size: 48px;
+    color: var(--text-disabled);
+  }
+  & p {
+    margin: 0;
+  }
 }
 
 .mat-toolbar {
@@ -127,7 +222,7 @@ body {
 }
 
 .app-principal {
-  background: #fafafa;
+  background: var(--bg);
   padding: 0 !important;
   min-height: 100%;
 }
