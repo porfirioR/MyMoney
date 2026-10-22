@@ -13,6 +13,9 @@ import { SelectYearMonthForm } from '../../forms/select-year-month.form';
 })
 export class SelectYearMonthComponent implements OnInit {
   protected months = MonthType
+  // Today's month is outlined, like today in a calendar, so it is easy to come back to it
+  protected readonly currentMonth = MonthType[new Date().getMonth()]
+  protected readonly currentYear = new Date().getFullYear()
   protected formGroup: FormGroup<SelectYearMonthForm>
 
   constructor(

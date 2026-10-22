@@ -16,15 +16,6 @@
   margin: 0.2rem;
 }
 
-// Expense / income as two big buttons instead of a dropdown
-.type-toggle {
-  display: flex;
-  margin: 0.6rem;
-  & .mat-button-toggle {
-    flex: 1;
-  }
-}
-
 .mat-card {
   margin: 0.75rem;
 }

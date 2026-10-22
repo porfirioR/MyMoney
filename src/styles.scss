@@ -94,6 +94,7 @@ $my-dark-theme: mat.define-dark-theme((
   --success-bg: #e8f5e9;
   --danger: #c62828;
   --warn: #f44336;
+  --danger-bg: #ffebee;
   --active-bg: #f0f6ed;
   --skeleton-base: #eeeeee;
   --skeleton-highlight: #f5f5f5;
@@ -113,6 +114,7 @@ $my-dark-theme: mat.define-dark-theme((
   --success-bg: rgb(129 199 132 / 16%);
   --danger: #ef9a9a;
   --warn: #ef5350;
+  --danger-bg: rgb(239 154 154 / 16%);
   --active-bg: rgb(130 179 102 / 18%);
   --skeleton-base: #3a3a3a;
   --skeleton-highlight: #484848;
@@ -167,6 +169,43 @@ body {
 // Lists with the floating button leave room so it never covers the last item
 .fab-space {
   padding-bottom: 110px;
+}
+
+// Expense / income as two separate full-width buttons, like Cancel / Save: red text for expenses, green for incomes.
+// The selected one gets a border and a soft background of its color. !important beats Material's runtime group styles.
+.type-toggle.mat-button-toggle-group {
+  display: flex;
+  gap: 1rem;
+  margin: 0.6rem;
+  border: none !important;
+  border-radius: 0;
+  overflow: visible;
+  & .mat-button-toggle {
+    flex: 1;
+    border: 1px solid var(--divider) !important;
+    border-radius: 4px;
+    background: transparent;
+    font-weight: 500;
+    & .mat-button-toggle-label-content {
+      line-height: 2.75rem;
+    }
+    &.expense {
+      color: var(--danger);
+    }
+    &.income {
+      color: var(--success);
+    }
+  }
+  & .mat-button-toggle.mat-button-toggle-checked {
+    &.expense {
+      border-color: var(--danger) !important;
+      background: var(--danger-bg);
+    }
+    &.income {
+      border-color: var(--success) !important;
+      background: var(--success-bg);
+    }
+  }
 }
 
 // Message shown when a screen has nothing to list yet

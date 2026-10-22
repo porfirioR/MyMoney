@@ -5,10 +5,10 @@
       <app-skeleton *ngIf="loading" [cards]="1" [lines]="4"></app-skeleton>
       <mat-card *ngIf="!loading">
         <mat-button-toggle-group class="type-toggle" formControlName="type" [attr.aria-label]="'Type:' | translate">
-          <mat-button-toggle [value]="categoryType.expense" id="type-expense">
+          <mat-button-toggle class="expense" [value]="categoryType.expense" id="type-expense">
             {{categoryType.expense | translate}}
           </mat-button-toggle>
-          <mat-button-toggle [value]="categoryType.income" id="type-income">
+          <mat-button-toggle class="income" [value]="categoryType.income" id="type-income">
             {{categoryType.income | translate}}
           </mat-button-toggle>
         </mat-button-toggle-group>

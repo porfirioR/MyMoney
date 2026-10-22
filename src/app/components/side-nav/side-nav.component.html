@@ -17,10 +17,6 @@
     <span mat-line>{{item.name | translate}}</span>
   </mat-list-item>
   <mat-divider></mat-divider>
-  <mat-list-item id="theme-toggle" (click)="toggleTheme()">
-    <mat-icon mat-list-icon color="primary">{{themeService.isDark ? 'light_mode' : 'dark_mode'}}</mat-icon>
-    <span mat-line>{{(themeService.isDark ? 'Light mode' : 'Dark mode') | translate}}</span>
-  </mat-list-item>
   <mat-list-item (click)="logout()">
     <mat-icon mat-list-icon color="primary">exit_to_app</mat-icon>
     <span mat-line>{{'Exit' | translate}}</span>

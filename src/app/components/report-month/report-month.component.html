@@ -7,10 +7,10 @@
     <main id="main">
       <mat-card>
         <mat-button-toggle-group class="type-toggle" formControlName="type" [attr.aria-label]="'Type:' | translate">
-          <mat-button-toggle [value]="categoryType.expense">
+          <mat-button-toggle class="expense" [value]="categoryType.expense">
             {{categoryType.expense | translate}}
           </mat-button-toggle>
-          <mat-button-toggle [value]="categoryType.income">
+          <mat-button-toggle class="income" [value]="categoryType.income">
             {{categoryType.income | translate}}
           </mat-button-toggle>
         </mat-button-toggle-group>
