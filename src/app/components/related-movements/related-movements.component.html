@@ -1,25 +1,7 @@
-<mat-sidenav-container [hasBackdrop]="true">
-  <mat-sidenav #sidenav mode="over" [fixedInViewport]="true">
-    <app-side-nav></app-side-nav>
-  </mat-sidenav>
-  <mat-sidenav-content>
-    <ng-container *ngTemplateOutlet="relatedMovement"></ng-container>
-  </mat-sidenav-content>
-</mat-sidenav-container>
-
-<ng-template #relatedMovement>
-  <main id="main">
-    <mat-toolbar color="primary">
-      <button mat-icon-button [title]="'menu-button' | translate" (click)="sidenav.toggle()">
-        <mat-icon>menu</mat-icon>
-      </button>
-      <span>{{'Related Mov.' | translate}}</span>
-      <button mat-icon-button routerLink="add" [title]="'Add Related Movement' | translate">
-        <mat-icon>add</mat-icon>
-      </button>
-    </mat-toolbar>
-    <div class="header-height"></div>
+<app-page-layout title="Related Mov.">
+  <main id="main" class="fab-space">
     <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+    <app-skeleton *ngIf="loading" [cards]="3" [lines]="2"></app-skeleton>
 
     <ng-container *ngIf="!loading">
       <section class="empty-state" *ngIf="relatedMovements.length === 0">
@@ -116,7 +98,10 @@
       </mat-accordion>
     </ng-container>
   </main>
-</ng-template>
+  <button mat-fab color="primary" class="btn-add" routerLink="add" [disabled]="loading" [title]="'Add Related Movement' | translate">
+    <mat-icon>add</mat-icon>
+  </button>
+</app-page-layout>
 
 <ng-template #remaining let-summary>
   <p class="remaining" [class.done]="summary.remaining <= 0">

@@ -12,18 +12,6 @@
     248 / 2 => 124px
     (124 / 768) * 100 = 16.14583 ~ 16%
 */
-@media (max-width: 599px) {
-  .mat-toolbar-block {
-    margin-top: 56px;
-  }
-}
-
-@media (min-width: 599px) {
-  .mat-toolbar-block {
-    margin-top: 64px;
-  }
-}
-
 // From tablet width the app is a centered column; the toolbar and the add button follow that column
 @media only screen and (min-width: 768px) {
   :root {
@@ -46,9 +34,6 @@
     right: calc(50% - var(--column-width) / 2 + 18px) !important;
   }
 
-  .header-height {
-    height: 64px !important;
-  }
 }
 
 @media only screen and (min-width: 2560px) {

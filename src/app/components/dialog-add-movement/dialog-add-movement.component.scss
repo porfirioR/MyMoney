@@ -32,13 +32,13 @@
 
 .option-date {
   font-size: 12px;
-  color: rgb(0 0 0 / 60%);
+  color: var(--text-secondary);
 }
 
 .option-amount {
   flex-shrink: 0;
   &.income {
-    color: #2e7d32;
+    color: var(--success);
   }
 }
 
@@ -50,7 +50,7 @@
 
 .empty-filter {
   text-align: center;
-  color: rgb(0 0 0 / 60%);
+  color: var(--text-secondary);
 }
 
 .mat-card-content {
@@ -91,7 +91,7 @@
 }
 
 #category-hint {
-  color: #f44336;
+  color: var(--warn);
 }
 
 .row-mat-field {

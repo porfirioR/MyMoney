@@ -1,21 +1,5 @@
-<mat-sidenav-container [hasBackdrop]="true">
-  <mat-sidenav #sidenav mode="over" [fixedInViewport]="true">
-    <app-side-nav></app-side-nav>
-  </mat-sidenav>
-  <mat-sidenav-content>
-    <ng-container *ngTemplateOutlet="importMovement"></ng-container>
-  </mat-sidenav-content>
-</mat-sidenav-container>
-
-<ng-template #importMovement>
+<app-page-layout title="Import movements">
   <main id="main">
-    <mat-toolbar color="primary">
-      <button mat-icon-button [title]="'menu-button' | translate" (click)="sidenav.toggle()">
-        <mat-icon>menu</mat-icon>
-      </button>
-      <span translate>Import movements</span>
-    </mat-toolbar>
-    <div class="mat-toolbar-block"></div>
     <mat-card>
       <mat-card-header>
         <mat-card-title translate>Instructions</mat-card-title>
@@ -66,4 +50,4 @@
       </mat-card-content>
     </mat-card>
   </main>
-</ng-template>
+</app-page-layout>

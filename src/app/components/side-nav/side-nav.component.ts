@@ -35,26 +35,27 @@ export class SideNavComponent implements OnInit {
     private auth: AuthService,
     protected router: Router,
     private readonly userService: UserService
-  ) {
-    if (!this.year) {
-      this.year = this.userService.getSelectedYearMonth().year
-    }
-  }
+  ) { }
 
   ngOnInit(): void {
     this.userService.getItemObservable$.subscribe({
       next: (user) => {
         this.photo = user.photo!,
         this.displayName = user.displayName
-      }, error: (e) => {
-        console.error(e);
-        throw e;
       }
     })
   }
 
+  // The menu lives inside each screen, so the current URL tells which item is open
+  protected isActive = (action: ItemAction): boolean => {
+    const path = this.router.url.split(/[?#]/)[0]
+    return action === ItemAction.home ? path === '/' : path === `/${action}` || path.startsWith(`/${action}/`)
+  }
+
   protected performItemAction = (action: ItemAction) => {
-    const url = action === ItemAction.annualReport ? `${action}/${this.year}` : action
+    // Screens without a year of their own open the report on the year being viewed
+    const year = this.year ?? this.userService.getSelectedYearMonth().year
+    const url = action === ItemAction.annualReport ? `${action}/${year}` : action
     this.router.navigate([url])
   }
 

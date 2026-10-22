@@ -1,4 +1,20 @@
-<mat-progress-bar mode="indeterminate" *ngIf="!isLocal || isLoading"></mat-progress-bar>
+<mat-progress-bar mode="indeterminate" *ngIf="isLoading"></mat-progress-bar>
+
+<section *ngIf="!isLocal && !isLoading" class="p-t-16">
+  <mat-toolbar color="primary">
+    <h1>{{title | translate}}</h1>
+  </mat-toolbar>
+  <main id="main">
+    <mat-card>
+      <mat-card-footer>
+        <button mat-flat-button color="primary" [title]="'login-button' | translate" (click)="loginWithGoogle()">
+          <mat-icon>account_circle</mat-icon>
+          {{'Login with Google' | translate}}
+        </button>
+      </mat-card-footer>
+    </mat-card>
+  </main>
+</section>
 
 <section *ngIf="isLocal" [formGroup]="formGroup" class="p-t-16">
   <mat-toolbar color="primary">

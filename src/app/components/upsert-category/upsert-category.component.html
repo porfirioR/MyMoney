@@ -1,13 +1,5 @@
-<mat-toolbar color="primary">
-  <button mat-icon-button (click)="exit()" [title]="'exit-button' | translate">
-    <mat-icon>keyboard_backspace</mat-icon>
-  </button>
-  <span>{{title | translate}}</span>
-  <button mat-icon-button routerLink="/" [title]="'home-button' | translate">
-    <mat-icon>home</mat-icon>
-  </button>
-</mat-toolbar>
-<div class="mat-toolbar-block"></div>
+<app-page-layout [title]="title" [backButton]="true" (back)="exit()">
+<mat-progress-bar mode="indeterminate" *ngIf="saving || deleting"></mat-progress-bar>
 <main id="main" *ngIf="formGroup">
   <header class="preview">
     <span class="preview-icon" customColor
@@ -99,12 +91,22 @@
       <button mat-stroked-button color="primary" type="button" (click)="exit()" [title]="'cancel-button' | translate">
         {{'Cancel' | translate}}
       </button>
-      <button mat-flat-button color="primary" type="submit" [disabled]="formGroup.invalid || saving" [title]="'save-button' | translate">
+      <button mat-flat-button color="primary" type="submit" [disabled]="formGroup.invalid || saving || deleting" [title]="'save-button' | translate">
         {{'Save' | translate}}
       </button>
     </footer>
   </form>
+
+  <!-- Deleting removes the movements too, so it lives apart from the form and only for own categories -->
+  <section class="danger-zone" *ngIf="category && !isSystemCategory">
+    <p>{{'category-messages.delete-hint' | translate}}</p>
+    <button mat-stroked-button color="warn" type="button" [disabled]="saving || deleting" (click)="deleteCategory()" [title]="'delete-button' | translate">
+      <mat-icon>delete</mat-icon>
+      {{'Delete category' | translate}}
+    </button>
+  </section>
 </main>
+</app-page-layout>
 
 <ng-template #colorPicker let-label="label" let-control="control" let-hexControl="hexControl" let-presets="presets">
   <section class="color-section">

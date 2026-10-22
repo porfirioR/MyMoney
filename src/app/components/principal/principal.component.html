@@ -1,63 +1,57 @@
-<mat-sidenav-container [hasBackdrop]="true">
-  <mat-sidenav #sidenav [mode]="'over'" [fixedInViewport]="true">
-    <app-side-nav [year]="yearMonth.year"></app-side-nav>
-  </mat-sidenav>
-  <mat-sidenav-content>
-    <ng-container *ngTemplateOutlet="principalPage"></ng-container>
-  </mat-sidenav-content>
-</mat-sidenav-container>
+<app-page-layout [title]="title" [year]="yearMonth.year">
+  <button toolbarActions mat-stroked-button [title]="'year-month-button' | translate" (click)="openYearMonth()">
+    {{yearMonth.shortMonth | translate}} {{yearMonth.year}}
+  </button>
 
-<ng-template #principalPage>
-  <mat-toolbar color="primary">
-    <button mat-icon-button [title]="'menu-button' | translate" (click)="sidenav.toggle()">
-      <mat-icon>menu</mat-icon>
-    </button>
-    <span>{{title | translate}}</span>
-    <button mat-stroked-button [title]="'year-month-button' | translate" (click)="openYearMonth()">
-      {{yearMonth.shortMonth | translate}} {{yearMonth.year}}
-    </button>
-  </mat-toolbar>
-  <div class="header-height"></div>
-  <main id="main">
-    <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
-    <mat-card class="mat-card-header" *ngIf="!loading">
-      <button mat-icon-button type="button" class="toggle-amounts"
-        [title]="(hideAmounts ? 'show-amounts-button' : 'hide-amounts-button') | translate"
-        (click)="toggleAmountsVisibility()">
-        <mat-icon>{{hideAmounts ? 'visibility_off' : 'visibility'}}</mat-icon>
-      </button>
-      <header class="amount-header">
-        <article matRipple id="incomes"
-          [matRippleCentered]="true"
-          [matRippleUnbounded]="true"
-          [routerLink]="['report-month', categoryType.income]"
-          [queryParams]="yearMonth">
-          {{'Incomes' | translate}}
-          <p>{{hideAmounts ? '••••••' : (income | number:'' : numberType)}}</p>
-        </article>
-        <hr>
-        <article matRipple id="expenses"
-          [matRippleCentered]="true"
-          [matRippleUnbounded]="true"
-          [routerLink]="['report-month', categoryType.expense]"
-          [queryParams]="yearMonth">
-          {{'Expenses' | translate}}
-          <p>{{hideAmounts ? '••••••' : (expenses | number:'' : numberType)}}</p>
-        </article>
-        <hr>
-        <article matRipple id="difference-balance">
-          {{'Difference' | translate}}
-          <p>{{hideAmounts ? '••••••' : (balance | number:'' : numberType)}}</p>
-        </article>
-      </header>
-    </mat-card>
-    <mat-card *ngFor="let groupDateMovement of groupDateMovementList" class="mat-card-movement">
-      <app-movement [groupDateMovement]="groupDateMovement" [categories]="categories" [numberType]="numberType"></app-movement>
-    </mat-card>
+  <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+  <main id="main" class="fab-space">
+    <app-skeleton *ngIf="loading" [cards]="3"></app-skeleton>
+    <ng-container *ngIf="!loading">
+      <mat-card class="mat-card-header">
+        <button mat-icon-button type="button" class="toggle-amounts"
+          [title]="(hideAmounts ? 'show-amounts-button' : 'hide-amounts-button') | translate"
+          (click)="toggleAmountsVisibility()">
+          <mat-icon>{{hideAmounts ? 'visibility_off' : 'visibility'}}</mat-icon>
+        </button>
+        <header class="amount-header">
+          <article matRipple id="incomes"
+            [matRippleCentered]="true"
+            [matRippleUnbounded]="true"
+            [routerLink]="['report-month', categoryType.income]"
+            [queryParams]="yearMonth">
+            {{'Incomes' | translate}}
+            <p>{{hideAmounts ? '••••••' : (income | number:'' : numberType)}}</p>
+          </article>
+          <hr>
+          <article matRipple id="expenses"
+            [matRippleCentered]="true"
+            [matRippleUnbounded]="true"
+            [routerLink]="['report-month', categoryType.expense]"
+            [queryParams]="yearMonth">
+            {{'Expenses' | translate}}
+            <p>{{hideAmounts ? '••••••' : (expenses | number:'' : numberType)}}</p>
+          </article>
+          <hr>
+          <article matRipple id="difference-balance">
+            {{'Difference' | translate}}
+            <p>{{hideAmounts ? '••••••' : (balance | number:'' : numberType)}}</p>
+          </article>
+        </header>
+      </mat-card>
+      <mat-card *ngFor="let groupDateMovement of groupDateMovementList" class="mat-card-movement">
+        <app-movement [groupDateMovement]="groupDateMovement" [categories]="categories" [numberType]="numberType"></app-movement>
+      </mat-card>
+      <section class="empty-state" *ngIf="groupDateMovementList.length === 0">
+        <mat-icon class="empty-icon">receipt_long</mat-icon>
+        <p>{{'movement-messages.empty-month' | translate: { month: (yearMonth.shortMonth | translate), year: yearMonth.year } }}</p>
+        <button mat-flat-button color="primary" routerLink="/register-movement" [title]="'add-movement-button' | translate">
+          <mat-icon>add</mat-icon>
+          {{'Add Movement' | translate}}
+        </button>
+      </section>
+    </ng-container>
   </main>
-  <mat-card-footer>
-    <button mat-fab color="primary" class="btn-add" routerLink="/register-movement" [disabled]="loading" [title]="'add-movement-button' | translate">
-      <mat-icon>add</mat-icon>
-    </button>
-  </mat-card-footer>
-</ng-template>
+  <button mat-fab color="primary" class="btn-add" routerLink="/register-movement" [disabled]="loading" [title]="'add-movement-button' | translate">
+    <mat-icon>add</mat-icon>
+  </button>
+</app-page-layout>

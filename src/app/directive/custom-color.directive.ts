@@ -1,4 +1,5 @@
 import { AfterViewInit, Directive, ElementRef, Input, SimpleChanges, OnChanges } from '@angular/core';
+import { DEFAULT_BACKGROUND_COLOR, DEFAULT_ICON_COLOR } from '../constants/category.constants';
 
 @Directive({
   selector: '[customColor]'
@@ -10,25 +11,20 @@ export class CustomColorDirective implements AfterViewInit, OnChanges {
   constructor(private element: ElementRef) { }
 
   ngAfterViewInit(): void {
-    this.updateColor()
-    this.updateBackgroundColor()
+    this.updateColors()
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['color']) {
-      this.updateColor()
-    }
-    if (changes['backgroundColor']) {
-      this.updateBackgroundColor()
+    if (changes['color'] || changes['backgroundColor']) {
+      this.updateColors()
     }
   }
 
-  private updateColor = (): void => {
-    this.element.nativeElement.style.color = this.color
-  }
-
-  private updateBackgroundColor = (): void => {
-    this.element.nativeElement.style.backgroundColor = this.backgroundColor
+  // The default pair (black icon on white) follows the light/dark theme; colors chosen by the user are kept as they are
+  private updateColors = (): void => {
+    const isDefaultPair = this.color?.toLowerCase() === DEFAULT_ICON_COLOR && this.backgroundColor?.toLowerCase() === DEFAULT_BACKGROUND_COLOR
+    this.element.nativeElement.style.color = isDefaultPair ? 'var(--icon-default-color)' : this.color
+    this.element.nativeElement.style.backgroundColor = isDefaultPair ? 'var(--icon-default-background)' : this.backgroundColor
   }
 
 }

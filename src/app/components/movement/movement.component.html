@@ -22,10 +22,10 @@
       >
         <i [id]="'icon-' + i" class="material-icons-outlined notranslate">{{movement.icon}}</i>
       </button>
-      <span [id]="'memorandum-' + i">{{movement.memorandum! | translate}}</span>
+      <span [id]="'memorandum-' + i">{{(movement.memorandum || movement.categoryName || '') | translate}}</span>
     </article>
     <article [id]="'amount-' + i">
-      {{movement.amount | number:'' : numberType}}
+      {{getSignedAmount(movement) | number:'' : numberType}}
     </article>
   </span>
 </mat-card-content>

@@ -249,8 +249,25 @@
   "upload-button": "Upload button",
   "Total:": "Total:",
   "Edit": "Edit",
+  "Type:": "Type:",
+  "Hide": "Hide",
+  "Delete category": "Delete category",
+  "Login with Google": "Login with Google",
+  "Upload Movement": "Upload movements",
+  "hide-category-button": "Hide category",
+  "show-category-button": "Show category",
+  "Theme": "Theme",
+  "theme-type": {
+    "system": "Same as the system",
+    "light": "Light",
+    "dark": "Dark"
+  },
   "category-messages": {
-    "question": "Are you sure you want to delete this category?. All movements ({{length}}) related to this category will be deleted",
+    "title-deactivate": "Hide category",
+    "question-deactivate": "The category will no longer appear when you register movements. Its movements ({{length}}) are kept and you can show it again at any time.",
+    "deactivated": "The category was hidden",
+    "delete-hint": "Deleting removes the category and all its movements. If you only want it out of the way, hide it from the category list.",
+    "question": "This cannot be undone: the category and its {{length}} movements will be deleted. If you only want it out of the way, cancel and hide it from the list.",
     "deleted": "The category was deleted",
     "title-delete": "Delete category",
     "title-restarted": "Category was restarted",
@@ -259,6 +276,8 @@
     "add": "Add {{type}} category"
   },
   "message-error": {
+    "generic": "Something went wrong. Check your connection and try again.",
+    "amount-min": "The amount must be greater than zero",
     "exceed": "Value cannot exceed {{count}} {{type}}",
     "required-category": "The category is required",
     "required-email": "Email is required",
@@ -267,6 +286,8 @@
     "login-failed": "Could not log in. Check your email and password and try again."
   },
   "movement-messages": {
+    "empty-month": "There are no movements in {{month}} {{year}}",
+    "empty-report": "There are no movements of this type in the month",
     "title-delete": "Delete movement",
     "question-delete": "Are you sure you want to delete this movement?",
     "deleted": "The movement was deleted",
@@ -312,6 +333,7 @@
   },
   "more-options-button": "More options",
   "import-movement-messages": {
+    "to-save": "Movements to save: {{count}}",
     "empty-file": "Empty file",
     "invalid-row": "Invalid first row",
     "loaded": "All movements loaded successfully",

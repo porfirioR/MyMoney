@@ -1,50 +1,49 @@
-<mat-toolbar color="primary">
-  <button mat-icon-button (click)="exit()" [title]="'exit-button' | translate">
-    <mat-icon>keyboard_backspace</mat-icon>
-  </button>
-  <span translate>Details</span>
-  <button mat-icon-button (click)="deleteMovement()" [title]="'delete-button' | translate">
-    <mat-icon>delete</mat-icon>
-  </button>
-</mat-toolbar>
-<div class="mat-toolbar-block"></div>
-<main id="main" *ngIf="load">
-  <mat-card>
-    <span class="mat-card-header">
-      <button mat-icon-button customColor
-        [color]="movement!.color"
-        [backgroundColor]="movement!.backgroundColor"
-      >
-        <mat-icon>{{movement!.icon}}</mat-icon>
-      </button>
-      <span>{{movement?.categoryName ?? '' | translate}}</span>
-      <button mat-icon-button [title]="'edit-button' | translate" (click)="editMovement(movement!.id)">
-        <mat-icon>edit</mat-icon>
-      </button>
-    </span>
-  </mat-card>
-  <mat-card>
-    <mat-card-content>
-      <p id="memorandum">
-        <label translate>Memorandum:</label>
-        <span>{{movement!.memorandum! | translate}}</span>
-      </p>
-      <p id="category">
-        <label translate>Category:</label>
-        <span translate>{{movement!.type}}</span>
-      </p>
-      <p id="date">
-        <label translate>Date:</label>
-        <span>{{movement!.date | date: 'dd/MM/YYY E': '': language}}</span>
-      </p>
-      <p id="amount">
-        <label translate>Amount:</label>
-        <span>{{movement!.amount | number:'' : numberType}}</span>
-      </p>
-      <dl id="related-movement" *ngIf="relatedMovements.length > 0">
-        <dt translate>Related Movements:</dt>
-        <dd *ngFor="let relatedMovement of relatedMovements">-{{relatedMovement}}</dd>
-      </dl>
-    </mat-card-content>
-  </mat-card>
-</main>
+<app-page-layout title="Details" [backButton]="true" (back)="exit()">
+  <span toolbarActions *ngIf="load">
+    <button mat-icon-button [title]="'edit-button' | translate" [disabled]="deleting" (click)="editMovement()">
+      <mat-icon>edit</mat-icon>
+    </button>
+    <button mat-icon-button [title]="'delete-button' | translate" [disabled]="deleting" (click)="deleteMovement()">
+      <mat-icon>delete</mat-icon>
+    </button>
+  </span>
+
+  <mat-progress-bar mode="indeterminate" *ngIf="!load || deleting"></mat-progress-bar>
+  <main id="main" *ngIf="load && movement">
+    <mat-card>
+      <span class="mat-card-header">
+        <span class="category-icon" customColor
+          [color]="movement.color"
+          [backgroundColor]="movement.backgroundColor"
+        >
+          <mat-icon>{{movement.icon}}</mat-icon>
+        </span>
+        <span>{{(movement.categoryName ?? '') | translate}}</span>
+      </span>
+    </mat-card>
+    <mat-card>
+      <mat-card-content>
+        <p id="memorandum">
+          <label translate>Memorandum:</label>
+          <span>{{(movement.memorandum || movement.categoryName || '') | translate}}</span>
+        </p>
+        <p id="category">
+          <label translate>Type:</label>
+          <span translate>{{movement.type}}</span>
+        </p>
+        <p id="date">
+          <label translate>Date:</label>
+          <span>{{movement.date | date: 'dd/MM/yyyy E': '': language}}</span>
+        </p>
+        <p id="amount">
+          <label translate>Amount:</label>
+          <span>{{getSignedAmount(movement) | number:'' : numberType}}</span>
+        </p>
+        <dl id="related-movement" *ngIf="relatedMovements.length > 0">
+          <dt translate>Related Movements:</dt>
+          <dd *ngFor="let relatedMovement of relatedMovements">-{{relatedMovement}}</dd>
+        </dl>
+      </mat-card-content>
+    </mat-card>
+  </main>
+</app-page-layout>

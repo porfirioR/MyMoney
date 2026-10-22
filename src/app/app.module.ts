@@ -29,6 +29,7 @@ import { MatLegacyListModule as MatListModule } from '@angular/material/legacy-l
 import { MatLegacySnackBarModule as MatSnackBarModule } from '@angular/material/legacy-snack-bar';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatLegacyCheckboxModule as MatCheckboxModule } from '@angular/material/legacy-checkbox';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 import { SelectYearMonthComponent } from './components/select-year-mount/select-year-month.component';
 import { SideNavComponent } from './components/side-nav/side-nav.component';
@@ -76,6 +77,8 @@ import { MatLegacyAutocompleteModule as MatAutocompleteModule } from '@angular/m
 import { DialogCalculatorComponent } from './components/dialog-calculator/dialog-calculator.component';
 import { TitleStrategy } from '@angular/router';
 import { PageTitleStrategyService } from './services/page-title-strategy.service';
+import { PageLayoutComponent } from './components/page-layout/page-layout.component';
+import { SkeletonComponent } from './components/skeleton/skeleton.component';
 
 registerLocaleData(localEs, 'es')
 registerLocaleData(localeEn, 'en')
@@ -109,7 +112,9 @@ registerLocaleData(localeEn, 'en')
     UpsertRelatedMovementComponent,
     RelatedMovementDetailComponent,
     DialogAddMovementComponent,
-    DialogCalculatorComponent
+    DialogCalculatorComponent,
+    PageLayoutComponent,
+    SkeletonComponent
   ],
   imports: [
     BrowserModule,
@@ -153,6 +158,7 @@ registerLocaleData(localeEn, 'en')
     MatChipsModule,
     MatAutocompleteModule,
     MatCheckboxModule,
+    MatButtonToggleModule,
     NgxMaskDirective,
     NgxMaskPipe,
     provideFirebaseApp(() => initializeApp(environment.firebase)),

@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core'
-import { Location } from '@angular/common'
 import { MatLegacyTabChangeEvent as MatTabChangeEvent } from '@angular/material/legacy-tabs'
 import { ActivatedRoute, Router } from '@angular/router'
 import { TranslateService } from '@ngx-translate/core'
-import { catchError, take } from 'rxjs'
+import { take } from 'rxjs'
 import { CategoryType } from '../../enums/category-type.enum'
 import { CategoryModel } from '../../models/category.model'
 import { CategoryEvent } from '../../models/category-event.model'
 import { HelperService } from '../../services/helper.service'
 import { UserService } from '../../services/user.service'
+import { NotificationService } from '../../services/notification.service'
 
 @Component({
   selector: 'app-category-configuration',
@@ -25,31 +25,27 @@ export class CategoryConfigurationComponent implements OnInit {
   private readonly tabs = Object.keys(CategoryType)
 
   constructor(
-    private readonly location: Location,
     private readonly userService: UserService,
     private readonly activatedRoute: ActivatedRoute,
     private readonly router: Router,
-    private readonly translateService: TranslateService
+    private readonly translateService: TranslateService,
+    private readonly notificationService: NotificationService
   ) { }
 
   ngOnInit(): void {
     const tab = this.activatedRoute.snapshot.queryParamMap.get('tab')
     this.currentTap = this.tabs.includes(tab!) ? tab! : this.tabs[0]
     this.selectedIndex = this.tabs.indexOf(this.currentTap)
-    this.userService.getAllCategories$().pipe(take(1), catchError((e) => {
-      this.loading = false
-      throw e
-    })).subscribe({
+    this.userService.getAllCategories$().pipe(take(1)).subscribe({
       next: (categories) => {
         this.expenseCategory = this.orderCategoryByActive(HelperService.categoriesByType(categories, CategoryType.expense))
         this.incomeCategory = this.orderCategoryByActive(HelperService.categoriesByType(categories, CategoryType.income))
         this.loading = false
+      }, error: (e) => {
+        this.loading = false
+        this.notificationService.error(e)
       }
     })
-  }
-
-  protected exit = (): void => {
-    this.location.back()
   }
 
   protected tabChanged = (tabChangeEvent: MatTabChangeEvent): void => {

@@ -9,6 +9,8 @@ import { RelatedMapModel } from '../models/related-map-model';
 import { RelatedMovementModel } from '../models/related-movement.model';
 import { RelatedMovementSummaryModel } from '../models/related-movement-summary.model';
 import { RelatedProgressType } from '../enums/related-progress-type.enum';
+import { MovementModel } from '../models/movement.model';
+import { UNSET_CATEGORY_ORDER } from '../constants/category.constants';
 
 @Injectable({
   providedIn: 'root'
@@ -62,10 +64,27 @@ constructor() { }
     getName: (name: string) => string = (name) => name
   ): number => (a.order - b.order) || getName(a.name).localeCompare(getName(b.name))
 
-  // New categories go to the end of their list
+  // New categories go to the end of their list (categories without a position do not count)
   public static getNextCategoryOrder = (categories: CategoryModel[], type: string): number => {
-    const orders = categories.filter(x => x.type.toLowerCase() === type.toLowerCase()).map(x => x.order ?? 0)
+    const orders = categories
+      .filter(x => x.type.toLowerCase() === type.toLowerCase())
+      .map(x => x.order ?? 0)
+      .filter(x => x < UNSET_CATEGORY_ORDER)
     return orders.length ? Math.max(...orders) + 1 : 0
+  }
+
+  public static isUnsetCategoryOrder = (order: number | undefined): boolean => (order ?? 0) >= UNSET_CATEGORY_ORDER
+
+  // Amounts are stored positive; expenses are shown negative
+  public static getSignedAmount = (movement: MovementModel): number =>
+    HelperService.isExpense(movement.type) ? -Math.abs(movement.amount) : Math.abs(movement.amount)
+
+  // First day of the viewed month, or today when the current month is viewed
+  public static getDefaultMovementDate = (yearMonth: YearMonthModel): Date => {
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+    const isCurrentMonth = today.getFullYear() === Number(yearMonth.year) && today.getMonth() === Number(yearMonth.month)
+    return isCurrentMonth ? today : new Date(Number(yearMonth.year), Number(yearMonth.month), 1)
   }
 
   public static convertStringToMonthType = (value: string): MonthType => Number.parseInt(Object.entries(MonthType).find(([key, val]) => val === value)![0])

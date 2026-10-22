@@ -1,0 +1,48 @@
+.skeleton-card {
+  margin: 0.5rem 1rem;
+}
+
+.skeleton-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.9rem;
+}
+
+%shimmer {
+  background: linear-gradient(90deg, var(--skeleton-base) 25%, var(--skeleton-highlight) 50%, var(--skeleton-base) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.2s infinite linear;
+}
+
+.skeleton-line {
+  @extend %shimmer;
+  flex: 1;
+  height: 0.75rem;
+  border-radius: 4px;
+  &.title {
+    width: 40%;
+  }
+  &.short {
+    flex: 0 0 20%;
+  }
+}
+
+.skeleton-circle {
+  @extend %shimmer;
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+}
+
+@keyframes shimmer {
+  from { background-position: 200% 0; }
+  to { background-position: -200% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton-line, .skeleton-circle {
+    animation: none;
+  }
+}

@@ -1,15 +1,14 @@
-<article class="row-category">
+<article class="row-category" [class.inactive]="!category.active">
   <button mat-icon-button
-    [ngClass]="{ 'mat-warn': category.active }"
-    [title]="'active-category-button' | translate"
+    [title]="(category.active ? 'hide-category-button' : 'show-category-button') | translate"
     [disabled]="saving"
-    (click)="deactivateReactivateCategory(category.active)"
+    (click)="toggleActive()"
   >
     <mat-icon [ngClass]="{ 'icon-color-green': !category.active }">
-      {{ category.active ? 'highlight_off' : 'add_circle_outline' }}
+      {{ category.active ? 'visibility' : 'visibility_off' }}
     </mat-icon>
   </button>
-  <span class="order-number">{{category.order}}</span>
+  <span class="order-number">{{hasOrder ? category.order : ''}}</span>
   <button mat-mini-fab customColor
     [color]="category.color"
     [backgroundColor]="category.backgroundColor"

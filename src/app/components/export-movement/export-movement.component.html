@@ -1,21 +1,6 @@
-<mat-sidenav-container [hasBackdrop]="true">
-  <mat-sidenav #sidenav mode="over" [fixedInViewport]="true">
-    <app-side-nav></app-side-nav>
-  </mat-sidenav>
-  <mat-sidenav-content>
-    <ng-container *ngTemplateOutlet="exportMovement"></ng-container>
-  </mat-sidenav-content>
-</mat-sidenav-container>
-<ng-template #exportMovement>
+<app-page-layout title="Export Movements">
   <form [formGroup]="formGroup">
     <main id="main">
-      <mat-toolbar color="primary">
-        <button mat-icon-button [title]="'menu-button' | translate" (click)="sidenav.toggle()">
-          <mat-icon>menu</mat-icon>
-        </button>
-        <span translate>Export Movements</span>
-      </mat-toolbar>
-      <div class="mat-toolbar-block"></div>
       <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
       <mat-card>
         <mat-card-content>
@@ -49,4 +34,4 @@
       </mat-card>
     </main>
   </form>
-</ng-template>
+</app-page-layout>

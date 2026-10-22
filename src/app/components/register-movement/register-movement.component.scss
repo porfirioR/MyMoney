@@ -2,7 +2,7 @@
 .mat-card-subtitle {
   text-align: center !important;
   margin: 8px 0 8px 0 !important;
-  color: rgb(0 0 0 / 66%);
+  color: var(--text-secondary);
 }
 
 .icon-list {
@@ -14,11 +14,6 @@
 
 .btn-icon {
   margin: 0.2rem;
-}
-
-.mat-toolbar {
-  display: flex;
-  justify-content: space-between;
 }
 
 .mat-card {

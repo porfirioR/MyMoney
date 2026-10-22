@@ -11,7 +11,7 @@
   right: -8px;
   z-index: 1;
   transform: scale(0.8);
-  color: rgba(0, 0, 0, 0.54);
+  color: var(--text-secondary);
   padding-right: 10px;
 }
 
@@ -21,22 +21,6 @@
 
 .mat-card-movement {
   margin: 0.5rem 1rem;
-}
-
-.mat-sidenav-content {
-  min-height: 100%;
-}
-
-.btn-add {
-  position: fixed;
-  width: 60px;
-  height: 60px;
-  bottom: 40px;
-  right: 18px;
-}
-
-.mat-drawer-content {
-  display: unset;
 }
 
 label ~ p {

@@ -7,6 +7,7 @@ import { UserDataModel } from '../models/user-data.model';
 import { YearMonthModel } from '../models/year-month-model';
 import { HelperService } from './helper.service';
 import { ItemObservable } from '../observables/item.observable';
+import { UNSET_CATEGORY_ORDER } from '../constants/category.constants';
 
 @Injectable({
   providedIn: 'root'
@@ -62,7 +63,7 @@ export class UserService extends ItemObservable<UserDataModel> {
         x.order = userCategory.order
       } else {
         x.active = true,
-        x.order = 1000
+        x.order = UNSET_CATEGORY_ORDER
       }
     })
     const activeCategories = allCategories.filter(x => x.active)

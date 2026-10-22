@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core'
 import { FormControl, FormGroup, Validators } from '@angular/forms'
 import { ActivatedRoute } from '@angular/router'
-import { Location } from '@angular/common'
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar'
 import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog'
 import { TranslateService } from '@ngx-translate/core'
 import { combineLatest, switchMap, take } from 'rxjs'
@@ -20,6 +18,8 @@ import { MovementService } from '../../services/movement.service'
 import { RelatedMovementService } from '../../services/related-movement.service'
 import { HelperService } from '../../services/helper.service'
 import { UserService } from '../../services/user.service'
+import { NavigationService } from '../../services/navigation.service'
+import { NotificationService } from '../../services/notification.service'
 import { DialogAddMovementComponent } from '../dialog-add-movement/dialog-add-movement.component'
 
 @Component({
@@ -51,11 +51,11 @@ export class UpsertRelatedMovementComponent implements OnInit {
     private readonly activatedRoute: ActivatedRoute,
     private readonly relatedMovementsService: RelatedMovementService,
     private readonly movementService: MovementService,
-    private readonly location: Location,
     private readonly translateService: TranslateService,
-    private readonly snackBar: MatSnackBar,
     private readonly dialog: MatDialog,
     private readonly userService: UserService,
+    private readonly navigationService: NavigationService,
+    private readonly notificationService: NotificationService,
   ) {
     const configuration = this.activatedRoute.snapshot.data['config'] as ConfigurationModel
     [this.mask, this.thousandSeparator] = HelperService.getMarkValues(configuration)
@@ -93,13 +93,14 @@ export class UpsertRelatedMovementComponent implements OnInit {
         this.loading = false
       }, error: (e) => {
         this.loading = false
-        throw e
+        this.notificationService.error(e)
+        this.exit()
       }
     })
   }
 
   protected exit = (): void => {
-    this.location.back()
+    this.navigationService.back('/related-movements')
   }
 
   protected addMovement = (): void => {
@@ -141,12 +142,11 @@ export class UpsertRelatedMovementComponent implements OnInit {
     }
     const request$ = this.id ? this.relatedMovementsService.update(request) : this.relatedMovementsService.create(request)
     request$.then(() => {
-      this.snackBar.open(this.translateService.instant(`Related Movement was ${this.id ? 'updated' : 'created'}`), '', { duration: 3000 })
+      this.notificationService.message(`Related Movement was ${this.id ? 'updated' : 'created'}`)
       this.exit()
     }).catch(e => {
       this.saving = false
-      console.error(e)
-      this.snackBar.open(String(e), '', { duration: 3000 })
+      this.notificationService.error(e)
     })
   }
 

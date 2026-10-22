@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, combineLatest, map, of, switchMap, take } from 'rxjs';
 import { RelatedMovementModel } from '../../models/related-movement.model';
@@ -11,6 +10,7 @@ import { RelatedMovementService } from '../../services/related-movement.service'
 import { MovementService } from '../../services/movement.service';
 import { UserService } from '../../services/user.service';
 import { HelperService } from '../../services/helper.service';
+import { NotificationService } from '../../services/notification.service';
 import { CategoryType } from '../../enums/category-type.enum';
 import { NumberType } from '../../enums/number-type.enum';
 import { LanguageType } from '../../enums/language-type.enum';
@@ -34,7 +34,7 @@ export class RelatedMovementsComponent implements OnInit {
     private readonly relatedMovementsService: RelatedMovementService,
     private readonly dialog: MatDialog,
     private translate: TranslateService,
-    private readonly snackBar: MatSnackBar,
+    private readonly notificationService: NotificationService,
     private readonly movementService: MovementService,
     private readonly userService: UserService,
   ) { }
@@ -59,7 +59,7 @@ export class RelatedMovementsComponent implements OnInit {
         this.loading = false
       }, error: (e) => {
         this.loading = false
-        throw e
+        this.notificationService.error(e)
       }
     })
   }
@@ -79,8 +79,8 @@ export class RelatedMovementsComponent implements OnInit {
           this.relatedMovements = this.relatedMovements.filter(x => x.id !== id)
           this.movements.delete(id)
           this.summaries.delete(id)
-          this.snackBar.open(this.translate.instant('related-movement-messages.deleted'), '', { duration: 3000 })
-        }).catch((reason: any) => this.snackBar.open(String(reason), '', { duration: 3000 }))
+          this.notificationService.message('related-movement-messages.deleted')
+        }).catch((e) => this.notificationService.error(e))
       }
     })
   }

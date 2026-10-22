@@ -1,14 +1,6 @@
-<mat-toolbar color="primary">
-  <button mat-icon-button (click)="exit()" [title]="'exit-button' | translate">
-    <mat-icon>keyboard_backspace</mat-icon>
-  </button>
-  <span>{{title | translate}}</span>
-  <button mat-icon-button routerLink="/" [title]="'home-button' | translate">
-    <mat-icon>home</mat-icon>
-  </button>
-</mat-toolbar>
-<div class="mat-toolbar-block"></div>
-<mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+<app-page-layout [title]="title" [backButton]="true" (back)="exit()">
+<mat-progress-bar mode="indeterminate" *ngIf="loading || saving"></mat-progress-bar>
+<app-skeleton *ngIf="loading" [cards]="2"></app-skeleton>
 <form id="main" [formGroup]="formGroup" *ngIf="!loading" (ngSubmit)="save()">
   <mat-card>
     <mat-form-field class="w-100">
@@ -128,3 +120,4 @@
     </button>
   </footer>
 </form>
+</app-page-layout>

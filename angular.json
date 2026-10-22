@@ -32,7 +32,8 @@
               "src/manifest.webmanifest",
               "src/robots.txt",
               "src/sitemap.xml",
-              "src/manifest.webmanifest"
+              "src/manifest.webmanifest",
+              "src/google7aa1f91ad72276f0.html"
             ],
             "styles": [
               "src/styles.scss"

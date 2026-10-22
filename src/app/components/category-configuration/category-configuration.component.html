@@ -1,38 +1,23 @@
-<mat-sidenav-container [hasBackdrop]="true">
-  <mat-sidenav #sidenav mode="over" [fixedInViewport]="true">
-    <app-side-nav></app-side-nav>
-  </mat-sidenav>
-  <mat-sidenav-content>
-    <ng-container *ngTemplateOutlet="category"></ng-container>
-  </mat-sidenav-content>
-</mat-sidenav-container>
-
-<ng-template #category>
-  <mat-toolbar color="primary">
-    <button mat-icon-button [title]="'menu-button' | translate" (click)="sidenav.toggle()">
-      <mat-icon>menu</mat-icon>
-    </button>
-    <span translate>Category configuration</span>
-    <button mat-icon-button [routerLink]="['new-category', currentTap]" [title]="'Add category' | translate">
-      <mat-icon>add</mat-icon>
-    </button>
-  </mat-toolbar>
-  <div class="mat-toolbar-block"></div>
+<app-page-layout title="Category configuration">
   <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+  <app-skeleton *ngIf="loading" [cards]="1" [lines]="6"></app-skeleton>
   <mat-tab-group mat-stretch-tabs mat-align-tabs="center" *ngIf="!loading" [selectedIndex]="selectedIndex" (selectedTabChange)="tabChanged($event)">
     <mat-tab [label]="categoryType.income | translate">
-      <main id="main-income">
+      <main id="main-income" class="fab-space">
         <ng-container *ngFor="let item of incomeCategory">
           <app-category-row [category]="item" (updateCategoryEvent)="updateCategories($event)"></app-category-row>
         </ng-container>
       </main>
     </mat-tab>
     <mat-tab [label]="categoryType.expense | translate">
-      <main id="main-expense">
+      <main id="main-expense" class="fab-space">
         <ng-container *ngFor="let item of expenseCategory">
           <app-category-row [category]="item" (updateCategoryEvent)="updateCategories($event)"></app-category-row>
         </ng-container>
       </main>
     </mat-tab>
   </mat-tab-group>
-</ng-template>
+  <button mat-fab color="primary" class="btn-add" [routerLink]="['new-category', currentTap]" [disabled]="loading" [title]="'Add category' | translate">
+    <mat-icon>add</mat-icon>
+  </button>
+</app-page-layout>

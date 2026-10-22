@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { addDoc, collection, collectionData, CollectionReference, deleteDoc, doc, DocumentData, documentId, DocumentReference, Firestore, orderBy, Query, query, setDoc, where, WriteBatch, writeBatch } from '@angular/fire/firestore';
-import { combineLatest, concatAll, concatMap, forkJoin, map, Observable, of, take } from 'rxjs';
+import { combineLatest, firstValueFrom, map, Observable, of, take } from 'rxjs';
 import { CategoryType } from '../enums/category-type.enum';
 import { CollectionType } from '../enums/collection-type.enum';
 import { MovementModel } from '../models/movement.model';
@@ -58,7 +58,21 @@ export class MovementService {
   }
 
   public deleteMovementForList = (id: string): void => {
-    this.movementList = this.movementList.filter(x => x.id === id)
+    this.movementList = this.movementList.filter(x => x.id !== id)
+  }
+
+  // Used when the screen is reloaded and the movement is not in the list of the main screen
+  public getMovementByIdFromServer = async (id: string): Promise<MovementModel | undefined> => {
+    const [expenses, incomes] = await firstValueFrom(combineLatest([
+      this.getMovementsByIds(CategoryType.expense, [id]),
+      this.getMovementsByIds(CategoryType.income, [id])
+    ]))
+    const movement = [...expenses, ...incomes][0]
+    if (movement) {
+      movement.date = new Date(movement.time)
+      this.movementList = [...this.movementList.filter(x => x.id !== id), movement]
+    }
+    return movement
   }
 
   public openBatch = (): WriteBatch => {

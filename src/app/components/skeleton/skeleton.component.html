@@ -1,0 +1,8 @@
+<mat-card *ngFor="let card of cardList" class="skeleton-card" aria-hidden="true">
+  <div class="skeleton-line title"></div>
+  <div class="skeleton-row" *ngFor="let line of lineList">
+    <span class="skeleton-circle"></span>
+    <span class="skeleton-line"></span>
+    <span class="skeleton-line short"></span>
+  </div>
+</mat-card>

@@ -12,6 +12,7 @@
   <button class="btn-month" mat-mini-fab
     *ngFor="let month of months | enumArrayLoop"
     [color]="month === formGroup.controls.month.value && formGroup.controls.year.value === formGroup.controls.selectedYear.value ? 'primary': ''"
+    [class.current-month]="month === currentMonth && formGroup.controls.selectedYear.value === currentYear"
     [title]="'change-month-button' | translate"
     (click)="changeMonth(month)"
   >

@@ -5,6 +5,8 @@ import { CategoryIconGroupModel } from '../models/category-icon-group.model';
 export const DEFAULT_ICON_COLOR = '#000000'
 export const DEFAULT_BACKGROUND_COLOR = '#ffffff'
 export const HEX_COLOR_PATTERN = /^#[0-9A-Fa-f]{6}$/
+// Order of categories the user never positioned: they go after the positioned ones
+export const UNSET_CATEGORY_ORDER = 1000
 
 export const ICON_COLOR_PRESETS: string[] = [
   '#000000', '#ffffff', '#e53935', '#d81b60', '#8e24aa', '#3949ab',

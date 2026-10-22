@@ -7,6 +7,6 @@
     {{'Cancel' | translate}}
   </button>
   <button mat-flat-button [mat-dialog-close]="true" color="warn" [title]="'delete-button' | translate">
-    {{'Delete' | translate}}
+    {{(data.confirmText ?? 'Delete') | translate}}
   </button>
 </mat-dialog-actions>

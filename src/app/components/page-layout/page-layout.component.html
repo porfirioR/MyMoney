@@ -1,0 +1,27 @@
+<mat-sidenav-container *ngIf="!backButton; else page" [hasBackdrop]="true">
+  <mat-sidenav mode="over" [fixedInViewport]="true">
+    <app-side-nav [year]="year"></app-side-nav>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <ng-container *ngTemplateOutlet="page"></ng-container>
+  </mat-sidenav-content>
+</mat-sidenav-container>
+
+<ng-template #page>
+  <mat-toolbar color="primary">
+    <button mat-icon-button *ngIf="backButton; else menuButton" type="button" [title]="'exit-button' | translate" (click)="back.emit()">
+      <mat-icon>keyboard_backspace</mat-icon>
+    </button>
+    <ng-template #menuButton>
+      <button mat-icon-button type="button" [title]="'menu-button' | translate" (click)="toggleMenu()">
+        <mat-icon>menu</mat-icon>
+      </button>
+    </ng-template>
+    <span class="toolbar-title">{{title | translate}}</span>
+    <span class="toolbar-actions">
+      <ng-content select="[toolbarActions]"></ng-content>
+    </span>
+  </mat-toolbar>
+  <div class="mat-toolbar-block"></div>
+  <ng-content></ng-content>
+</ng-template>

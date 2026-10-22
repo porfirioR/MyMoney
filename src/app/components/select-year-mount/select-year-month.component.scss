@@ -14,3 +14,13 @@
   justify-content: space-evenly;
   flex-wrap: wrap;
 }
+
+// Outline only, so it does not compete with the filled selected month
+.current-month {
+  box-shadow: inset 0 0 0 2px var(--primary) !important;
+  color: var(--primary);
+  font-weight: 500;
+  &.mat-primary {
+    color: #fff;
+  }
+}

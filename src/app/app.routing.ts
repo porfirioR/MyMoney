@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { canActivate, redirectUnauthorizedTo } from '@angular/fire/auth-guard'
 import { CategoryConfigurationComponent } from './components/category-configuration/category-configuration.component';
 import { UpsertCategoryComponent } from './components/upsert-category/upsert-category.component';
 import { PrincipalComponent } from './components/principal/principal.component';
@@ -24,7 +23,7 @@ const routes: Routes = [
   {
     path: '',
     component: PrincipalComponent,
-    ...canActivate(() => redirectUnauthorizedTo(['/logout'])),
+    canActivate: [UserGuard],
     title: environment.title
   },
   {

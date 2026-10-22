@@ -1,0 +1,31 @@
+// Left button, centered title and actions: the title stays centered whether the screen has actions or not
+.mat-toolbar {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 0.5rem;
+  & > button {
+    justify-self: start;
+  }
+}
+
+.toolbar-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: center;
+}
+
+.toolbar-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.mat-sidenav-content {
+  min-height: 100%;
+}
+
+.mat-drawer-content {
+  display: unset;
+}

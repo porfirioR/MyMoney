@@ -1,28 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
-import { Router } from '@angular/router';
-import { DateAdapter } from '@angular/material/core';
-import localEs from '@angular/common/locales/es'
-import { TranslateService } from '@ngx-translate/core';
-import { registerLocaleData } from '@angular/common';
-import { getAuth, onAuthStateChanged } from '@angular/fire/auth';
-import { combineLatest, debounceTime, Observable, take } from 'rxjs';
+import { combineLatest, Observable, take } from 'rxjs';
 import { CategoryModel } from '../../models/category.model';
 import { GroupDateMovementModel } from '../../models/group-date-movement.model';
 import { MovementModel } from '../../models/movement.model';
 import { YearMonthModel } from '../../models/year-month-model';
-import { ConfigurationModel } from '../../models/configuration.model';
-import { UserDataModel } from '../../models/user-data.model';
 import { UserCategoryModel } from '../../models/user-category.model';
-import { CategoryService } from '../../services/category.service';
 import { MovementService } from '../../services/movement.service';
-import { UserCategoryService } from '../../services/user-category.service';
 import { UserService } from '../../services/user.service';
-import { ConfigurationService } from '../../services/configuration.service';
+import { HelperService } from '../../services/helper.service';
+import { NotificationService } from '../../services/notification.service';
 import { SelectYearMonthComponent } from '../select-year-mount/select-year-month.component';
 import { CategoryType } from '../../enums/category-type.enum';
 import { NumberType } from '../../enums/number-type.enum';
-import { LanguageType } from '../../enums/language-type.enum';
 import { environment } from '../../../environments/environment';
 
 @Component({
@@ -40,6 +30,7 @@ export class PrincipalComponent implements OnInit {
   protected movements: MovementModel[] = []
   protected loading = true
   protected groupDateMovementList: GroupDateMovementModel[] = []
+  // Every category (also hidden ones) so old movements still show their name
   protected categories: CategoryModel[] = []
   protected categoryType = CategoryType
   protected title = environment.title
@@ -48,67 +39,27 @@ export class PrincipalComponent implements OnInit {
 
   constructor(
     private readonly dialog: MatDialog,
-    private readonly categoryService: CategoryService,
     private readonly movementService: MovementService,
-    private readonly userCategoryService: UserCategoryService,
     private readonly userService: UserService,
-    private readonly configurationService: ConfigurationService,
-    private translate: TranslateService,
-    private readonly router: Router,
-    private dateAdapter: DateAdapter<Date>
+    private readonly notificationService: NotificationService
   ) {
     this.yearMonth = this.userService.getSelectedYearMonth()
-    this.hideAmounts = localStorage.getItem(PrincipalComponent.hideAmountsStorageKey) === 'true'
-    onAuthStateChanged(getAuth(), (user) => {
-      if (user) {
-        const userData: UserDataModel = {
-          email: user.email!,
-          activeCategories: [],
-          allCategories: [],
-          userCategories: [],
-          photo: user.photoURL,
-          displayName: user.displayName!,
-          userConfiguration: new ConfigurationModel(LanguageType.English, NumberType.English, user.email!)
-        }
-        this.userService.setUser(userData)
-      } else {
-        this.router.navigate(['logout'])
-      }
-    })
+    this.hideAmounts = this.readHideAmounts()
   }
 
+  // The user data (categories and configuration) is already loaded by UserGuard
   ngOnInit(): void {
-    const requestMovement$ = this.getMovements().pipe(debounceTime(1), take(1))
-    const categories$ = this.categoryService.getAll().pipe(take(1))
-    const userCategories$ = this.userCategoryService.getUserCategories().pipe(take(1))
-    const configuration$ = this.configurationService.getConfiguration().pipe(take(1))
-    combineLatest([categories$, requestMovement$, userCategories$, configuration$]).subscribe({
-      next: ([categories, movements, userCategories, configuration]) => {
-        userCategories.forEach(y => y.categoryId = y.category!.path.split('\/').pop()!)
-        this.userCategories = userCategories
-        this.prepareMovementListToView(movements)
-        this.categories = this.userService.setCategories(categories, userCategories)
-        if (configuration) {
-          this.userService.setConfiguration(configuration)
-          this.numberType = configuration.number
-          this.translate.setDefaultLang(configuration.language)
-          this.translate.use(configuration.language)
-          if (configuration.language === LanguageType.Spanish) {
-            registerLocaleData(localEs, configuration.language)
-            this.dateAdapter.setLocale(configuration.language)
-          }
-        }
-        this.loading = false
-      }, error: (e) => {
-        this.loading = false
-        throw e;
-      }
-    })
+    this.categories = this.userService.getAllCategories()
+    this.userCategories = this.userService.getUserCategories()
+    this.numberType = this.userService.item!.userConfiguration.number
+    this.loadMovements()
   }
 
   protected toggleAmountsVisibility = (): void => {
     this.hideAmounts = !this.hideAmounts
-    localStorage.setItem(PrincipalComponent.hideAmountsStorageKey, String(this.hideAmounts))
+    try {
+      localStorage.setItem(PrincipalComponent.hideAmountsStorageKey, String(this.hideAmounts))
+    } catch { }
   }
 
   protected openYearMonth = (): void => {
@@ -121,30 +72,40 @@ export class PrincipalComponent implements OnInit {
       if (result && (this.yearMonth?.month !== result.month || this.yearMonth?.year !== result.year)) {
         this.yearMonth = result;
         this.userService.setSelectedYearMonth(result)
-        this.movements = []
-        this.income = 0
-        this.expenses = 0
-        this.groupDateMovementList = []
-        this.balance = 0
-        this.getMovements().subscribe({
-          next: (movements) => this.prepareMovementListToView(movements),
-          error: (e) => {
-            this.loading = false
-            throw e;
-          }
-        })
+        this.loadMovements()
       }
     })
   }
 
-  private getMovements = (): Observable<[MovementModel[], MovementModel[]]> => {
+  private loadMovements = (): void => {
     this.loading = true
+    this.getMovements().subscribe({
+      next: (movements) => this.prepareMovementListToView(movements),
+      error: (e) => {
+        this.loading = false
+        this.notificationService.error(e)
+      }
+    })
+  }
+
+  private readHideAmounts = (): boolean => {
+    try {
+      return localStorage.getItem(PrincipalComponent.hideAmountsStorageKey) === 'true'
+    } catch {
+      return false
+    }
+  }
+
+  private getMovements = (): Observable<[MovementModel[], MovementModel[]]> => {
     const expenseList$ = this.movementService.getBySelectedMonth(CategoryType.expense, this.yearMonth?.month!, this.yearMonth?.year!)
     const incomeList$ = this.movementService.getBySelectedMonth(CategoryType.income, this.yearMonth?.month!, this.yearMonth?.year!)
-    return combineLatest(expenseList$, incomeList$).pipe(take(1))
+    return combineLatest([expenseList$, incomeList$]).pipe(take(1))
   }
 
   private prepareMovementListToView = (movements: [MovementModel[], MovementModel[]]): void => {
+    this.income = 0
+    this.expenses = 0
+    this.groupDateMovementList = []
     this.movements = movements[0].concat(movements[1])
     this.movements.forEach(x => x.date = new Date(x.time))
     this.movements = this.movements.sort((a, b) => b.time - a.time)
@@ -162,12 +123,12 @@ export class PrincipalComponent implements OnInit {
         dateMovement = new GroupDateMovementModel(date, [movement])
         this.groupDateMovementList.push(dateMovement)
       }
-      if (movement.type.toLowerCase() === CategoryType.income.toLowerCase()) {
-        dateMovement.income += movement.amount
-        this.income += movement.amount
-      } else {
+      if (HelperService.isExpense(movement.type)) {
         dateMovement.expense += movement.amount
         this.expenses += movement.amount
+      } else {
+        dateMovement.income += movement.amount
+        this.income += movement.amount
       }
     })
     this.movementService.setMovementList(this.movements)
