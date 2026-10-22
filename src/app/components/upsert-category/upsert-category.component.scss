@@ -187,3 +187,9 @@
     color: var(--text-secondary);
   }
 }
+
+// The hint wraps to two lines on phones; its area has a fixed height, so the field reserves the extra line
+.budget-field {
+  margin-top: 0.75rem;
+  margin-bottom: 1rem;
+}

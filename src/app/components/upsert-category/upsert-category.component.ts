@@ -44,6 +44,8 @@ export class UpsertCategoryComponent implements OnInit {
   protected title!: string
   protected category?: CategoryModel
   protected isSystemCategory = false
+  // Budgets only make sense for expenses
+  protected isExpense = false
   protected saving = false
   protected deleting = false
   protected iconPanelExpanded = false
@@ -94,6 +96,7 @@ export class UpsertCategoryComponent implements OnInit {
           this.iconPanelExpanded = true
         }
         const isIncome = this.type.toLowerCase() === CategoryType.income.toLowerCase()
+        this.isExpense = !isIncome
         this.iconGroups = isIncome ? [INCOME_ICON_GROUP, ...CATEGORY_ICON_GROUPS] : [...CATEGORY_ICON_GROUPS, INCOME_ICON_GROUP]
         this.categoryNames = categories
           .filter(x => x.id !== this.category?.id && x.type.toLowerCase() === this.type.toLowerCase())
@@ -219,6 +222,12 @@ export class UpsertCategoryComponent implements OnInit {
   private getOrderToSave = (order: number | string | null | undefined): number =>
     order === null || order === undefined || order === '' ? UNSET_CATEGORY_ORDER : Number(order)
 
+  // An empty or zero budget means the category has none
+  private getBudgetToSave = (budget: number | string | null | undefined): number | null => {
+    const value = Number(budget)
+    return this.isExpense && budget !== null && budget !== '' && value > 0 ? value : null
+  }
+
   private create = async (): Promise<void> => {
     const value = this.formGroup!.getRawValue()
     const email = this.userService.getUserEmail()
@@ -231,7 +240,8 @@ export class UpsertCategoryComponent implements OnInit {
     } as CategoryModel
     const categoryReference = await this.categoryService.create(category)
     const userCategory = new UserCategoryModel(
-      true, categoryReference.id, email, undefined, undefined, value.color!, value.backgroundColor!, this.getOrderToSave(value.order)
+      true, categoryReference.id, email, undefined, undefined, value.color!, value.backgroundColor!, this.getOrderToSave(value.order),
+      this.getBudgetToSave(value.budget)
     )
     const userCategoryReference = await this.userCategoryService.upsertCategory(userCategory)
     userCategory.id = userCategoryReference?.id
@@ -239,7 +249,8 @@ export class UpsertCategoryComponent implements OnInit {
       id: categoryReference.id,
       color: userCategory.color,
       backgroundColor: userCategory.backgroundColor,
-      order: userCategory.order
+      order: userCategory.order,
+      budget: userCategory.budget
     })
     this.userService.setCategory(category)
     this.userService.setUserCategory(userCategory)
@@ -269,7 +280,8 @@ export class UpsertCategoryComponent implements OnInit {
       undefined,
       value.color!,
       value.backgroundColor!,
-      this.getOrderToSave(value.order)
+      this.getOrderToSave(value.order),
+      this.getBudgetToSave(value.budget)
     )
     const docReference = await this.userCategoryService.upsertCategory(request)
     if (docReference) {
@@ -278,6 +290,7 @@ export class UpsertCategoryComponent implements OnInit {
     category.color = request.color
     category.backgroundColor = request.backgroundColor
     category.order = request.order
+    category.budget = request.budget
     this.userService.setUserCategory(request)
   }
 
@@ -298,7 +311,8 @@ export class UpsertCategoryComponent implements OnInit {
       backgroundColor: new FormControl(backgroundColor, Validators.required),
       hexBackgroundColor: new FormControl(backgroundColor, [Validators.required, Validators.pattern(HEX_COLOR_PATTERN)]),
       // New categories go last; existing ones without a position show the field empty
-      order: new FormControl(this.getInitialOrder(userCategory), Validators.min(0))
+      order: new FormControl(this.getInitialOrder(userCategory), Validators.min(0)),
+      budget: new FormControl(userCategory?.budget ?? this.category?.budget ?? null, Validators.min(0))
     })
     const controls = this.formGroup.controls
     // Shows the duplicate name error while typing, without waiting for blur
