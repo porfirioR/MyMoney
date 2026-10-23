@@ -1,3 +1,4 @@
 User-agent: *
 Disallow:
-Sitemap: https://my-money.click/sitemap.xml
+
+Sitemap: https://mymoney-993366.firebaseapp.com/sitemap.xml

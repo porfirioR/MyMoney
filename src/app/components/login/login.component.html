@@ -1,13 +1,13 @@
 <mat-progress-bar mode="indeterminate" *ngIf="isLoading"></mat-progress-bar>
 
-<section *ngIf="!isLocal && !isLoading" class="p-t-16">
+<section *ngIf="!isLocal" class="p-t-16">
   <mat-toolbar color="primary">
     <h1>{{title | translate}}</h1>
   </mat-toolbar>
   <main id="main">
     <mat-card>
       <mat-card-footer>
-        <button mat-flat-button color="primary" [title]="'login-button' | translate" (click)="loginWithGoogle()">
+        <button mat-flat-button color="primary" [disabled]="isLoading" [title]="'login-button' | translate" (click)="loginWithGoogle()">
           <mat-icon>account_circle</mat-icon>
           {{'Login with Google' | translate}}
         </button>

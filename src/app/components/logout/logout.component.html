@@ -1,3 +1,4 @@
+<mat-progress-bar mode="indeterminate" *ngIf="isLoading"></mat-progress-bar>
 <main>
   <mat-toolbar color="primary">
     <h1>{{title | translate}}</h1>
@@ -10,7 +11,7 @@
       <mat-card-subtitle>{{'If you want login please click on' | translate}}</mat-card-subtitle>
     </mat-card-header>
     <mat-card-footer>
-      <button mat-stroked-button color="primary" [title]="'login-button' | translate" (click)="goToLogin()">
+      <button mat-stroked-button color="primary" [disabled]="isLoading" [title]="'login-button' | translate" (click)="goToLogin()">
         <mat-icon>account_circle</mat-icon>
         {{'Login' | translate}}
       </button>
