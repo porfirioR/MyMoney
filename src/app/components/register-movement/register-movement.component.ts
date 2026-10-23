@@ -86,7 +86,11 @@ export class RegisterMovementComponent implements OnInit {
         this.title = 'Movement update'
         this.patchFormGroup(this.updateMovement)
       } else {
-        this.currentCategories = HelperService.categoriesByType(this.categoryList, this.categoryType.expense, this.getCategoryName)
+        // The app icon shortcuts open this screen with ?type=Income or ?type=Expense
+        const queryType = this.activatedRoute.snapshot.queryParamMap.get('type')
+        const type = Object.values(CategoryType).find(x => x.toLowerCase() === queryType?.toLowerCase()) ?? CategoryType.expense
+        this.formGroup.controls.type.setValue(type, { emitEvent: false })
+        this.currentCategories = HelperService.categoriesByType(this.categoryList, type, this.getCategoryName)
         if (this.currentCategories.length > 0) {
           this.selectCategory(this.currentCategories[0])
         }

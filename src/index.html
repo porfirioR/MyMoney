@@ -13,6 +13,24 @@
     <meta name="theme-color" content="#82b366">
     <!-- ThemeService sets it to light or dark; the phone uses it for its own bars (like the navigation bar) -->
     <meta name="color-scheme" content="light dark">
+    <!-- Applies the saved theme before the first paint, so dark mode does not flash white while Angular loads.
+         Same storage key and rules as ThemeService (my-money.theme: system | light | dark) -->
+    <style>
+      html { background: #fafafa; }
+      html.dark-theme { background: #303030; }
+    </style>
+    <script>
+      (function () {
+        try {
+          var theme = localStorage.getItem('my-money.theme');
+          var dark = theme === 'dark' || (theme !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+          if (dark) {
+            document.documentElement.classList.add('dark-theme');
+            document.querySelector('meta[name="theme-color"]').setAttribute('content', '#5b7d47');
+          }
+        } catch (e) { }
+      })();
+    </script>
     <meta property="og:url" content="https://mymoney-993366.web.app/"/>
     <meta property="og:site_name" content="My Money"/>
     <meta property="og:type" content="website"/>

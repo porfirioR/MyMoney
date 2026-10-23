@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Only the public pages: every other screen needs a signed-in user and redirects to /logout -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://my-money.click/</loc>
-    <lastmod>2024-11-01</lastmod>
+    <loc>https://mymoney-993366.firebaseapp.com/</loc>
+    <lastmod>2026-10-23</lastmod>
   </url>
   <url>
-    <loc>https://my-money.click/logout</loc>
-    <lastmod>2024-11-01</lastmod>
+    <loc>https://mymoney-993366.firebaseapp.com/logout</loc>
+    <lastmod>2026-10-23</lastmod>
   </url>
 </urlset>

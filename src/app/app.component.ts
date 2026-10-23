@@ -4,6 +4,7 @@ import { environment } from '../environments/environment';
 import { LanguageType } from './enums/language-type.enum';
 import { LanguageService } from './services/language.service';
 import { ThemeService } from './services/theme.service';
+import { AppUpdateService } from './services/app-update.service';
 
 @Component({
   selector: 'app-root',
@@ -17,12 +18,14 @@ export class AppComponent {
   constructor(
     private readonly translate: TranslateService,
     private readonly languageService: LanguageService,
-    private readonly themeService: ThemeService
+    private readonly themeService: ThemeService,
+    private readonly appUpdateService: AppUpdateService
   ) {
     this.translate.addLangs([LanguageType.English, LanguageType.Spanish])
     const navigatorLanguage = navigator.language
     let systemLanguage = Object.values(LanguageType).find(x => navigatorLanguage === x || navigatorLanguage.startsWith(`${x}-`))
     systemLanguage = systemLanguage ?? LanguageType.English
     this.languageService.use(systemLanguage)
+    this.appUpdateService.watch()
   }
 }
