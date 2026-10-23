@@ -80,6 +80,13 @@ $my-dark-theme: mat.define-dark-theme((
   & .mat-toolbar.mat-primary {
     background: #5b7d47;
   }
+
+  // Material inverts the snackbar (light on dark); a dark one dazzles less and matches the rest of the screen
+  & .mat-snack-bar-container {
+    background: #212121;
+    color: rgb(255 255 255 / 87%);
+    border: 1px solid rgb(255 255 255 / 12%);
+  }
 }
 
 // Color tokens used by the components instead of fixed colors

@@ -88,7 +88,7 @@ constructor() { }
     return statuses
   }
 
-  public static isUnsetCategoryOrder =(order: number | undefined): boolean => (order ?? 0) >= UNSET_CATEGORY_ORDER
+  public static isUnsetCategoryOrder = (order: number | undefined): boolean => (order ?? 0) >= UNSET_CATEGORY_ORDER
 
   // Amounts are stored positive; expenses are shown negative
   public static getSignedAmount = (movement: MovementModel): number =>
