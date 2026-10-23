@@ -1,8 +1,7 @@
 {
   "name": "My Money",
   "short_name": "My Money",
-  "theme_color": "#82b366",
-  "background_color": "#fafafa",
+  "background_color": "#303030",
   "display": "standalone",
   "scope": "./",
   "start_url": "./",
