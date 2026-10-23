@@ -146,6 +146,8 @@ html {
   height: 100%;
   // Keeps the same width whether the current screen scrolls or not, so the layout does not jump between screens
   scrollbar-gutter: stable;
+  // Same color as the body, so the overscroll area and the phone navigation bar follow the theme
+  background: var(--bg);
 }
 
 body {
@@ -154,6 +156,8 @@ body {
   // box-shadow: 0px 2px 1px -1px rgb(0 0 0 / 20%), 0px 1px 1px 0px rgb(0 0 0 / 14%), 0px 1px 3px 0px rgb(0 0 0 / 12%);
   background: var(--bg);
   color: var(--text-primary);
+  // The app is drawn behind the phone navigation bar (viewport-fit=cover); the last content stays above it
+  padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 .w-100 {
@@ -170,7 +174,7 @@ body {
   position: fixed !important;
   width: 60px !important;
   height: 60px !important;
-  bottom: 40px;
+  bottom: calc(40px + env(safe-area-inset-bottom, 0px));
   right: 18px;
   z-index: 4;
 }
