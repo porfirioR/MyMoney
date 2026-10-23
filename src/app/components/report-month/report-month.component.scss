@@ -18,3 +18,58 @@ form {
 .mat-mini-fab {
   box-shadow: unset;
 }
+
+// Title row and, for categories with a budget, the bar below it
+.mat-expansion-panel-header {
+  padding-top: 0.6rem;
+  padding-bottom: 0.6rem;
+}
+
+.group-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  width: 100%;
+  min-width: 0;
+  & .mat-expansion-panel-header-title {
+    margin-right: 0;
+  }
+}
+
+// Green while there is room, orange from 90% and red when the budget is exceeded
+.budget {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  --budget-color: var(--primary);
+  &.near {
+    --budget-color: var(--caution);
+  }
+  &.over {
+    --budget-color: var(--danger);
+  }
+}
+
+.budget-track {
+  flex: 1;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--divider);
+  overflow: hidden;
+}
+
+.budget-fill {
+  height: 100%;
+  border-radius: 3px;
+  background: var(--budget-color);
+}
+
+.budget-text {
+  flex-shrink: 0;
+  font-size: 12px;
+  color: var(--text-secondary);
+  .over & {
+    color: var(--danger);
+    font-weight: 500;
+  }
+}

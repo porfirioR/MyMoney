@@ -10,6 +10,7 @@ import { RelatedMovementModel } from '../models/related-movement.model';
 import { RelatedMovementSummaryModel } from '../models/related-movement-summary.model';
 import { RelatedProgressType } from '../enums/related-progress-type.enum';
 import { MovementModel } from '../models/movement.model';
+import { BudgetStatusModel } from '../models/budget-status.model';
 import { UNSET_CATEGORY_ORDER } from '../constants/category.constants';
 
 @Injectable({
@@ -71,6 +72,20 @@ constructor() { }
       .map(x => x.order ?? 0)
       .filter(x => x < UNSET_CATEGORY_ORDER)
     return orders.length ? Math.max(...orders) + 1 : 0
+  }
+
+  // Budget of every expense category that has one, compared with what the given movements spent on it
+  public static getBudgetStatuses = (categories: CategoryModel[], movements: MovementModel[]): Map<string, BudgetStatusModel> => {
+    const statuses = new Map<string, BudgetStatusModel>()
+    categories
+      .filter(x => (x.budget ?? 0) > 0 && HelperService.isExpense(x.type))
+      .forEach(category => {
+        const spent = movements
+          .filter(x => x.categoryId === category.id && HelperService.isExpense(x.type))
+          .reduce((total, x) => total + Math.abs(x.amount), 0)
+        statuses.set(category.id, new BudgetStatusModel(spent, category.budget!))
+      })
+    return statuses
   }
 
   public static isUnsetCategoryOrder = (order: number | undefined): boolean => (order ?? 0) >= UNSET_CATEGORY_ORDER

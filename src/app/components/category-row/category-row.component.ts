@@ -87,7 +87,8 @@ export class CategoryRowComponent implements OnInit {
         undefined,
         userCategory?.color ?? this.category.color ?? DEFAULT_ICON_COLOR,
         userCategory?.backgroundColor ?? this.category.backgroundColor ?? DEFAULT_BACKGROUND_COLOR,
-        userCategory?.order ?? this.category.order ?? 0
+        userCategory?.order ?? this.category.order ?? 0,
+        userCategory?.budget ?? this.category.budget ?? null
       )
       const docReference = await this.userCategoryService.upsertCategory(request)
       if (docReference) {

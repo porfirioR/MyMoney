@@ -7,4 +7,6 @@ export interface UserCategoryRequest {
   order: number
   color: string
   backgroundColor: string
+  // Monthly spending limit; null when the category has none
+  budget: number | null
 }

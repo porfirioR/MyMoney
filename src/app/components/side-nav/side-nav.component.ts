@@ -22,8 +22,9 @@ export class SideNavComponent implements OnInit {
     new NavItemModel('home', 'Home', ItemAction.home),
     new NavItemModel('dashboard', 'Category', ItemAction.category),
     new NavItemModel('group_work', 'Related Mov.', ItemAction.relatedMovements),
-    new NavItemModel('launch', 'Export', ItemAction.export),
-    new NavItemModel('cloud_upload', 'Import', ItemAction.import),
+    // Hidden for now, together with their routes in app.routing.ts
+    // new NavItemModel('launch', 'Export', ItemAction.export),
+    // new NavItemModel('cloud_upload', 'Import', ItemAction.import),
     new NavItemModel('assignment', 'Annual Report', ItemAction.annualReport),
     new NavItemModel('stars', 'About us', ItemAction.aboutUs),
     new NavItemModel('build', 'Configuration', ItemAction.configuration),

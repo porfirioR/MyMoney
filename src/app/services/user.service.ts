@@ -61,6 +61,7 @@ export class UserService extends ItemObservable<UserDataModel> {
         x.color = userCategory.color
         x.backgroundColor = userCategory.backgroundColor,
         x.order = userCategory.order
+        x.budget = userCategory.budget ?? null
       } else {
         x.active = true,
         x.order = UNSET_CATEGORY_ORDER
@@ -88,6 +89,7 @@ export class UserService extends ItemObservable<UserDataModel> {
       this.item!.userCategories[index].backgroundColor = userCategory.backgroundColor
       this.item!.userCategories[index].color = userCategory.color
       this.item!.userCategories[index].order = userCategory.order
+      this.item!.userCategories[index].budget = userCategory.budget ?? null
     }
   }
 

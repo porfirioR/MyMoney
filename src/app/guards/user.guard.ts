@@ -70,7 +70,8 @@ export class UserGuard  {
     userCategories.forEach(x => x.categoryId = x.category!.path.split('/').pop()!)
     if (configuration) {
       this.userService.setConfiguration(configuration)
-      this.languageService.use(configuration.language)
+      // Waits for the texts: mat-select does not refresh its selected label when the translation arrives later
+      await this.languageService.use(configuration.language)
       if (configuration.theme) {
         this.themeService.use(configuration.theme)
       }

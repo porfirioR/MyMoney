@@ -262,6 +262,15 @@
     "light": "Light",
     "dark": "Dark"
   },
+  "budget-messages": {
+    "label": "Monthly budget (optional)",
+    "hint": "The most you want to spend per month in this category. Empty = no budget",
+    "progress": "{{percent}}% of {{budget}}",
+    "over-one": "1 category went over its budget this month",
+    "over-many": "{{count}} categories went over their budget this month",
+    "near-one": "1 category is close to its budget",
+    "near-many": "{{count}} categories are close to their budget"
+  },
   "category-messages": {
     "title-deactivate": "Hide category",
     "question-deactivate": "The category will no longer appear when you register movements. Its movements ({{length}}) are kept and you can show it again at any time.",

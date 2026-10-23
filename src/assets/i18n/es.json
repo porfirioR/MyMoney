@@ -262,6 +262,15 @@
     "light": "Claro",
     "dark": "Oscuro"
   },
+  "budget-messages": {
+    "label": "Presupuesto mensual (opcional)",
+    "hint": "Cuánto querés gastar como máximo por mes en esta categoría. Vacío = sin presupuesto",
+    "progress": "{{percent}}% de {{budget}}",
+    "over-one": "1 categoría pasó su presupuesto este mes",
+    "over-many": "{{count}} categorías pasaron su presupuesto este mes",
+    "near-one": "1 categoría está cerca de su presupuesto",
+    "near-many": "{{count}} categorías están cerca de su presupuesto"
+  },
   "category-messages": {
     "title-deactivate": "Ocultar categoría",
     "question-deactivate": "La categoría dejará de aparecer al registrar movimientos. Sus movimientos ({{length}}) se mantienen y podés volver a mostrarla cuando quieras.",

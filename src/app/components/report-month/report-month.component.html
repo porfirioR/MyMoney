@@ -34,22 +34,35 @@
           </mat-card>
           <mat-accordion>
             <mat-expansion-panel hideToggle *ngFor="let group of groupMovementCategoryModel">
-              <mat-expansion-panel-header>
-                <mat-panel-title>
-                  <button mat-mini-fab customColor type="button"
-                    [color]="group!.color"
-                    [backgroundColor]="group!.backgroundColor"
-                    [title]="'category-name-button' | translate"
-                  >
-                    <i class="material-icons-outlined notranslate">{{group.icon}}</i>
-                  </button>
-                  <span>
-                    {{group.categoryName | translate}}
-                  </span>
-                  <span>
-                    {{group.amount | number:'' : numberType}}
-                  </span>
-                </mat-panel-title>
+              <mat-expansion-panel-header collapsedHeight="auto" expandedHeight="auto">
+                <div class="group-header">
+                  <mat-panel-title>
+                    <button mat-mini-fab customColor type="button"
+                      [color]="group!.color"
+                      [backgroundColor]="group!.backgroundColor"
+                      [title]="'category-name-button' | translate"
+                    >
+                      <i class="material-icons-outlined notranslate">{{group.icon}}</i>
+                    </button>
+                    <span>
+                      {{group.categoryName | translate}}
+                    </span>
+                    <span>
+                      {{group.amount | number:'' : numberType}}
+                    </span>
+                  </mat-panel-title>
+                  <div class="budget" *ngIf="group.budget as budget" [class.near]="budget.isNear" [class.over]="budget.isOver">
+                    <div class="budget-track">
+                      <div class="budget-fill" [style.width.%]="getBudgetBarWidth(budget)"></div>
+                    </div>
+                    <span class="budget-text">
+                      {{'budget-messages.progress' | translate: {
+                        percent: (budget.percent | number:'1.0-0':numberType),
+                        budget: (budget.budget | number:'':numberType)
+                      } }}
+                    </span>
+                  </div>
+                </div>
               </mat-expansion-panel-header>
               <ul>
                 <li *ngFor="let movement of group.movements" class="row">

@@ -35,6 +35,9 @@ export class PrincipalComponent implements OnInit {
   protected categoryType = CategoryType
   protected title = environment.title
   protected numberType = NumberType.English
+  // Expense categories over or close to their monthly budget; the alert only shows when one of them is above 0
+  protected budgetsOver = 0
+  protected budgetsNear = 0
   private userCategories: UserCategoryModel[] = []
 
   constructor(
@@ -133,6 +136,9 @@ export class PrincipalComponent implements OnInit {
     })
     this.movementService.setMovementList(this.movements)
     this.balance = this.income - this.expenses
+    const budgets = [...HelperService.getBudgetStatuses(this.categories, this.movements).values()]
+    this.budgetsOver = budgets.filter(x => x.isOver).length
+    this.budgetsNear = budgets.filter(x => x.isNear).length
     this.loading = false
   }
 }

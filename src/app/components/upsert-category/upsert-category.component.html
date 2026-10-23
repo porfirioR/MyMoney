@@ -85,6 +85,12 @@
         <mat-hint>{{ 'list-position-hint' | translate }}</mat-hint>
         <mat-error *ngIf="formGroup.controls.order.hasError('min')" translate>Value cannot less than zero</mat-error>
       </mat-form-field>
+
+      <mat-form-field class="w-100 budget-field" *ngIf="isExpense">
+        <mat-label>{{'budget-messages.label' | translate}}</mat-label>
+        <input matInput type="text" formControlName="budget" [mask]="mask" [thousandSeparator]="thousandSeparator" id="budget" inputmode="numeric" autocomplete="off">
+        <mat-hint>{{'budget-messages.hint' | translate}}</mat-hint>
+      </mat-form-field>
     </mat-card>
 
     <footer class="actions form-actions">

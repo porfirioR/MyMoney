@@ -18,6 +18,8 @@ import { UserService } from '../../services/user.service';
 import { SelectYearMonthComponent } from '../select-year-mount/select-year-month.component';
 import { TypeForm } from '../../forms/type.form';
 import { DEFAULT_BACKGROUND_COLOR, DEFAULT_ICON_COLOR } from '../../constants/category.constants';
+import { HelperService } from '../../services/helper.service';
+import { BudgetStatusModel } from '../../models/budget-status.model';
 import { NavigationService } from '../../services/navigation.service';
 import { NotificationService } from '../../services/notification.service';
 import { ThemeService } from '../../services/theme.service';
@@ -127,12 +129,17 @@ export class ReportMonthComponent implements OnInit {
         movementCategory.movements.sort((a, b) => a.time - b.time)
         movementCategory.amount += movement.amount
       } else {
-        groups.push(new GroupMovementCategoryModel(movement.categoryName, movement.icon, movement.color!, movement.backgroundColor!, movement.amount, [movement]))
+        groups.push(new GroupMovementCategoryModel(movement.categoryName, movement.icon, movement.color!, movement.backgroundColor!, movement.amount, [movement], movement.categoryId))
       }
     })
     groups.sort((a, b) => b.amount - a.amount)
+    // Expense categories with a monthly budget show how much of it was spent
+    const budgets = HelperService.getBudgetStatuses(this.userService.getAllCategories(), movements)
+    groups.forEach(x => x.budget = x.categoryId ? budgets.get(x.categoryId) : undefined)
     return groups
   }
+
+  protected getBudgetBarWidth = (budget: BudgetStatusModel): number => Math.min(budget.percent, 100)
 
   protected exit = (): void => {
     this.navigationService.back()

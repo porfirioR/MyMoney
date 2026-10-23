@@ -38,6 +38,23 @@
           </article>
         </header>
       </mat-card>
+      <!-- Only shown when a budget needs attention; it opens the expense report of the month -->
+      <a class="budget-alert" *ngIf="budgetsOver > 0 || budgetsNear > 0"
+        [class.over]="budgetsOver > 0"
+        [routerLink]="['report-month', categoryType.expense]"
+        [queryParams]="yearMonth"
+      >
+        <mat-icon>{{budgetsOver > 0 ? 'error_outline' : 'warning_amber'}}</mat-icon>
+        <span>
+          <ng-container *ngIf="budgetsOver > 0; else nearMessage">
+            {{(budgetsOver === 1 ? 'budget-messages.over-one' : 'budget-messages.over-many') | translate: { count: budgetsOver } }}
+          </ng-container>
+          <ng-template #nearMessage>
+            {{(budgetsNear === 1 ? 'budget-messages.near-one' : 'budget-messages.near-many') | translate: { count: budgetsNear } }}
+          </ng-template>
+        </span>
+        <mat-icon class="budget-alert-arrow">chevron_right</mat-icon>
+      </a>
       <mat-card *ngFor="let groupDateMovement of groupDateMovementList" class="mat-card-movement">
         <app-movement [groupDateMovement]="groupDateMovement" [categories]="categories" [numberType]="numberType"></app-movement>
       </mat-card>

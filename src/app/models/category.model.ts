@@ -11,4 +11,6 @@ export class CategoryModel {
   backgroundColor!: string
   order!: number
   owner!: string
+  // Copied from the user data (user_categories); null or missing when there is no budget
+  budget?: number | null
 }
