@@ -49,6 +49,7 @@ export class ThemeService {
     const dark = this.currentPreference === ThemeType.Dark || (this.currentPreference === ThemeType.System && this.media.matches)
     document.documentElement.classList.toggle('dark-theme', dark)
     document.querySelector('meta[name="theme-color"]')?.setAttribute('content', dark ? ThemeService.toolbarColors.dark : ThemeService.toolbarColors.light)
+    document.querySelector('meta[name="color-scheme"]')?.setAttribute('content', dark ? 'dark' : 'light')
     Chart.defaults.color = dark ? 'rgba(255, 255, 255, 0.7)' : '#666666'
     Chart.defaults.borderColor = dark ? 'rgba(255, 255, 255, 0.12)' : 'rgba(0, 0, 0, 0.1)'
     this.darkSubject.next(dark)
