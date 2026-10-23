@@ -271,6 +271,10 @@
     "near-one": "1 categoría está cerca de su presupuesto",
     "near-many": "{{count}} categorías están cerca de su presupuesto"
   },
+  "update-messages": {
+    "available": "Hay una nueva versión disponible",
+    "action": "Actualizar"
+  },
   "category-messages": {
     "title-deactivate": "Ocultar categoría",
     "question-deactivate": "La categoría dejará de aparecer al registrar movimientos. Sus movimientos ({{length}}) se mantienen y podés volver a mostrarla cuando quieras.",

@@ -271,6 +271,10 @@
     "near-one": "1 category is close to its budget",
     "near-many": "{{count}} categories are close to their budget"
   },
+  "update-messages": {
+    "available": "A new version is available",
+    "action": "Update"
+  },
   "category-messages": {
     "title-deactivate": "Hide category",
     "question-deactivate": "The category will no longer appear when you register movements. Its movements ({{length}}) are kept and you can show it again at any time.",
