@@ -1,6 +1,6 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Inject, OnInit, Optional, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatLegacyDialog as MatDialog, MatLegacyDialogRef as MatDialogRef, MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
 import { ActivatedRoute } from '@angular/router';
 import { doc } from '@angular/fire/firestore';
 import { TranslateService } from '@ngx-translate/core';
@@ -54,6 +54,8 @@ export class RegisterMovementComponent implements OnInit {
   protected mask = 'separator.0'
   protected thousandSeparator = '.'
   protected relatedMovements: RelatedMovementModel[] = []
+  // Opened as a dialog (e.g. from the annual report) it closes itself instead of navigating back
+  protected isDialog = false
   private categoryList!: CategoryModel[]
   private updateMovement?: MovementModel
 
@@ -65,20 +67,24 @@ export class RegisterMovementComponent implements OnInit {
     private translate: TranslateService,
     private relateMovementService: RelatedMovementService,
     private readonly navigationService: NavigationService,
-    private readonly notificationService: NotificationService
-  ) { }
+    private readonly notificationService: NotificationService,
+    @Optional() private readonly dialogRef?: MatDialogRef<RegisterMovementComponent, boolean>,
+    @Optional() @Inject(MAT_DIALOG_DATA) private readonly dialogData?: { movement: MovementModel }
+  ) {
+    this.isDialog = !!this.dialogRef
+  }
 
   async ngOnInit(): Promise<void> {
     [this.mask, this.thousandSeparator] = HelperService.getMarkValues(this.userService.item!.userConfiguration)
     this.inputCharacter = this.translate.instant(InputType.Characters)
     this.inputDigit = this.translate.instant(InputType.Digits)
     this.categoryList = this.userService.getActiveCategories()
-    const movementId: string | undefined = this.activatedRoute.snapshot.params['id']
+    const movementId: string | undefined = this.dialogData?.movement.id ?? this.activatedRoute.snapshot.params['id']
     try {
       this.relatedMovements = await firstValueFrom(this.relateMovementService.getRelatedMovementsShowingInMovements().pipe(take(1)))
       if (movementId) {
         // After a reload the movement is not in the list of the main screen, so it is read from the server
-        this.updateMovement = this.movementService.getMovementById(movementId) ?? await this.movementService.getMovementByIdFromServer(movementId)
+        this.updateMovement = this.dialogData?.movement ?? this.movementService.getMovementById(movementId) ?? await this.movementService.getMovementByIdFromServer(movementId)
         if (!this.updateMovement) {
           this.exit()
           return
@@ -136,8 +142,13 @@ export class RegisterMovementComponent implements OnInit {
     this.formGroup.markAllAsTouched()
   }
 
-  protected exit = (): void => {
-    this.navigationService.back()
+  // saved tells the dialog opener whether it has to reload its data
+  protected exit = (saved = false): void => {
+    if (this.dialogRef) {
+      this.dialogRef.close(saved)
+    } else {
+      this.navigationService.back()
+    }
   }
 
   private getCategoryName = (name: string): string => this.translate.instant(name)
@@ -202,7 +213,7 @@ export class RegisterMovementComponent implements OnInit {
       // The movement is already saved: show the error and close instead of allowing a duplicate save
       this.notificationService.error(e)
     }
-    this.exit()
+    this.exit(true)
   }
 
   private selectCategory = (category: CategoryModel): void => {

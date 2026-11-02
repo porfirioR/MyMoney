@@ -1,4 +1,12 @@
 
+// Inside a dialog the dialog itself is the card
+.in-dialog .mat-card {
+  margin: 0;
+  padding: 0;
+  box-shadow: none;
+  background: transparent;
+}
+
 .mat-card-subtitle {
   text-align: center !important;
   margin: 8px 0 8px 0 !important;

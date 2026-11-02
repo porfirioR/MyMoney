@@ -9,7 +9,7 @@
       </button>
     </mat-menu>
   </span>
-  <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+  <mat-progress-bar mode="indeterminate" *ngIf="loading || refreshing"></mat-progress-bar>
   <main id="main">
     <app-skeleton *ngIf="loading" [cards]="3"></app-skeleton>
     <ng-container *ngIf="!loading">
@@ -121,7 +121,7 @@
     </ng-container>
 
     <ng-template #matExpansionPanelContent let-groups="groups">
-      <mat-expansion-panel hideToggle *ngFor="let group of groups" class="m-0">
+      <mat-expansion-panel hideToggle *ngFor="let group of groups; trackBy: trackByCategory" class="m-0">
         <mat-expansion-panel-header>
           <mat-panel-title>
             <button mat-mini-fab customColor [color]="group!.color" [backgroundColor]="group!.backgroundColor" [title]="'icon-group-button' | translate">
@@ -135,20 +135,35 @@
             </span>
           </mat-panel-title>
         </mat-expansion-panel-header>
-        <ul>
-          <li *ngFor="let movement of group.movements" class="row">
-            <span>
-              <strong>
-                - {{movement.date | date: 'dd/MM': '': language}}
-              </strong>
-              {{(movement.memorandum || movement.categoryName || '') | translate}}
-            </span>
-            <span>
-              {{movement.amount | number:'' : numberType}}
-            </span>
+        <ul class="movement-list">
+          <li *ngFor="let movement of group.movements; trackBy: trackByMovement">
+            <button type="button" class="movement-row"
+              [matMenuTriggerFor]="movementMenu"
+              [matMenuTriggerData]="{ movement: movement }"
+              [disabled]="refreshing"
+              [title]="'movement-options-button' | translate"
+            >
+              <span class="movement-date">{{movement.date | date: 'dd/MM': '': language}}</span>
+              <span class="movement-memorandum">{{(movement.memorandum || movement.categoryName || '') | translate}}</span>
+              <span class="movement-amount">{{movement.amount | number:'' : numberType}}</span>
+              <mat-icon class="movement-more">more_vert</mat-icon>
+            </button>
           </li>
         </ul>
       </mat-expansion-panel>
     </ng-template>
+
+    <mat-menu #movementMenu="matMenu" xPosition="before">
+      <ng-template matMenuContent let-movement="movement">
+        <button mat-menu-item (click)="editMovement(movement)" [title]="'edit-button' | translate">
+          <mat-icon>edit</mat-icon>
+          <span>{{'Edit' | translate}}</span>
+        </button>
+        <button mat-menu-item class="menu-delete" (click)="deleteMovement(movement)" [title]="'delete-button' | translate">
+          <mat-icon>delete</mat-icon>
+          <span>{{'Delete' | translate}}</span>
+        </button>
+      </ng-template>
+    </mat-menu>
   </main>
 </app-page-layout>

@@ -16,12 +16,74 @@
   margin: 0 1rem;
 }
 
-ul {
-  padding-inline-start: 10px;
+// Each movement is a full-width tap target that opens the edit/delete menu
+.movement-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
-li {
-  margin-bottom: 0.3rem;
+.movement-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  min-height: 2.5rem;
+  padding: 0.25rem 0.25rem 0.25rem 0.5rem;
+  border: none;
+  border-bottom: 1px solid var(--divider);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--text-primary);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+
+  &:hover:not(:disabled), &:focus-visible {
+    background: var(--active-bg);
+    outline: none;
+  }
+
+  &:disabled {
+    cursor: default;
+    opacity: 0.6;
+  }
+}
+
+li:last-child .movement-row {
+  border-bottom: none;
+}
+
+.movement-date {
+  flex-shrink: 0;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-secondary);
+}
+
+.movement-memorandum {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.movement-amount {
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.movement-more {
+  flex-shrink: 0;
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+  color: var(--text-secondary);
+}
+
+::ng-deep .menu-delete, ::ng-deep .menu-delete .mat-icon {
+  color: var(--warn) !important;
 }
 
 .icon-rotate-270 {
