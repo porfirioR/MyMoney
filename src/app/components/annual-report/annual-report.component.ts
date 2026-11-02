@@ -18,6 +18,10 @@ import { AnnualReportExportModel, CategoryMonthlyAmountModel } from '../../model
 import { NotificationService } from '../../services/notification.service';
 import { ThemeService } from '../../services/theme.service';
 import { DEFAULT_BACKGROUND_COLOR, DEFAULT_ICON_COLOR } from '../../constants/category.constants';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { RelatedMovementService } from '../../services/related-movement.service';
+import { RegisterMovementComponent } from '../register-movement/register-movement.component';
+import { DialogDeleteComponent } from '../dialog-delete/dialog-delete.component';
 
 @Component({
   selector: 'app-annual-report',
@@ -140,6 +144,8 @@ export class AnnualReportComponent implements OnInit {
   protected incomeChart = new ChartModel('doughnut', [], { responsive: true }, true)
   protected expenseChart = new ChartModel('doughnut', [], { responsive: true }, true)
   protected loading: boolean = true
+  // Reload after editing or deleting: the report stays on screen so the open panels are kept
+  protected refreshing: boolean = false
   protected incomeGroupMovementCategoryModel!: GroupMovementCategoryModel[]
   protected expenseGroupMovementCategoryModel!: GroupMovementCategoryModel[]
   protected numberType = NumberType.English
@@ -156,7 +162,9 @@ export class AnnualReportComponent implements OnInit {
     private route: ActivatedRoute,
     private readonly router: Router,
     private readonly notificationService: NotificationService,
-    private readonly themeService: ThemeService
+    private readonly themeService: ThemeService,
+    private readonly dialog: MatDialog,
+    private readonly relatedMovementService: RelatedMovementService
   ) {
     // Chart colors come from Chart.defaults, so the charts on screen are redrawn when the theme changes
     this.themeService.isDark$.pipe(skip(1), takeUntilDestroyed()).subscribe(() => this.charts?.forEach(x => x.chart?.update()))
@@ -188,7 +196,13 @@ export class AnnualReportComponent implements OnInit {
     this.globalChartData.datasets[0].label = this.translateService.instant('General Balance')
     this.globalChartData.datasets[0].data = [this.incomeAmount, this.expenseAmount]
     this.balance = this.incomeAmount - this.expenseAmount
+    // New references, so the charts already drawn are redrawn with the new values
+    this.globalChartData = { ...this.globalChartData }
+    this.monthsChartData = { ...this.monthsChartData }
+    this.incomeChartData = { ...this.incomeChartData }
+    this.expenseChartData = { ...this.expenseChartData }
     this.loading = false
+    this.refreshing = false
   }
 
   private prepareChartDataForIncomeCategory = (income: MovementModel[]): void => {
@@ -236,16 +250,68 @@ export class AnnualReportComponent implements OnInit {
     this.loadYear(selectedYear)
   }
 
-  private loadYear = (year: number): void => {
-    this.loading = true
+  private loadYear = (year: number, silent = false): void => {
+    if (silent) {
+      this.refreshing = true
+    } else {
+      this.loading = true
+    }
     this.getMovementForCategoriesByYear(year).pipe(take(1)).subscribe({
       next: ([expense, income]) => this.subscribeMovements(expense, income),
       error: (e) => {
         this.loading = false
+        this.refreshing = false
         this.notificationService.error(e)
       }
     })
   }
+
+  // The same form of the movements screen, opened over the report so it is not lost
+  protected editMovement = (movement: MovementModel): void => {
+    if (this.refreshing) { return }
+    const dialogRef = this.dialog.open(RegisterMovementComponent, {
+      width: '500px',
+      maxWidth: '95vw',
+      maxHeight: '90vh',
+      autoFocus: false,
+      data: { movement: { ...movement } }
+    })
+    dialogRef.afterClosed().pipe(take(1)).subscribe((saved?: boolean) => {
+      if (saved) {
+        this.loadYear(this.year, true)
+      }
+    })
+  }
+
+  protected deleteMovement = (movement: MovementModel): void => {
+    if (this.refreshing) { return }
+    const dialogRef = this.dialog.open(DialogDeleteComponent, {
+      width: '350px',
+      data: {
+        title: this.translateService.instant('movement-messages.title-delete'),
+        message: this.translateService.instant('movement-messages.question-delete')
+      }
+    })
+    dialogRef.afterClosed().pipe(take(1)).subscribe(result => {
+      if (!result) { return }
+      this.refreshing = true
+      this.movementService.delete(movement.id!, movement.type)
+        .then(() => this.relatedMovementService.removeMovements([movement.id!]))
+        .then(() => {
+          this.movementService.deleteMovementForList(movement.id!)
+          this.notificationService.message('movement-messages.deleted')
+          this.loadYear(this.year, true)
+        }).catch((e) => {
+          this.refreshing = false
+          this.notificationService.error(e)
+        })
+    })
+  }
+
+  // Keeps the panels (and whether they are open) when the report is reloaded
+  protected trackByCategory = (_: number, group: GroupMovementCategoryModel): string => group.categoryName
+
+  protected trackByMovement = (_: number, movement: MovementModel): string => movement.id!
 
   // Ticks and tooltips of every chart use the configured number format
   private setChartsLocale = (locale: string): void => {

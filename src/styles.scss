@@ -92,6 +92,8 @@ $my-dark-theme: mat.define-dark-theme((
 // Color tokens used by the components instead of fixed colors
 :root {
   --bg: #fafafa;
+  // Outside the centered column on wide screens, so the column reads as the app
+  --page-bg: #e4e7eb;
   --text-primary: rgb(0 0 0 / 87%);
   --text-secondary: rgb(0 0 0 / 60%);
   --text-disabled: rgb(0 0 0 / 38%);
@@ -113,6 +115,7 @@ $my-dark-theme: mat.define-dark-theme((
 
 .dark-theme {
   --bg: #303030;
+  --page-bg: #1c1c1c;
   --text-primary: #ffffff;
   --text-secondary: rgb(255 255 255 / 70%);
   --text-disabled: rgb(255 255 255 / 40%);

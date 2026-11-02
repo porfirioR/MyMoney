@@ -1,7 +1,12 @@
-<app-page-layout [title]="title" [backButton]="true" (back)="exit()">
+<app-page-layout *ngIf="!isDialog; else formContent" [title]="title" [backButton]="true" (back)="exit()">
+  <ng-container *ngTemplateOutlet="formContent"></ng-container>
+</app-page-layout>
+
+<ng-template #formContent>
+  <h1 matDialogTitle *ngIf="isDialog">{{title | translate}}</h1>
   <mat-progress-bar mode="indeterminate" *ngIf="loading || saving"></mat-progress-bar>
   <form [formGroup]="formGroup">
-    <main id="main">
+    <main id="main" [class.in-dialog]="isDialog">
       <app-skeleton *ngIf="loading" [cards]="1" [lines]="4"></app-skeleton>
       <mat-card *ngIf="!loading">
         <mat-button-toggle-group class="type-toggle" formControlName="type" [attr.aria-label]="'Type:' | translate">
@@ -86,4 +91,4 @@
       </mat-card>
     </main>
   </form>
-</app-page-layout>
+</ng-template>

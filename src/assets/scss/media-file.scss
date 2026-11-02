@@ -18,9 +18,18 @@
     --column-width: 500px;
   }
 
+  // Outside the column a different background, and the column as one full-height surface with side edges,
+  // so the screen reads as a framed app instead of cards floating in an empty page
+  html {
+    background: var(--page-bg);
+  }
+
   .content {
     max-width: var(--column-width);
     margin: 0 auto;
+    box-sizing: border-box;
+    min-height: 100%;
+    box-shadow: 0 0 0 1px var(--divider), 0 0 24px rgb(0 0 0 / 12%);
   }
 
   // Positioned with left (not margin: auto): Material's typography resets the toolbar margin to 0
