@@ -1,10 +1,41 @@
 <form [formGroup]="formGroup">
-  <mat-card class="m-b-10">
-    <mat-card-header translate>
-      <mat-card-title>{{'Filters' | translate}}</mat-card-title>
-    </mat-card-header>
-    <mat-divider></mat-divider>
+  <mat-card class="filters">
     <mat-card-content>
+      <!-- The text is the main filter: it searches description and category in the loaded movements -->
+      <mat-form-field class="w-100" appearance="fill">
+        <mat-icon matPrefix class="search-icon">search</mat-icon>
+        <mat-label>{{'related-movement-messages.search-text' | translate}}</mat-label>
+        <input matInput formControlName="text" autocomplete="off">
+        <button mat-icon-button matSuffix type="button" *ngIf="formGroup.controls.text.value" (click)="clearText()" [title]="'related-movement-messages.clear-search' | translate">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <mat-button-toggle-group class="period-toggle" formControlName="period" (change)="choosePeriod()" [attr.aria-label]="'related-movement-messages.period' | translate">
+        <mat-button-toggle value="month">{{'Month' | translate}}</mat-button-toggle>
+        <mat-button-toggle value="year">{{'Year' | translate}}</mat-button-toggle>
+        <mat-button-toggle value="all">{{'related-movement-messages.all-dates' | translate}}</mat-button-toggle>
+      </mat-button-toggle-group>
+
+      <article class="row-mat-field" *ngIf="formGroup.controls.period.value !== 'all'">
+        <mat-form-field id="month-field" *ngIf="formGroup.controls.period.value === 'month'">
+          <mat-label>{{'Month' | translate}}</mat-label>
+          <mat-select formControlName="month">
+            <mat-option [value]="month" *ngFor="let month of months | enumArrayLoop">
+              {{month | translate}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field id="year-field">
+          <mat-label>{{'Year' | translate}}</mat-label>
+          <mat-select formControlName="year">
+            <mat-option [value]="year" *ngFor="let year of yearRange">
+              {{year}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </article>
+
       <mat-form-field class="w-100">
         <mat-label>{{'Categories' | translate}}</mat-label>
         <mat-chip-list #chipList aria-label="Categories selection">
@@ -33,7 +64,7 @@
             (matChipInputTokenEnd)="add($event)"
           />
         </mat-chip-list>
-        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedCategory($event)">
           <mat-option *ngFor="let category of filteredCategories | async; let i = index" [id]="'' + i" [value]="category.id">
             <span customColor class="mat-custom-icon-button"
               [color]="category.color"
@@ -47,52 +78,15 @@
         </mat-autocomplete>
         <mat-hint>{{'related-movement-messages.categories-hint' | translate}}</mat-hint>
       </mat-form-field>
-      <article class="row-mat-field">
-        <mat-form-field id="month-field">
-          <mat-label>{{'Month' | translate}}</mat-label>
-          <mat-select formControlName="month">
-            <mat-option [value]="month" *ngFor="let month of months | enumArrayLoop">
-              {{month | translate}}
-            </mat-option>
-          </mat-select>
-          <mat-error *ngIf="formGroup.controls.month.hasError('required')" translate>
-            Filter month is required.
-          </mat-error>
-        </mat-form-field>
-        <mat-form-field id="year-field">
-          <mat-label>{{'Year' | translate}}</mat-label>
-          <mat-select formControlName="year">
-            <mat-option [value]="year" *ngFor="let year of yearRange">
-              {{year}}
-            </mat-option>
-          </mat-select>
-          <mat-error *ngIf="formGroup.controls.year.hasError('required')" translate>
-            Filter year is required.
-          </mat-error>
-        </mat-form-field>
-      </article>
     </mat-card-content>
-    <mat-card-actions align="end">
-      <button mat-stroked-button color="primary"
-        [disabled]="formGroup.invalid || searching" [title]="'Search' | translate"
-        (click)="search()"
-      >
-        {{"Search" | translate}}
-      </button>
-    </mat-card-actions>
   </mat-card>
   <mat-progress-bar mode="indeterminate" *ngIf="searching"></mat-progress-bar>
-  <mat-card class="m-t-10">
-    <mat-card-header>
-      <mat-card-title>{{'Movements' | translate}}</mat-card-title>
-    </mat-card-header>
-    <mat-divider></mat-divider>
+  <!-- Only the results scroll: the filters stay on top and the buttons at the bottom -->
+  <mat-card class="results">
     <mat-card-content>
-      <mat-form-field class="w-100" *ngIf="movements.length">
-        <mat-label>{{'related-movement-messages.search-text' | translate}}</mat-label>
-        <input matInput formControlName="text" autocomplete="off">
-        <mat-icon matSuffix>search</mat-icon>
-      </mat-form-field>
+      <p class="result-count" *ngIf="!searching && filteredMovements.length">
+        {{'related-movement-messages.result-count' | translate: { count: filteredMovements.length } }}
+      </p>
       <ng-container *ngIf="movements.length; else emptyMovement">
         <!-- Options are hidden instead of removed so the text filter does not lose the selection -->
         <mat-selection-list formControlName="selectedMovement">
@@ -100,9 +94,15 @@
             [class.is-hidden]="!filteredMovements.includes(movement)"
           >
             <span class="option-row">
+              <span customColor class="mat-custom-icon-button"
+                [color]="movement.color"
+                [backgroundColor]="movement.backgroundColor"
+              >
+                <i class="material-icons-outlined notranslate">{{movement.icon}}</i>
+              </span>
               <span class="option-text">
                 <span class="option-memorandum">{{movement.memorandum ?? '' | translate}}</span>
-                <span class="option-date">{{movement.date | date:'dd/MM/yy':'':language}}</span>
+                <span class="option-date">{{movement.date | date:'dd/MM/yy':'':language}} · {{(movement.categoryName ?? '') | translate}}</span>
               </span>
               <span class="option-amount" [class.income]="!isExpense(movement)">
                 {{isExpense(movement) ? '-' : ''}}{{movement.amount | number:'':numberType}}
@@ -113,20 +113,25 @@
         <p class="empty-filter" *ngIf="filteredMovements.length === 0" translate>Without movements to show.</p>
       </ng-container>
       <ng-template #emptyMovement>
-        <p class="empty-filter" translate>Without movements to show.</p>
+        <p class="empty-filter" *ngIf="!searching && formGroup.controls.period.value === 'all' && !hasTextForAllDates(); else noResults">
+          <mat-icon>search</mat-icon>
+          {{'related-movement-messages.all-dates-hint' | translate: { count: minTextAllDates } }}
+        </p>
+        <ng-template #noResults>
+          <p class="empty-filter" *ngIf="!searching" translate>Without movements to show.</p>
+        </ng-template>
       </ng-template>
     </mat-card-content>
   </mat-card>
-  <mat-card class="m-t-10">
-    <mat-card-footer class="form-actions">
-      <button mat-stroked-button color="primary" type="button" (click)="cancelAddition()" [title]="'cancel-button' | translate">
-        {{'Cancel' | translate}}
-      </button>
-      <button mat-flat-button color="primary" type="submit"
-        [disabled]="!formGroup.controls.selectedMovement.value?.length"
-        [title]="'save-button' | translate"
-        (click)="save()">{{'Save' | translate}}
-      </button>
-    </mat-card-footer>
-  </mat-card>
+  <footer class="form-actions dialog-actions">
+    <button mat-stroked-button color="primary" type="button" (click)="cancelAddition()" [title]="'cancel-button' | translate">
+      {{'Cancel' | translate}}
+    </button>
+    <button mat-flat-button color="primary" type="submit"
+      [disabled]="selected.size === 0"
+      [title]="'save-button' | translate"
+      (click)="save()">
+      {{'Save' | translate}}{{selected.size ? ' (' + selected.size + ')' : ''}}
+    </button>
+  </footer>
 </form>

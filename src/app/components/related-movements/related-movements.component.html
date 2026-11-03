@@ -15,7 +15,7 @@
 
       <mat-accordion [multi]="true" class="groups" *ngIf="relatedMovements.length > 0">
         <!-- The default toggle is hidden: it floats over the amounts, so the chevron lives in the last row -->
-        <mat-expansion-panel *ngFor="let related of relatedMovements" class="group" [hideToggle]="true" #panel>
+        <mat-expansion-panel *ngFor="let related of relatedMovements; trackBy: trackByRelated" class="group" [hideToggle]="true" #panel>
           <mat-expansion-panel-header collapsedHeight="auto" expandedHeight="auto">
             <div class="group-summary" *ngIf="summaries.get(related.id!) as summary">
               <div class="group-title">
@@ -90,6 +90,7 @@
             [configuration]="configuration"
             [relatedMovement]="related"
             (deletedMovementEvent)="deletedMovement($event, related)"
+            (updatedMovementEvent)="updatedMovement(related)"
           ></app-related-movement-detail>
           <ng-template #noMovements>
             <p class="no-movements">{{'related-movement-messages.no-movements' | translate}}</p>

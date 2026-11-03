@@ -96,9 +96,75 @@
 
 .row-mat-field {
   display: flex;
-  justify-content: space-between;
+  gap: 1rem;
+  & > .mat-form-field {
+    flex: 1;
+  }
 }
 
-#month-field, #year-field {
-  width: 45% !important;
+.search-icon {
+  margin-right: 6px;
+  color: var(--text-secondary);
+}
+
+// Month / Year / All dates as one segmented control
+.period-toggle.mat-button-toggle-group {
+  display: flex;
+  margin-bottom: 1rem;
+  & .mat-button-toggle {
+    flex: 1;
+  }
+  & .mat-button-toggle-checked {
+    background: var(--active-bg);
+    color: var(--primary);
+    font-weight: 500;
+  }
+}
+
+.result-count {
+  margin: 0 0 0.5rem;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+// The dialog is a column: filters on top, results in the remaining height (the only part that scrolls),
+// buttons always visible at the bottom
+:host {
+  display: block;
+  height: 100%;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  height: 100%;
+}
+
+.filters, .dialog-actions {
+  flex-shrink: 0;
+}
+
+.results {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.dialog-actions {
+  padding: 0 !important;
+}
+
+// Text starts on the left next to the icon, the amount goes to the right
+.option-row {
+  text-align: left;
+  & > .option-text {
+    flex: 1;
+  }
+}
+
+.empty-filter .mat-icon {
+  display: block;
+  margin: 0 auto 0.5rem;
+  color: var(--text-disabled);
 }

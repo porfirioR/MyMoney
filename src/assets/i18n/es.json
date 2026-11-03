@@ -309,6 +309,7 @@
   },
   "related-movement-messages": {
     "title-delete-movement": "Quitar movimiento del grupo",
+    "remove-from-group": "Quitar del grupo",
     "question-delete-movement": "¿Querés quitar este movimiento del grupo? El movimiento no se borra, sigue en tu lista.",
     "movement-removed": "El movimiento se quitó del grupo",
     "title-delete": "Borrar movimiento relacionado",
@@ -325,7 +326,12 @@
     "goal": "Meta (opcional)",
     "goal-hint": "El monto total que querés alcanzar, por ejemplo lo que tenés que pagar o te tienen que devolver",
     "search-text": "Buscar por descripción o categoría",
-    "categories-hint": "Opcional: si no elegís ninguna, se muestran todos los movimientos del mes",
+    "categories-hint": "Opcional: si no elegís ninguna, se buscan todas las categorías",
+    "clear-search": "Limpiar búsqueda",
+    "period": "Período",
+    "all-dates": "Todo",
+    "all-dates-hint": "Escribí al menos {{count}} letras para buscar en todas las fechas",
+    "result-count": "{{count}} movimientos",
     "goal-reached": "¡Meta alcanzada!",
     "goal-exceeded": "Superaste la meta por {{amount}}",
     "shown-in-movement": "Aparece como opción al registrar movimientos"

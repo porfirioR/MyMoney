@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(sed -i 's|^    \"categories-hint\": \"Opcional: si no elegís ninguna, se muestran todos los movimientos del mes\",$|    \"categories-hint\": \"Opcional: si no elegís ninguna, se buscan todas las categorías\",\\\\n    \"clear-search\": \"Limpiar búsqueda\",\\\\n    \"period\": \"Período\",\\\\n    \"all-dates\": \"Todo\",\\\\n    \"result-count\": \"{{count}} movimientos\",|' es.json)",
+      "Bash(sed -i 's|^    \"categories-hint\": \"Optional: if you choose none, every movement of the month is shown\",$|    \"categories-hint\": \"Optional: if you choose none, every category is searched\",\\\\n    \"clear-search\": \"Clear search\",\\\\n    \"period\": \"Period\",\\\\n    \"all-dates\": \"All\",\\\\n    \"result-count\": \"{{count}} movements\",|' en.json)",
+      "Bash(node -e \"JSON.parse\\(require\\('fs'\\).readFileSync\\('es.json'\\)\\);JSON.parse\\(require\\('fs'\\).readFileSync\\('en.json'\\)\\);console.log\\('ok'\\)\")"
+    ]
+  }
+}

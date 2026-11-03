@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { addDoc, collection, collectionData, CollectionReference, deleteDoc, doc, DocumentData, documentId, DocumentReference, Firestore, orderBy, Query, query, setDoc, where, WriteBatch, writeBatch } from '@angular/fire/firestore';
+import { addDoc, collection, collectionData, CollectionReference, deleteDoc, doc, DocumentData, documentId, DocumentReference, Firestore, orderBy, Query, query, QueryConstraint, setDoc, where, WriteBatch, writeBatch } from '@angular/fire/firestore';
 import { combineLatest, firstValueFrom, map, Observable, of, take } from 'rxjs';
 import { CategoryType } from '../enums/category-type.enum';
 import { CollectionType } from '../enums/collection-type.enum';
@@ -116,28 +116,35 @@ export class MovementService {
     return combineLatest(requests$).pipe(map(x => x.flat()))
   }
 
-  // Without categories it returns every movement of the month
+  // Without categories it returns every movement of the range; without a range, every date
   public getGetMovementByFilter = (request: FilterRelatedMovementModel): Observable<[MovementModel[], MovementModel[]]> => {
-    if (request.categoryIds.length === 0) {
-      return combineLatest([
-        this.getBySelectedMonth(CategoryType.income, request.month, request.year),
-        this.getBySelectedMonth(CategoryType.expense, request.month, request.year)
-      ])
+    const byType = (type: CategoryType): Observable<MovementModel[]> => {
+      const constraints: QueryConstraint[] = []
+      if (request.categoryIds.length > 0) {
+        const typeIds = this.userService.getActiveCategories().filter(x => x.type === type.toLocaleLowerCase()).map(x => x.id)
+        const ids = request.categoryIds.filter(x => typeIds.includes(x))
+        if (ids.length === 0) {
+          return of([])
+        }
+        constraints.push(where('categoryId', 'in', ids))
+      }
+      if (request.startTime !== undefined && request.endTime !== undefined) {
+        constraints.push(where('time', '>=', request.startTime), where('time', '<=', request.endTime))
+      }
+      const ref = query(this.getReference(type), ...constraints, orderBy('time'))
+      return collectionData<MovementModel>(ref as Query<MovementModel>, { idField: 'id' }).pipe(take(1))
     }
-    const [startTime, endTime] = this.getDateTimeRange(request.month, request.year)
-    const hasExpenseIds = this.userService.getActiveCategories().filter(x => x.type === CategoryType.expense.toLocaleLowerCase()).map(x => x.id).some(x => request.categoryIds.includes(x))
-    const hasIncomeIds = this.userService.getActiveCategories().filter(x => x.type === CategoryType.income.toLocaleLowerCase()).map(x => x.id).some(x => request.categoryIds.includes(x))
-    let expenseRequest$: Observable<MovementModel[]> = of([])
-    let incomeRequest$: Observable<MovementModel[]> = of([])
-    if (hasExpenseIds) {
-      const ref = query(this.getReference(CategoryType.expense), where('categoryId', 'in', request.categoryIds), where('time', '>=', startTime), where('time', '<=', endTime), orderBy('time'))
-      expenseRequest$ = collectionData<MovementModel>(ref as Query<MovementModel>, { idField: 'id' })
-    }
-    if (hasIncomeIds) {
-      const ref = query(this.getReference(CategoryType.income), where('categoryId', 'in', request.categoryIds), where('time', '>=', startTime), where('time', '<=', endTime), orderBy('time'))
-      incomeRequest$ = collectionData<MovementModel>(ref as Query<MovementModel>, { idField: 'id' })
-    }
-    return combineLatest([incomeRequest$, expenseRequest$])
+    return combineLatest([byType(CategoryType.income), byType(CategoryType.expense)])
+  }
+
+  public getMonthTimeRange = (month: number, year: number): [number, number] => this.getDateTimeRange(month, year)
+
+  public getYearTimeRange = (year: number): [number, number] => {
+    const startDate = new Date(year, 0, 1)
+    startDate.setHours(0, 0, 0)
+    const endDate = new Date(year, 11, 31)
+    endDate.setHours(23, 59, 59)
+    return [startDate.getTime(), endDate.getTime()]
   }
 
   private getDateTimeRange = (month: number, year: number): [number, number] => {
