@@ -73,6 +73,12 @@
   border-bottom: 1px solid var(--divider);
 }
 
+// The icon has empty space inside: moved outwards so it ends on the card edge like the amounts
+.remove-button {
+  flex-shrink: 0;
+  margin-right: -10px;
+}
+
 .movement-icon {
   flex-shrink: 0;
   display: inline-flex;

@@ -309,6 +309,7 @@
   },
   "related-movement-messages": {
     "title-delete-movement": "Remove movement from group",
+    "remove-from-group": "Remove from group",
     "question-delete-movement": "Remove this movement from the group? The movement is not deleted, it stays in your list.",
     "movement-removed": "The movement was removed from the group",
     "title-delete": "Delete related movement",
@@ -325,7 +326,12 @@
     "goal": "Goal (optional)",
     "goal-hint": "The total amount you want to reach, for example what you have to pay or what you are owed",
     "search-text": "Search by description or category",
-    "categories-hint": "Optional: if you choose none, every movement of the month is shown",
+    "categories-hint": "Optional: if you choose none, every category is searched",
+    "clear-search": "Clear search",
+    "period": "Period",
+    "all-dates": "All",
+    "all-dates-hint": "Type at least {{count}} letters to search every date",
+    "result-count": "{{count}} movements",
     "goal-reached": "Goal reached!",
     "goal-exceeded": "You went over the goal by {{amount}}",
     "shown-in-movement": "Shown as an option when registering movements"

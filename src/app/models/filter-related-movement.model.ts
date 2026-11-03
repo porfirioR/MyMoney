@@ -1,7 +1,8 @@
 export class FilterRelatedMovementModel {
+  // Without a time range it searches every date
   constructor(
     public categoryIds: string[],
-    public month: number,
-    public year: number
+    public startTime?: number,
+    public endTime?: number
   ) { }
 }

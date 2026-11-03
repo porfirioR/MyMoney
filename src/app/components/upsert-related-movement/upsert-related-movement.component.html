@@ -86,12 +86,6 @@
       </button>
     </div>
     <article *ngFor="let movement of movements; let i = index" class="movement-row">
-      <button mat-icon-button color="warn" type="button"
-        (click)="removeMovement(movement.id!)"
-        [title]="'related-movement-messages.title-delete-movement' | translate"
-      >
-        <mat-icon>highlight_off</mat-icon>
-      </button>
       <span class="movement-icon" customColor
         [color]="movement.color"
         [backgroundColor]="movement.backgroundColor"
@@ -105,6 +99,13 @@
       <span [id]="'amount-' + i" class="movement-amount" [class.income]="!isExpense(movement)">
         {{isExpense(movement) ? '-' : ''}}{{movement.amount | number:'':numberType}}
       </span>
+      <!-- Actions on the right, like the rest of the app -->
+      <button mat-icon-button color="warn" type="button" class="remove-button"
+        (click)="removeMovement(movement.id!)"
+        [title]="'related-movement-messages.title-delete-movement' | translate"
+      >
+        <mat-icon>link_off</mat-icon>
+      </button>
     </article>
     <p class="no-movements" *ngIf="movements.length === 0">
       {{'related-movement-messages.no-movements' | translate}}

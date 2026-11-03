@@ -90,7 +90,23 @@ export class RelatedMovementsComponent implements OnInit {
     this.setMovements(relatedMovement, movements)
   }
 
-  private getMovements = (relatedMovement: RelatedMovementModel): Observable<RelatedMovementDetailModel[]> => {
+  // After an edit the group is read again: a type change gives the movement a new id in the group
+  protected updatedMovement = (relatedMovement: RelatedMovementModel): void => {
+    this.relatedMovementsService.getById(relatedMovement.id!).pipe(
+      take(1),
+      switchMap((updated) => {
+        relatedMovement.related = updated.related
+        return this.getMovements(relatedMovement)
+      })
+    ).subscribe({
+      next: (movements) => this.setMovements(relatedMovement, movements),
+      error: (e) => this.notificationService.error(e)
+    })
+  }
+
+  protected trackByRelated = (_: number, related: RelatedMovementModel): string => related.id!
+
+  private getMovements =(relatedMovement: RelatedMovementModel): Observable<RelatedMovementDetailModel[]> => {
     const expenseIds = relatedMovement.related.filter(x => HelperService.isExpense(x.type)).map(x => x.id)
     const incomeIds = relatedMovement.related.filter(x => !HelperService.isExpense(x.type)).map(x => x.id)
     return combineLatest([
@@ -106,7 +122,8 @@ export class RelatedMovementsComponent implements OnInit {
         HelperService.isExpense(x.type),
         x.icon,
         x.color,
-        x.backgroundColor
+        x.backgroundColor,
+        x
       ))
     ))
   }

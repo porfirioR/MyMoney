@@ -1,36 +1,43 @@
-<ng-container *ngIf="movements.length">
-  <header class="flex-space-between">
-    <b align="start" translate>Action</b>
-    <b class="w-10" align="start" translate>Date</b>
-    <b class="w-40" align="start" translate>Memorandum</b>
-    <b class="w-20" align="end" translate>Amount</b>
-  </header>
-  <main>
-    <article *ngFor="let movement of movements; let i = index">
-      <button mat-icon-button color="warn" [title]="'related-movement-messages.title-delete-movement' | translate"
-        (click)="deletedMovement(movement.id!)">
-        <mat-icon>
-          highlight_off
-        </mat-icon>
-      </button>
-      <span class="w-10">
-        {{movement.date | date: 'dd/MM': '': language}}
-      </span>
-      <span class="w-40 memorandum">
-        <button mat-mini-fab customColor
-          [color]="movement!.color"
-          [backgroundColor]="movement!.backgroundColor"
-          [title]="'movement-icon-button' | translate"
+<ul class="movement-list" *ngIf="movements.length">
+  <ng-container *ngFor="let movement of movements; let i = index; trackBy: trackByMovement">
+    <!-- Groups can span years: a header marks where each year starts -->
+    <li class="year-header" *ngIf="i === 0 || movements[i - 1].date.getFullYear() !== movement.date.getFullYear()">
+      {{movement.date.getFullYear()}}
+    </li>
+    <li>
+      <button type="button" class="movement-row"
+        [matMenuTriggerFor]="movementMenu"
+        [matMenuTriggerData]="{ movement: movement }"
+        [title]="'movement-options-button' | translate"
+      >
+        <span class="movement-icon" customColor
+          [color]="movement.color"
+          [backgroundColor]="movement.backgroundColor"
         >
-          <i [id]="'icon-' + i" class="material-icons-outlined notranslate">
-            {{movement.icon}}
-          </i>
-        </button>
-        {{movement.memorandum | translate}}
-      </span>
-      <span class="w-20" align="end">
-        {{movement.isExpense ? '-' : ''}}{{movement.amount | number:'' : numberType}}
-      </span>
-    </article>
-  </main>
-</ng-container>
+          <i class="material-icons-outlined notranslate">{{movement.icon}}</i>
+        </span>
+        <span class="movement-text">
+          <span class="movement-memorandum">{{movement.memorandum | translate}}</span>
+          <span class="movement-date">{{movement.date | date: 'EEE dd/MM/yy': '': language}}</span>
+        </span>
+        <span class="movement-amount" [class.income]="!movement.isExpense">
+          {{movement.isExpense ? '-' : ''}}{{movement.amount | number:'' : numberType}}
+        </span>
+        <mat-icon class="movement-more">more_vert</mat-icon>
+      </button>
+    </li>
+  </ng-container>
+</ul>
+
+<mat-menu #movementMenu="matMenu" xPosition="before">
+  <ng-template matMenuContent let-movement="movement">
+    <button mat-menu-item (click)="editMovement(movement)" [disabled]="!movement.movement" [title]="'edit-button' | translate">
+      <mat-icon>edit</mat-icon>
+      <span>{{'Edit' | translate}}</span>
+    </button>
+    <button mat-menu-item class="menu-delete" (click)="deletedMovement(movement.id)" [title]="'related-movement-messages.title-delete-movement' | translate">
+      <mat-icon>link_off</mat-icon>
+      <span>{{'related-movement-messages.remove-from-group' | translate}}</span>
+    </button>
+  </ng-template>
+</mat-menu>

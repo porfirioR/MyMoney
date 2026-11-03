@@ -10,6 +10,7 @@ import { ConfigurationModel } from '../../models/configuration.model';
 import { RelatedMovementModel } from '../../models/related-movement.model';
 import { DialogDeleteComponent } from '../dialog-delete/dialog-delete.component';
 import { RelatedMovementService } from '../../services/related-movement.service';
+import { RegisterMovementComponent } from '../register-movement/register-movement.component';
 
 @Component({
   selector: 'app-related-movement-detail',
@@ -21,6 +22,8 @@ export class RelatedMovementDetailComponent implements OnInit {
   @Input() configuration!: ConfigurationModel
   @Input() relatedMovement!: RelatedMovementModel
   @Output() deletedMovementEvent = new EventEmitter<string>()
+  // The group has to be read again: an edit can change the amount, the date or even the id (type change)
+  @Output() updatedMovementEvent = new EventEmitter<void>()
 
   protected language = LanguageType.English
   protected numberType = NumberType.English
@@ -35,6 +38,25 @@ export class RelatedMovementDetailComponent implements OnInit {
   ngOnInit(): void {
     this.language = this.configuration.language
     this.numberType = this.configuration.number
+  }
+
+  protected trackByMovement = (_: number, movement: RelatedMovementDetailModel): string => movement.id
+
+  // The same form of the movements screen, opened over the group so the page is not left
+  protected editMovement = (detail: RelatedMovementDetailModel): void => {
+    if (!detail.movement) { return }
+    const dialogRef = this.dialog.open(RegisterMovementComponent, {
+      width: '500px',
+      maxWidth: '95vw',
+      maxHeight: '90vh',
+      autoFocus: false,
+      data: { movement: { ...detail.movement, date: new Date(detail.movement.time) } }
+    })
+    dialogRef.afterClosed().pipe(take(1)).subscribe((saved?: boolean) => {
+      if (saved) {
+        this.updatedMovementEvent.emit()
+      }
+    })
   }
 
   protected deletedMovement = (id: string): void => {
