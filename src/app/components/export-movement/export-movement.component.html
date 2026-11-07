@@ -27,6 +27,9 @@
           <button mat-stroked-button color="primary" type="button" (click)="exit()" [title]="'cancel-button' | translate">
             {{'Cancel' | translate}}
           </button>
+          <button mat-stroked-button color="primary" type="button" (click)="exportForMyEvents()" [disabled]="!canExportForMyEvents()" [title]="'export-my-events-button' | translate">
+            {{"Export for my-events" | translate}}
+          </button>
           <button mat-flat-button color="primary" (click)="export()" [disabled]="formGroup.invalid || loading" [title]="'export-button' | translate">
             {{"Export" | translate}}
           </button>
