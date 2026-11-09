@@ -1,3 +1,13 @@
 .mat-card {
   margin: 1rem;
 }
+
+// Cancelar y Exportar en una fila; "Exportar para my-events" abajo, en una fila de ancho completo
+.form-actions {
+  flex-wrap: wrap;
+
+  .my-events-button {
+    flex-basis: 100%;
+    order: 3;
+  }
+}

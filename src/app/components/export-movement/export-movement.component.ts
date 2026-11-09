@@ -23,6 +23,7 @@ import { MyEventsExportHelper } from '../../services/my-events-export.helper';
 })
 export class ExportMovementComponent {
   protected minDate = new Date('2018-01-01:00:00:00')
+  protected today = new Date()
   protected loading = false
   protected formGroup: FormGroup<ExportMovementForm> = new FormGroup<ExportMovementForm>({
     startDate: new FormControl(null, [Validators.required]),
