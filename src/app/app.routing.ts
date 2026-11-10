@@ -6,9 +6,10 @@ import { PrincipalComponent } from './components/principal/principal.component';
 import { RegisterMovementComponent } from './components/register-movement/register-movement.component';
 import { LoginComponent } from './components/login/login.component';
 import { MovementDetailComponent } from './components/movement-detail/movement-detail.component';
-// Import and export are hidden for now; the components stay in the project in case they are needed again
+// Import is hidden for now; the component stays in the project in case it is needed again
 // import { ImportMovementComponent } from './components/import-movement/import-movement.component';
-// import { ExportMovementComponent } from './components/export-movement/export-movement.component';
+// Export is back: it creates the file that my-events imports (my-events epic #213)
+import { ExportMovementComponent } from './components/export-movement/export-movement.component';
 import { LogoutComponent } from './components/logout/logout.component';
 import { ReportMonthComponent } from './components/report-month/report-month.component';
 import { AboutUsComponent } from './components/about-us/about-us.component';
@@ -63,19 +64,19 @@ const routes: Routes = [
     component: RegisterMovementComponent,
     title: 'Movement update'
   },
-  // Hidden: uncomment these routes (and the imports above, and the side menu items) to enable them again
+  // Hidden: uncomment this route (and the import above, and the side menu item) to enable it again
   // {
   //   path: 'import',
   //   canActivate: [UserGuard],
   //   component: ImportMovementComponent,
   //   title: 'Import'
   // },
-  // {
-  //   path: 'export',
-  //   canActivate: [UserGuard],
-  //   component: ExportMovementComponent,
-  //   title: 'Export'
-  // },
+  {
+    path: 'export',
+    canActivate: [UserGuard],
+    component: ExportMovementComponent,
+    title: 'Export'
+  },
   {
     path: 'report-month/:type',
     canActivate: [UserGuard],
@@ -138,7 +139,7 @@ const routes: Routes = [
     path: 'home',
     redirectTo: ''
   },
-  // Unknown URLs (like the hidden /import and /export) go to the main screen instead of a blank page
+  // Unknown URLs (like the hidden /import) go to the main screen instead of a blank page
   {
     path: '**',
     redirectTo: ''

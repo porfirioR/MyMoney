@@ -4,7 +4,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { combineLatest } from 'rxjs';
+import { combineLatest, firstValueFrom, take } from 'rxjs';
 import { CategoryType } from '../../enums/category-type.enum';
 import { ExportRequestModel } from '../../models/export-request.model';
 import { MovementModel } from '../../models/movement.model';
@@ -13,6 +13,8 @@ import { UserService } from '../../services/user.service';
 import { environment } from '../../../environments/environment';
 import { NotificationService } from '../../services/notification.service';
 import { ExportMovementForm } from '../../forms/export-movement.form';
+import { RelatedMovementService } from '../../services/related-movement.service';
+import { MyEventsExportHelper } from '../../services/my-events-export.helper';
 
 @Component({
   selector: 'app-export-movement',
@@ -21,6 +23,7 @@ import { ExportMovementForm } from '../../forms/export-movement.form';
 })
 export class ExportMovementComponent {
   protected minDate = new Date('2018-01-01:00:00:00')
+  protected today = new Date()
   protected loading = false
   protected formGroup: FormGroup<ExportMovementForm> = new FormGroup<ExportMovementForm>({
     startDate: new FormControl(null, [Validators.required]),
@@ -37,6 +40,7 @@ export class ExportMovementComponent {
     private translate: TranslateService,
     private router: Router,
     private readonly notificationService: NotificationService,
+    private readonly relatedMovementService: RelatedMovementService,
   ) { }
 
   protected exit = (): void => {
@@ -61,6 +65,53 @@ export class ExportMovementComponent {
       const unique = new Set(this.movementListResponse)
       this.returnExport([...unique])
     }, 10000);
+  }
+
+  protected canExportForMyEvents = (): boolean =>
+    !!this.formGroup.controls.startDate.value && !!this.formGroup.controls.endDate.value && !this.loading
+
+  // Every movement of the range (income and expense, all categories) as the JSON that my-events imports
+  protected exportForMyEvents = async (): Promise<void> => {
+    const startDate = new Date(this.formGroup.controls.startDate.value!)
+    const endDate = new Date(this.formGroup.controls.endDate.value!)
+    this.loading = true
+    try {
+      const [incomes, expenses, relatedGroups] = await Promise.all([
+        firstValueFrom(this.movementService.getMovementToExport(CategoryType.income, new Date(startDate), new Date(endDate)).pipe(take(1))),
+        firstValueFrom(this.movementService.getMovementToExport(CategoryType.expense, new Date(startDate), new Date(endDate)).pipe(take(1))),
+        firstValueFrom(this.relatedMovementService.getAll().pipe(take(1))),
+      ])
+      const report = MyEventsExportHelper.build({
+        categories: this.userService.getAllCategories(),
+        movements: [...incomes, ...expenses],
+        relatedGroups: relatedGroups.map(g => ({ ...g, related: g.related.map(r => ({ id: r['id'] })) })),
+        from: MyEventsExportHelper.toLocalDate(startDate),
+        to: MyEventsExportHelper.toLocalDate(endDate),
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        exportedAt: new Date(),
+      })
+      if (report.movements.length === 0) {
+        this.snackBar.open(this.translate.instant('There are no movements in the loaded date range'), '', { duration: 5000 })
+        return
+      }
+      this.downloadJson(report, `mymoney-export-${MyEventsExportHelper.toLocalDate(new Date())}.json`)
+    } catch (e) {
+      this.notificationService.error(e)
+    } finally {
+      this.loading = false
+    }
+  }
+
+  private downloadJson = (data: unknown, filename: string): void => {
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' })
+    const url = URL.createObjectURL(blob)
+    const a: HTMLAnchorElement = document.createElement('a') as HTMLAnchorElement
+    a.href = url
+    a.download = filename
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+    URL.revokeObjectURL(url)
   }
 
   private convertDate = (x: Date): string => `${x.getFullYear()}-${(x.getMonth() + 1)}-${x.getDate()}`;

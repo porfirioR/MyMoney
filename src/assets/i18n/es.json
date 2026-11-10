@@ -41,6 +41,8 @@
   "Category": "Categoría",
   "Category:": "Categoría:",
   "Export": "Exportar",
+  "Export for my-events": "Exportar para my-events",
+  "export-my-events-button": "Exporta todos los movimientos del rango en el archivo que importa my-events",
   "Import": "Importar",
   "Exit": "Salir",
   "Actions": "Acciones",
