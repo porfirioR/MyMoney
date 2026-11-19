@@ -23,6 +23,9 @@ import { BudgetStatusModel } from '../../models/budget-status.model';
 import { NavigationService } from '../../services/navigation.service';
 import { NotificationService } from '../../services/notification.service';
 import { ThemeService } from '../../services/theme.service';
+import { RelatedMovementService } from '../../services/related-movement.service';
+import { RegisterMovementComponent } from '../register-movement/register-movement.component';
+import { DialogDeleteComponent } from '../dialog-delete/dialog-delete.component';
 
 @Component({
   selector: 'app-report-month',
@@ -46,6 +49,8 @@ export class ReportMonthComponent implements OnInit {
   protected chartLegend = true;
   protected chartType: ChartType = 'doughnut'
   protected loading: boolean = false
+  // Reload after editing or deleting: the report stays on screen so the open panels are kept
+  protected refreshing: boolean = false
   protected yearMonth!: YearMonthModel
   protected categoryType = CategoryType
   protected groupMovementCategoryModel: GroupMovementCategoryModel[] = []
@@ -64,7 +69,8 @@ export class ReportMonthComponent implements OnInit {
     private translate: TranslateService,
     private readonly navigationService: NavigationService,
     private readonly notificationService: NotificationService,
-    private readonly themeService: ThemeService
+    private readonly themeService: ThemeService,
+    private readonly relatedMovementService: RelatedMovementService
   ) {
     // Chart colors come from Chart.defaults, so the chart on screen is redrawn when the theme changes
     this.themeService.isDark$.pipe(skip(1), takeUntilDestroyed()).subscribe(() => this.charts?.forEach(x => x.chart?.update()))
@@ -91,11 +97,15 @@ export class ReportMonthComponent implements OnInit {
         this.getMovementsByType(type)
       }, error: (e) => this.notificationService.error(e)
     })
-    this.formGroup.controls.type.valueChanges.subscribe(this.getMovementsByType)
+    this.formGroup.controls.type.valueChanges.subscribe(type => this.getMovementsByType(type))
   }
 
-  private getMovementsByType = (type: CategoryType | null): void => {
-    this.loading = true
+  private getMovementsByType = (type: CategoryType | null, silent = false): void => {
+    if (silent) {
+      this.refreshing = true
+    } else {
+      this.loading = true
+    }
     this.movementService.getBySelectedMonth(type!, this.yearMonth?.month!, this.yearMonth?.year!).pipe(take(1)).subscribe({
       next: (movements) => {
         movements.sort((a, b) => a.categoryId.localeCompare(b.categoryId))
@@ -106,13 +116,66 @@ export class ReportMonthComponent implements OnInit {
         this.chartData.labels = this.doughnutChartLabels
         this.chartData.datasets[0].label = type!
         this.chartData.datasets[0].data = this.groupMovementCategoryModel.map(x => x.amount)
+        // New reference, so the chart already drawn is redrawn with the new values
+        this.chartData = { ...this.chartData }
         this.loading = false
+        this.refreshing = false
       }, error: (e) => {
         this.loading = false
+        this.refreshing = false
         this.notificationService.error(e)
       }
     })
   }
+
+  private reload = (): void => this.getMovementsByType(this.formGroup.controls.type.value, true)
+
+  // The same form of the movements screen, opened over the report so it is not lost
+  protected editMovement = (movement: MovementModel): void => {
+    if (this.refreshing) { return }
+    const dialogRef = this.dialog.open(RegisterMovementComponent, {
+      width: '500px',
+      maxWidth: '95vw',
+      maxHeight: '90vh',
+      autoFocus: false,
+      data: { movement: { ...movement } }
+    })
+    dialogRef.afterClosed().pipe(take(1)).subscribe((saved?: boolean) => {
+      if (saved) {
+        this.reload()
+      }
+    })
+  }
+
+  protected deleteMovement = (movement: MovementModel): void => {
+    if (this.refreshing) { return }
+    const dialogRef = this.dialog.open(DialogDeleteComponent, {
+      width: '350px',
+      data: {
+        title: this.translate.instant('movement-messages.title-delete'),
+        message: this.translate.instant('movement-messages.question-delete')
+      }
+    })
+    dialogRef.afterClosed().pipe(take(1)).subscribe(result => {
+      if (!result) { return }
+      this.refreshing = true
+      this.movementService.delete(movement.id!, movement.type)
+        .then(() => this.relatedMovementService.removeMovements([movement.id!]))
+        .then(() => {
+          this.movementService.deleteMovementForList(movement.id!)
+          this.notificationService.message('movement-messages.deleted')
+          this.reload()
+        }).catch((e) => {
+          this.refreshing = false
+          this.notificationService.error(e)
+        })
+    })
+  }
+
+  // Keeps the panels (and whether they are open) when the report is reloaded
+  protected trackByCategory = (_: number, group: GroupMovementCategoryModel): string => group.categoryName
+
+  protected trackByMovement = (_: number, movement: MovementModel): string => movement.id!
 
   private groupByCategoryName = (movements: MovementModel[]): GroupMovementCategoryModel[] => {
     const groups: GroupMovementCategoryModel[] = []
