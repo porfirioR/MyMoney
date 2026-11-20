@@ -67,8 +67,11 @@ export class ExportMovementComponent {
     }, 10000);
   }
 
-  protected canExportForMyEvents = (): boolean =>
-    !!this.formGroup.controls.startDate.value && !!this.formGroup.controls.endDate.value && !this.loading
+  // my-events needs every movement of the range, so both types have to be selected
+  protected canExportForMyEvents = (): boolean => {
+    const selected = this.formGroup.controls.categories.value ?? []
+    return this.formGroup.valid && !this.loading && Object.values(CategoryType).every(type => selected.includes(type))
+  }
 
   // Every movement of the range (income and expense, all categories) as the JSON that my-events imports
   protected exportForMyEvents = async (): Promise<void> => {
