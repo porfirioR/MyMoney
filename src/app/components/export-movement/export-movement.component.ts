@@ -67,10 +67,11 @@ export class ExportMovementComponent {
     }, 10000);
   }
 
-  // my-events needs every movement of the range, so both types have to be selected
+  // my-events needs every movement of the range, so both types have to be selected.
+  // The select stores the enum key ('income') and the enum value is 'Income': compare case-insensitively
   protected canExportForMyEvents = (): boolean => {
-    const selected = this.formGroup.controls.categories.value ?? []
-    return this.formGroup.valid && !this.loading && Object.values(CategoryType).every(type => selected.includes(type))
+    const selected = (this.formGroup.controls.categories.value ?? []).map(type => type.toLowerCase())
+    return this.formGroup.valid && !this.loading && Object.values(CategoryType).every(type => selected.includes(type.toLowerCase()))
   }
 
   // Every movement of the range (income and expense, all categories) as the JSON that my-events imports
