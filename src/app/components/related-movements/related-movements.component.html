@@ -54,11 +54,16 @@
                 <ng-container *ngTemplateOutlet="remaining; context: { $implicit: summary }"></ng-container>
               </ng-container>
               <ng-template #withoutGoal>
-                <div class="group-progress">
+                <div class="group-progress" *ngIf="!summary.isSaving">
                   <span>{{ ('related-progress-short.' + summary.progressType) | translate }}</span>
                   <b>{{summary.progress | number:'':numberType}}</b>
                 </div>
               </ng-template>
+              <!-- Savings: what is in the saving today, with or without a goal -->
+              <div class="group-progress" *ngIf="summary.isSaving">
+                <span>{{'saving-messages.balance' | translate}}</span>
+                <b class="saving-amount">{{summary.savingBalance | number:'':numberType}}</b>
+              </div>
 
               <div class="group-footer">
                 <span class="group-meta">
@@ -78,11 +83,18 @@
           </p>
 
           <ng-container *ngIf="summaries.get(related.id!) as summary">
-            <div class="totals">
-              <span>{{'Expenses' | translate}}: <b>{{summary.expenseAmount | number:'':numberType}}</b></span>
-              <span>{{'Incomes' | translate}}: <b>{{summary.incomeAmount | number:'':numberType}}</b></span>
-              <span>{{'Difference' | translate}}: <b>{{summary.balance | number:'':numberType}}</b></span>
+            <div class="totals" *ngIf="summary.isSaving; else incomeExpenseTotals">
+              <span>{{'saving-messages.deposited' | translate}}: <b>{{summary.depositAmount | number:'':numberType}}</b></span>
+              <span>{{'saving-messages.withdrawn' | translate}}: <b>{{summary.withdrawalAmount | number:'':numberType}}</b></span>
+              <span>{{'saving-messages.yields' | translate}}: <b>{{summary.yieldAmount | number:'':numberType}}</b></span>
             </div>
+            <ng-template #incomeExpenseTotals>
+              <div class="totals">
+                <span>{{'Expenses' | translate}}: <b>{{summary.expenseAmount | number:'':numberType}}</b></span>
+                <span>{{'Incomes' | translate}}: <b>{{summary.incomeAmount | number:'':numberType}}</b></span>
+                <span>{{'Difference' | translate}}: <b>{{summary.balance | number:'':numberType}}</b></span>
+              </div>
+            </ng-template>
           </ng-container>
           <mat-divider></mat-divider>
           <app-related-movement-detail *ngIf="movements.get(related.id!)?.length; else noMovements"

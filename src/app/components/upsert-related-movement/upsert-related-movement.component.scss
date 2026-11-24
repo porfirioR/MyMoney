@@ -131,3 +131,13 @@
   padding: 0.75rem 1rem calc(0.75rem + env(safe-area-inset-bottom, 0px)) !important;
   background: var(--bg);
 }
+
+// A saving group with incomes or expenses (or the opposite) cannot be saved
+.mixed-movements {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0.75rem 0 0;
+  font-size: 13px;
+  color: var(--danger);
+}

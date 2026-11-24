@@ -5,8 +5,9 @@
   font-size: 12px;
 }
 
-.income-title {
-  margin-right: 0.5rem;
+// Totals of the day, one after the other
+.header-total + .header-total {
+  margin-left: 0.5rem;
 }
 
 .movement-row {

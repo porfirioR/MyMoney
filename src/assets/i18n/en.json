@@ -6,6 +6,16 @@
   "income": "income",
   "Expense": "Expense",
   "expense": "expense",
+  "Savings": "Savings",
+  "saving": "saving",
+  "Home savings": "Savings at home",
+  "Free savings": "Flexible savings",
+  "Rotating savings": "Rotating savings",
+  "Stocks and bonds": "Stocks and bonds",
+  "Scheduled savings": "Scheduled savings",
+  "Fixed-term deposit": "Fixed-term deposit",
+  "CDA": "CDA",
+  "Mutual fund": "Mutual fund",
   "Difference": "Difference",
   "Search": "Search",
   "My Money": "My Money",
@@ -265,6 +275,22 @@
     "light": "Light",
     "dark": "Dark"
   },
+  "saving-messages": {
+    "tab-hint": "Money you set aside: it is neither an expense nor an income, it is still yours.",
+    "earns-interest": "Earns interest",
+    "earns-interest-hint": "Check it if this money grows (CDA, fixed-term deposit, mutual fund...), so you can record what it earns.",
+    "direction-label": "What happened?",
+    "is-loss": "It was a loss (the value went down)",
+    "hint-deposit": "You put money into this saving: it does not count as an expense.",
+    "hint-withdrawal": "You took money out of this saving: it does not count as an income.",
+    "hint-yield": "What it earned while it was saved. If it was paid to you to spend, record it as an income.",
+    "balance": "Balance",
+    "deposited": "Deposited",
+    "withdrawn": "Withdrawn",
+    "yields": "Yields",
+    "only-savings": "A saving group can only have saving movements. Remove the others or change the progress type.",
+    "no-savings": "Saving movements only go in groups of type Saving. Remove them or change the progress type."
+  },
   "budget-messages": {
     "label": "Monthly budget (optional)",
     "hint": "The most you want to spend per month in this category. Empty = no budget",
@@ -341,17 +367,20 @@
   "related-remaining": {
     "expense": "Left to pay",
     "income": "Left to receive",
-    "balance": "Left"
+    "balance": "Left",
+    "saving": "Left to deposit"
   },
   "related-progress": {
     "expense": "Payments I make (adds up expenses)",
     "income": "Payments I receive (adds up incomes)",
-    "balance": "Balance (incomes − expenses)"
+    "balance": "Balance (incomes − expenses)",
+    "saving": "Saving (adds up deposits)"
   },
   "related-progress-short": {
     "expense": "Paid",
     "income": "Received",
-    "balance": "Balance"
+    "balance": "Balance",
+    "saving": "Deposited"
   },
   "more-options-button": "More options",
   "import-movement-messages": {
@@ -369,5 +398,10 @@
     "invalid-amount": "Invalid amount {{num}} in row {{index}}",
     "invalid-category": "Invalid category {{category}} is inactive or does not exist in row {{index}}"
   },
-  "year-range-button": "{{year}} button"
+  "year-range-button": "{{year}} button",
+  "saving-direction": {
+    "deposit": "Deposit",
+    "withdrawal": "Withdrawal",
+    "yield": "Yield"
+  }
 }

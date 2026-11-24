@@ -6,6 +6,7 @@ import { DocumentData, DocumentReference } from '@angular/fire/firestore';
 import { TranslateService } from '@ngx-translate/core';
 import { combineLatest, distinctUntilChanged, take } from 'rxjs';
 import { CategoryType } from '../../enums/category-type.enum';
+import { CategoryGroupIconType } from '../../enums/category-group-icon-type.enum';
 import { IconType } from '../../enums/icon-type.enum';
 import { ResourceType } from '../../enums/resource-type.enum';
 import { CategoryModel } from '../../models/category.model';
@@ -46,6 +47,8 @@ export class UpsertCategoryComponent implements OnInit {
   protected isSystemCategory = false
   // Budgets only make sense for expenses
   protected isExpense = false
+  // Saving categories say whether they generate interest
+  protected isSaving = false
   protected saving = false
   protected deleting = false
   protected iconPanelExpanded = false
@@ -95,9 +98,9 @@ export class UpsertCategoryComponent implements OnInit {
           this.title = this.translateService.instant('category-messages.add', { type: this.translateService.instant(this.type) })
           this.iconPanelExpanded = true
         }
-        const isIncome = this.type.toLowerCase() === CategoryType.income.toLowerCase()
-        this.isExpense = !isIncome
-        this.iconGroups = isIncome ? [INCOME_ICON_GROUP, ...CATEGORY_ICON_GROUPS] : [...CATEGORY_ICON_GROUPS, INCOME_ICON_GROUP]
+        this.isExpense = this.type.toLowerCase() === CategoryType.expense.toLowerCase()
+        this.isSaving = this.type.toLowerCase() === CategoryType.saving.toLowerCase()
+        this.iconGroups = this.getIconGroups(this.type)
         this.categoryNames = categories
           .filter(x => x.id !== this.category?.id && x.type.toLowerCase() === this.type.toLowerCase())
           .flatMap(x => [x.name, this.translateService.instant(x.name)])
@@ -228,16 +231,33 @@ export class UpsertCategoryComponent implements OnInit {
     return this.isExpense && budget !== null && budget !== '' && value > 0 ? value : null
   }
 
+  // Income icons go first for incomes and last for the rest; finance icons go first for savings
+  private getIconGroups = (type: string): CategoryIconGroupModel[] => {
+    if (type.toLowerCase() === CategoryType.income.toLowerCase()) {
+      return [INCOME_ICON_GROUP, ...CATEGORY_ICON_GROUPS]
+    }
+    if (type.toLowerCase() === CategoryType.saving.toLowerCase()) {
+      const finance = CATEGORY_ICON_GROUPS.filter(x => x.groupName === CategoryGroupIconType.Finance)
+      const others = CATEGORY_ICON_GROUPS.filter(x => x.groupName !== CategoryGroupIconType.Finance)
+      return [...finance, ...others, INCOME_ICON_GROUP]
+    }
+    return [...CATEGORY_ICON_GROUPS, INCOME_ICON_GROUP]
+  }
+
+  // Only saving categories store it, so the other documents keep their current fields
+  private withEarnsInterest = (category: CategoryModel, earnsInterest: boolean | null): CategoryModel =>
+    this.isSaving ? { ...category, earnsInterest: !!earnsInterest } : category
+
   private create = async (): Promise<void> => {
     const value = this.formGroup!.getRawValue()
     const email = this.userService.getUserEmail()
-    const category = {
+    const category = this.withEarnsInterest({
       name: value.name!.trim(),
       icon: value.icon!,
       type: this.type,
       active: true,
       owner: email
-    } as CategoryModel
+    } as CategoryModel, value.earnsInterest)
     const categoryReference = await this.categoryService.create(category)
     const userCategory = new UserCategoryModel(
       true, categoryReference.id, email, undefined, undefined, value.color!, value.backgroundColor!, this.getOrderToSave(value.order),
@@ -260,17 +280,23 @@ export class UpsertCategoryComponent implements OnInit {
     const value = this.formGroup!.getRawValue()
     const name = value.name!.trim()
     const icon = value.icon!
-    if (!this.isSystemCategory && (name !== category.name || icon !== category.icon)) {
-      await this.categoryService.update({
+    const earnsInterest = !!value.earnsInterest
+    const earnsInterestChanged = this.isSaving && earnsInterest !== !!category.earnsInterest
+    if (!this.isSystemCategory && (name !== category.name || icon !== category.icon || earnsInterestChanged)) {
+      // setDoc replaces the whole document: every stored field has to be sent
+      await this.categoryService.update(this.withEarnsInterest({
         id: category.id,
         name,
         icon,
         type: category.type,
         active: category.active,
         owner: category.owner
-      } as CategoryModel)
+      } as CategoryModel, earnsInterest))
       category.name = name
       category.icon = icon
+      if (this.isSaving) {
+        category.earnsInterest = earnsInterest
+      }
     }
     const request = new UserCategoryModel(
       category.active,
@@ -295,8 +321,9 @@ export class UpsertCategoryComponent implements OnInit {
   }
 
   private buildForm = (userCategory?: UserCategoryModel): void => {
-    const color = userCategory?.color ?? DEFAULT_ICON_COLOR
-    const backgroundColor = userCategory?.backgroundColor ?? DEFAULT_BACKGROUND_COLOR
+    // The user's colors first, then the default ones of the category (system categories can bring them)
+    const color = userCategory?.color ?? this.category?.color ?? DEFAULT_ICON_COLOR
+    const backgroundColor = userCategory?.backgroundColor ?? this.category?.backgroundColor ?? DEFAULT_BACKGROUND_COLOR
     this.formGroup = new FormGroup<UpsertCategoryForm>({
       name: new FormControl(
         { value: this.category?.name ?? '', disabled: this.isSystemCategory },
@@ -312,7 +339,9 @@ export class UpsertCategoryComponent implements OnInit {
       hexBackgroundColor: new FormControl(backgroundColor, [Validators.required, Validators.pattern(HEX_COLOR_PATTERN)]),
       // New categories go last; existing ones without a position show the field empty
       order: new FormControl(this.getInitialOrder(userCategory), Validators.min(0)),
-      budget: new FormControl(userCategory?.budget ?? this.category?.budget ?? null, Validators.min(0))
+      budget: new FormControl(userCategory?.budget ?? this.category?.budget ?? null, Validators.min(0)),
+      // System categories come with it already set
+      earnsInterest: new FormControl({ value: !!this.category?.earnsInterest, disabled: this.isSystemCategory })
     })
     const controls = this.formGroup.controls
     // Shows the duplicate name error while typing, without waiting for blur

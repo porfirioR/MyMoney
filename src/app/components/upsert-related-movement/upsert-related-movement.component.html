@@ -65,16 +65,29 @@
       </p>
     </ng-container>
     <ng-template #withoutGoal>
-      <div class="summary-progress">
+      <div class="summary-progress" *ngIf="!summary.isSaving">
         <span>{{ ('related-progress-short.' + summary.progressType) | translate }}</span>
         <b>{{summary.progress | number:'':numberType}}</b>
       </div>
     </ng-template>
-    <div class="totals">
-      <span>{{'Expenses' | translate}}: <b>{{summary.expenseAmount | number:'':numberType}}</b></span>
-      <span>{{'Incomes' | translate}}: <b>{{summary.incomeAmount | number:'':numberType}}</b></span>
-      <span>{{'Difference' | translate}}: <b>{{summary.balance | number:'':numberType}}</b></span>
-    </div>
+    <ng-container *ngIf="summary.isSaving; else incomeExpenseTotals">
+      <div class="summary-progress">
+        <span>{{'saving-messages.balance' | translate}}</span>
+        <b class="saving-amount">{{summary.savingBalance | number:'':numberType}}</b>
+      </div>
+      <div class="totals">
+        <span>{{'saving-messages.deposited' | translate}}: <b>{{summary.depositAmount | number:'':numberType}}</b></span>
+        <span>{{'saving-messages.withdrawn' | translate}}: <b>{{summary.withdrawalAmount | number:'':numberType}}</b></span>
+        <span>{{'saving-messages.yields' | translate}}: <b>{{summary.yieldAmount | number:'':numberType}}</b></span>
+      </div>
+    </ng-container>
+    <ng-template #incomeExpenseTotals>
+      <div class="totals">
+        <span>{{'Expenses' | translate}}: <b>{{summary.expenseAmount | number:'':numberType}}</b></span>
+        <span>{{'Incomes' | translate}}: <b>{{summary.incomeAmount | number:'':numberType}}</b></span>
+        <span>{{'Difference' | translate}}: <b>{{summary.balance | number:'':numberType}}</b></span>
+      </div>
+    </ng-template>
   </mat-card>
 
   <mat-card>
@@ -94,10 +107,16 @@
       </span>
       <span class="movement-text">
         <span [id]="'memorandum-' + i" class="movement-memorandum">{{movement.memorandum! | translate}}</span>
-        <span class="movement-date">{{movement.date | date:'dd/MM/yy':'':language}}</span>
+        <span class="movement-date">
+          {{movement.date | date:'dd/MM/yy':'':language}}
+          <span class="saving-direction" *ngIf="movement.direction">{{('saving-direction.' + movement.direction) | translate}}</span>
+        </span>
       </span>
-      <span [id]="'amount-' + i" class="movement-amount" [class.income]="!isExpense(movement)">
-        {{isExpense(movement) ? '-' : ''}}{{movement.amount | number:'':numberType}}
+      <span [id]="'amount-' + i" class="movement-amount"
+        [class.income]="!isExpense(movement) && !isSaving(movement)"
+        [class.saving-amount]="isSaving(movement)"
+      >
+        {{getSignedAmount(movement) | number:'':numberType}}
       </span>
       <!-- Actions on the right, like the rest of the app -->
       <button mat-icon-button color="warn" type="button" class="remove-button"
@@ -110,13 +129,17 @@
     <p class="no-movements" *ngIf="movements.length === 0">
       {{'related-movement-messages.no-movements' | translate}}
     </p>
+    <p class="mixed-movements" *ngIf="hasMixedMovements()">
+      <mat-icon>error_outline</mat-icon>
+      {{(isSavingGroup() ? 'saving-messages.only-savings' : 'saving-messages.no-savings') | translate}}
+    </p>
   </mat-card>
 
   <footer class="actions form-actions">
     <button mat-stroked-button color="primary" type="button" (click)="exit()" [title]="'cancel-button' | translate">
       {{'Cancel' | translate}}
     </button>
-    <button mat-flat-button color="primary" type="submit" [disabled]="formGroup.invalid || saving" [title]="'save-button' | translate">
+    <button mat-flat-button color="primary" type="submit" [disabled]="formGroup.invalid || saving || hasMixedMovements()" [title]="'save-button' | translate">
       {{'Save' | translate}}
     </button>
   </footer>

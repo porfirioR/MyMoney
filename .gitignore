@@ -51,3 +51,6 @@ Thumbs.db
 /playwright/.cache/
 playwright/.auth/user.json
 .env
+
+# Service account keys used by scripts/ (never commit them)
+scripts/*.json

@@ -6,6 +6,8 @@ import { CollectionType } from '../enums/collection-type.enum';
 import { MovementModel } from '../models/movement.model';
 import { UserService } from './user.service';
 import { FilterRelatedMovementModel } from '../models/filter-related-movement.model';
+import { HelperService } from './helper.service';
+import { RelatedMapModel } from '../models/related-map-model';
 
 @Injectable({
   providedIn: 'root'
@@ -63,11 +65,12 @@ export class MovementService {
 
   // Used when the screen is reloaded and the movement is not in the list of the main screen
   public getMovementByIdFromServer = async (id: string): Promise<MovementModel | undefined> => {
-    const [expenses, incomes] = await firstValueFrom(combineLatest([
+    const [expenses, incomes, savings] = await firstValueFrom(combineLatest([
       this.getMovementsByIds(CategoryType.expense, [id]),
-      this.getMovementsByIds(CategoryType.income, [id])
+      this.getMovementsByIds(CategoryType.income, [id]),
+      this.getMovementsByIds(CategoryType.saving, [id])
     ]))
-    const movement = [...expenses, ...incomes][0]
+    const movement = [...expenses, ...incomes, ...savings][0]
     if (movement) {
       movement.date = new Date(movement.time)
       this.movementList = [...this.movementList.filter(x => x.id !== id), movement]
@@ -116,12 +119,30 @@ export class MovementService {
     return combineLatest(requests$).pipe(map(x => x.flat()))
   }
 
-  // Without categories it returns every movement of the range; without a range, every date
-  public getGetMovementByFilter = (request: FilterRelatedMovementModel): Observable<[MovementModel[], MovementModel[]]> => {
+  // The movements of a related group, each read from the collection of its type
+  public getMovementsByRelated = (related: (RelatedMapModel | Record<string, string>)[]): Observable<MovementModel[]> => {
+    const idsOf = (type: CategoryType) => related.filter(x => (x.type ?? '').toLowerCase() === type.toLowerCase()).map(x => x.id)
+    // Old groups may store the type with another case: anything that is not a saving or an expense is an income
+    const incomeIds = related
+      .filter(x => !HelperService.isExpense(x.type) && !HelperService.isSaving(x.type))
+      .map(x => x.id)
+    return combineLatest([
+      this.getMovementsByIds(CategoryType.expense, idsOf(CategoryType.expense)),
+      this.getMovementsByIds(CategoryType.income, incomeIds),
+      this.getMovementsByIds(CategoryType.saving, idsOf(CategoryType.saving))
+    ]).pipe(take(1), map(x => x.flat()))
+  }
+
+  // Without categories it returns every movement of the range of the given types; without a range, every date
+  public getGetMovementByFilter = (
+    request: FilterRelatedMovementModel,
+    types: CategoryType[] = [CategoryType.income, CategoryType.expense]
+  ): Observable<MovementModel[]> => {
     const byType = (type: CategoryType): Observable<MovementModel[]> => {
       const constraints: QueryConstraint[] = []
       if (request.categoryIds.length > 0) {
-        const typeIds = this.userService.getActiveCategories().filter(x => x.type === type.toLocaleLowerCase()).map(x => x.id)
+        // System categories store 'Expense'/'Income' and own ones 'expense'/'income'
+        const typeIds = this.userService.getActiveCategories().filter(x => x.type.toLowerCase() === type.toLowerCase()).map(x => x.id)
         const ids = request.categoryIds.filter(x => typeIds.includes(x))
         if (ids.length === 0) {
           return of([])
@@ -134,7 +155,7 @@ export class MovementService {
       const ref = query(this.getReference(type), ...constraints, orderBy('time'))
       return collectionData<MovementModel>(ref as Query<MovementModel>, { idField: 'id' }).pipe(take(1))
     }
-    return combineLatest([byType(CategoryType.income), byType(CategoryType.expense)])
+    return combineLatest(types.map(byType)).pipe(map(x => x.flat()))
   }
 
   public getMonthTimeRange = (month: number, year: number): [number, number] => this.getDateTimeRange(month, year)

@@ -45,6 +45,8 @@ export class DialogAddMovementComponent implements OnInit {
   protected language = LanguageType.English
   protected numberType = NumberType.English
   private excludedIds: string[] = []
+  // Saving groups only search saving movements; the other groups only incomes and expenses
+  private savings = false
   protected selectedCategories: CategoryModel[] = []
   protected filteredCategories: Observable<CategoryModel[]>
   protected defaultColor = DEFAULT_ICON_COLOR
@@ -66,9 +68,10 @@ export class DialogAddMovementComponent implements OnInit {
     private readonly userService: UserService,
     private readonly translateService: TranslateService,
     private readonly notificationService: NotificationService,
-    @Optional() @Inject(MAT_DIALOG_DATA) data?: { excludedIds?: string[] }
+    @Optional() @Inject(MAT_DIALOG_DATA) data?: { excludedIds?: string[], savings?: boolean }
   ) {
     this.excludedIds = data?.excludedIds ?? []
+    this.savings = !!data?.savings
     const currentYear = new Date().getFullYear()
     // Newest first, only years that can have movements
     this.yearRange = Array.from({ length: currentYear - this.minValidYear + 2 }, (_, i) => currentYear + 1 - i)
@@ -121,7 +124,7 @@ export class DialogAddMovementComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.categories = this.userService.getActiveCategories()
+    this.categories = this.userService.getActiveCategories().filter(x => HelperService.isSaving(x.type) === this.savings)
     this.categories.forEach(x => {
       x.color = x.color ?? this.defaultColor
       x.backgroundColor = x.backgroundColor ?? this.defaultBackgroundColor
@@ -139,6 +142,10 @@ export class DialogAddMovementComponent implements OnInit {
 
   protected isExpense = (movement: MovementModel): boolean => HelperService.isExpense(movement.type)
 
+  protected isSaving = (movement: MovementModel): boolean => HelperService.isSaving(movement.type)
+
+  protected getSignedAmount = (movement: MovementModel): number => HelperService.getSignedAmount(movement)
+
   protected choosePeriod = (): void => {
     this.periodChosenByUser = true
   }
@@ -151,7 +158,8 @@ export class DialogAddMovementComponent implements OnInit {
 
   private loadMovements = (): Observable<MovementModel[]> => {
     const request = this.buildRequest()
-    const read$ = this.movementService.getGetMovementByFilter(request).pipe(map(([incomes, expenses]) => [...incomes, ...expenses]))
+    const types = this.savings ? [CategoryType.saving] : [CategoryType.income, CategoryType.expense]
+    const read$ = this.movementService.getGetMovementByFilter(request, types)
     if (this.formGroup.controls.period.value !== 'all') {
       return read$
     }

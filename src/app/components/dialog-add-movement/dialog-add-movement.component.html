@@ -102,10 +102,16 @@
               </span>
               <span class="option-text">
                 <span class="option-memorandum">{{movement.memorandum ?? '' | translate}}</span>
-                <span class="option-date">{{movement.date | date:'dd/MM/yy':'':language}} · {{(movement.categoryName ?? '') | translate}}</span>
+                <span class="option-date">
+                  {{movement.date | date:'dd/MM/yy':'':language}} · {{(movement.categoryName ?? '') | translate}}
+                  <span class="saving-direction" *ngIf="movement.direction">{{('saving-direction.' + movement.direction) | translate}}</span>
+                </span>
               </span>
-              <span class="option-amount" [class.income]="!isExpense(movement)">
-                {{isExpense(movement) ? '-' : ''}}{{movement.amount | number:'':numberType}}
+              <span class="option-amount"
+                [class.income]="!isExpense(movement) && !isSaving(movement)"
+                [class.saving-amount]="isSaving(movement)"
+              >
+                {{getSignedAmount(movement) | number:'':numberType}}
               </span>
             </span>
           </mat-list-option>

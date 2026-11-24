@@ -16,6 +16,9 @@
           <mat-button-toggle class="income" [value]="categoryType.income" id="type-income">
             {{categoryType.income | translate}}
           </mat-button-toggle>
+          <mat-button-toggle class="saving" [value]="categoryType.saving" id="type-saving">
+            {{categoryType.saving | translate}}
+          </mat-button-toggle>
         </mat-button-toggle-group>
         <section class="icon-list">
           <span *ngIf="currentCategories.length === 0" translate>There are no categories</span>
@@ -30,6 +33,25 @@
             </button>
             <label translate>{{category.name}}</label>
           </span>
+        </section>
+        <!-- Savings say what happened with the money; yields only for savings that generate interest -->
+        <section class="saving-direction-section" *ngIf="isSavingType()">
+          <span class="saving-direction-label">{{'saving-messages.direction-label' | translate}}</span>
+          <mat-button-toggle-group class="direction-toggle" formControlName="direction" [attr.aria-label]="'saving-messages.direction-label' | translate">
+            <mat-button-toggle [value]="savingDirection.Deposit" id="direction-deposit">
+              {{'saving-direction.deposit' | translate}}
+            </mat-button-toggle>
+            <mat-button-toggle [value]="savingDirection.Withdrawal" id="direction-withdrawal">
+              {{'saving-direction.withdrawal' | translate}}
+            </mat-button-toggle>
+            <mat-button-toggle [value]="savingDirection.Yield" id="direction-yield" *ngIf="canYield()">
+              {{'saving-direction.yield' | translate}}
+            </mat-button-toggle>
+          </mat-button-toggle-group>
+          <mat-checkbox color="primary" formControlName="isLoss" id="isLoss" *ngIf="isYield()">
+            {{'saving-messages.is-loss' | translate}}
+          </mat-checkbox>
+          <p class="saving-direction-hint">{{('saving-messages.hint-' + formGroup.controls.direction.value) | translate}}</p>
         </section>
         <mat-card-content>
           <mat-form-field appearance="fill" class="w-100">

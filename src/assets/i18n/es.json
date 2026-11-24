@@ -5,7 +5,17 @@
   "Income": "Ingreso",
   "income": "ingreso",
   "Expense": "Gasto",
-  "expense":"gasto",
+  "expense": "gasto",
+  "Savings": "Ahorros",
+  "saving": "ahorro",
+  "Home savings": "Ahorro en casa",
+  "Free savings": "Ahorro libre",
+  "Rotating savings": "Rueda de ahorro",
+  "Stocks and bonds": "Acciones y bonos",
+  "Scheduled savings": "Ahorro programado",
+  "Fixed-term deposit": "Plazo fijo",
+  "CDA": "CDA",
+  "Mutual fund": "Fondo mutuo",
   "Difference": "Diferencia",
   "Search": "Buscar",
   "My Money": "Mi dinero",
@@ -19,12 +29,12 @@
   "Amount:": "Monto:",
   "Delete": "Borrar",
   "Invalid column value, expected some value but was empty in row": "Valor inválido en la columna, se esperaba algún valor pero esta vacía en fila",
-  "Invalid column date, expected yyyy/mm/dd but was":"Valor inválido en columna fecha, se esperaba yyyy/mm/dd pero fue",
-  "Invalid year, expected min year 2015 but was":"Año inválido, se esperaba el año 2015 como mínimo pero fue",
-  "Movement was created":"El movimiento fue credado",
-  "Movement was updated":"El movimiento fue actualizado",
-  "Invalid type, expected":"Tipo inválido, se esperaba",
-  "Invalid amount":"Monto inválido",
+  "Invalid column date, expected yyyy/mm/dd but was": "Valor inválido en columna fecha, se esperaba yyyy/mm/dd pero fue",
+  "Invalid year, expected min year 2015 but was": "Año inválido, se esperaba el año 2015 como mínimo pero fue",
+  "Movement was created": "El movimiento fue credado",
+  "Movement was updated": "El movimiento fue actualizado",
+  "Invalid type, expected": "Tipo inválido, se esperaba",
+  "Invalid amount": "Monto inválido",
   "Hi, you are logout": "Hola, estás desconectado",
   "Login": "Ingresar",
   "If you want login please click on": "Si desea iniciar sesión, haga clic en",
@@ -75,7 +85,7 @@
   "Electronic": "Electrónica",
   "Finance": "Finanzas",
   "Housing": "Hogar",
-  "Order":"Orden",
+  "Order": "Orden",
   "Icon color": "Color del ícono",
   "Icon": "Ícono",
   "Background color": "Color de fondo",
@@ -265,6 +275,22 @@
     "light": "Claro",
     "dark": "Oscuro"
   },
+  "saving-messages": {
+    "tab-hint": "Plata que apartás: no es gasto ni ingreso, sigue siendo tuya.",
+    "earns-interest": "Genera intereses",
+    "earns-interest-hint": "Marcalo si esta plata rinde (CDA, plazo fijo, fondo mutuo...). Así vas a poder registrar lo que gana.",
+    "direction-label": "¿Qué pasó?",
+    "is-loss": "Fue una pérdida (el valor bajó)",
+    "hint-deposit": "Pusiste plata en este ahorro: no cuenta como gasto.",
+    "hint-withdrawal": "Sacaste plata de este ahorro: no cuenta como ingreso.",
+    "hint-yield": "Lo que ganó mientras estaba guardado. Si te lo depositaron para gastar, cargalo como ingreso.",
+    "balance": "Saldo",
+    "deposited": "Aportado",
+    "withdrawn": "Retirado",
+    "yields": "Rendimientos",
+    "only-savings": "Un grupo de ahorro solo puede tener movimientos de ahorro. Quitá los demás o cambiá el tipo de progreso.",
+    "no-savings": "Los movimientos de ahorro solo van en grupos de tipo Ahorro. Quitalos o cambiá el tipo de progreso."
+  },
   "budget-messages": {
     "label": "Presupuesto mensual (opcional)",
     "hint": "Cuánto querés gastar como máximo por mes en esta categoría. Vacío = sin presupuesto",
@@ -341,17 +367,20 @@
   "related-remaining": {
     "expense": "Falta pagar",
     "income": "Falta cobrar",
-    "balance": "Falta"
+    "balance": "Falta",
+    "saving": "Falta aportar"
   },
   "related-progress": {
     "expense": "Pagos que hago (suma los gastos)",
     "income": "Cobros que recibo (suma los ingresos)",
-    "balance": "Saldo (ingresos − gastos)"
+    "balance": "Saldo (ingresos − gastos)",
+    "saving": "Ahorro (suma los aportes)"
   },
   "related-progress-short": {
     "expense": "Pagado",
     "income": "Cobrado",
-    "balance": "Saldo"
+    "balance": "Saldo",
+    "saving": "Aportado"
   },
   "more-options-button": "Más opciones",
   "import-movement-messages": {
@@ -379,5 +408,10 @@
   "calculator-multiply-button": "botón-multiplicar-calculadora",
   "calculator-subtract-button": "botón-restar-calculadora",
   "calculator-add-button": "botón-sumar-calculadora",
-  "calculator-equals-button": "botón-igual-calculadora"
+  "calculator-equals-button": "botón-igual-calculadora",
+  "saving-direction": {
+    "deposit": "Aporte",
+    "withdrawal": "Retiro",
+    "yield": "Rendimiento"
+  }
 }

@@ -31,13 +31,17 @@
           <label translate>Type:</label>
           <span translate>{{movement.type}}</span>
         </p>
+        <p id="direction" *ngIf="movement.direction">
+          <label>{{'saving-messages.direction-label' | translate}}</label>
+          <span class="saving-direction">{{('saving-direction.' + movement.direction) | translate}}</span>
+        </p>
         <p id="date">
           <label translate>Date:</label>
           <span>{{movement.date | date: 'dd/MM/yyyy E': '': language}}</span>
         </p>
         <p id="amount">
           <label translate>Amount:</label>
-          <span>{{getSignedAmount(movement) | number:'' : numberType}}</span>
+          <span [class.saving-amount]="!!movement.direction">{{getSignedAmount(movement) | number:'' : numberType}}</span>
         </p>
         <dl id="related-movement" *ngIf="relatedMovements.length > 0">
           <dt translate>Related Movements:</dt>

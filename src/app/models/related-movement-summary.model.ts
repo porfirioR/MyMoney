@@ -8,17 +8,33 @@ export class RelatedMovementSummaryModel {
     public expenseAmount: number,
     public incomeAmount: number,
     public count: number,
-    public lastDate?: Date
+    public lastDate?: Date,
+    // Saving movements (only saving groups have them)
+    public depositAmount = 0,
+    public withdrawalAmount = 0,
+    // Can be negative when the saving lost value
+    public yieldAmount = 0
   ) { }
 
   public get balance(): number {
     return this.incomeAmount - this.expenseAmount
   }
 
+  // What is in the saving today
+  public get savingBalance(): number {
+    return this.depositAmount - this.withdrawalAmount + this.yieldAmount
+  }
+
+  public get isSaving(): boolean {
+    return this.progressType === RelatedProgressType.Saving
+  }
+
   public get progress(): number {
     switch (this.progressType) {
       case RelatedProgressType.Income: return this.incomeAmount
       case RelatedProgressType.Balance: return this.balance
+      // Withdrawing at the end does not undo what was saved: the goal follows the deposits
+      case RelatedProgressType.Saving: return this.depositAmount
       default: return this.expenseAmount
     }
   }
