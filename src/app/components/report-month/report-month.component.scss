@@ -135,3 +135,34 @@ form {
     font-weight: 500;
   }
 }
+
+// Totals of the savings of the month
+.saving-totals {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  font-size: 14px;
+  color: var(--text-secondary);
+
+  & article {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  & strong {
+    font-size: 16px;
+    color: var(--text-primary);
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+// Deposited / withdrawn / yields of a saving category, under its name
+.saving-breakdown {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1rem;
+  margin: 0.25rem 0 0;
+  font-size: 12px;
+  color: var(--text-secondary);
+}

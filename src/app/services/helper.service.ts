@@ -13,6 +13,7 @@ import { MovementModel } from '../models/movement.model';
 import { BudgetStatusModel } from '../models/budget-status.model';
 import { UNSET_CATEGORY_ORDER } from '../constants/category.constants';
 import { SavingDirection } from '../enums/saving-direction.enum';
+import { SavingTotalsModel } from '../models/saving-totals.model';
 
 @Injectable({
   providedIn: 'root'
@@ -34,6 +35,38 @@ constructor() { }
       case SavingDirection.Withdrawal: return -Math.abs(movement.amount)
       case SavingDirection.Yield: return movement.amount
       default: return Math.abs(movement.amount)
+    }
+  }
+
+  // Deposits, withdrawals and yields of the given saving movements; the other movements are ignored
+  public static getSavingTotals = (movements: MovementModel[]): SavingTotalsModel => {
+    const totals = new SavingTotalsModel()
+    movements.filter(x => HelperService.isSaving(x.type)).forEach(x => {
+      switch (x.direction) {
+        case SavingDirection.Withdrawal: totals.withdrawn += Math.abs(x.amount); break
+        case SavingDirection.Yield: totals.yields += x.amount; break
+        default: totals.deposited += Math.abs(x.amount)
+      }
+    })
+    return totals
+  }
+
+  // Balance of each saving category, by categoryId
+  public static getSavingBalances = (movements: MovementModel[]): Map<string, number> => {
+    const balances = new Map<string, number>()
+    movements.filter(x => HelperService.isSaving(x.type))
+      .forEach(x => balances.set(x.categoryId, (balances.get(x.categoryId) ?? 0) + HelperService.getSavingEffect(x)))
+    return balances
+  }
+
+  // The eye of the main screen hides the amounts; the other screens with totals follow it
+  public static readonly hideAmountsStorageKey = 'my-money.hide-amounts'
+
+  public static readHideAmounts = (): boolean => {
+    try {
+      return localStorage.getItem(HelperService.hideAmountsStorageKey) === 'true'
+    } catch {
+      return false
     }
   }
 

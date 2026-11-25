@@ -33,7 +33,7 @@
                 {{incomeAmount | number:'' : numberType}}
               </span>
               <span customColor [color]="greenColor" [backgroundColor]="'transparent'">
-                <i class="material-icons-outlined notranslate">call_made</i>
+                <i class="material-icons-outlined notranslate">trending_up</i>
               </span>
             </p>
           </article>
@@ -47,25 +47,40 @@
                 {{expenseAmount | number:'' : numberType}}
               </span>
               <span  customColor [color]="redColor" [backgroundColor]="'transparent'">
-                <i class="material-icons-outlined notranslate icon-rotate-270">call_received</i>
+                <i class="material-icons-outlined notranslate">trending_down</i>
               </span>
             </p>
           </article>
           <hr>
+          <!-- Savings are not expenses, but that money is no longer available to spend -->
           <article>
             <strong>
-              {{'Difference' | translate}}
+              {{'saving-messages.saved' | translate}}
             </strong>
             <p class="flex-center">
               <span>
-                {{balance | number:'' : numberType}}
+                {{savingTotals.saved | number:'' : numberType}}
               </span>
-              <span  customColor [color]="getBalanceColor()" [backgroundColor]="'transparent'">
-                <i class="material-icons-outlined notranslate icon-rotate-270">import_export</i>
+              <span customColor [color]="savingColor" [backgroundColor]="'transparent'">
+                <i class="material-icons-outlined notranslate">savings</i>
               </span>
             </p>
           </article>
         </main>
+        <!-- What was left to spend: incomes - expenses - saved -->
+        <footer class="saving-summary">
+          <span *ngIf="savingTotals.yields">
+            {{'saving-messages.yields' | translate}}
+            <strong>{{savingTotals.yields | number:'' : numberType}}</strong>
+          </span>
+          <span class="available">
+            {{'saving-messages.available' | translate}}
+            <strong>{{available | number:'' : numberType}}</strong>
+            <span customColor [color]="getBalanceColor()" [backgroundColor]="'transparent'">
+              <i class="material-icons-outlined notranslate icon-rotate-270">import_export</i>
+            </span>
+          </span>
+        </footer>
       </mat-card>
       <mat-card>
         <canvas baseChart width="150" height="150"
@@ -111,6 +126,19 @@
             </ng-container>
           </mat-accordion>
         </mat-expansion-panel>
+        <mat-expansion-panel [hideToggle]="false" *ngIf="hasSavings">
+          <mat-expansion-panel-header class="flex-center">
+            {{'saving-messages.details' | translate}}
+          </mat-expansion-panel-header>
+          <p class="saving-closing">
+            {{'saving-messages.balance-at-year-end' | translate: { year: year } }}
+            <strong>{{savingClosingBalance | number:'' : numberType}}</strong>
+          </p>
+          <mat-accordion class="m-0">
+            <ng-container *ngTemplateOutlet="matExpansionPanelContent context: { groups: savingGroupMovementCategoryModel }">
+            </ng-container>
+          </mat-accordion>
+        </mat-expansion-panel>
       </mat-accordion>
       <footer class="report-actions">
         <button mat-stroked-button color="primary" (click)="exportReport()" [disabled]="loading" [title]="'export-annual-report-button' | translate">
@@ -122,7 +150,8 @@
 
     <ng-template #matExpansionPanelContent let-groups="groups">
       <mat-expansion-panel hideToggle *ngFor="let group of groups; trackBy: trackByCategory" class="m-0">
-        <mat-expansion-panel-header>
+        <mat-expansion-panel-header collapsedHeight="auto" expandedHeight="auto">
+          <div class="group-header">
           <mat-panel-title>
             <button mat-mini-fab customColor [color]="group!.color" [backgroundColor]="group!.backgroundColor" [title]="'icon-group-button' | translate">
               <i class="material-icons-outlined notranslate">{{group.icon}}</i>
@@ -134,6 +163,14 @@
               {{group.amount | number:'' : numberType}}
             </span>
           </mat-panel-title>
+          <!-- Saving categories: what happened in the year and what was kept on December 31 -->
+          <p class="saving-breakdown" *ngIf="group.saving as saving">
+            <span>{{'saving-messages.deposited' | translate}}: <strong>{{saving.deposited | number:'' : numberType}}</strong></span>
+            <span *ngIf="saving.withdrawn">{{'saving-messages.withdrawn' | translate}}: <strong>{{saving.withdrawn | number:'' : numberType}}</strong></span>
+            <span *ngIf="saving.yields">{{'saving-messages.yields' | translate}}: <strong>{{saving.yields | number:'' : numberType}}</strong></span>
+            <span>{{'saving-messages.balance-at-end' | translate}}: <strong>{{group.closingBalance | number:'' : numberType}}</strong></span>
+          </p>
+          </div>
         </mat-expansion-panel-header>
         <ul class="movement-list">
           <li *ngFor="let movement of group.movements; trackBy: trackByMovement">
@@ -145,7 +182,8 @@
             >
               <span class="movement-date">{{movement.date | date: 'dd/MM': '': language}}</span>
               <span class="movement-memorandum">{{(movement.memorandum || movement.categoryName || '') | translate}}</span>
-              <span class="movement-amount">{{movement.amount | number:'' : numberType}}</span>
+              <span class="saving-direction" *ngIf="movement.direction">{{('saving-direction.' + movement.direction) | translate}}</span>
+              <span class="movement-amount">{{getAmount(movement) | number:'' : numberType}}</span>
               <mat-icon class="movement-more">more_vert</mat-icon>
             </button>
           </li>

@@ -289,7 +289,13 @@
     "withdrawn": "Retirado",
     "yields": "Rendimientos",
     "only-savings": "Un grupo de ahorro solo puede tener movimientos de ahorro. Quitá los demás o cambiá el tipo de progreso.",
-    "no-savings": "Los movimientos de ahorro solo van en grupos de tipo Ahorro. Quitalos o cambiá el tipo de progreso."
+    "no-savings": "Los movimientos de ahorro solo van en grupos de tipo Ahorro. Quitalos o cambiá el tipo de progreso.",
+    "saved": "Ahorrado",
+    "available": "Disponible",
+    "report-button": "Ver el reporte de ahorros del mes",
+    "details": "Detalles de ahorros",
+    "balance-at-year-end": "Tenías ahorrado al 31/12/{{year}}",
+    "balance-at-end": "Saldo al cierre"
   },
   "budget-messages": {
     "label": "Presupuesto mensual (opcional)",

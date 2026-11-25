@@ -111,3 +111,64 @@ canvas {
     height: 2.75rem;
   }
 }
+
+// Category of a panel; saving categories add a line with their totals
+.group-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  width: 100%;
+  min-width: 0;
+  padding: 0.6rem 0;
+  & .mat-expansion-panel-header-title {
+    margin-right: 0;
+  }
+}
+
+// Yields and available money of the year, under the totals
+.saving-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  margin-top: 0.75rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--divider);
+  font-size: 14px;
+  color: var(--text-secondary);
+
+  & strong {
+    margin-left: 0.25rem;
+    color: var(--text-primary);
+    font-variant-numeric: tabular-nums;
+  }
+
+  & .available {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+    font-size: 16px;
+  }
+}
+
+.saving-breakdown {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1rem;
+  margin: 0;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.saving-closing {
+  display: flex;
+  justify-content: space-between;
+  margin: 0 0 0.75rem;
+  font-size: 14px;
+  color: var(--text-secondary);
+
+  & strong {
+    font-variant-numeric: tabular-nums;
+  }
+}

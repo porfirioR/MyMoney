@@ -20,6 +20,7 @@ import { TypeForm } from '../../forms/type.form';
 import { DEFAULT_BACKGROUND_COLOR, DEFAULT_ICON_COLOR } from '../../constants/category.constants';
 import { HelperService } from '../../services/helper.service';
 import { BudgetStatusModel } from '../../models/budget-status.model';
+import { SavingTotalsModel } from '../../models/saving-totals.model';
 import { NavigationService } from '../../services/navigation.service';
 import { NotificationService } from '../../services/notification.service';
 import { ThemeService } from '../../services/theme.service';
@@ -59,6 +60,11 @@ export class ReportMonthComponent implements OnInit {
   })
   protected numberType = NumberType.English
   protected language = LanguageType.English
+  // Savings: the chart shows what was deposited in each category, the list the effect on each balance
+  protected isSaving = false
+  protected savingTotals = new SavingTotalsModel()
+  protected hasChart = false
+  protected hideAmounts = HelperService.readHideAmounts()
 
   constructor(
     private readonly activatedRoute: ActivatedRoute,
@@ -108,14 +114,19 @@ export class ReportMonthComponent implements OnInit {
     }
     this.movementService.getBySelectedMonth(type!, this.yearMonth?.month!, this.yearMonth?.year!).pipe(take(1)).subscribe({
       next: (movements) => {
+        this.isSaving = HelperService.isSaving(type!)
         movements.sort((a, b) => a.categoryId.localeCompare(b.categoryId))
         this.groupMovementCategoryModel = this.groupByCategoryName(movements)
-        let amountMovements = 0
-        movements.forEach(x => amountMovements += x.amount)
-        this.doughnutChartLabels = this.groupMovementCategoryModel.map(x => this.labelMovements(x, amountMovements))
+        this.savingTotals = HelperService.getSavingTotals(movements)
+        // A doughnut cannot show negative values: for savings it shows only the deposits
+        const chartGroups = this.isSaving ? this.groupMovementCategoryModel.filter(x => (x.saving?.deposited ?? 0) > 0) : this.groupMovementCategoryModel
+        const chartAmount = (x: GroupMovementCategoryModel): number => this.isSaving ? x.saving!.deposited : x.amount
+        const amountMovements = chartGroups.reduce((a, b) => a + chartAmount(b), 0)
+        this.hasChart = chartGroups.length > 0
+        this.doughnutChartLabels = chartGroups.map(x => this.labelMovements(x, chartAmount(x), amountMovements))
         this.chartData.labels = this.doughnutChartLabels
         this.chartData.datasets[0].label = type!
-        this.chartData.datasets[0].data = this.groupMovementCategoryModel.map(x => x.amount)
+        this.chartData.datasets[0].data = chartGroups.map(chartAmount)
         // New reference, so the chart already drawn is redrawn with the new values
         this.chartData = { ...this.chartData }
         this.loading = false
@@ -186,15 +197,18 @@ export class ReportMonthComponent implements OnInit {
       movement.color = category?.color ?? DEFAULT_ICON_COLOR
       movement.backgroundColor = category?.backgroundColor ?? DEFAULT_BACKGROUND_COLOR
       movement.date = new Date(movement.time)
+      // A saving adds its effect on the balance: deposits add, withdrawals subtract
+      const amount = HelperService.isSaving(movement.type) ? HelperService.getSavingEffect(movement) : movement.amount
       const movementCategory = groups.find(x => x.categoryName == movement.categoryName)
       if (movementCategory) {
         movementCategory.movements.push(movement)
         movementCategory.movements.sort((a, b) => a.time - b.time)
-        movementCategory.amount += movement.amount
+        movementCategory.amount += amount
       } else {
-        groups.push(new GroupMovementCategoryModel(movement.categoryName, movement.icon, movement.color!, movement.backgroundColor!, movement.amount, [movement], movement.categoryId))
+        groups.push(new GroupMovementCategoryModel(movement.categoryName, movement.icon, movement.color!, movement.backgroundColor!, amount, [movement], movement.categoryId))
       }
     })
+    groups.filter(x => x.movements.some(y => HelperService.isSaving(y.type))).forEach(x => x.saving = HelperService.getSavingTotals(x.movements))
     groups.sort((a, b) => b.amount - a.amount)
     // Expense categories with a monthly budget show how much of it was spent
     const budgets = HelperService.getBudgetStatuses(this.userService.getAllCategories(), movements)
@@ -208,9 +222,9 @@ export class ReportMonthComponent implements OnInit {
     this.navigationService.back()
   }
 
-  private labelMovements = (x: GroupMovementCategoryModel, amountMovements: number): string => {
-    let total = 0
-    x.movements.forEach(x => total += x.amount)
+  protected getSignedAmount = (movement: MovementModel): number => HelperService.getSignedAmount(movement)
+
+  private labelMovements = (x: GroupMovementCategoryModel, total: number, amountMovements: number): string => {
     return `${this.translate.instant(x.categoryName)} ${((total * 100)/amountMovements).toFixed(1)}%`
   }
 

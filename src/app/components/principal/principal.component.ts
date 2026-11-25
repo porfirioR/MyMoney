@@ -5,6 +5,7 @@ import { CategoryModel } from '../../models/category.model';
 import { GroupDateMovementModel } from '../../models/group-date-movement.model';
 import { MovementModel } from '../../models/movement.model';
 import { YearMonthModel } from '../../models/year-month-model';
+import { SavingTotalsModel } from '../../models/saving-totals.model';
 import { UserCategoryModel } from '../../models/user-category.model';
 import { MovementService } from '../../services/movement.service';
 import { UserService } from '../../services/user.service';
@@ -21,11 +22,13 @@ import { environment } from '../../../environments/environment';
   styleUrls: ['./principal.component.scss'],
 })
 export class PrincipalComponent implements OnInit {
-  private static readonly hideAmountsStorageKey = 'my-money.hide-amounts'
   protected hideAmounts = false
   protected income: number = 0
   protected expenses: number = 0
   protected balance: number = 0
+  // Third column (saved) and the line below (available = incomes - expenses - saved)
+  protected savingTotals = new SavingTotalsModel()
+  protected available: number = 0
   protected yearMonth!: YearMonthModel
   protected movements: MovementModel[] = []
   protected loading = true
@@ -47,7 +50,7 @@ export class PrincipalComponent implements OnInit {
     private readonly notificationService: NotificationService
   ) {
     this.yearMonth = this.userService.getSelectedYearMonth()
-    this.hideAmounts = this.readHideAmounts()
+    this.hideAmounts = HelperService.readHideAmounts()
   }
 
   // The user data (categories and configuration) is already loaded by UserGuard
@@ -61,7 +64,7 @@ export class PrincipalComponent implements OnInit {
   protected toggleAmountsVisibility = (): void => {
     this.hideAmounts = !this.hideAmounts
     try {
-      localStorage.setItem(PrincipalComponent.hideAmountsStorageKey, String(this.hideAmounts))
+      localStorage.setItem(HelperService.hideAmountsStorageKey, String(this.hideAmounts))
     } catch { }
   }
 
@@ -89,14 +92,6 @@ export class PrincipalComponent implements OnInit {
         this.notificationService.error(e)
       }
     })
-  }
-
-  private readHideAmounts = (): boolean => {
-    try {
-      return localStorage.getItem(PrincipalComponent.hideAmountsStorageKey) === 'true'
-    } catch {
-      return false
-    }
   }
 
   private getMovements = (): Observable<MovementModel[][]> => {
@@ -144,6 +139,9 @@ export class PrincipalComponent implements OnInit {
     })
     this.movementService.setMovementList(this.movements)
     this.balance = this.income - this.expenses
+    // What was put in the savings is no longer available to spend; yields stay inside the saving
+    this.savingTotals = HelperService.getSavingTotals(this.movements)
+    this.available = this.balance - this.savingTotals.saved
     const budgets = [...HelperService.getBudgetStatuses(this.categories, this.movements).values()]
     this.budgetsOver = budgets.filter(x => x.isOver).length
     this.budgetsNear = budgets.filter(x => x.isNear).length

@@ -96,6 +96,13 @@ export class MovementService {
     return collectionData<MovementModel>(ref as Query<MovementModel>, { idField: 'id' })
   }
 
+  // Every saving movement up to the given time (all of them without it): balances add up every movement since the first one
+  public getSavingsUntil = (endTime?: number): Observable<MovementModel[]> => {
+    const constraints: QueryConstraint[] = endTime === undefined ? [] : [where('time', '<=', endTime)]
+    const ref = query(this.getReference(CategoryType.saving), ...constraints, orderBy('time'))
+    return collectionData<MovementModel>(ref as Query<MovementModel>, { idField: 'id' }).pipe(take(1))
+  }
+
   public getMovementsByCategoryId = (category: CategoryType, categoryId: string): Observable<MovementModel[]> => {
     const ref = query(this.getReference(category), where('categoryId', '==', categoryId), orderBy('time'))
     return collectionData<MovementModel>(ref as Query<MovementModel>, { idField: 'id' })

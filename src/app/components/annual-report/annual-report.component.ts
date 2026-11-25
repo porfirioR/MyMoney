@@ -22,6 +22,8 @@ import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { RelatedMovementService } from '../../services/related-movement.service';
 import { RegisterMovementComponent } from '../register-movement/register-movement.component';
 import { DialogDeleteComponent } from '../dialog-delete/dialog-delete.component';
+import { HelperService } from '../../services/helper.service';
+import { SavingTotalsModel } from '../../models/saving-totals.model';
 
 @Component({
   selector: 'app-annual-report',
@@ -34,6 +36,8 @@ export class AnnualReportComponent implements OnInit {
   protected redColor = 'rgb(255, 99, 132)'
   protected greenColor = 'rgb(75, 192, 192)'
   protected neutralColor = 'var(--text-secondary)'
+  protected savingColor = 'rgb(54, 162, 235)'
+  private savingBackgroundColor = 'rgba(54, 162, 235, 0.2)'
   protected incomeChartData: ChartConfiguration<'doughnut'>['data'] = {
     labels: [''],
     datasets: [
@@ -79,25 +83,25 @@ export class AnnualReportComponent implements OnInit {
         backgroundColor: [
           'rgba(75, 192, 192, 0.2)',
           'rgba(255, 99, 132, 0.2)',
-          'rgba(255, 159, 64, 0.2)',
-          'rgba(255, 205, 86, 0.2)',
           'rgba(54, 162, 235, 0.2)',
+          'rgba(255, 205, 86, 0.2)',
+          'rgba(255, 159, 64, 0.2)',
           'rgba(153, 102, 255, 0.2)',
           'rgba(201, 203, 207, 0.2)'
         ],
         borderColor: [
           this.greenColor,
           this.redColor,
-          'rgb(255, 159, 64)',
-          'rgb(255, 205, 86)',
           'rgb(54, 162, 235)',
+          'rgb(255, 205, 86)',
+          'rgb(255, 159, 64)',
           'rgb(153, 102, 255)',
           'rgb(201, 203, 207)'
         ],
         hoverBackgroundColor: [
           this.greenColor,
           this.redColor,
-          'rgba(54, 162, 235, 0.2)',
+          'rgb(54, 162, 235)',
           'rgba(255, 206, 86, 0.2)',
           'rgba(153, 102, 255, 0.2)',
           'rgba(255, 159, 64, 0.2)'
@@ -105,9 +109,9 @@ export class AnnualReportComponent implements OnInit {
         hoverBorderColor: [
           this.greenColor,
           this.redColor,
-          'rgb(255, 159, 64)',
-          'rgb(255, 205, 86)',
           'rgb(54, 162, 235)',
+          'rgb(255, 205, 86)',
+          'rgb(255, 159, 64)',
           'rgb(153, 102, 255)',
           'rgb(201, 203, 207)'
         ],
@@ -148,6 +152,12 @@ export class AnnualReportComponent implements OnInit {
   protected refreshing: boolean = false
   protected incomeGroupMovementCategoryModel!: GroupMovementCategoryModel[]
   protected expenseGroupMovementCategoryModel!: GroupMovementCategoryModel[]
+  // Savings of the year: they are neither incomes nor expenses, and they only show when the year has some
+  protected savingGroupMovementCategoryModel: GroupMovementCategoryModel[] = []
+  protected savingTotals = new SavingTotalsModel()
+  protected available: number = 0
+  // Everything kept in the savings on December 31 (movements of every year up to then)
+  protected savingClosingBalance: number = 0
   protected numberType = NumberType.English
   protected language = LanguageType.English
   protected incomeAmount: number = 0
@@ -185,17 +195,32 @@ export class AnnualReportComponent implements OnInit {
     this.loadYear(this.year)
   }
 
-  private subscribeMovements = (expense: MovementModel[], income: MovementModel[]): void => {
+  protected get hasSavings(): boolean {
+    return !this.savingTotals.isEmpty
+  }
+
+  private subscribeMovements = (expense: MovementModel[], income: MovementModel[], savingsUntilYearEnd: MovementModel[]): void => {
     this.expenseAmount = 0
     this.incomeAmount = 0
     this.balance = 0
+    const [startTime] = this.movementService.getYearTimeRange(this.year)
+    const saving = savingsUntilYearEnd.filter(x => x.time >= startTime)
     this.prepareChartDataForExpenseCategory(expense)
     this.prepareChartDataForIncomeCategory(income)
-    this.prepareMonthsChartData(expense, income)
-    this.globalChartData.labels = [this.translateService.instant(CategoryType.income), this.translateService.instant(CategoryType.expense)]
+    this.prepareSavings(saving, savingsUntilYearEnd)
+    this.prepareMonthsChartData(expense, income, saving)
+    const labels = [this.translateService.instant(CategoryType.income), this.translateService.instant(CategoryType.expense)]
+    const data = [this.incomeAmount, this.expenseAmount]
+    // The third bar is what went to the savings (deposits - withdrawals)
+    if (this.hasSavings) {
+      labels.push(this.translateService.instant(CategoryType.saving))
+      data.push(this.savingTotals.saved)
+    }
+    this.globalChartData.labels = labels
     this.globalChartData.datasets[0].label = this.translateService.instant('General Balance')
-    this.globalChartData.datasets[0].data = [this.incomeAmount, this.expenseAmount]
+    this.globalChartData.datasets[0].data = data
     this.balance = this.incomeAmount - this.expenseAmount
+    this.available = this.balance - this.savingTotals.saved
     // New references, so the charts already drawn are redrawn with the new values
     this.globalChartData = { ...this.globalChartData }
     this.monthsChartData = { ...this.monthsChartData }
@@ -227,7 +252,31 @@ export class AnnualReportComponent implements OnInit {
     this.expenseChartData.datasets[0].data = this.expenseGroupMovementCategoryModel.map(x => x.amount)
   }
 
-  private prepareMonthsChartData = (expense: MovementModel[], income: MovementModel[]): void => {
+  private prepareSavings = (saving: MovementModel[], savingsUntilYearEnd: MovementModel[]): void => {
+    this.savingTotals = HelperService.getSavingTotals(saving)
+    const balances = HelperService.getSavingBalances(savingsUntilYearEnd)
+    this.savingClosingBalance = [...balances.values()].reduce((a, b) => a + b, 0)
+    saving.sort((a, b) => a.categoryId.localeCompare(b.categoryId))
+    this.savingGroupMovementCategoryModel = this.groupByCategoryName(saving)
+    this.savingGroupMovementCategoryModel.forEach(x => {
+      x.saving = HelperService.getSavingTotals(x.movements)
+      x.closingBalance = balances.get(x.categoryId!) ?? 0
+    })
+  }
+
+  private prepareMonthsChartData = (expense: MovementModel[], income: MovementModel[], saving: MovementModel[]): void => {
+    const [expenseDataset, incomeDataset] = this.monthsChartData.datasets
+    const savingDataset = this.monthsChartData.datasets[2] ?? {
+      type: 'bar',
+      label: this.translateService.instant(CategoryType.saving),
+      data: [],
+      borderColor: this.savingColor,
+      backgroundColor: this.savingBackgroundColor,
+      hoverBackgroundColor: this.savingColor,
+      hoverBorderColor: this.savingColor
+    }
+    // The bar of the savings only shows when the year has some
+    this.monthsChartData.datasets = this.hasSavings ? [expenseDataset, incomeDataset, savingDataset] : [expenseDataset, incomeDataset]
     Object.values(MonthType).filter((v) => !isNaN(Number(v))).map((x)  => {
       const month = +x
       const startDate = new Date(this.year, month, 1)
@@ -240,6 +289,7 @@ export class AnnualReportComponent implements OnInit {
       const expensesByMonth = expense.filter(x => x.time >= startTime && x.time <= endTime)
       this.monthsChartData.datasets[0].data[month] = expensesByMonth.reduce((a, b) => a + b.amount, 0)
       this.monthsChartData.datasets[1].data[month] = incomeByMonth.reduce((a, b) => a + b.amount, 0)
+      savingDataset.data[month] = HelperService.getSavingTotals(saving.filter(x => x.time >= startTime && x.time <= endTime)).saved
     })
   }
 
@@ -257,7 +307,7 @@ export class AnnualReportComponent implements OnInit {
       this.loading = true
     }
     this.getMovementForCategoriesByYear(year).pipe(take(1)).subscribe({
-      next: ([expense, income]) => this.subscribeMovements(expense, income),
+      next: ([expense, income, saving]) => this.subscribeMovements(expense, income, saving),
       error: (e) => {
         this.loading = false
         this.refreshing = false
@@ -318,7 +368,11 @@ export class AnnualReportComponent implements OnInit {
     [this.globalChart, this.monthsChart, this.incomeChart, this.expenseChart].forEach(x => x.chartOptions = { ...x.chartOptions, locale })
   }
 
-  protected getBalanceColor = (): string => this.balance > 0 ? this.greenColor : this.balance < 0 ? this.redColor : this.neutralColor
+  // Incomes and expenses are shown positive; savings with their effect on the balance
+  protected getAmount = (movement: MovementModel): number =>
+    HelperService.isSaving(movement.type) ? HelperService.getSavingEffect(movement) : movement.amount
+
+  protected getBalanceColor = (): string => this.available > 0 ? this.greenColor : this.available < 0 ? this.redColor : this.neutralColor
 
   private groupByCategoryName = (movements: MovementModel[]): GroupMovementCategoryModel[] => {
     const groups: GroupMovementCategoryModel[] = []
@@ -329,13 +383,15 @@ export class AnnualReportComponent implements OnInit {
       movement.color = category?.color ?? DEFAULT_ICON_COLOR
       movement.backgroundColor = category?.backgroundColor ?? DEFAULT_BACKGROUND_COLOR
       movement.date = new Date(movement.time)
+      // A saving adds its effect on the balance: deposits add, withdrawals subtract
+      const amount = this.getAmount(movement)
       const movementCategory = groups.find(x => x.categoryName == movement.categoryName)
       if (movementCategory) {
         movementCategory.movements.push(movement)
         movementCategory.movements.sort((a, b) => a.time - b.time)
-        movementCategory.amount += movement.amount
+        movementCategory.amount += amount
       } else {
-        groups.push(new GroupMovementCategoryModel(movement.categoryName, movement.icon, movement.color!, movement.backgroundColor!, movement.amount, [movement]))
+        groups.push(new GroupMovementCategoryModel(movement.categoryName, movement.icon, movement.color!, movement.backgroundColor!, amount, [movement], movement.categoryId))
       }
     })
     groups.sort((a, b) => b.amount - a.amount)
@@ -356,6 +412,16 @@ export class AnnualReportComponent implements OnInit {
         income: this.buildMonthlyCategoryBreakdown(this.incomeGroupMovementCategoryModel)
       }
     }
+    // A year without savings exports the same as before
+    if (this.hasSavings) {
+      report.summary.totalDeposited = this.savingTotals.deposited
+      report.summary.totalWithdrawn = this.savingTotals.withdrawn
+      report.summary.totalYields = this.savingTotals.yields
+      report.summary.totalSaved = this.savingTotals.saved
+      report.summary.available = this.available
+      report.summary.savingBalanceAtYearEnd = this.savingClosingBalance
+      report.categoriesByMonth.saving = this.buildMonthlyCategoryBreakdown(this.savingGroupMovementCategoryModel)
+    }
     this.downloadJson(report, `annual-report-${this.year}.json`)
   }
 
@@ -365,7 +431,7 @@ export class AnnualReportComponent implements OnInit {
       const months = monthKeys.reduce((acc, monthKey) => ({ ...acc, [monthKey]: 0 }), {} as Record<string, number>)
       group.movements.forEach(movement => {
         const monthKey = MonthType[new Date(movement.time).getMonth()]
-        months[monthKey] += movement.amount
+        months[monthKey] += this.getAmount(movement)
       })
       return { category: group.categoryName, total: group.amount, months }
     })
@@ -391,7 +457,8 @@ export class AnnualReportComponent implements OnInit {
 
   private getMovementForCategoriesByYear = (year: number) => combineLatest([
     this.movementService.getBySelectedYear(CategoryType.expense, year),
-    this.movementService.getBySelectedYear(CategoryType.income, year)
+    this.movementService.getBySelectedYear(CategoryType.income, year),
+    this.movementService.getSavingsUntil(this.movementService.getYearTimeRange(year)[1])
   ])
   
 }
