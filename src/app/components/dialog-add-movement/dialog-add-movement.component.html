@@ -65,7 +65,8 @@
           />
         </mat-chip-list>
         <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedCategory($event)">
-          <mat-option *ngFor="let category of filteredCategories | async; let i = index" [id]="'' + i" [value]="category.id">
+          <mat-optgroup *ngFor="let group of filteredCategoryGroups | async" [label]="group.label | translate">
+          <mat-option *ngFor="let category of group.categories" [value]="category.id">
             <span customColor class="mat-custom-icon-button"
               [color]="category.color"
               [backgroundColor]="category.backgroundColor"
@@ -75,6 +76,7 @@
             </span>
             <span translate>{{category.name}}</span>
           </mat-option>
+          </mat-optgroup>
         </mat-autocomplete>
         <mat-hint>{{'related-movement-messages.categories-hint' | translate}}</mat-hint>
       </mat-form-field>
@@ -102,10 +104,16 @@
               </span>
               <span class="option-text">
                 <span class="option-memorandum">{{movement.memorandum ?? '' | translate}}</span>
-                <span class="option-date">{{movement.date | date:'dd/MM/yy':'':language}} · {{(movement.categoryName ?? '') | translate}}</span>
+                <span class="option-date">
+                  {{movement.date | date:'dd/MM/yy':'':language}} · {{(movement.categoryName ?? '') | translate}}
+                  <span class="saving-direction" *ngIf="movement.direction">{{('saving-direction.' + movement.direction) | translate}}</span>
+                </span>
               </span>
-              <span class="option-amount" [class.income]="!isExpense(movement)">
-                {{isExpense(movement) ? '-' : ''}}{{movement.amount | number:'':numberType}}
+              <span class="option-amount"
+                [class.income]="!isExpense(movement) && !isSaving(movement)"
+                [class.saving-amount]="isSaving(movement)"
+              >
+                {{getSignedAmount(movement) | number:'':numberType}}
               </span>
             </span>
           </mat-list-option>

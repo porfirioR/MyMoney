@@ -57,6 +57,20 @@
       ]
     },
     {
+      "collectionGroup": "saving",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "categoryId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "time",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
       "collectionGroup": "user_categories",
       "queryScope": "COLLECTION",
       "fields": [

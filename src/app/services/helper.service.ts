@@ -12,6 +12,8 @@ import { RelatedProgressType } from '../enums/related-progress-type.enum';
 import { MovementModel } from '../models/movement.model';
 import { BudgetStatusModel } from '../models/budget-status.model';
 import { UNSET_CATEGORY_ORDER } from '../constants/category.constants';
+import { SavingDirection } from '../enums/saving-direction.enum';
+import { SavingTotalsModel } from '../models/saving-totals.model';
 
 @Injectable({
   providedIn: 'root'
@@ -23,6 +25,54 @@ constructor() { }
   // Movement types are compared case-insensitively ('Expense' and 'expense' both exist)
   public static isExpense = (type: string | undefined): boolean =>
     (type ?? '').toLowerCase() === CategoryType.expense.toLowerCase()
+
+  public static isSaving = (type: string | undefined): boolean =>
+    (type ?? '').toLowerCase() === CategoryType.saving.toLowerCase()
+
+  // How a saving movement changes the saved balance: deposits add, withdrawals subtract, yields keep their sign
+  public static getSavingEffect = (movement: { amount: number, direction?: SavingDirection }): number => {
+    switch (movement.direction) {
+      case SavingDirection.Withdrawal: return -Math.abs(movement.amount)
+      case SavingDirection.Yield: return movement.amount
+      default: return Math.abs(movement.amount)
+    }
+  }
+
+  // Deposits, withdrawals and yields of the given saving movements; the other movements are ignored
+  public static getSavingTotals = (movements: MovementModel[]): SavingTotalsModel => {
+    const totals = new SavingTotalsModel()
+    movements.filter(x => HelperService.isSaving(x.type)).forEach(x => {
+      switch (x.direction) {
+        case SavingDirection.Withdrawal: totals.withdrawn += Math.abs(x.amount); break
+        case SavingDirection.Yield: totals.yields += x.amount; break
+        default: totals.deposited += Math.abs(x.amount)
+      }
+    })
+    return totals
+  }
+
+  // Balance of each saving category, by categoryId
+  public static getSavingBalances = (movements: MovementModel[]): Map<string, number> => {
+    const balances = new Map<string, number>()
+    movements.filter(x => HelperService.isSaving(x.type))
+      .forEach(x => balances.set(x.categoryId, (balances.get(x.categoryId) ?? 0) + HelperService.getSavingEffect(x)))
+    return balances
+  }
+
+  // The eye of the main screen hides the amounts; the other screens with totals follow it
+  public static readonly hideAmountsStorageKey = 'my-money.hide-amounts'
+
+  public static readHideAmounts = (): boolean => {
+    try {
+      return localStorage.getItem(HelperService.hideAmountsStorageKey) === 'true'
+    } catch {
+      return false
+    }
+  }
+
+  // Groups of savings only take saving movements, and the other groups only incomes and expenses
+  public static isSavingGroup = (group: RelatedMovementModel): boolean =>
+    HelperService.getRelatedProgressType(group) === RelatedProgressType.Saving
 
   // Groups created before progressType existed: only expenses → payments, only incomes → collections, both → balance
   public static getRelatedProgressType = (group: RelatedMovementModel): RelatedProgressType => {
@@ -37,16 +87,28 @@ constructor() { }
     return hasIncome ? RelatedProgressType.Income : RelatedProgressType.Expense
   }
 
+  // Saving movements are told apart by their direction: they count neither as income nor as expense
   public static getRelatedSummary = (
     progressType: RelatedProgressType,
     goal: number | null | undefined,
-    movements: { amount: number, isExpense: boolean, date?: Date }[]
+    movements: { amount: number, isExpense: boolean, date?: Date, direction?: SavingDirection }[]
   ): RelatedMovementSummaryModel => {
-    const expenseAmount = movements.filter(x => x.isExpense).reduce((a, b) => a + Math.abs(b.amount), 0)
-    const incomeAmount = movements.filter(x => !x.isExpense).reduce((a, b) => a + Math.abs(b.amount), 0)
+    const sum = (list: { amount: number }[], keepSign = false) => list.reduce((a, b) => a + (keepSign ? b.amount : Math.abs(b.amount)), 0)
+    const savings = movements.filter(x => !!x.direction)
+    const others = movements.filter(x => !x.direction)
     const times = movements.filter(x => !!x.date).map(x => x.date!.getTime())
     const lastDate = times.length ? new Date(Math.max(...times)) : undefined
-    return new RelatedMovementSummaryModel(progressType, Math.abs(Number(goal ?? 0)), expenseAmount, incomeAmount, movements.length, lastDate)
+    return new RelatedMovementSummaryModel(
+      progressType,
+      Math.abs(Number(goal ?? 0)),
+      sum(others.filter(x => x.isExpense)),
+      sum(others.filter(x => !x.isExpense)),
+      movements.length,
+      lastDate,
+      sum(savings.filter(x => x.direction === SavingDirection.Deposit)),
+      sum(savings.filter(x => x.direction === SavingDirection.Withdrawal)),
+      sum(savings.filter(x => x.direction === SavingDirection.Yield), true)
+    )
   }
 
   // getName receives the stored name (a translation key for system categories) and returns the text shown to the user
@@ -90,9 +152,13 @@ constructor() { }
 
   public static isUnsetCategoryOrder = (order: number | undefined): boolean => (order ?? 0) >= UNSET_CATEGORY_ORDER
 
-  // Amounts are stored positive; expenses are shown negative
-  public static getSignedAmount = (movement: MovementModel): number =>
-    HelperService.isExpense(movement.type) ? -Math.abs(movement.amount) : Math.abs(movement.amount)
+  // Amounts are stored positive; expenses are shown negative and savings with their effect on the saved balance
+  public static getSignedAmount = (movement: MovementModel): number => {
+    if (HelperService.isSaving(movement.type)) {
+      return HelperService.getSavingEffect(movement)
+    }
+    return HelperService.isExpense(movement.type) ? -Math.abs(movement.amount) : Math.abs(movement.amount)
+  }
 
   // First day of the viewed month, or today when the current month is viewed
   public static getDefaultMovementDate = (yearMonth: YearMonthModel): Date => {

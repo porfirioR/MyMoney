@@ -11,7 +11,6 @@ import { MovementService } from '../../services/movement.service';
 import { UserService } from '../../services/user.service';
 import { HelperService } from '../../services/helper.service';
 import { NotificationService } from '../../services/notification.service';
-import { CategoryType } from '../../enums/category-type.enum';
 import { NumberType } from '../../enums/number-type.enum';
 import { LanguageType } from '../../enums/language-type.enum';
 import { DialogDeleteComponent } from '../dialog-delete/dialog-delete.component';
@@ -107,12 +106,7 @@ export class RelatedMovementsComponent implements OnInit {
   protected trackByRelated = (_: number, related: RelatedMovementModel): string => related.id!
 
   private getMovements =(relatedMovement: RelatedMovementModel): Observable<RelatedMovementDetailModel[]> => {
-    const expenseIds = relatedMovement.related.filter(x => HelperService.isExpense(x.type)).map(x => x.id)
-    const incomeIds = relatedMovement.related.filter(x => !HelperService.isExpense(x.type)).map(x => x.id)
-    return combineLatest([
-      this.movementService.getMovementsByIds(CategoryType.expense, expenseIds),
-      this.movementService.getMovementsByIds(CategoryType.income, incomeIds)
-    ]).pipe(take(1), map(([expenses, incomes]) => [...expenses, ...incomes]
+    return this.movementService.getMovementsByRelated(relatedMovement.related).pipe(map((movements) => movements
       .sort((a, b) => b.time - a.time)
       .map(x => new RelatedMovementDetailModel(
         x.id!,
@@ -123,7 +117,8 @@ export class RelatedMovementsComponent implements OnInit {
         x.icon,
         x.color,
         x.backgroundColor,
-        x
+        x,
+        x.direction
       ))
     ))
   }

@@ -13,4 +13,6 @@ export class CategoryModel {
   owner!: string
   // Copied from the user data (user_categories); null or missing when there is no budget
   budget?: number | null
+  // Saving categories only: true when the money generates interest (CDA, mutual fund...), so yields can be recorded
+  earnsInterest?: boolean
 }

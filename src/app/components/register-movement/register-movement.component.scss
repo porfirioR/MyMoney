@@ -53,3 +53,32 @@
 ::ng-deep .mat-form-field-appearance-fill .mat-form-field-infix {
   padding-left: 6px !important;
 }
+
+// What happened with a saving movement: Deposit / Withdrawal / Yield
+.saving-direction-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0.5rem 0.6rem 0;
+}
+
+.saving-direction-label {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.direction-toggle {
+  border-color: var(--saving);
+  & .mat-button-toggle-checked {
+    background: var(--saving-bg);
+    color: var(--saving);
+  }
+}
+
+.saving-direction-hint {
+  margin: 0;
+  font-size: 12px;
+  text-align: center;
+  color: var(--text-secondary);
+}

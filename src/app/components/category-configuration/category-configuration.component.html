@@ -16,6 +16,14 @@
         </ng-container>
       </main>
     </mat-tab>
+    <mat-tab [label]="'Savings' | translate">
+      <main id="main-saving" class="fab-space">
+        <p class="tab-hint">{{'saving-messages.tab-hint' | translate}}</p>
+        <ng-container *ngFor="let item of savingCategory">
+          <app-category-row [category]="item" (updateCategoryEvent)="updateCategories($event)"></app-category-row>
+        </ng-container>
+      </main>
+    </mat-tab>
   </mat-tab-group>
   <button mat-fab color="primary" class="btn-add" [routerLink]="['new-category', currentTap]" [disabled]="loading" [title]="'Add category' | translate">
     <mat-icon>add</mat-icon>

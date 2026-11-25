@@ -3,11 +3,14 @@
     {{groupDateMovement.date | date: 'dd/MM E': '': language}}
   </article>
   <article>
-    <span [ngClass]="{'income-title': totalExpense && totalExpense > 0}" *ngIf="totalIncome && totalIncome > 0">
+    <span class="header-total" *ngIf="totalIncome && totalIncome > 0">
       {{'Incomes' | translate}}: {{totalIncome | number:'' : numberType}}
     </span>
-    <span *ngIf="totalExpense && totalExpense > 0">
+    <span class="header-total" *ngIf="totalExpense && totalExpense > 0">
       {{'Expenses' | translate}}: {{totalExpense | number:'' : numberType}}
+    </span>
+    <span class="header-total saving-amount" *ngIf="groupDateMovement.hasSavings">
+      {{'Saving' | translate}}: {{groupDateMovement.saving | number:'' : numberType}}
     </span>
   </article>
 </header>
@@ -23,8 +26,9 @@
         <i [id]="'icon-' + i" class="material-icons-outlined notranslate">{{movement.icon}}</i>
       </button>
       <span [id]="'memorandum-' + i">{{(movement.memorandum || movement.categoryName || '') | translate}}</span>
+      <span class="saving-direction" *ngIf="movement.direction">{{('saving-direction.' + movement.direction) | translate}}</span>
     </article>
-    <article [id]="'amount-' + i">
+    <article [id]="'amount-' + i" [class.saving-amount]="!!movement.direction">
       {{getSignedAmount(movement) | number:'' : numberType}}
     </article>
   </span>

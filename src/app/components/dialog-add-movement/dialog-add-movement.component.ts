@@ -45,8 +45,11 @@ export class DialogAddMovementComponent implements OnInit {
   protected language = LanguageType.English
   protected numberType = NumberType.English
   private excludedIds: string[] = []
+  // Saving groups only search saving movements; the other groups only incomes and expenses
+  private savings = false
   protected selectedCategories: CategoryModel[] = []
-  protected filteredCategories: Observable<CategoryModel[]>
+  // The options are grouped by type, so categories with the same name are told apart
+  protected filteredCategoryGroups: Observable<{ label: string, categories: CategoryModel[] }[]>
   protected defaultColor = DEFAULT_ICON_COLOR
   protected defaultBackgroundColor = DEFAULT_BACKGROUND_COLOR
   // Selected movements are kept here, so changing the filters does not lose them
@@ -66,9 +69,10 @@ export class DialogAddMovementComponent implements OnInit {
     private readonly userService: UserService,
     private readonly translateService: TranslateService,
     private readonly notificationService: NotificationService,
-    @Optional() @Inject(MAT_DIALOG_DATA) data?: { excludedIds?: string[] }
+    @Optional() @Inject(MAT_DIALOG_DATA) data?: { excludedIds?: string[], savings?: boolean }
   ) {
     this.excludedIds = data?.excludedIds ?? []
+    this.savings = !!data?.savings
     const currentYear = new Date().getFullYear()
     // Newest first, only years that can have movements
     this.yearRange = Array.from({ length: currentYear - this.minValidYear + 2 }, (_, i) => currentYear + 1 - i)
@@ -114,14 +118,15 @@ export class DialogAddMovementComponent implements OnInit {
       }
     })
 
-    this.filteredCategories = this.formGroup.controls.category.valueChanges.pipe(
+    this.filteredCategoryGroups = this.formGroup.controls.category.valueChanges.pipe(
       startWith(null),
-      map((x: string | null) => x ? this.filter(x) : this.categories.filter(x => !this.selectedCategories.map(x => x.id).includes(x.id)).slice())
+      map((x: string | null) => x ? this.filter(x) : this.categories.filter(x => !this.selectedCategories.map(x => x.id).includes(x.id))),
+      map((categories) => this.groupByType(categories))
     )
   }
 
   ngOnInit(): void {
-    this.categories = this.userService.getActiveCategories()
+    this.categories = this.userService.getActiveCategories().filter(x => HelperService.isSaving(x.type) === this.savings)
     this.categories.forEach(x => {
       x.color = x.color ?? this.defaultColor
       x.backgroundColor = x.backgroundColor ?? this.defaultBackgroundColor
@@ -139,6 +144,10 @@ export class DialogAddMovementComponent implements OnInit {
 
   protected isExpense = (movement: MovementModel): boolean => HelperService.isExpense(movement.type)
 
+  protected isSaving = (movement: MovementModel): boolean => HelperService.isSaving(movement.type)
+
+  protected getSignedAmount = (movement: MovementModel): number => HelperService.getSignedAmount(movement)
+
   protected choosePeriod = (): void => {
     this.periodChosenByUser = true
   }
@@ -151,7 +160,8 @@ export class DialogAddMovementComponent implements OnInit {
 
   private loadMovements = (): Observable<MovementModel[]> => {
     const request = this.buildRequest()
-    const read$ = this.movementService.getGetMovementByFilter(request).pipe(map(([incomes, expenses]) => [...incomes, ...expenses]))
+    const types = this.savings ? [CategoryType.saving] : [CategoryType.income, CategoryType.expense]
+    const read$ = this.movementService.getGetMovementByFilter(request, types)
     if (this.formGroup.controls.period.value !== 'all') {
       return read$
     }
@@ -246,6 +256,16 @@ export class DialogAddMovementComponent implements OnInit {
   private filter = (value: string): CategoryModel[] => {
     const filterValue = value.toLowerCase()
     return this.categories.filter(x => !this.selectedCategories.map(x => x.id).includes(x.id) && this.translateService.instant(x.name).toLowerCase().includes(filterValue))
+  }
+
+  private groupByType = (categories: CategoryModel[]): { label: string, categories: CategoryModel[] }[] => {
+    const groups = this.savings
+      ? [{ label: 'Savings', categories: categories.filter(x => HelperService.isSaving(x.type)) }]
+      : [
+        { label: CategoryType.expense, categories: categories.filter(x => HelperService.isExpense(x.type)) },
+        { label: CategoryType.income, categories: categories.filter(x => !HelperService.isExpense(x.type) && !HelperService.isSaving(x.type)) }
+      ]
+    return groups.filter(x => x.categories.length > 0)
   }
 
   // Categories are an optional filter: changing them refreshes the results

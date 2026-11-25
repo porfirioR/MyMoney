@@ -5,6 +5,7 @@ import { CategoryModel } from '../../models/category.model';
 import { GroupDateMovementModel } from '../../models/group-date-movement.model';
 import { MovementModel } from '../../models/movement.model';
 import { YearMonthModel } from '../../models/year-month-model';
+import { SavingTotalsModel } from '../../models/saving-totals.model';
 import { UserCategoryModel } from '../../models/user-category.model';
 import { MovementService } from '../../services/movement.service';
 import { UserService } from '../../services/user.service';
@@ -21,11 +22,13 @@ import { environment } from '../../../environments/environment';
   styleUrls: ['./principal.component.scss'],
 })
 export class PrincipalComponent implements OnInit {
-  private static readonly hideAmountsStorageKey = 'my-money.hide-amounts'
   protected hideAmounts = false
   protected income: number = 0
   protected expenses: number = 0
   protected balance: number = 0
+  // Third column (saved) and the line below (available = incomes - expenses - saved)
+  protected savingTotals = new SavingTotalsModel()
+  protected available: number = 0
   protected yearMonth!: YearMonthModel
   protected movements: MovementModel[] = []
   protected loading = true
@@ -47,7 +50,7 @@ export class PrincipalComponent implements OnInit {
     private readonly notificationService: NotificationService
   ) {
     this.yearMonth = this.userService.getSelectedYearMonth()
-    this.hideAmounts = this.readHideAmounts()
+    this.hideAmounts = HelperService.readHideAmounts()
   }
 
   // The user data (categories and configuration) is already loaded by UserGuard
@@ -61,7 +64,7 @@ export class PrincipalComponent implements OnInit {
   protected toggleAmountsVisibility = (): void => {
     this.hideAmounts = !this.hideAmounts
     try {
-      localStorage.setItem(PrincipalComponent.hideAmountsStorageKey, String(this.hideAmounts))
+      localStorage.setItem(HelperService.hideAmountsStorageKey, String(this.hideAmounts))
     } catch { }
   }
 
@@ -91,25 +94,22 @@ export class PrincipalComponent implements OnInit {
     })
   }
 
-  private readHideAmounts = (): boolean => {
-    try {
-      return localStorage.getItem(PrincipalComponent.hideAmountsStorageKey) === 'true'
-    } catch {
-      return false
-    }
+  private getMovements = (): Observable<MovementModel[][]> => {
+    const month = this.yearMonth?.month!
+    const year = this.yearMonth?.year!
+    return combineLatest([
+      this.movementService.getBySelectedMonth(CategoryType.expense, month, year),
+      this.movementService.getBySelectedMonth(CategoryType.income, month, year),
+      this.movementService.getBySelectedMonth(CategoryType.saving, month, year)
+    ]).pipe(take(1))
   }
 
-  private getMovements = (): Observable<[MovementModel[], MovementModel[]]> => {
-    const expenseList$ = this.movementService.getBySelectedMonth(CategoryType.expense, this.yearMonth?.month!, this.yearMonth?.year!)
-    const incomeList$ = this.movementService.getBySelectedMonth(CategoryType.income, this.yearMonth?.month!, this.yearMonth?.year!)
-    return combineLatest([expenseList$, incomeList$]).pipe(take(1))
-  }
-
-  private prepareMovementListToView = (movements: [MovementModel[], MovementModel[]]): void => {
+  // Savings show in the list of each day, but they are neither incomes nor expenses
+  private prepareMovementListToView = (movements: MovementModel[][]): void => {
     this.income = 0
     this.expenses = 0
     this.groupDateMovementList = []
-    this.movements = movements[0].concat(movements[1])
+    this.movements = movements.flat()
     this.movements.forEach(x => x.date = new Date(x.time))
     this.movements = this.movements.sort((a, b) => b.time - a.time)
     this.movements.forEach((movement: MovementModel) => {
@@ -126,7 +126,10 @@ export class PrincipalComponent implements OnInit {
         dateMovement = new GroupDateMovementModel(date, [movement])
         this.groupDateMovementList.push(dateMovement)
       }
-      if (HelperService.isExpense(movement.type)) {
+      if (HelperService.isSaving(movement.type)) {
+        dateMovement.saving += HelperService.getSavingEffect(movement)
+        dateMovement.hasSavings = true
+      } else if (HelperService.isExpense(movement.type)) {
         dateMovement.expense += movement.amount
         this.expenses += movement.amount
       } else {
@@ -136,6 +139,9 @@ export class PrincipalComponent implements OnInit {
     })
     this.movementService.setMovementList(this.movements)
     this.balance = this.income - this.expenses
+    // What was put in the savings is no longer available to spend; yields stay inside the saving
+    this.savingTotals = HelperService.getSavingTotals(this.movements)
+    this.available = this.balance - this.savingTotals.saved
     const budgets = [...HelperService.getBudgetStatuses(this.categories, this.movements).values()]
     this.budgetsOver = budgets.filter(x => x.isOver).length
     this.budgetsNear = budgets.filter(x => x.isNear).length

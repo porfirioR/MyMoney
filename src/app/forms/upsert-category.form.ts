@@ -10,4 +10,5 @@ export interface UpsertCategoryForm {
   hexBackgroundColor: FormControl<null | string>
   order: FormControl<null | number>
   budget: FormControl<null | number>
+  earnsInterest: FormControl<null | boolean>
 }

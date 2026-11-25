@@ -18,6 +18,7 @@ import { NotificationService } from '../../services/notification.service'
 export class CategoryConfigurationComponent implements OnInit {
   protected expenseCategory!: CategoryModel[]
   protected incomeCategory!: CategoryModel[]
+  protected savingCategory!: CategoryModel[]
   protected currentTap!: string
   protected categoryType = CategoryType
   protected loading = true
@@ -40,6 +41,7 @@ export class CategoryConfigurationComponent implements OnInit {
       next: (categories) => {
         this.expenseCategory = this.orderCategoryByActive(HelperService.categoriesByType(categories, CategoryType.expense))
         this.incomeCategory = this.orderCategoryByActive(HelperService.categoriesByType(categories, CategoryType.income))
+        this.savingCategory = this.orderCategoryByActive(HelperService.categoriesByType(categories, CategoryType.saving))
         this.loading = false
       }, error: (e) => {
         this.loading = false
@@ -55,15 +57,19 @@ export class CategoryConfigurationComponent implements OnInit {
   }
 
   protected updateCategories = (result: CategoryEvent): void => {
-    if(result.categoryId) {
-      result.categoryType.toLowerCase() === CategoryType.income.toLowerCase() ?
-      this.incomeCategory = this.incomeCategory.filter(x => x.id !== result.categoryId) :
-      this.expenseCategory = this.expenseCategory.filter(x => x.id !== result.categoryId)
+    const type = result.categoryType.toLowerCase()
+    if (type === CategoryType.income.toLowerCase()) {
+      this.incomeCategory = this.refreshList(this.incomeCategory, result.categoryId)
+    } else if (type === CategoryType.saving.toLowerCase()) {
+      this.savingCategory = this.refreshList(this.savingCategory, result.categoryId)
+    } else {
+      this.expenseCategory = this.refreshList(this.expenseCategory, result.categoryId)
     }
-    result.categoryType.toLowerCase() === CategoryType.income.toLowerCase() ?
-      this.incomeCategory = this.orderCategoryByActive(this.incomeCategory) :
-      this.expenseCategory = this.orderCategoryByActive(this.expenseCategory)
   }
+
+  // A categoryId means that category left the list
+  private refreshList = (categories: CategoryModel[], removedId?: string): CategoryModel[] =>
+    this.orderCategoryByActive(removedId ? categories.filter(x => x.id !== removedId) : categories)
 
   private orderCategoryByActive = (categories: CategoryModel[]): CategoryModel[] => categories.sort((a, b) => {
     const compareActive = a.active === b.active ? 0 : a.active ? -1 : 1

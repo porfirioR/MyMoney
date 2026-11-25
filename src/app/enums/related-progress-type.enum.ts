@@ -2,5 +2,7 @@
 export enum RelatedProgressType {
   Expense = 'expense',
   Income = 'income',
-  Balance = 'balance'
+  Balance = 'balance',
+  // Only saving movements: the deposits move towards the goal
+  Saving = 'saving'
 }

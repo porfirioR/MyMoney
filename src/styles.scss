@@ -101,6 +101,9 @@ $my-dark-theme: mat.define-dark-theme((
   --primary: #82b366;
   --success: #2e7d32;
   --success-bg: #e8f5e9;
+  // Savings are neither expense (red) nor income (green)
+  --saving: #1565c0;
+  --saving-bg: #e3f2fd;
   --danger: #c62828;
   --warn: #f44336;
   --danger-bg: #ffebee;
@@ -123,6 +126,8 @@ $my-dark-theme: mat.define-dark-theme((
   --primary: #a8ca94;
   --success: #81c784;
   --success-bg: rgb(129 199 132 / 16%);
+  --saving: #90caf9;
+  --saving-bg: rgb(144 202 249 / 16%);
   --danger: #ef9a9a;
   --warn: #ef5350;
   --danger-bg: rgb(239 154 154 / 16%);
@@ -211,6 +216,9 @@ body {
     &.income {
       color: var(--success);
     }
+    &.saving {
+      color: var(--saving);
+    }
   }
   & .mat-button-toggle.mat-button-toggle-checked {
     &.expense {
@@ -221,7 +229,27 @@ body {
       border-color: var(--success) !important;
       background: var(--success-bg);
     }
+    &.saving {
+      border-color: var(--saving) !important;
+      background: var(--saving-bg);
+    }
   }
+}
+
+// Amount of a saving movement (deposit, withdrawal or yield): a color of its own
+.saving-amount {
+  color: var(--saving);
+}
+
+// Small label with what happened in a saving movement (Deposit / Withdrawal / Yield)
+.saving-direction {
+  font-size: 11px;
+  padding: 0 6px;
+  margin-left: 6px;
+  border-radius: 8px;
+  color: var(--saving);
+  background: var(--saving-bg);
+  white-space: nowrap;
 }
 
 // Message shown when a screen has nothing to list yet

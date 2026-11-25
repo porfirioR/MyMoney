@@ -13,6 +13,9 @@
           <mat-button-toggle class="income" [value]="categoryType.income">
             {{categoryType.income | translate}}
           </mat-button-toggle>
+          <mat-button-toggle class="saving" [value]="categoryType.saving">
+            {{categoryType.saving | translate}}
+          </mat-button-toggle>
         </mat-button-toggle-group>
       </mat-card>
       <mat-progress-bar mode="indeterminate" *ngIf="loading || refreshing"></mat-progress-bar>
@@ -23,7 +26,22 @@
           <p>{{'movement-messages.empty-report' | translate}}</p>
         </section>
         <ng-template #report>
-          <mat-card>
+          <!-- Savings of the month: deposited, withdrawn and earned -->
+          <mat-card class="saving-totals" *ngIf="isSaving">
+            <article>
+              {{'saving-messages.deposited' | translate}}
+              <strong>{{hideAmounts ? '••••••' : (savingTotals.deposited | number:'' : numberType)}}</strong>
+            </article>
+            <article>
+              {{'saving-messages.withdrawn' | translate}}
+              <strong>{{hideAmounts ? '••••••' : (savingTotals.withdrawn | number:'' : numberType)}}</strong>
+            </article>
+            <article>
+              {{'saving-messages.yields' | translate}}
+              <strong>{{hideAmounts ? '••••••' : (savingTotals.yields | number:'' : numberType)}}</strong>
+            </article>
+          </mat-card>
+          <mat-card *ngIf="hasChart">
             <canvas baseChart width="200" height="150"
               [data]="chartData"
               [labels]="doughnutChartLabels"
@@ -51,6 +69,11 @@
                       {{group.amount | number:'' : numberType}}
                     </span>
                   </mat-panel-title>
+                  <p class="saving-breakdown" *ngIf="group.saving as saving">
+                    <span>{{'saving-messages.deposited' | translate}}: <strong>{{saving.deposited | number:'' : numberType}}</strong></span>
+                    <span *ngIf="saving.withdrawn">{{'saving-messages.withdrawn' | translate}}: <strong>{{saving.withdrawn | number:'' : numberType}}</strong></span>
+                    <span *ngIf="saving.yields">{{'saving-messages.yields' | translate}}: <strong>{{saving.yields | number:'' : numberType}}</strong></span>
+                  </p>
                   <div class="budget" *ngIf="group.budget as budget" [class.near]="budget.isNear" [class.over]="budget.isOver">
                     <div class="budget-track">
                       <div class="budget-fill" [style.width.%]="getBudgetBarWidth(budget)"></div>
@@ -74,7 +97,8 @@
                   >
                     <span class="movement-date">{{movement.date | date: 'dd/MM': '': language}}</span>
                     <span class="movement-memorandum">{{(movement.memorandum || movement.categoryName || '') | translate}}</span>
-                    <span class="movement-amount">{{movement.amount | number:'' : numberType}}</span>
+                    <span class="saving-direction" *ngIf="movement.direction">{{('saving-direction.' + movement.direction) | translate}}</span>
+                    <span class="movement-amount">{{(isSaving ? getSignedAmount(movement) : movement.amount) | number:'' : numberType}}</span>
                     <mat-icon class="movement-more">more_vert</mat-icon>
                   </button>
                 </li>

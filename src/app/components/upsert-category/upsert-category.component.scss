@@ -193,3 +193,13 @@
   margin-top: 0.75rem;
   margin-bottom: 1rem;
 }
+
+.earns-interest {
+  margin-bottom: 1rem;
+
+  .hint {
+    margin: 0.4rem 0 0;
+    font-size: 12px;
+    color: var(--text-secondary);
+  }
+}

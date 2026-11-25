@@ -6,6 +6,7 @@ import { doc } from '@angular/fire/firestore';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom, take } from 'rxjs';
 import { CategoryType } from '../../enums/category-type.enum';
+import { SavingDirection } from '../../enums/saving-direction.enum';
 import { InputType } from '../../enums/input-type.enum';
 import { MovementModel } from '../../models/movement.model';
 import { CategoryModel } from '../../models/category.model';
@@ -46,14 +47,19 @@ export class RegisterMovementComponent implements OnInit {
     backgroundColor: new FormControl(this.defaultBackgroundColor),
     time: new FormControl(null, Validators.required),
     relatedMovements: new FormControl(null),
+    direction: new FormControl(SavingDirection.Deposit),
+    isLoss: new FormControl(false),
   })
+  protected savingDirection = SavingDirection
   protected currentCategories: CategoryModel[] = []
   protected loading = true
   protected saving = false
   protected title: string = 'Register movement'
   protected mask = 'separator.0'
   protected thousandSeparator = '.'
+  // Groups offered for the current type: saving groups for savings, the others for incomes and expenses
   protected relatedMovements: RelatedMovementModel[] = []
+  private groupsShownInMovement: RelatedMovementModel[] = []
   // Opened as a dialog (e.g. from the annual report) it closes itself instead of navigating back
   protected isDialog = false
   private categoryList!: CategoryModel[]
@@ -81,7 +87,7 @@ export class RegisterMovementComponent implements OnInit {
     this.categoryList = this.userService.getActiveCategories()
     const movementId: string | undefined = this.dialogData?.movement.id ?? this.activatedRoute.snapshot.params['id']
     try {
-      this.relatedMovements = await firstValueFrom(this.relateMovementService.getRelatedMovementsShowingInMovements().pipe(take(1)))
+      this.groupsShownInMovement = await firstValueFrom(this.relateMovementService.getRelatedMovementsShowingInMovements().pipe(take(1)))
       if (movementId) {
         // After a reload the movement is not in the list of the main screen, so it is read from the server
         this.updateMovement = this.dialogData?.movement ?? this.movementService.getMovementById(movementId) ?? await this.movementService.getMovementByIdFromServer(movementId)
@@ -92,10 +98,11 @@ export class RegisterMovementComponent implements OnInit {
         this.title = 'Movement update'
         this.patchFormGroup(this.updateMovement)
       } else {
-        // The app icon shortcuts open this screen with ?type=Income or ?type=Expense
+        // The app icon shortcuts open this screen with ?type=Income, ?type=Expense or ?type=Saving
         const queryType = this.activatedRoute.snapshot.queryParamMap.get('type')
         const type = Object.values(CategoryType).find(x => x.toLowerCase() === queryType?.toLowerCase()) ?? CategoryType.expense
         this.formGroup.controls.type.setValue(type, { emitEvent: false })
+        this.relatedMovements = this.getGroupsForType(type)
         this.currentCategories = HelperService.categoriesByType(this.categoryList, type, this.getCategoryName)
         if (this.currentCategories.length > 0) {
           this.selectCategory(this.currentCategories[0])
@@ -111,6 +118,11 @@ export class RegisterMovementComponent implements OnInit {
 
     this.formGroup.controls.type.valueChanges.subscribe({
       next: (type) => {
+        // A group of the other kind cannot keep the movement, so its selection goes away
+        this.relatedMovements = this.getGroupsForType(type!)
+        const visibleIds = this.relatedMovements.map(x => x.id!)
+        const selected = this.formGroup.controls.relatedMovements.value ?? []
+        this.formGroup.controls.relatedMovements.setValue(selected.filter(x => visibleIds.includes(x)))
         this.currentCategories = HelperService.categoriesByType(this.categoryList, type!, this.getCategoryName)
         const currentCategory = this.currentCategories.find(x => x.id === this.formGroup.controls.categoryId.value)
         if (currentCategory) { return }
@@ -167,6 +179,14 @@ export class RegisterMovementComponent implements OnInit {
     })
   }
 
+  protected isSavingType = (): boolean => HelperService.isSaving(this.formGroup.controls.type.value ?? undefined)
+
+  // Yields only make sense for savings that generate interest
+  protected canYield = (): boolean =>
+    !!this.currentCategories.find(x => x.id === this.formGroup.controls.categoryId.value)?.earnsInterest
+
+  protected isYield = (): boolean => this.isSavingType() && this.formGroup.controls.direction.value === SavingDirection.Yield
+
   protected save = async (): Promise<void> => {
     if (this.formGroup.invalid || this.saving) { return }
     const request: MovementModel = {
@@ -178,6 +198,14 @@ export class RegisterMovementComponent implements OnInit {
       color: this.formGroup.controls.color.value!,
       backgroundColor: this.formGroup.controls.backgroundColor.value!,
       time: this.formGroup.controls.time.value!,
+    }
+    // Firestore rejects undefined fields, so the direction is only added to savings
+    if (this.isSavingType()) {
+      const direction = this.formGroup.controls.direction.value ?? SavingDirection.Deposit
+      request.direction = direction
+      if (direction === SavingDirection.Yield && this.formGroup.controls.isLoss.value) {
+        request.amount = -Math.abs(request.amount)
+      }
     }
     // saving stays true until the screen closes, so a second tap cannot duplicate the movement
     this.saving = true
@@ -221,6 +249,14 @@ export class RegisterMovementComponent implements OnInit {
     this.formGroup.controls.categoryId.setValue(category.id)
     this.formGroup.controls.color.setValue(category.color ?? this.defaultColor)
     this.formGroup.controls.backgroundColor.setValue(category.backgroundColor ?? this.defaultBackgroundColor)
+    if (!category.earnsInterest && this.formGroup.controls.direction.value === SavingDirection.Yield) {
+      this.formGroup.controls.direction.setValue(SavingDirection.Deposit)
+    }
+  }
+
+  private getGroupsForType = (type: CategoryType | string): RelatedMovementModel[] => {
+    const isSaving = HelperService.isSaving(type)
+    return this.groupsShownInMovement.filter(x => HelperService.isSavingGroup(x) === isSaving)
   }
 
   private setDate = (date: Date): void => {
@@ -232,6 +268,7 @@ export class RegisterMovementComponent implements OnInit {
 
   private patchFormGroup = (movement: MovementModel): void => {
     this.currentCategories = HelperService.categoriesByType(this.categoryList, movement.type, this.getCategoryName)
+    this.relatedMovements = this.getGroupsForType(movement.type)
     const currentCategory = this.currentCategories.find(x => x.id === movement.categoryId)
     const relatedMovementIds = this.relatedMovements.filter(x => x.related.map(y => y.id).includes(movement.id!)).map(x => x.id!)
     this.formGroup.patchValue({
@@ -242,6 +279,8 @@ export class RegisterMovementComponent implements OnInit {
       date: movement.date,
       time: movement.date?.getTime(),
       amount: Math.abs(movement.amount),
+      direction: movement.direction ?? SavingDirection.Deposit,
+      isLoss: movement.direction === SavingDirection.Yield && movement.amount < 0,
       color: currentCategory && currentCategory.color ? currentCategory.color : this.defaultColor,
       backgroundColor: currentCategory && currentCategory.backgroundColor ? currentCategory.backgroundColor : this.defaultBackgroundColor,
       relatedMovements: relatedMovementIds
@@ -258,7 +297,9 @@ export class RegisterMovementComponent implements OnInit {
     let changes = 0
     groups.forEach(group => {
       const wasIncluded = !!oldId && group.related.some(x => x.id === oldId)
-      const include = selectableIds.includes(group.id!) ? selectedIds.includes(group.id!) : wasIncluded
+      // A movement that changed between saving and income/expense leaves the groups of the other kind
+      const sameKind = HelperService.isSavingGroup(group) === HelperService.isSaving(type)
+      const include = selectableIds.includes(group.id!) ? selectedIds.includes(group.id!) : wasIncluded && sameKind
       if ((!wasIncluded && !include) || (wasIncluded && include && oldId === newId)) { return }
       const related = group.related.filter(x => x.id !== oldId).map(x => ({ id: x.id, type: x.type }))
       if (include) {

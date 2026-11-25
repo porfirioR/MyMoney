@@ -56,9 +56,11 @@ export class MovementDetailComponent implements OnInit {
       }
       const relatedMovements = await firstValueFrom(this.relateMovementService.getRelatedMovementsShowingInMovements().pipe(take(1)))
       const userCategory = this.userService.getUserCategories().find(x => x.categoryId === movement.categoryId)
-      movement.categoryName = this.userService.getAllCategories().find(x => x.id === movement.categoryId)?.name
-      movement.color = userCategory?.color ?? this.defaultColor
-      movement.backgroundColor = userCategory?.backgroundColor ?? this.defaultBackgroundColor
+      const category = this.userService.getAllCategories().find(x => x.id === movement.categoryId)
+      movement.categoryName = category?.name
+      // Like the main screen: the user color first, then the default color of the category
+      movement.color = userCategory?.color ?? category?.color ?? this.defaultColor
+      movement.backgroundColor = userCategory?.backgroundColor ?? category?.backgroundColor ?? this.defaultBackgroundColor
       this.relatedMovements = relatedMovements.filter(x => x.related.map(y => y.id).includes(movement.id!)).map(x => x.name!)
       this.movement = movement
       this.load = true

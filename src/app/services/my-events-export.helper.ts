@@ -36,7 +36,9 @@ export class MyEventsExportHelper {
     const usedCategoryIds = new Set(movements.map(m => m.categoryId))
 
     // Active categories always; inactive ones only if they have movements in the range
+    // Saving categories stay out until the format supports them: version 1 only knows income and expense
     const categories = source.categories
+      .filter(c => (c.type ?? '').toLowerCase() !== 'saving')
       .filter(c => c.active !== false || usedCategoryIds.has(c.id))
       .map(c => ({ id: c.id, name: c.name, type: MyEventsExportHelper.toType(c.type), active: c.active !== false }))
       .sort((a, b) => a.type.localeCompare(b.type) || a.name.localeCompare(b.name))

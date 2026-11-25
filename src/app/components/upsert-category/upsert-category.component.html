@@ -91,6 +91,13 @@
         <input matInput type="text" formControlName="budget" [mask]="mask" [thousandSeparator]="thousandSeparator" id="budget" inputmode="numeric" autocomplete="off">
         <mat-hint>{{'budget-messages.hint' | translate}}</mat-hint>
       </mat-form-field>
+
+      <section class="earns-interest" *ngIf="isSaving">
+        <mat-checkbox color="primary" formControlName="earnsInterest" id="earnsInterest">
+          {{'saving-messages.earns-interest' | translate}}
+        </mat-checkbox>
+        <p class="hint">{{'saving-messages.earns-interest-hint' | translate}}</p>
+      </section>
     </mat-card>
 
     <footer class="actions form-actions">

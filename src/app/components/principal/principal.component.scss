@@ -15,7 +15,7 @@
   padding-right: 10px;
 }
 
-.mat-card-header #difference-balance {
+.mat-card-header #saved {
   padding-right: 0.75rem;
 }
 
@@ -54,4 +54,30 @@ label ~ p {
   & .mat-icon {
     flex-shrink: 0;
   }
+}
+
+// What the user can still spend, on its own line under the totals
+.available {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-top: 0.75rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--divider);
+  color: var(--text-secondary);
+
+  & strong {
+    font-size: 18px;
+    color: var(--text-primary);
+    font-variant-numeric: tabular-nums;
+  }
+
+  & strong.negative {
+    color: var(--danger);
+  }
+}
+
+// The totals open their report, so they look clickable
+#incomes, #expenses, #saved {
+  cursor: pointer;
 }

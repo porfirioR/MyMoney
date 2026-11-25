@@ -86,7 +86,10 @@ export const CATEGORY_ICON_GROUPS: CategoryIconGroupModel[] = [
   new CategoryIconGroupModel(CategoryGroupIconType.Finance, [
     IconType.Savings, IconType.Wallet, IconType.BalanceWallet,
     IconType.CurrencyExchange, IconType.Monetization, IconType.AttachMoney,
-    IconType.TrendingUp, IconType.RequestQuote, IconType.Shield,
+    IconType.TrendingUp, IconType.TrendingDown, IconType.ShowChart, IconType.CandlestickChart,
+    IconType.QueryStats, IconType.Percent, IconType.Payments, IconType.Paid, IconType.PriceCheck,
+    IconType.MoneyOff, IconType.LockClock, IconType.Event, IconType.Poll, IconType.Diversity,
+    IconType.RequestQuote, IconType.Shield,
     IconType.AccountBalance, IconType.CreditScore, IconType.CurrencyBitcoin, IconType.LocalAtm
   ]),
   new CategoryIconGroupModel(CategoryGroupIconType.Housing, [

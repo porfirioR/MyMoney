@@ -32,11 +32,21 @@
             <p>{{hideAmounts ? '••••••' : (expenses | number:'' : numberType)}}</p>
           </article>
           <hr>
-          <article matRipple id="difference-balance">
-            {{'Difference' | translate}}
-            <p>{{hideAmounts ? '••••••' : (balance | number:'' : numberType)}}</p>
+          <!-- Savings are not expenses, but that money is no longer available to spend -->
+          <article matRipple id="saved"
+            [matRippleCentered]="true"
+            [matRippleUnbounded]="true"
+            [routerLink]="['report-month', categoryType.saving]"
+            [queryParams]="yearMonth">
+            {{'saving-messages.saved' | translate}}
+            <p>{{hideAmounts ? '••••••' : (savingTotals.saved | number:'' : numberType)}}</p>
           </article>
         </header>
+        <!-- What the user can still spend: incomes - expenses - saved -->
+        <footer class="available" id="available">
+          {{'saving-messages.available' | translate}}
+          <strong [class.negative]="available < 0">{{hideAmounts ? '••••••' : (available | number:'' : numberType)}}</strong>
+        </footer>
       </mat-card>
       <!-- Only shown when a budget needs attention; it opens the expense report of the month -->
       <a class="budget-alert" *ngIf="budgetsOver > 0 || budgetsNear > 0"
