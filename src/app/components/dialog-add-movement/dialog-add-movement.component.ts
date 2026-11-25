@@ -48,7 +48,8 @@ export class DialogAddMovementComponent implements OnInit {
   // Saving groups only search saving movements; the other groups only incomes and expenses
   private savings = false
   protected selectedCategories: CategoryModel[] = []
-  protected filteredCategories: Observable<CategoryModel[]>
+  // The options are grouped by type, so categories with the same name are told apart
+  protected filteredCategoryGroups: Observable<{ label: string, categories: CategoryModel[] }[]>
   protected defaultColor = DEFAULT_ICON_COLOR
   protected defaultBackgroundColor = DEFAULT_BACKGROUND_COLOR
   // Selected movements are kept here, so changing the filters does not lose them
@@ -117,9 +118,10 @@ export class DialogAddMovementComponent implements OnInit {
       }
     })
 
-    this.filteredCategories = this.formGroup.controls.category.valueChanges.pipe(
+    this.filteredCategoryGroups = this.formGroup.controls.category.valueChanges.pipe(
       startWith(null),
-      map((x: string | null) => x ? this.filter(x) : this.categories.filter(x => !this.selectedCategories.map(x => x.id).includes(x.id)).slice())
+      map((x: string | null) => x ? this.filter(x) : this.categories.filter(x => !this.selectedCategories.map(x => x.id).includes(x.id))),
+      map((categories) => this.groupByType(categories))
     )
   }
 
@@ -254,6 +256,16 @@ export class DialogAddMovementComponent implements OnInit {
   private filter = (value: string): CategoryModel[] => {
     const filterValue = value.toLowerCase()
     return this.categories.filter(x => !this.selectedCategories.map(x => x.id).includes(x.id) && this.translateService.instant(x.name).toLowerCase().includes(filterValue))
+  }
+
+  private groupByType = (categories: CategoryModel[]): { label: string, categories: CategoryModel[] }[] => {
+    const groups = this.savings
+      ? [{ label: 'Savings', categories: categories.filter(x => HelperService.isSaving(x.type)) }]
+      : [
+        { label: CategoryType.expense, categories: categories.filter(x => HelperService.isExpense(x.type)) },
+        { label: CategoryType.income, categories: categories.filter(x => !HelperService.isExpense(x.type) && !HelperService.isSaving(x.type)) }
+      ]
+    return groups.filter(x => x.categories.length > 0)
   }
 
   // Categories are an optional filter: changing them refreshes the results
