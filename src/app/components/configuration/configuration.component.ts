@@ -78,6 +78,10 @@ export class ConfigurationComponent implements OnInit, OnDestroy {
     if (this.formGroup.invalid || this.saving) { return }
     this.saving = true
     const request: ConfigurationModel = this.formGroup.getRawValue()! as ConfigurationModel
+    // Settings that are not in this form (like the dismissed notice to move savings) are kept
+    if (this.userService.item?.userConfiguration?.moveToSavingDismissed) {
+      request.moveToSavingDismissed = true
+    }
     this.configurationService.upsert(request).then((reference) => {
       request.id = request.id ?? reference?.id
       // The other screens read the configuration from memory, so it is updated right away

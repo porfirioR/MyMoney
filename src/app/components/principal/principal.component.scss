@@ -81,3 +81,31 @@ label ~ p {
 #incomes, #expenses, #saved {
   cursor: pointer;
 }
+
+// One-time suggestion to move the categories used as savings
+.move-to-saving {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.25rem 0.75rem;
+  margin: -0.25rem 1rem 0.75rem;
+  padding: 0.75rem;
+  border: 1px solid var(--saving);
+  border-radius: 4px;
+  background: var(--saving-bg);
+  font-size: 14px;
+
+  & > .mat-icon {
+    color: var(--saving);
+  }
+
+  & p {
+    margin: 0;
+  }
+
+  & footer {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+  }
+}

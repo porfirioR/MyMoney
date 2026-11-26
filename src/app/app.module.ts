@@ -48,6 +48,7 @@ import localEs from '@angular/common/locales/es'
 import localeEn from '@angular/common/locales/en';
 import { registerLocaleData } from '@angular/common'
 import { MovementDetailComponent } from './components/movement-detail/movement-detail.component';
+import { MoveToSavingComponent } from './components/move-to-saving/move-to-saving.component';
 import { DialogDeleteComponent } from './components/dialog-delete/dialog-delete.component';
 import { ImportMovementComponent } from './components/import-movement/import-movement.component';
 import { DialogUploadMovementComponent } from './components/dialog-upload-movement/dialog-upload-movement.component';
@@ -86,6 +87,7 @@ registerLocaleData(localeEn, 'en')
 
 @NgModule({
   declarations: [
+    MoveToSavingComponent,
     AppComponent,
     PrincipalComponent,
     SelectYearMonthComponent,

@@ -5,6 +5,7 @@ import { UpsertCategoryComponent } from './components/upsert-category/upsert-cat
 import { PrincipalComponent } from './components/principal/principal.component';
 import { RegisterMovementComponent } from './components/register-movement/register-movement.component';
 import { LoginComponent } from './components/login/login.component';
+import { MoveToSavingComponent } from './components/move-to-saving/move-to-saving.component';
 import { MovementDetailComponent } from './components/movement-detail/movement-detail.component';
 // Import is hidden for now; the component stays in the project in case it is needed again
 // import { ImportMovementComponent } from './components/import-movement/import-movement.component';
@@ -33,6 +34,12 @@ const routes: Routes = [
     canActivate: [UserGuard],
     component: CategoryConfigurationComponent,
     title: 'Category'
+  },
+  {
+    path: 'category/move-to-saving',
+    canActivate: [UserGuard],
+    component: MoveToSavingComponent,
+    title: 'move-to-saving.title'
   },
   {
     path: 'category/new-category/:type',

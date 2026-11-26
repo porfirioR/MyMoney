@@ -1,0 +1,101 @@
+<app-page-layout title="move-to-saving.title" [backButton]="true" (back)="exit()">
+  <mat-progress-bar mode="indeterminate" *ngIf="moving"></mat-progress-bar>
+  <main id="main">
+    <!-- The saving categories come from the system ones (or own ones): without them there is nowhere to move -->
+    <section class="empty-state" *ngIf="savingCategories.length === 0; else content">
+      <mat-icon class="empty-icon">savings</mat-icon>
+      <p>{{'move-to-saving.no-saving-categories' | translate}}</p>
+    </section>
+
+    <ng-template #content>
+      <!-- After moving: what changed and the option to hide the old categories -->
+      <mat-card *ngIf="result; else form" class="result">
+        <mat-card-content>
+          <h2>
+            <mat-icon>check_circle</mat-icon>
+            {{'move-to-saving.done' | translate: { count: result.movements } }}
+          </h2>
+          <p *ngIf="result.savingGroups.size">
+            {{'move-to-saving.saving-groups' | translate: { names: toNames(result.savingGroups) } }}
+          </p>
+          <p class="warning" *ngIf="result.mixedGroups.size">
+            <mat-icon>warning_amber</mat-icon>
+            {{'move-to-saving.mixed-groups' | translate: { names: toNames(result.mixedGroups) } }}
+          </p>
+          <p *ngIf="hasActiveOldCategories && !oldHidden">{{'move-to-saving.hide-question' | translate}}</p>
+        </mat-card-content>
+        <footer class="form-actions">
+          <button mat-stroked-button color="primary" type="button" (click)="exit()" [title]="'exit-button' | translate">
+            {{'move-to-saving.back' | translate}}
+          </button>
+          <button mat-flat-button color="primary" type="button" *ngIf="hasActiveOldCategories && !oldHidden"
+            [disabled]="hidingOld" (click)="hideOldCategories()" [title]="'move-to-saving.hide-button' | translate">
+            {{'move-to-saving.hide-button' | translate}}
+          </button>
+        </footer>
+      </mat-card>
+
+      <ng-template #form>
+        <p class="intro">{{'move-to-saving.intro' | translate}}</p>
+        <mat-card class="category-list">
+          <article *ngFor="let row of visibleRows" class="category-row" [class.selected]="row.selected">
+            <mat-checkbox color="primary" [checked]="row.selected" [disabled]="moving" (change)="toggleRow(row)">
+              <span class="category-label">
+                <span customColor class="mat-custom-icon-button"
+                  [color]="row.category.color"
+                  [backgroundColor]="row.category.backgroundColor"
+                >
+                  <i class="material-icons-outlined notranslate">{{row.category.icon}}</i>
+                </span>
+                <span class="category-name">{{row.category.name | translate}}</span>
+                <span class="type-chip" [class.expense]="isExpense(row.category)">
+                  {{(isExpense(row.category) ? 'Expense' : 'Income') | translate}}
+                </span>
+              </span>
+            </mat-checkbox>
+
+            <section class="plan" *ngIf="row.selected">
+              <p class="count">
+                <ng-container *ngIf="row.count !== undefined; else counting">
+                  {{'move-to-saving.movements' | translate: { count: row.count } }}
+                </ng-container>
+                <ng-template #counting>{{'move-to-saving.counting' | translate}}</ng-template>
+              </p>
+              <mat-form-field class="w-100">
+                <mat-label>{{'move-to-saving.target' | translate}}</mat-label>
+                <mat-select [value]="row.target" [compareWith]="compareCategories" [disabled]="moving" (selectionChange)="selectTarget(row, $event.value)">
+                  <mat-option *ngFor="let saving of savingCategories" [value]="saving">
+                    {{saving.name | translate}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <!-- Incomes from a saving were withdrawals, or the interest it earned -->
+              <ng-container *ngIf="!isExpense(row.category); else depositHint">
+                <mat-button-toggle-group class="direction-toggle" [value]="row.direction" [disabled]="moving" (change)="row.direction = $event.value">
+                  <mat-button-toggle [value]="directions.Withdrawal">{{'saving-direction.withdrawal' | translate}}</mat-button-toggle>
+                  <mat-button-toggle [value]="directions.Yield" *ngIf="canYield(row)">{{'saving-direction.yield' | translate}}</mat-button-toggle>
+                </mat-button-toggle-group>
+                <p class="hint">{{'move-to-saving.income-hint' | translate}}</p>
+              </ng-container>
+              <ng-template #depositHint>
+                <p class="hint">{{'move-to-saving.expense-hint' | translate}}</p>
+              </ng-template>
+            </section>
+          </article>
+          <button mat-button color="primary" type="button" class="show-all" *ngIf="!showAll" (click)="showAll = true">
+            {{'move-to-saving.show-all' | translate}}
+          </button>
+        </mat-card>
+
+        <footer class="form-actions">
+          <button mat-stroked-button color="primary" type="button" (click)="exit()" [disabled]="moving" [title]="'cancel-button' | translate">
+            {{'Cancel' | translate}}
+          </button>
+          <button mat-flat-button color="primary" type="button" [disabled]="!canMove" (click)="move()" [title]="'move-to-saving.confirm-button' | translate">
+            {{'move-to-saving.confirm-button' | translate}}{{totalMovements ? ' (' + totalMovements + ')' : ''}}
+          </button>
+        </footer>
+      </ng-template>
+    </ng-template>
+  </main>
+</app-page-layout>

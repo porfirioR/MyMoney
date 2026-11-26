@@ -19,6 +19,11 @@
     <mat-tab [label]="'Savings' | translate">
       <main id="main-saving" class="fab-space">
         <p class="tab-hint">{{'saving-messages.tab-hint' | translate}}</p>
+        <!-- For who already registered savings as expenses or incomes -->
+        <a class="move-link" routerLink="move-to-saving">
+          <mat-icon>move_down</mat-icon>
+          {{'move-to-saving.link' | translate}}
+        </a>
         <ng-container *ngFor="let item of savingCategory">
           <app-category-row [category]="item" (updateCategoryEvent)="updateCategories($event)"></app-category-row>
         </ng-container>

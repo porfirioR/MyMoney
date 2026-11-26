@@ -419,5 +419,30 @@
     "deposit": "Aporte",
     "withdrawal": "Retiro",
     "yield": "Rendimiento"
+  },
+  "move-to-saving": {
+    "title": "Pasar a Ahorro",
+    "link": "¿Cargabas ahorros como gasto o ingreso? Pasalos a Ahorro",
+    "notice": "¿Cargabas tus ahorros o inversiones como gasto o ingreso? Ahora podés pasarlos a Ahorro para que no cuenten como gasto.",
+    "review": "Revisar",
+    "dismiss": "No volver a preguntar",
+    "intro": "Elegí las categorías que usabas para ahorrar. Sus movimientos pasan a la categoría de ahorro que elijas, con la misma fecha, monto y memorándum.",
+    "no-saving-categories": "Todavía no hay categorías de ahorro. Creá una en Configuración de categorías → Ahorros.",
+    "show-all": "Ver todas las categorías",
+    "movements": "{{count}} movimientos para pasar",
+    "counting": "Contando movimientos…",
+    "target": "Pasar a",
+    "expense-hint": "Cada gasto pasa como Aporte.",
+    "income-hint": "Cada ingreso pasa como Retiro (sacaste plata del ahorro) o como Rendimiento (lo que ganó).",
+    "confirm-title": "Pasar a Ahorro",
+    "confirm-message": "Se van a pasar {{count}} movimientos. Dejan de contar como gastos o ingresos. ¿Continuar?",
+    "confirm-button": "Pasar a Ahorro",
+    "done": "{{count}} movimientos pasaron a Ahorro.",
+    "saving-groups": "Estos grupos ahora son de tipo Ahorro: {{names}}.",
+    "mixed-groups": "Estos grupos mezclan ahorros con gastos o ingresos; revisalos en Movimientos relacionados: {{names}}.",
+    "hide-question": "¿Ocultar las categorías viejas? No se borran, solo dejan de aparecer al registrar.",
+    "hide-button": "Ocultar categorías viejas",
+    "hidden": "Categorías ocultas",
+    "back": "Volver"
   }
 }

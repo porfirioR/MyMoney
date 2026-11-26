@@ -48,6 +48,19 @@
           <strong [class.negative]="available < 0">{{hideAmounts ? '••••••' : (available | number:'' : numberType)}}</strong>
         </footer>
       </mat-card>
+      <!-- Shown once: savings registered as expenses or incomes can be moved to the saving type -->
+      <section class="move-to-saving" *ngIf="showMoveToSaving">
+        <mat-icon>savings</mat-icon>
+        <p>{{'move-to-saving.notice' | translate}}</p>
+        <footer>
+          <button mat-button type="button" (click)="dismissMoveToSaving()" [title]="'move-to-saving.dismiss' | translate">
+            {{'move-to-saving.dismiss' | translate}}
+          </button>
+          <button mat-flat-button color="primary" type="button" routerLink="/category/move-to-saving" [title]="'move-to-saving.review' | translate">
+            {{'move-to-saving.review' | translate}}
+          </button>
+        </footer>
+      </section>
       <!-- Only shown when a budget needs attention; it opens the expense report of the month -->
       <a class="budget-alert" *ngIf="budgetsOver > 0 || budgetsNear > 0"
         [class.over]="budgetsOver > 0"

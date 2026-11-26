@@ -11,6 +11,7 @@ import { MovementService } from '../../services/movement.service';
 import { UserService } from '../../services/user.service';
 import { HelperService } from '../../services/helper.service';
 import { NotificationService } from '../../services/notification.service';
+import { MoveToSavingService } from '../../services/move-to-saving.service';
 import { SelectYearMonthComponent } from '../select-year-mount/select-year-month.component';
 import { CategoryType } from '../../enums/category-type.enum';
 import { NumberType } from '../../enums/number-type.enum';
@@ -42,12 +43,15 @@ export class PrincipalComponent implements OnInit {
   protected budgetsOver = 0
   protected budgetsNear = 0
   private userCategories: UserCategoryModel[] = []
+  // Shown once to who has categories that look like savings ("Ahorro", "Inversiones"...)
+  protected showMoveToSaving = false
 
   constructor(
     private readonly dialog: MatDialog,
     private readonly movementService: MovementService,
     private readonly userService: UserService,
-    private readonly notificationService: NotificationService
+    private readonly notificationService: NotificationService,
+    private readonly moveToSavingService: MoveToSavingService
   ) {
     this.yearMonth = this.userService.getSelectedYearMonth()
     this.hideAmounts = HelperService.readHideAmounts()
@@ -58,6 +62,7 @@ export class PrincipalComponent implements OnInit {
     this.categories = this.userService.getAllCategories()
     this.userCategories = this.userService.getUserCategories()
     this.numberType = this.userService.item!.userConfiguration.number
+    this.showMoveToSaving = this.moveToSavingService.shouldShowNotice()
     this.loadMovements()
   }
 
@@ -66,6 +71,11 @@ export class PrincipalComponent implements OnInit {
     try {
       localStorage.setItem(HelperService.hideAmountsStorageKey, String(this.hideAmounts))
     } catch { }
+  }
+
+  protected dismissMoveToSaving = (): void => {
+    this.showMoveToSaving = false
+    this.moveToSavingService.dismissNotice().catch((e) => this.notificationService.error(e))
   }
 
   protected openYearMonth = (): void => {

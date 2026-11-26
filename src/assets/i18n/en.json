@@ -409,5 +409,30 @@
     "deposit": "Deposit",
     "withdrawal": "Withdrawal",
     "yield": "Yield"
+  },
+  "move-to-saving": {
+    "title": "Move to savings",
+    "link": "Did you register savings as expenses or incomes? Move them to Savings",
+    "notice": "Did you register your savings or investments as expenses or incomes? You can now move them to Savings so they do not count as expenses.",
+    "review": "Review",
+    "dismiss": "Do not ask again",
+    "intro": "Choose the categories you used for savings. Their movements go to the saving category you pick, with the same date, amount and memorandum.",
+    "no-saving-categories": "There are no saving categories yet. Create one in Category configuration → Savings.",
+    "show-all": "Show every category",
+    "movements": "{{count}} movements to move",
+    "counting": "Counting movements…",
+    "target": "Move to",
+    "expense-hint": "Each expense becomes a Deposit.",
+    "income-hint": "Each income becomes a Withdrawal (money taken out of the saving) or a Yield (what it earned).",
+    "confirm-title": "Move to savings",
+    "confirm-message": "{{count}} movements will be moved. They will stop counting as expenses or incomes. Continue?",
+    "confirm-button": "Move to savings",
+    "done": "{{count}} movements were moved to Savings.",
+    "saving-groups": "These groups are now saving groups: {{names}}.",
+    "mixed-groups": "These groups now mix savings with expenses or incomes; check them in Related movements: {{names}}.",
+    "hide-question": "Hide the old categories? They are not deleted, they just stop showing when registering.",
+    "hide-button": "Hide old categories",
+    "hidden": "Categories hidden",
+    "back": "Back"
   }
 }
