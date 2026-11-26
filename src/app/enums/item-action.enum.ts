@@ -1,8 +1,7 @@
 export enum ItemAction {
   home = 'home',
   category = 'category',
-  export = 'export',
-  import = 'import',
+  backup = 'backup',
   annualReport = 'annual-report',
   aboutUs = 'about-us',
   configuration = 'configuration',
