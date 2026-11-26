@@ -10,6 +10,8 @@ export class GroupMovementCategoryModel {
   public saving?: SavingTotalsModel
   // Only saving categories in the annual report: the balance at the end of the year
   public closingBalance?: number
+  // Only in the annual report: the movements of the category split by month
+  public months?: GroupMovementMonthModel[]
 
   constructor(
     public categoryName: string,
@@ -19,5 +21,16 @@ export class GroupMovementCategoryModel {
     public amount: number = 0,
     public movements: MovementModel[] = [],
     public categoryId?: string
+  ) { }
+}
+
+export class GroupMovementMonthModel {
+  constructor(
+    // 0 = January … 11 = December
+    public month: number,
+    // First day of the month, to show its name with the user's language
+    public date: Date,
+    public amount: number = 0,
+    public movements: MovementModel[] = []
   ) { }
 }

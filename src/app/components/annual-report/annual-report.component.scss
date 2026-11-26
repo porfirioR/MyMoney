@@ -152,6 +152,46 @@ canvas {
   }
 }
 
+// Income, expense and saving details: less side padding, so the categories have more room
+::ng-deep .report-details > .mat-expansion-panel > .mat-expansion-panel-content > .mat-expansion-panel-body {
+  padding: 0 10px 16px;
+}
+
+// Space between each title and its icon in the totals
+.amount-header strong.flex-center {
+  gap: 0.25rem;
+}
+
+// Months inside a category: a block per month, its title and total over its movements
+.month-block + .month-block {
+  margin-top: 0.75rem;
+}
+
+.month-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.5rem;
+  border-radius: 4px;
+  background: var(--active-bg);
+  font-size: 13px;
+}
+
+.month-name {
+  font-weight: 500;
+}
+
+.month-count {
+  flex: 1;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.month-amount {
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
 .saving-breakdown {
   display: flex;
   flex-wrap: wrap;
