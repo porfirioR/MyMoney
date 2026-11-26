@@ -1,0 +1,68 @@
+.mat-card {
+  margin: 1rem;
+}
+
+.card-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.mat-card-content {
+  overflow-wrap: anywhere;
+
+  p {
+    margin: 0 0 0.5rem;
+  }
+}
+
+.form-actions {
+  flex-wrap: wrap;
+}
+
+.file-input {
+  display: none;
+}
+
+.hint,
+.progress {
+  font-size: smaller;
+  opacity: 0.8;
+}
+
+.progress {
+  margin: 0.5rem 1rem 0;
+}
+
+.error,
+.warning {
+  color: var(--expense-color, #f44336);
+}
+
+.done {
+  font-weight: 500;
+}
+
+.preview {
+  margin-top: 0.75rem;
+
+  h3 {
+    margin: 0 0 0.25rem;
+    font-size: 1rem;
+  }
+}
+
+.summary {
+  margin: 0 0 0.75rem;
+  padding-left: 1.25rem;
+
+  li {
+    padding: 0.15rem 0;
+  }
+
+  .names {
+    list-style: none;
+    font-size: smaller;
+    opacity: 0.8;
+  }
+}

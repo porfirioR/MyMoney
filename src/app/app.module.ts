@@ -49,10 +49,8 @@ import localeEn from '@angular/common/locales/en';
 import { registerLocaleData } from '@angular/common'
 import { MovementDetailComponent } from './components/movement-detail/movement-detail.component';
 import { DialogDeleteComponent } from './components/dialog-delete/dialog-delete.component';
-import { ImportMovementComponent } from './components/import-movement/import-movement.component';
-import { DialogUploadMovementComponent } from './components/dialog-upload-movement/dialog-upload-movement.component';
 import { LogoutComponent } from './components/logout/logout.component';
-import { ExportMovementComponent } from './components/export-movement/export-movement.component';
+import { BackupComponent } from './components/backup/backup.component';
 import { UserGuard } from './guards/user.guard';
 import { UserService } from './services/user.service';
 import { NgChartsModule } from 'ng2-charts';
@@ -98,9 +96,7 @@ registerLocaleData(localeEn, 'en')
     MovementComponent,
     MovementDetailComponent,
     DialogDeleteComponent,
-    ImportMovementComponent,
-    ExportMovementComponent,
-    DialogUploadMovementComponent,
+    BackupComponent,
     LogoutComponent,
     ReportMonthComponent,
     AboutUsComponent,

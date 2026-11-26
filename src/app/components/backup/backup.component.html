@@ -1,0 +1,100 @@
+<app-page-layout title="Backup">
+  <main id="main">
+    <!-- Export backup -->
+    <mat-card id="export-backup">
+      <mat-card-header>
+        <mat-card-title class="card-title"><mat-icon color="primary">download</mat-icon>{{'backup-messages.export-title' | translate}}</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p>{{'backup-messages.export-description' | translate}}</p>
+      </mat-card-content>
+      <mat-progress-bar mode="indeterminate" *ngIf="exporting"></mat-progress-bar>
+      <mat-card-footer class="form-actions">
+        <button mat-flat-button color="primary" type="button" (click)="exportBackup()" [disabled]="busy" [title]="'backup-messages.export-button' | translate">
+          {{'backup-messages.export-button' | translate}}
+        </button>
+      </mat-card-footer>
+    </mat-card>
+
+    <!-- Import backup -->
+    <mat-card id="import-backup">
+      <mat-card-header>
+        <mat-card-title class="card-title"><mat-icon color="primary">upload</mat-icon>{{'backup-messages.import-title' | translate}}</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p>{{'backup-messages.import-description' | translate}}</p>
+        <p class="hint">{{'backup-messages.import-again' | translate}}</p>
+
+        <p class="error" *ngIf="errorKey">{{errorKey | translate}}</p>
+
+        <section class="preview" *ngIf="plan">
+          <h3>{{'backup-messages.preview-title' | translate}}</h3>
+          <p class="hint file-name">{{'backup-messages.file' | translate: { name: fileName } }}</p>
+          <p class="hint">{{'backup-messages.exported-at' | translate: { date: (plan.backup.exportedAt | date: 'medium') } }}</p>
+          <ul class="summary">
+            <li>{{'backup-messages.categories-new' | translate: { count: plan.categoriesToCreate.length } }}</li>
+            <li *ngIf="plan.categoriesToCreate.length > 0" class="names">{{newCategoryNames}}</li>
+            <li>{{'backup-messages.categories-found' | translate: { count: plan.categoriesFound } }}</li>
+            <li>{{'backup-messages.category-settings' | translate: { count: plan.userCategories.length } }}</li>
+            <li>{{'backup-messages.movements' | translate: { income: plan.movements.income, expense: plan.movements.expense, saving: plan.movements.saving } }}</li>
+            <li>{{'backup-messages.groups' | translate: { new: groupsToCreate, replaced: groupsToReplace } }}</li>
+            <li *ngIf="plan.movementsWithoutCategory > 0" class="warning">
+              {{'backup-messages.without-category' | translate: { count: plan.movementsWithoutCategory } }}
+            </li>
+          </ul>
+          <p class="hint">{{'backup-messages.overwrite-hint' | translate}}</p>
+        </section>
+
+        <p class="done" *ngIf="finished">{{'backup-messages.imported' | translate}}</p>
+      </mat-card-content>
+      <mat-progress-bar mode="indeterminate" *ngIf="reading"></mat-progress-bar>
+      <ng-container *ngIf="importing">
+        <mat-progress-bar mode="determinate" [value]="progress"></mat-progress-bar>
+        <p class="progress">{{'backup-messages.progress' | translate: { done: done, total: total } }}</p>
+      </ng-container>
+      <input type="file" class="file-input" accept=".json,application/json" (change)="onFileSelected($event)" #fileUpload id="file-input">
+      <mat-card-footer class="form-actions">
+        <!-- Main action until a file is read; then importing is the main one -->
+        <button mat-flat-button *ngIf="!plan" color="primary" type="button" (click)="fileUpload.click()" [disabled]="busy" [title]="'backup-messages.choose-file' | translate">
+          {{'backup-messages.choose-file' | translate}}
+        </button>
+        <button mat-stroked-button *ngIf="plan" color="primary" type="button" (click)="fileUpload.click()" [disabled]="busy" [title]="'backup-messages.choose-other-file' | translate">
+          {{'backup-messages.choose-other-file' | translate}}
+        </button>
+        <button mat-flat-button color="primary" type="button" *ngIf="plan" (click)="confirmImport()" [disabled]="busy" [title]="'backup-messages.import-button' | translate">
+          {{'backup-messages.import-button' | translate}}
+        </button>
+      </mat-card-footer>
+    </mat-card>
+
+    <!-- Export for my-events -->
+    <form [formGroup]="formGroup">
+      <mat-card id="my-events">
+        <mat-card-header>
+          <mat-card-title class="card-title"><mat-icon color="primary">event</mat-icon>{{'Export for my-events' | translate}}</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <p>{{'backup-messages.my-events-description' | translate}}</p>
+          <mat-form-field appearance="fill" class="w-100">
+            <mat-label translate>Start date</mat-label>
+            <input matInput [matDatepicker]="startDatePicker" formControlName="startDate" [min]="minDate" [max]="formGroup.controls.endDate.value ?? today" id="start-date">
+            <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
+            <mat-datepicker #startDatePicker></mat-datepicker>
+          </mat-form-field>
+          <mat-form-field appearance="fill" class="w-100">
+            <mat-label translate>End date</mat-label>
+            <input matInput [matDatepicker]="endDatePicker" formControlName="endDate" [min]="formGroup.controls.startDate.value" [max]="today" id="end-date">
+            <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
+            <mat-datepicker #endDatePicker></mat-datepicker>
+          </mat-form-field>
+        </mat-card-content>
+        <mat-progress-bar mode="indeterminate" *ngIf="exportingMyEvents"></mat-progress-bar>
+        <mat-card-footer class="form-actions">
+          <button mat-flat-button color="primary" type="button" (click)="exportForMyEvents()" [disabled]="formGroup.invalid || busy" [title]="'export-my-events-button' | translate">
+            {{'Export' | translate}}
+          </button>
+        </mat-card-footer>
+      </mat-card>
+    </form>
+  </main>
+</app-page-layout>

@@ -6,10 +6,8 @@ import { PrincipalComponent } from './components/principal/principal.component';
 import { RegisterMovementComponent } from './components/register-movement/register-movement.component';
 import { LoginComponent } from './components/login/login.component';
 import { MovementDetailComponent } from './components/movement-detail/movement-detail.component';
-// Import is hidden for now; the component stays in the project in case it is needed again
-// import { ImportMovementComponent } from './components/import-movement/import-movement.component';
-// Export is back: it creates the file that my-events imports (my-events epic #213)
-import { ExportMovementComponent } from './components/export-movement/export-movement.component';
+// Export and import a whole account (backup JSON), and the file that my-events imports (my-events epic #213)
+import { BackupComponent } from './components/backup/backup.component';
 import { LogoutComponent } from './components/logout/logout.component';
 import { ReportMonthComponent } from './components/report-month/report-month.component';
 import { AboutUsComponent } from './components/about-us/about-us.component';
@@ -64,18 +62,20 @@ const routes: Routes = [
     component: RegisterMovementComponent,
     title: 'Movement update'
   },
-  // Hidden: uncomment this route (and the import above, and the side menu item) to enable it again
-  // {
-  //   path: 'import',
-  //   canActivate: [UserGuard],
-  //   component: ImportMovementComponent,
-  //   title: 'Import'
-  // },
+  {
+    path: 'backup',
+    canActivate: [UserGuard],
+    component: BackupComponent,
+    title: 'Backup'
+  },
+  // Old addresses of the screens that the backup replaced
   {
     path: 'export',
-    canActivate: [UserGuard],
-    component: ExportMovementComponent,
-    title: 'Export'
+    redirectTo: 'backup'
+  },
+  {
+    path: 'import',
+    redirectTo: 'backup'
   },
   {
     path: 'report-month/:type',
@@ -139,7 +139,7 @@ const routes: Routes = [
     path: 'home',
     redirectTo: ''
   },
-  // Unknown URLs (like the hidden /import) go to the main screen instead of a blank page
+  // Unknown URLs go to the main screen instead of a blank page
   {
     path: '**',
     redirectTo: ''
