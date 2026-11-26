@@ -11,7 +11,7 @@ import { CategoryType } from '../../enums/category-type.enum';
 import { MonthType } from '../../enums/month-type.enum';
 import { MovementService } from '../../services/movement.service';
 import { UserService } from '../../services/user.service';
-import { GroupMovementCategoryModel } from '../../models/group-movement-category.model';
+import { GroupMovementCategoryModel, GroupMovementMonthModel } from '../../models/group-movement-category.model';
 import { MovementModel } from '../../models/movement.model';
 import { ChartModel } from '../../models/chart.model';
 import { AnnualReportExportModel, CategoryMonthlyAmountModel } from '../../models/annual-report-export.model';
@@ -361,7 +361,9 @@ export class AnnualReportComponent implements OnInit {
   // Keeps the panels (and whether they are open) when the report is reloaded
   protected trackByCategory = (_: number, group: GroupMovementCategoryModel): string => group.categoryName
 
-  protected trackByMovement = (_: number, movement: MovementModel): string => movement.id!
+  protected trackByMonth = (_: number, month: GroupMovementMonthModel): number => month.month
+
+  protected trackByMovement =(_: number, movement: MovementModel): string => movement.id!
 
   // Ticks and tooltips of every chart use the configured number format
   private setChartsLocale = (locale: string): void => {
@@ -395,7 +397,21 @@ export class AnnualReportComponent implements OnInit {
       }
     })
     groups.sort((a, b) => b.amount - a.amount)
+    groups.forEach(x => x.months = this.groupByMonth(x.movements))
     return groups
+  }
+
+  // Only the months that have movements, in calendar order
+  private groupByMonth = (movements: MovementModel[]): GroupMovementMonthModel[] => {
+    const months = new Map<number, GroupMovementMonthModel>()
+    movements.forEach(movement => {
+      const month = new Date(movement.time).getMonth()
+      const group = months.get(month) ?? new GroupMovementMonthModel(month, new Date(this.year, month, 1))
+      group.movements.push(movement)
+      group.amount += this.getAmount(movement)
+      months.set(month, group)
+    })
+    return [...months.values()].sort((a, b) => a.month - b.month)
   }
 
   protected exportReport = (): void => {
