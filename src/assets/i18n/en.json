@@ -403,5 +403,14 @@
     "progress": "Saving {{done}} of {{total}}…",
     "imported": "The backup was imported successfully",
     "my-events-description": "Creates the file that my-events imports, with the incomes and expenses of the chosen range and their groups. It cannot be imported into MyMoney: use the backup for that."
+  },
+  "search-messages": {
+    "movements-label": "Search by description, category or amount",
+    "movements-count": "{{count}} movements",
+    "categories-label": "Search category",
+    "categories-count": "{{count}} categories",
+    "clear": "Clear",
+    "no-results": "Nothing found for \"{{text}}\"",
+    "no-results-tab": "No category in this tab matches the search"
   }
 }

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { combineLatest, Observable, take } from 'rxjs';
 import { CategoryModel } from '../../models/category.model';
@@ -10,6 +11,7 @@ import { UserCategoryModel } from '../../models/user-category.model';
 import { MovementService } from '../../services/movement.service';
 import { UserService } from '../../services/user.service';
 import { HelperService } from '../../services/helper.service';
+import { SearchHelper } from '../../services/search.helper';
 import { NotificationService } from '../../services/notification.service';
 import { SelectYearMonthComponent } from '../select-year-mount/select-year-month.component';
 import { CategoryType } from '../../enums/category-type.enum';
@@ -41,13 +43,19 @@ export class PrincipalComponent implements OnInit {
   // Expense categories over or close to their monthly budget; the alert only shows when one of them is above 0
   protected budgetsOver = 0
   protected budgetsNear = 0
+  // Search inside the movements of the month only (local, nothing is read again)
+  protected searchText = ''
+  protected visibleDays: GroupDateMovementModel[] = []
+  protected searchCount = 0
+  protected searchTotal: number | null = null
   private userCategories: UserCategoryModel[] = []
 
   constructor(
     private readonly dialog: MatDialog,
     private readonly movementService: MovementService,
     private readonly userService: UserService,
-    private readonly notificationService: NotificationService
+    private readonly notificationService: NotificationService,
+    private readonly translate: TranslateService
   ) {
     this.yearMonth = this.userService.getSelectedYearMonth()
     this.hideAmounts = HelperService.readHideAmounts()
@@ -83,8 +91,15 @@ export class PrincipalComponent implements OnInit {
     })
   }
 
+  protected onSearch = (text: string): void => {
+    this.searchText = text
+    this.applySearch()
+  }
+
   private loadMovements = (): void => {
     this.loading = true
+    // Another month: the previous search would only show empty results
+    this.searchText = ''
     this.getMovements().subscribe({
       next: (movements) => this.prepareMovementListToView(movements),
       error: (e) => {
@@ -145,6 +160,50 @@ export class PrincipalComponent implements OnInit {
     const budgets = [...HelperService.getBudgetStatuses(this.categories, this.movements).values()]
     this.budgetsOver = budgets.filter(x => x.isOver).length
     this.budgetsNear = budgets.filter(x => x.isNear).length
+    this.applySearch()
     this.loading = false
+  }
+
+  // Days without results are hidden; the totals of each day are those of its results.
+  // The header (incomes, expenses, saved, available) keeps the totals of the whole month
+  private applySearch = (): void => {
+    const query = SearchHelper.parse(this.searchText)
+    if (!query.active) {
+      this.visibleDays = this.groupDateMovementList
+      this.searchCount = 0
+      this.searchTotal = null
+      return
+    }
+    const results: MovementModel[] = []
+    this.visibleDays = this.groupDateMovementList
+      .map(day => {
+        const movements = day.movements.filter(x => SearchHelper.matchesMovement(query, x, this.getCategoryName(x)))
+        results.push(...movements)
+        return this.buildDay(day.date, movements)
+      })
+      .filter(day => day.movements.length > 0)
+    this.searchCount = results.length
+    this.searchTotal = SearchHelper.getTotal(results)
+  }
+
+  private buildDay = (date: Date, movements: MovementModel[]): GroupDateMovementModel => {
+    const day = new GroupDateMovementModel(date, movements)
+    movements.forEach(x => {
+      if (HelperService.isSaving(x.type)) {
+        day.saving += HelperService.getSavingEffect(x)
+        day.hasSavings = true
+      } else if (HelperService.isExpense(x.type)) {
+        day.expense += x.amount
+      } else {
+        day.income += x.amount
+      }
+    })
+    return day
+  }
+
+  // The name the user sees: system categories are translated
+  private getCategoryName = (movement: MovementModel): string => {
+    const name = this.categories.find(x => x.id === movement.categoryId)?.name ?? movement.categoryName
+    return name ? this.translate.instant(name) : ''
   }
 }

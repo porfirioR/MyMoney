@@ -85,8 +85,14 @@
           [type]="monthsChart.type">
         </canvas>
       </mat-card>
+      <!-- Below the chart by month: it filters the categories and movements of the details -->
+      <app-search-box
+        [value]="searchText" (valueChange)="onSearch($event)"
+        [count]="searchCount" [total]="searchTotal"
+        [numberType]="numberType">
+      </app-search-box>
       <mat-accordion class="report-details" displayMode="default" [multi]="true" [hideToggle]="false">
-        <mat-expansion-panel [hideToggle]="false">
+        <mat-expansion-panel [hideToggle]="false" *ngIf="!searching || visibleIncomeGroups.length > 0" [expanded]="searching">
           <mat-expansion-panel-header class="flex-center">
             {{'Income details' | translate}}
           </mat-expansion-panel-header>
@@ -99,12 +105,12 @@
           </canvas>
           <mat-accordion class="m-0">
             <ng-container *ngTemplateOutlet="matExpansionPanelContent
-              context: { groups: incomeGroupMovementCategoryModel }"
+              context: { groups: visibleIncomeGroups }"
             >
             </ng-container>
           </mat-accordion>
         </mat-expansion-panel>
-        <mat-expansion-panel [hideToggle]="false">
+        <mat-expansion-panel [hideToggle]="false" *ngIf="!searching || visibleExpenseGroups.length > 0" [expanded]="searching">
           <mat-expansion-panel-header class="flex-center">
             {{'Expense details' | translate}}
           </mat-expansion-panel-header>
@@ -116,11 +122,11 @@
             [type]="expenseChart.type">
           </canvas>
           <mat-accordion class="m-0">
-            <ng-container *ngTemplateOutlet="matExpansionPanelContent context: { groups: expenseGroupMovementCategoryModel }">
+            <ng-container *ngTemplateOutlet="matExpansionPanelContent context: { groups: visibleExpenseGroups }">
             </ng-container>
           </mat-accordion>
         </mat-expansion-panel>
-        <mat-expansion-panel [hideToggle]="false" *ngIf="hasSavings">
+        <mat-expansion-panel [hideToggle]="false" *ngIf="hasSavings && (!searching || visibleSavingGroups.length > 0)" [expanded]="searching">
           <mat-expansion-panel-header class="flex-center">
             {{'saving-messages.details' | translate}}
           </mat-expansion-panel-header>
@@ -129,7 +135,7 @@
             <strong>{{savingClosingBalance | number:'' : numberType}}</strong>
           </p>
           <mat-accordion class="m-0">
-            <ng-container *ngTemplateOutlet="matExpansionPanelContent context: { groups: savingGroupMovementCategoryModel }">
+            <ng-container *ngTemplateOutlet="matExpansionPanelContent context: { groups: visibleSavingGroups }">
             </ng-container>
           </mat-accordion>
         </mat-expansion-panel>
@@ -143,7 +149,7 @@
     </ng-container>
 
     <ng-template #matExpansionPanelContent let-groups="groups">
-      <mat-expansion-panel hideToggle *ngFor="let group of groups; trackBy: trackByCategory" class="m-0">
+      <mat-expansion-panel hideToggle *ngFor="let group of groups; trackBy: trackByCategory" class="m-0" [expanded]="searching">
         <mat-expansion-panel-header collapsedHeight="auto" expandedHeight="auto">
           <div class="group-header">
           <mat-panel-title>

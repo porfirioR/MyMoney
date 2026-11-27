@@ -77,6 +77,7 @@ import { TitleStrategy } from '@angular/router';
 import { PageTitleStrategyService } from './services/page-title-strategy.service';
 import { PageLayoutComponent } from './components/page-layout/page-layout.component';
 import { SkeletonComponent } from './components/skeleton/skeleton.component';
+import { SearchBoxComponent } from './components/search-box/search-box.component';
 
 registerLocaleData(localEs, 'es')
 registerLocaleData(localeEn, 'en')
@@ -110,7 +111,8 @@ registerLocaleData(localeEn, 'en')
     DialogAddMovementComponent,
     DialogCalculatorComponent,
     PageLayoutComponent,
-    SkeletonComponent
+    SkeletonComponent,
+    SearchBoxComponent
   ],
   imports: [
     BrowserModule,

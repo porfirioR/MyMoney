@@ -24,6 +24,7 @@ import { RegisterMovementComponent } from '../register-movement/register-movemen
 import { DialogDeleteComponent } from '../dialog-delete/dialog-delete.component';
 import { HelperService } from '../../services/helper.service';
 import { SavingTotalsModel } from '../../models/saving-totals.model';
+import { SearchHelper } from '../../services/search.helper';
 
 @Component({
   selector: 'app-annual-report',
@@ -164,6 +165,14 @@ export class AnnualReportComponent implements OnInit {
   protected expenseAmount: number = 0
   protected balance: number = 0
   protected yearRange: number[] = []
+  // Local search inside the categories and movements of the year
+  protected searchText = ''
+  protected searching = false
+  protected visibleIncomeGroups: GroupMovementCategoryModel[] = []
+  protected visibleExpenseGroups: GroupMovementCategoryModel[] = []
+  protected visibleSavingGroups: GroupMovementCategoryModel[] = []
+  protected searchCount = 0
+  protected searchTotal: number | null = null
 
   constructor(
     private readonly movementService: MovementService,
@@ -226,6 +235,7 @@ export class AnnualReportComponent implements OnInit {
     this.monthsChartData = { ...this.monthsChartData }
     this.incomeChartData = { ...this.incomeChartData }
     this.expenseChartData = { ...this.expenseChartData }
+    this.applySearch()
     this.loading = false
     this.refreshing = false
   }
@@ -305,6 +315,8 @@ export class AnnualReportComponent implements OnInit {
       this.refreshing = true
     } else {
       this.loading = true
+      // Another year: the previous search would only show empty results. Reloads after editing or deleting keep it
+      this.searchText = ''
     }
     this.getMovementForCategoriesByYear(year).pipe(take(1)).subscribe({
       next: ([expense, income, saving]) => this.subscribeMovements(expense, income, saving),
@@ -314,6 +326,42 @@ export class AnnualReportComponent implements OnInit {
         this.notificationService.error(e)
       }
     })
+  }
+
+  protected onSearch = (text: string): void => {
+    this.searchText = text
+    this.applySearch()
+  }
+
+  // A category whose name matches shows all its movements; otherwise only the movements that match,
+  // still split by month. Detail panels and categories with results are opened
+  private applySearch = (): void => {
+    const query = SearchHelper.parse(this.searchText)
+    this.searching = query.active
+    const filter = (groups: GroupMovementCategoryModel[]): GroupMovementCategoryModel[] => {
+      if (!query.active) { return groups }
+      return groups
+        .map(group => {
+          const categoryName = this.translateService.instant(group.categoryName)
+          if (SearchHelper.matchesText(query, categoryName)) {
+            return group
+          }
+          const movements = group.movements.filter(x => SearchHelper.matchesMovement(query, x, categoryName))
+          const amount = movements.reduce((total, x) => total + this.getAmount(x), 0)
+          const filtered = new GroupMovementCategoryModel(group.categoryName, group.icon, group.color, group.backgroundColor, amount, movements, group.categoryId)
+          filtered.months = this.groupByMonth(movements)
+          filtered.saving = group.saving ? HelperService.getSavingTotals(movements) : undefined
+          filtered.closingBalance = group.closingBalance
+          return filtered
+        })
+        .filter(group => group.movements.length > 0)
+    }
+    this.visibleIncomeGroups = filter(this.incomeGroupMovementCategoryModel)
+    this.visibleExpenseGroups = filter(this.expenseGroupMovementCategoryModel)
+    this.visibleSavingGroups = filter(this.savingGroupMovementCategoryModel)
+    const results = [...this.visibleIncomeGroups, ...this.visibleExpenseGroups, ...this.visibleSavingGroups].flatMap(x => x.movements)
+    this.searchCount = query.active ? results.length : 0
+    this.searchTotal = query.active ? SearchHelper.getTotal(results) : null
   }
 
   // The same form of the movements screen, opened over the report so it is not lost
@@ -359,7 +407,9 @@ export class AnnualReportComponent implements OnInit {
   }
 
   // Keeps the panels (and whether they are open) when the report is reloaded
-  protected trackByCategory = (_: number, group: GroupMovementCategoryModel): string => group.categoryName
+  // While searching, each new text creates the panels again so the ones with results open
+  protected trackByCategory = (_: number, group: GroupMovementCategoryModel): string =>
+    this.searching ? `${group.categoryName}|${this.searchText}` : group.categoryName
 
   protected trackByMonth = (_: number, month: GroupMovementMonthModel): number => month.month
 

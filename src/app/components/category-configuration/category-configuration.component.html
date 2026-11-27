@@ -1,25 +1,34 @@
 <app-page-layout title="Category configuration">
   <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
   <app-skeleton *ngIf="loading" [cards]="1" [lines]="6"></app-skeleton>
+  <app-search-box class="category-search" *ngIf="!loading"
+    label="search-messages.categories-label"
+    countKey="search-messages.categories-count"
+    [value]="searchText" (valueChange)="onSearch($event)"
+    [count]="searchCount">
+  </app-search-box>
   <mat-tab-group mat-stretch-tabs mat-align-tabs="center" *ngIf="!loading" [selectedIndex]="selectedIndex" (selectedTabChange)="tabChanged($event)">
-    <mat-tab [label]="categoryType.income | translate">
+    <mat-tab [label]="getTabLabel(categoryType.income, visibleIncome.length)">
       <main id="main-income" class="fab-space">
-        <ng-container *ngFor="let item of incomeCategory">
+        <p class="tab-hint" *ngIf="searching && visibleIncome.length === 0">{{'search-messages.no-results-tab' | translate}}</p>
+        <ng-container *ngFor="let item of visibleIncome">
           <app-category-row [category]="item" (updateCategoryEvent)="updateCategories($event)"></app-category-row>
         </ng-container>
       </main>
     </mat-tab>
-    <mat-tab [label]="categoryType.expense | translate">
+    <mat-tab [label]="getTabLabel(categoryType.expense, visibleExpense.length)">
       <main id="main-expense" class="fab-space">
-        <ng-container *ngFor="let item of expenseCategory">
+        <p class="tab-hint" *ngIf="searching && visibleExpense.length === 0">{{'search-messages.no-results-tab' | translate}}</p>
+        <ng-container *ngFor="let item of visibleExpense">
           <app-category-row [category]="item" (updateCategoryEvent)="updateCategories($event)"></app-category-row>
         </ng-container>
       </main>
     </mat-tab>
-    <mat-tab [label]="'Savings' | translate">
+    <mat-tab [label]="getTabLabel('Savings', visibleSaving.length)">
       <main id="main-saving" class="fab-space">
-        <p class="tab-hint">{{'saving-messages.tab-hint' | translate}}</p>
-        <ng-container *ngFor="let item of savingCategory">
+        <p class="tab-hint" *ngIf="!searching">{{'saving-messages.tab-hint' | translate}}</p>
+        <p class="tab-hint" *ngIf="searching && visibleSaving.length === 0">{{'search-messages.no-results-tab' | translate}}</p>
+        <ng-container *ngFor="let item of visibleSaving">
           <app-category-row [category]="item" (updateCategoryEvent)="updateCategories($event)"></app-category-row>
         </ng-container>
       </main>

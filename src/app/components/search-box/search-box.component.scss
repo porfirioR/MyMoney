@@ -1,0 +1,76 @@
+:host {
+  display: block;
+}
+
+.search-box {
+  margin: 0.5rem 1rem 0.75rem;
+}
+
+// A rounded bar like the search of a phone: icon, text and the X on one line
+.search-bar.mat-card {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  height: 48px;
+  padding: 0 0.25rem 0 1rem;
+  border-radius: 24px;
+  border: 1px solid transparent;
+  transition: border-color 0.15s;
+
+  &.focused {
+    border-color: var(--primary);
+  }
+}
+
+.search-icon {
+  flex-shrink: 0;
+  color: var(--text-secondary);
+}
+
+input {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--text-primary);
+  font: inherit;
+  font-size: 16px;
+
+  &::placeholder {
+    color: var(--text-secondary);
+    opacity: 1;
+  }
+
+  // The browser adds its own clear button to type="search"; the bar already has one
+  &::-webkit-search-cancel-button {
+    display: none;
+  }
+}
+
+.clear-button {
+  flex-shrink: 0;
+  color: var(--text-secondary);
+}
+
+// "3 movimientos" on the left and the total on the right, like the totals of the other cards
+.summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0.5rem 1rem 0;
+  font-size: 14px;
+  color: var(--text-secondary);
+
+  & strong {
+    font-size: 16px;
+    color: var(--text-primary);
+    font-variant-numeric: tabular-nums;
+  }
+
+  &.empty button {
+    flex-shrink: 0;
+  }
+}

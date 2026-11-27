@@ -27,6 +27,7 @@ import { ThemeService } from '../../services/theme.service';
 import { RelatedMovementService } from '../../services/related-movement.service';
 import { RegisterMovementComponent } from '../register-movement/register-movement.component';
 import { DialogDeleteComponent } from '../dialog-delete/dialog-delete.component';
+import { SearchHelper } from '../../services/search.helper';
 
 @Component({
   selector: 'app-report-month',
@@ -65,6 +66,12 @@ export class ReportMonthComponent implements OnInit {
   protected savingTotals = new SavingTotalsModel()
   protected hasChart = false
   protected hideAmounts = HelperService.readHideAmounts()
+  // Local search inside the categories and movements of the report
+  protected searchText = ''
+  protected searching = false
+  protected visibleGroups: GroupMovementCategoryModel[] = []
+  protected searchCount = 0
+  protected searchTotal: number | null = null
 
   constructor(
     private readonly activatedRoute: ActivatedRoute,
@@ -111,6 +118,9 @@ export class ReportMonthComponent implements OnInit {
       this.refreshing = true
     } else {
       this.loading = true
+      // Another month or type: the previous search would only show empty results.
+      // Reloads after editing or deleting keep it
+      this.searchText = ''
     }
     this.movementService.getBySelectedMonth(type!, this.yearMonth?.month!, this.yearMonth?.year!).pipe(take(1)).subscribe({
       next: (movements) => {
@@ -129,6 +139,7 @@ export class ReportMonthComponent implements OnInit {
         this.chartData.datasets[0].data = chartGroups.map(chartAmount)
         // New reference, so the chart already drawn is redrawn with the new values
         this.chartData = { ...this.chartData }
+        this.applySearch()
         this.loading = false
         this.refreshing = false
       }, error: (e) => {
@@ -137,6 +148,40 @@ export class ReportMonthComponent implements OnInit {
         this.notificationService.error(e)
       }
     })
+  }
+
+  protected onSearch = (text: string): void => {
+    this.searchText = text
+    this.applySearch()
+  }
+
+  // A category whose name matches shows all its movements; otherwise only the movements that match,
+  // with the amount of those movements. Panels with results are opened
+  private applySearch = (): void => {
+    const query = SearchHelper.parse(this.searchText)
+    this.searching = query.active
+    if (!query.active) {
+      this.visibleGroups = this.groupMovementCategoryModel
+      this.searchCount = 0
+      this.searchTotal = null
+      return
+    }
+    this.visibleGroups = this.groupMovementCategoryModel
+      .map(group => {
+        const categoryName = this.translate.instant(group.categoryName)
+        if (SearchHelper.matchesText(query, categoryName)) {
+          return group
+        }
+        const movements = group.movements.filter(x => SearchHelper.matchesMovement(query, x, categoryName))
+        const amount = movements.reduce((total, x) => total + (this.isSaving ? HelperService.getSavingEffect(x) : x.amount), 0)
+        const filtered = new GroupMovementCategoryModel(group.categoryName, group.icon, group.color, group.backgroundColor, amount, movements, group.categoryId)
+        filtered.saving = group.saving ? HelperService.getSavingTotals(movements) : undefined
+        return filtered
+      })
+      .filter(group => group.movements.length > 0)
+    const results = this.visibleGroups.flatMap(x => x.movements)
+    this.searchCount = results.length
+    this.searchTotal = SearchHelper.getTotal(results)
   }
 
   private reload = (): void => this.getMovementsByType(this.formGroup.controls.type.value, true)
@@ -184,7 +229,9 @@ export class ReportMonthComponent implements OnInit {
   }
 
   // Keeps the panels (and whether they are open) when the report is reloaded
-  protected trackByCategory = (_: number, group: GroupMovementCategoryModel): string => group.categoryName
+  // While searching, each new text creates the panels again so the ones with results open
+  protected trackByCategory = (_: number, group: GroupMovementCategoryModel): string =>
+    this.searching ? `${group.categoryName}|${this.searchText}` : group.categoryName
 
   protected trackByMovement = (_: number, movement: MovementModel): string => movement.id!
 

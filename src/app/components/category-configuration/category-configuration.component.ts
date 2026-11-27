@@ -9,6 +9,7 @@ import { CategoryEvent } from '../../models/category-event.model'
 import { HelperService } from '../../services/helper.service'
 import { UserService } from '../../services/user.service'
 import { NotificationService } from '../../services/notification.service'
+import { SearchHelper } from '../../services/search.helper'
 
 @Component({
   selector: 'app-category-configuration',
@@ -23,6 +24,12 @@ export class CategoryConfigurationComponent implements OnInit {
   protected categoryType = CategoryType
   protected loading = true
   protected selectedIndex = 0
+  // Local search by name in the three tabs
+  protected searchText = ''
+  protected searching = false
+  protected visibleIncome: CategoryModel[] = []
+  protected visibleExpense: CategoryModel[] = []
+  protected visibleSaving: CategoryModel[] = []
   private readonly tabs = Object.keys(CategoryType)
 
   constructor(
@@ -42,6 +49,7 @@ export class CategoryConfigurationComponent implements OnInit {
         this.expenseCategory = this.orderCategoryByActive(HelperService.categoriesByType(categories, CategoryType.expense))
         this.incomeCategory = this.orderCategoryByActive(HelperService.categoriesByType(categories, CategoryType.income))
         this.savingCategory = this.orderCategoryByActive(HelperService.categoriesByType(categories, CategoryType.saving))
+        this.applySearch()
         this.loading = false
       }, error: (e) => {
         this.loading = false
@@ -65,6 +73,34 @@ export class CategoryConfigurationComponent implements OnInit {
     } else {
       this.expenseCategory = this.refreshList(this.expenseCategory, result.categoryId)
     }
+    this.applySearch()
+  }
+
+  protected onSearch = (text: string): void => {
+    this.searchText = text
+    this.applySearch()
+  }
+
+  // While searching, each tab shows how many of its categories match: "Gastos (3)"
+  protected getTabLabel = (label: string, count: number): string => {
+    const text = this.translateService.instant(label)
+    return this.searching ? `${text} (${count})` : text
+  }
+
+  protected get searchCount(): number {
+    return this.visibleIncome.length + this.visibleExpense.length + this.visibleSaving.length
+  }
+
+  // Categories have no amount: numbers are searched in the name too.
+  // Lists are cached so the rows are not created again on every change detection
+  private applySearch = (): void => {
+    const query = SearchHelper.parse(this.searchText)
+    this.searching = query.active
+    const filter = (categories: CategoryModel[]): CategoryModel[] =>
+      this.searching ? categories.filter(x => SearchHelper.normalize(this.getName(x.name)).includes(query.text)) : categories
+    this.visibleIncome = filter(this.incomeCategory)
+    this.visibleExpense = filter(this.expenseCategory)
+    this.visibleSaving = filter(this.savingCategory)
   }
 
   // A categoryId means that category left the list
