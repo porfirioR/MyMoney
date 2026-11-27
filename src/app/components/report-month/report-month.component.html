@@ -50,8 +50,14 @@
               [type]="chartType">
             </canvas>
           </mat-card>
+          <!-- Below the chart: it filters the categories and movements of the list -->
+          <app-search-box
+            [value]="searchText" (valueChange)="onSearch($event)"
+            [count]="searchCount" [total]="searchTotal"
+            [numberType]="numberType" [hideAmounts]="hideAmounts">
+          </app-search-box>
           <mat-accordion>
-            <mat-expansion-panel hideToggle *ngFor="let group of groupMovementCategoryModel; trackBy: trackByCategory">
+            <mat-expansion-panel hideToggle *ngFor="let group of visibleGroups; trackBy: trackByCategory" [expanded]="searching">
               <mat-expansion-panel-header collapsedHeight="auto" expandedHeight="auto">
                 <div class="group-header">
                   <mat-panel-title>

@@ -65,7 +65,12 @@
         </span>
         <mat-icon class="budget-alert-arrow">chevron_right</mat-icon>
       </a>
-      <mat-card *ngFor="let groupDateMovement of groupDateMovementList" class="mat-card-movement">
+      <app-search-box *ngIf="groupDateMovementList.length > 0"
+        [value]="searchText" (valueChange)="onSearch($event)"
+        [count]="searchCount" [total]="searchTotal"
+        [numberType]="numberType" [hideAmounts]="hideAmounts">
+      </app-search-box>
+      <mat-card *ngFor="let groupDateMovement of visibleDays" class="mat-card-movement">
         <app-movement [groupDateMovement]="groupDateMovement" [categories]="categories" [numberType]="numberType"></app-movement>
       </mat-card>
       <section class="empty-state" *ngIf="groupDateMovementList.length === 0">

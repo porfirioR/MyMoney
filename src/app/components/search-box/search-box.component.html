@@ -1,0 +1,30 @@
+<section class="search-box">
+  <!-- A card, so it takes the color and shadow of the other cards in light and dark mode -->
+  <mat-card class="search-bar" [class.focused]="focused">
+    <mat-icon class="search-icon">search</mat-icon>
+    <input type="search" autocomplete="off" enterkeyhint="search"
+      [placeholder]="label | translate"
+      [attr.aria-label]="label | translate"
+      [value]="value"
+      (input)="onInput($any($event.target).value)"
+      (focus)="focused = true"
+      (blur)="focused = false">
+    <button mat-icon-button type="button" class="clear-button" *ngIf="value" (click)="clear()" [title]="'search-messages.clear' | translate">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-card>
+  <ng-container *ngIf="active">
+    <p class="summary" *ngIf="count > 0; else empty">
+      <span>{{countKey | translate: { count: count } }}</span>
+      <strong *ngIf="total !== null">{{hideAmounts ? '••••••' : (total | number:'' : numberType)}}</strong>
+    </p>
+    <ng-template #empty>
+      <p class="summary empty">
+        <span>{{'search-messages.no-results' | translate: { text: value.trim() } }}</span>
+        <button mat-button color="primary" type="button" (click)="clear()" [title]="'search-messages.clear' | translate">
+          {{'search-messages.clear' | translate}}
+        </button>
+      </p>
+    </ng-template>
+  </ng-container>
+</section>

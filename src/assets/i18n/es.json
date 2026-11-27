@@ -413,5 +413,14 @@
     "progress": "Guardando {{done}} de {{total}}…",
     "imported": "El respaldo se importó correctamente",
     "my-events-description": "Genera el archivo que importa my-events con los ingresos y gastos del rango elegido y sus grupos. No sirve para importar en MyMoney: para eso usá el respaldo."
+  },
+  "search-messages": {
+    "movements-label": "Buscar por descripción, categoría o monto",
+    "movements-count": "{{count}} movimientos",
+    "categories-label": "Buscar categoría",
+    "categories-count": "{{count}} categorías",
+    "clear": "Limpiar",
+    "no-results": "No encontramos nada con \"{{text}}\"",
+    "no-results-tab": "Ninguna categoría de esta pestaña coincide con la búsqueda"
   }
 }
